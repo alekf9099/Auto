@@ -8,6 +8,7 @@ import OhaengChart   from './components/OhaengChart'
 import SipsinChart   from './components/SipsinChart'
 import DaunChart     from './components/DaunChart'
 import FortuneReading from './components/FortuneReading'
+import DailyFortune  from './components/DailyFortune'
 
 export default function App() {
   const [input,  setInput]  = useState<BirthInput | null>(null)
@@ -81,6 +82,7 @@ export default function App() {
         </div>
 
         <SajuChart     result={result} />
+        <DailyFortune  result={result} />
         <OhaengChart   count={ohaeng} hasHour={input.hour !== null} />
         <FortuneReading result={result} count={ohaeng} />
         <SipsinChart   result={result} />
