@@ -4,6 +4,7 @@ import { calculateSaju, getOhaengCount, pillarName, pillarNameKo } from './utils
 import { STEMS, BRANCHES } from './utils/constants'
 import LoginPage        from './components/LoginPage'
 import ProfileSetupPage from './components/ProfileSetupPage'
+import SplashScreen     from './components/SplashScreen'
 import HomePage         from './components/HomePage'
 import SinnyeonPage   from './components/SinnyeonPage'
 import TojeongPage    from './components/TojeongPage'
@@ -20,7 +21,7 @@ import SummaryPage    from './components/SummaryPage'
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'login' | 'profile' | 'analyzing' | 'home' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'form' | 'loading' | 'result' | 'summary'
+type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'form' | 'loading' | 'result' | 'summary'
 type Tab  = 'saju' | 'fortune' | 'analysis'
 
 const TABS: { id: Tab; label: string }[] = [
@@ -37,7 +38,7 @@ function loadBirthProfile(): BirthInput | null {
 }
 
 export default function App() {
-  const [page,         setPage]         = useState<Page>('login')
+  const [page,         setPage]         = useState<Page>('splash')
   const [tab,          setTab]          = useState<Tab>('saju')
   const [user,         setUser]         = useState<UserInfo | null>(null)
   const [birthProfile, setBirthProfile] = useState<BirthInput | null>(loadBirthProfile)
@@ -95,6 +96,9 @@ export default function App() {
     if (!input) return
     setResult(calculateSaju(input)); setPage('result'); window.scrollTo(0, 0)
   }
+
+  // ── 스플래시 ─────────────────────────────────────────────────────────
+  if (page === 'splash') return <SplashScreen onDone={() => setPage('login')} />
 
   // ── 로그인 ───────────────────────────────────────────────────────────
   if (page === 'login') return <LoginPage onLogin={handleLogin} />
