@@ -1,3 +1,9 @@
+export interface UserInfo {
+  name: string
+  email: string
+  picture?: string
+}
+
 export type Element = 'wood' | 'fire' | 'earth' | 'metal' | 'water'
 export type YinYang = 'yang' | 'yin'
 export type Gender = 'male' | 'female'
