@@ -79,44 +79,42 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 relative overflow-x-hidden">
-      {/* 배경 글로우 */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-amber-500/8 blur-[120px] pointer-events-none" />
+    <div className="min-h-screen bg-[#F4F2FF]">
 
       {/* 상단 바 */}
-      <div className="sticky top-0 z-10 bg-zinc-950/90 backdrop-blur-md border-b border-white/[0.06]">
+      <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-violet-100">
         <div className="max-w-2xl mx-auto px-4 pt-3 pb-0">
           <div className="flex items-center justify-between mb-3">
             <div>
               <h1
-                className="text-base font-bold text-white"
+                className="text-base font-bold text-stone-800"
                 style={{ fontFamily: "'Noto Serif KR', serif" }}
               >
                 사주팔자 결과
               </h1>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-stone-400">
                 {input.year}.{String(input.month).padStart(2,'0')}.{String(input.day).padStart(2,'0')}
                 &nbsp;{hourLabel}&nbsp;·&nbsp;{input.gender === 'male' ? '남성' : '여성'}
               </p>
             </div>
             <button
               onClick={handleReset}
-              className="text-xs text-zinc-400 border border-zinc-700 px-3 py-1.5 rounded-xl hover:border-zinc-500 hover:text-white transition"
+              className="text-xs text-violet-600 font-semibold bg-violet-50 border border-violet-200 px-3 py-1.5 rounded-xl hover:bg-violet-100 transition"
             >
               다시 입력
             </button>
           </div>
 
           {/* 탭 — 필 스타일 */}
-          <div className="flex bg-zinc-900/70 rounded-2xl p-1 gap-1 mb-1">
+          <div className="flex bg-stone-100 rounded-2xl p-1 gap-1 mb-1">
             {TABS.map(t => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
                 className={`flex-1 py-2 text-sm font-semibold rounded-xl transition-all ${
                   tab === t.id
-                    ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/20'
-                    : 'text-zinc-500 hover:text-zinc-300'
+                    ? 'bg-violet-600 text-white shadow-md shadow-violet-200'
+                    : 'text-stone-400 hover:text-stone-600'
                 }`}
               >
                 {t.label}
@@ -127,15 +125,15 @@ export default function App() {
       </div>
 
       {/* 콘텐츠 */}
-      <div className="max-w-2xl mx-auto px-4 py-5 space-y-4 relative z-10">
-        {/* 배너 */}
-        <div className="bg-gradient-to-br from-amber-500/20 to-orange-600/10 border border-amber-500/20 rounded-3xl p-5">
-          <p className="text-amber-400/70 text-xs mb-2">
+      <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
+        {/* 배너 — 점신 스타일 네이비 카드 */}
+        <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl p-5 shadow-xl shadow-violet-900/20">
+          <p className="text-violet-300/70 text-xs mb-2">
             {input.year}년 {input.month}월 {input.day}일생
           </p>
           <div
             className="text-4xl font-bold tracking-wide text-white mb-1"
-            style={{ fontFamily: "'Noto Serif KR', serif", textShadow: '0 0 40px rgba(245,158,11,0.3)' }}
+            style={{ fontFamily: "'Noto Serif KR', serif" }}
           >
             {pillarName(result.yearPillar)}
             {pillarName(result.monthPillar)}
@@ -143,21 +141,21 @@ export default function App() {
             {result.hourPillar   ? pillarName(result.hourPillar)   : ''}
             {result.minutePillar ? pillarName(result.minutePillar) : ''}
           </div>
-          <p className="text-zinc-500 text-sm mb-2">
+          <p className="text-violet-300/60 text-sm mb-3">
             ({pillarNameKo(result.yearPillar)}{pillarNameKo(result.monthPillar)}
             {pillarNameKo(result.dayPillar)}
             {result.hourPillar   ? pillarNameKo(result.hourPillar)   : ''}
             {result.minutePillar ? pillarNameKo(result.minutePillar) : ''})
           </p>
           <div className="flex gap-2 flex-wrap">
-            <span className="text-xs bg-amber-500/15 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-full">
+            <span className="text-xs bg-violet-400/20 text-violet-200 border border-violet-400/30 px-2.5 py-1 rounded-full font-medium">
               {dayStem.hanja}({dayStem.ko}) 일간
             </span>
-            <span className="text-xs bg-white/5 text-zinc-400 border border-white/10 px-2.5 py-1 rounded-full">
+            <span className="text-xs bg-white/10 text-violet-200 border border-white/20 px-2.5 py-1 rounded-full">
               {dayStem.element === 'wood' ? '목(木)' : dayStem.element === 'fire' ? '화(火)' : dayStem.element === 'earth' ? '토(土)' : dayStem.element === 'metal' ? '금(金)' : '수(水)'}
               {dayStem.yinYang === 'yang' ? ' 양' : ' 음'}
             </span>
-            <span className="text-xs bg-white/5 text-zinc-400 border border-white/10 px-2.5 py-1 rounded-full">
+            <span className="text-xs bg-white/10 text-violet-200 border border-white/20 px-2.5 py-1 rounded-full">
               {dayBranch.animal}띠
             </span>
           </div>
@@ -184,8 +182,8 @@ export default function App() {
         {/* 요약 카드 버튼 */}
         <button
           onClick={() => { setPage('summary'); window.scrollTo(0, 0) }}
-          className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-3xl
-            shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 hover:from-amber-400 hover:to-orange-400
+          className="w-full py-4 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-bold rounded-3xl
+            shadow-lg shadow-violet-200 hover:from-violet-500 hover:to-purple-500
             transition-all text-base flex items-center justify-center gap-2 active:scale-[0.99]"
         >
           <span>나의 사주 요약 카드 보기</span>

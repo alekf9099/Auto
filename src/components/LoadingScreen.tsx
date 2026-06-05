@@ -42,56 +42,49 @@ export default function LoadingScreen({ onComplete }: Props) {
   }, [onComplete])
 
   return (
-    <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center px-8 relative overflow-hidden">
-      {/* 배경 글로우 */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-amber-500/10 blur-[140px] pointer-events-none" />
-
-      {/* 회전 심볼 */}
+    <div className="min-h-screen bg-[#F4F2FF] flex flex-col items-center justify-center px-8">
+      {/* 아이콘 */}
       <div className="relative mb-10 flex items-center justify-center">
-        <span
-          className="text-7xl select-none text-amber-400 animate-spin"
-          style={{ animationDuration: '6s', fontFamily: "'Noto Serif KR', serif", filter: 'drop-shadow(0 0 24px rgba(245,158,11,0.4))' }}
-        >
-          ☯
-        </span>
+        <div className="w-28 h-28 rounded-3xl bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center shadow-2xl shadow-violet-200">
+          <span
+            className="text-5xl text-white select-none animate-spin"
+            style={{ animationDuration: '5s', fontFamily: "'Noto Serif KR', serif" }}
+          >
+            ☯
+          </span>
+        </div>
         <div
-          className="absolute rounded-full border-2 border-amber-400/20 border-t-amber-400/60 animate-spin"
-          style={{ width: 100, height: 100, animationDuration: '1.2s' }}
-        />
-        <div
-          className="absolute rounded-full border border-amber-300/10 border-b-amber-300/30 animate-spin"
-          style={{ width: 130, height: 130, animationDuration: '2.5s', animationDirection: 'reverse' }}
+          className="absolute rounded-full border-4 border-violet-200 border-t-violet-500 animate-spin"
+          style={{ width: 120, height: 120, animationDuration: '1.2s' }}
         />
       </div>
 
       <h2
-        className="text-2xl font-bold text-white mb-2"
+        className="text-2xl font-bold text-stone-800 mb-2"
         style={{ fontFamily: "'Noto Serif KR', serif" }}
       >
         사주 분석중
       </h2>
-      <p className="text-sm text-zinc-500 mb-8 text-center h-5 transition-all duration-700">
-        {MESSAGES[msgIdx]}
-      </p>
+      <p className="text-sm text-stone-400 mb-8 text-center h-5">{MESSAGES[msgIdx]}</p>
 
       {/* 진행 바 */}
-      <div className="w-56 bg-zinc-800 rounded-full h-1.5 overflow-hidden mb-2">
+      <div className="w-56 bg-violet-100 rounded-full h-2 overflow-hidden mb-2">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-400 transition-all duration-150"
+          className="h-full rounded-full bg-gradient-to-r from-violet-500 to-purple-500 transition-all duration-150"
           style={{ width: `${progress}%` }}
         />
       </div>
-      <p className="text-xs text-zinc-600 mb-12">{Math.round(progress)}%</p>
+      <p className="text-xs text-stone-400 mb-12">{Math.round(progress)}%</p>
 
       {/* 오행 도트 */}
       <div className="flex items-end gap-4">
         {OHAENG_COLORS.map((c, i) => (
           <div key={i} className="flex flex-col items-center gap-1.5">
             <div
-              className="w-2.5 h-2.5 rounded-full animate-bounce"
-              style={{ backgroundColor: c, animationDelay: `${i * 0.15}s`, animationDuration: '1s', boxShadow: `0 0 8px ${c}66` }}
+              className="w-3 h-3 rounded-full animate-bounce"
+              style={{ backgroundColor: c, animationDelay: `${i * 0.15}s`, animationDuration: '0.9s' }}
             />
-            <span className="text-[10px] text-zinc-600">{OHAENG_LABELS[i]}</span>
+            <span className="text-[10px] text-stone-400">{OHAENG_LABELS[i]}</span>
           </div>
         ))}
       </div>

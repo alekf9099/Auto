@@ -1,119 +1,88 @@
 import type { SajuResult, OhaengCount } from '../types'
 import { STEMS, BRANCHES, ELEMENT_COLORS, ILJU_MEANING } from '../utils/constants'
 
-interface Props {
-  result: SajuResult
-  count: OhaengCount
-}
+interface Props { result: SajuResult; count: OhaengCount }
 
-const ELEMENT_KEYWORDS: Record<string, string[]> = {
-  wood:  ['성장', '발전', '인내', '창의성', '계획'],
-  fire:  ['열정', '표현', '사교', '명예', '순발력'],
-  earth: ['안정', '신뢰', '포용', '중재', '현실감'],
-  metal: ['결단', '원칙', '정의', '의지', '집중력'],
-  water: ['지혜', '적응', '직관', '내면', '탐구'],
+const KEYWORDS: Record<string, string[]> = {
+  wood: ['성장','발전','인내','창의성','계획'], fire: ['열정','표현','사교','명예','순발력'],
+  earth: ['안정','신뢰','포용','중재','현실감'], metal: ['결단','원칙','정의','의지','집중력'],
+  water: ['지혜','적응','직관','내면','탐구'],
 }
-
-const ELEMENT_CAREER: Record<string, string[]> = {
-  wood:  ['교육', '의료', '환경', '문화예술', '출판/기획'],
-  fire:  ['언론/방송', '연예', '영업/마케팅', '요식업', '디자인'],
-  earth: ['부동산', '건설', '금융', '농업', '관리직'],
-  metal: ['법조', '군경', '금융', '기계/공학', '스포츠'],
-  water: ['IT/연구', '철학/종교', '유통', '물류', '심리상담'],
+const CAREER: Record<string, string[]> = {
+  wood: ['교육','의료','환경','문화예술','출판/기획'], fire: ['언론/방송','연예','영업/마케팅','요식업','디자인'],
+  earth: ['부동산','건설','금융','농업','관리직'], metal: ['법조','군경','금융','기계/공학','스포츠'],
+  water: ['IT/연구','철학/종교','유통','물류','심리상담'],
 }
 
 export default function FortuneReading({ result, count }: Props) {
   const dayStem   = STEMS[result.dayPillar.stemIndex]
   const dayBranch = BRANCHES[result.dayPillar.branchIndex]
-  const elements  = ['wood', 'fire', 'earth', 'metal', 'water'] as const
+  const elements  = ['wood','fire','earth','metal','water'] as const
   const strongest = elements.reduce((a, b) => count[a] >= count[b] ? a : b)
   const weakest   = elements.reduce((a, b) => count[a] <= count[b] ? a : b)
   const isBalanced = Math.max(...Object.values(count)) - Math.min(...Object.values(count)) <= 1
-  const stemColor  = ELEMENT_COLORS[dayStem.element]
+  const sc = ELEMENT_COLORS[dayStem.element]
 
   return (
-    <div className="bg-zinc-900 rounded-3xl border border-zinc-800 p-6">
-      <h2
-        className="text-base font-bold text-white mb-5"
-        style={{ fontFamily: "'Noto Serif KR', serif" }}
-      >
-        명식 해석 (命式)
-      </h2>
+    <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-6">
+      <div className="flex items-center gap-2 mb-5">
+        <div className="w-1 h-5 bg-violet-500 rounded-full" />
+        <h2 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>명식 해석 (命式)</h2>
+      </div>
 
       {/* 일주 특성 */}
-      <div
-        className="rounded-2xl p-4 mb-3 border"
-        style={{ backgroundColor: stemColor + '10', borderColor: stemColor + '25' }}
-      >
+      <div className="rounded-2xl p-4 mb-3 border" style={{ backgroundColor: sc + '0D', borderColor: sc + '30' }}>
         <div className="flex items-center gap-2 mb-2">
-          <span
-            className="text-2xl font-bold"
-            style={{ color: stemColor, filter: `drop-shadow(0 0 6px ${stemColor}66)` }}
-          >
-            {dayStem.hanja}{dayBranch.hanja}
-          </span>
-          <span className="text-xs text-zinc-500 bg-zinc-800 px-2 py-0.5 rounded-full">일주 특성</span>
+          <span className="text-2xl font-bold" style={{ color: sc }}>{dayStem.hanja}{dayBranch.hanja}</span>
+          <span className="text-xs text-stone-400 bg-stone-100 px-2 py-0.5 rounded-full">일주 특성</span>
         </div>
-        <p className="text-sm text-zinc-300 leading-relaxed">
-          {ILJU_MEANING[result.dayPillar.stemIndex]}
-        </p>
+        <p className="text-sm text-stone-600 leading-relaxed">{ILJU_MEANING[result.dayPillar.stemIndex]}</p>
       </div>
 
       {/* 오행 균형 */}
-      <div className="rounded-2xl bg-zinc-800/60 border border-zinc-700/50 p-4 mb-3">
-        <p className="text-xs font-semibold text-zinc-300 mb-2">🔮 오행 균형 분석</p>
+      <div className="rounded-2xl bg-violet-50 border border-violet-100 p-4 mb-3">
+        <p className="text-xs font-semibold text-violet-600 mb-2">🔮 오행 균형 분석</p>
         {isBalanced ? (
-          <p className="text-sm text-zinc-400">
-            오행이 전체적으로 균형 잡혀 있습니다. 다양한 분야에서 고루 능력을 발휘할 수 있습니다.
-          </p>
+          <p className="text-sm text-stone-600">오행이 전체적으로 균형 잡혀 있습니다. 다양한 분야에서 고루 능력을 발휘할 수 있습니다.</p>
         ) : (
-          <p className="text-sm text-zinc-400">
-            <strong style={{ color: ELEMENT_COLORS[strongest] }}>{ELEMENT_KEYWORDS[strongest][0]}</strong>과{' '}
-            <strong style={{ color: ELEMENT_COLORS[strongest] }}>{ELEMENT_KEYWORDS[strongest][1]}</strong>의 기운이 강합니다.{' '}
-            {count[weakest] === 0 ? (
-              <><strong className="text-zinc-200">{weakest === 'wood' ? '목(木)' : weakest === 'fire' ? '화(火)' : weakest === 'earth' ? '토(土)' : weakest === 'metal' ? '금(金)' : '수(水)'}</strong>의 기운이 없으니 관련 색상·방위를 보완하세요.</>
-            ) : (
-              <>약한 기운을 보완하면 더욱 균형 잡힌 삶을 이룰 수 있습니다.</>
-            )}
+          <p className="text-sm text-stone-600">
+            <strong style={{ color: ELEMENT_COLORS[strongest] }}>{KEYWORDS[strongest][0]}</strong>과{' '}
+            <strong style={{ color: ELEMENT_COLORS[strongest] }}>{KEYWORDS[strongest][1]}</strong>의 기운이 강합니다.{' '}
+            {count[weakest] === 0
+              ? <><strong className="text-stone-800">{weakest === 'wood' ? '목(木)' : weakest === 'fire' ? '화(火)' : weakest === 'earth' ? '토(土)' : weakest === 'metal' ? '금(金)' : '수(水)'}</strong>의 기운이 없으니 관련 색상·방위를 보완하세요.</>
+              : <>약한 기운을 보완하면 더욱 균형 잡힌 삶을 이룰 수 있습니다.</>}
           </p>
         )}
       </div>
 
       {/* 적성 */}
-      <div className="rounded-2xl bg-zinc-800/60 border border-zinc-700/50 p-4 mb-3">
-        <p className="text-xs font-semibold text-zinc-300 mb-2.5">💼 적성 &amp; 직업</p>
+      <div className="rounded-2xl bg-stone-50 border border-stone-100 p-4 mb-3">
+        <p className="text-xs font-semibold text-stone-600 mb-2.5">💼 적성 &amp; 직업</p>
         <div className="flex flex-wrap gap-1.5">
-          {[...ELEMENT_CAREER[strongest], ...ELEMENT_CAREER[dayStem.element]]
+          {[...CAREER[strongest], ...CAREER[dayStem.element]]
             .filter((v, i, a) => a.indexOf(v) === i).slice(0, 6)
-            .map(career => (
-              <span
-                key={career}
-                className="text-xs px-2.5 py-1 rounded-full border font-medium"
-                style={{ backgroundColor: stemColor + '12', borderColor: stemColor + '35', color: stemColor }}
-              >
-                {career}
+            .map(c => (
+              <span key={c} className="text-xs px-2.5 py-1 rounded-full border font-medium"
+                style={{ backgroundColor: sc + '10', borderColor: sc + '30', color: sc }}>
+                {c}
               </span>
             ))}
         </div>
       </div>
 
       {/* 키워드 */}
-      <div className="rounded-2xl bg-zinc-800/60 border border-zinc-700/50 p-4">
-        <p className="text-xs font-semibold text-zinc-300 mb-2.5">✨ 핵심 키워드</p>
+      <div className="rounded-2xl bg-stone-50 border border-stone-100 p-4">
+        <p className="text-xs font-semibold text-stone-600 mb-2.5">✨ 핵심 키워드</p>
         <div className="flex flex-wrap gap-1.5">
-          {[...ELEMENT_KEYWORDS[dayStem.element], ...ELEMENT_KEYWORDS[strongest]]
+          {[...KEYWORDS[dayStem.element], ...KEYWORDS[strongest]]
             .filter((v, i, a) => a.indexOf(v) === i).slice(0, 6)
             .map(kw => (
-              <span key={kw} className="text-xs bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-full font-medium">
-                {kw}
-              </span>
+              <span key={kw} className="text-xs bg-violet-50 text-violet-600 border border-violet-200 px-2.5 py-1 rounded-full font-medium">{kw}</span>
             ))}
         </div>
       </div>
 
-      <p className="text-xs text-zinc-700 mt-4 text-center">
-        ※ 본 해석은 참고용이며, 전문 역술가의 상담을 권장합니다.
-      </p>
+      <p className="text-xs text-stone-300 mt-4 text-center">※ 본 해석은 참고용이며, 전문 역술가의 상담을 권장합니다.</p>
     </div>
   )
 }
