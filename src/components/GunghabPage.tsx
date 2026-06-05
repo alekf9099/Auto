@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { BirthInput } from '../types'
 import { calcGunghab, type GunghabRelation, type GunghabResult } from '../utils/gunghab'
 import { loadPoints, tryFeatureBonus } from '../utils/points'
@@ -10,10 +10,16 @@ interface Props {
   onBack: () => void
 }
 
-const REL_OPTIONS: { key: GunghabRelation; icon: string; label: string }[] = [
-  { key: 'couple', icon: '💕', label: '커플'     },
-  { key: 'friend', icon: '🤝', label: '친구'     },
-  { key: 'work',   icon: '💼', label: '직장동료' },
+const REL_OPTIONS: { key: GunghabRelation; icon: string; label: string; desc: string }[] = [
+  { key: 'couple', icon: '💕', label: '커플',     desc: '연인 궁합' },
+  { key: 'friend', icon: '🤝', label: '친구',     desc: '우정 궁합' },
+  { key: 'work',   icon: '💼', label: '직장동료', desc: '업무 궁합' },
+]
+
+const BAR_COLORS = [
+  { from: '#F43F5E', to: '#FB7185' }, // 감정 — rose
+  { from: '#F59E0B', to: '#FCD34D' }, // 성격 — amber
+  { from: '#10B981', to: '#34D399' }, // 발전 — emerald
 ]
 
 type BirthFields = {
@@ -42,15 +48,16 @@ function toBirth(f: BirthFields): BirthInput {
 }
 
 function GaugeMeter({ value, color }: { value: number; color: string }) {
-  const r = 46, cx = 60, cy = 60
+  const r = 48, cx = 60, cy = 60
   const circ = 2 * Math.PI * r
   const filled = (value / 100) * circ
   return (
-    <svg viewBox="0 0 120 120" className="w-36 h-36">
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="10" />
+    <svg viewBox="0 0 120 120" className="w-44 h-44">
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="9" />
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="14" />
       <circle
         cx={cx} cy={cy} r={r} fill="none"
-        stroke={color} strokeWidth="10" strokeLinecap="round"
+        stroke={color} strokeWidth="9" strokeLinecap="round"
         strokeDasharray={`${filled} ${circ - filled}`}
         transform={`rotate(-90 ${cx} ${cy})`}
       />
@@ -59,16 +66,26 @@ function GaugeMeter({ value, color }: { value: number; color: string }) {
 }
 
 function PersonForm({
-  title, icon, fields, onChange,
+  title, icon, fields, onChange, accent,
 }: {
   title: string; icon: string
   fields: BirthFields; onChange: (f: BirthFields) => void
+  accent: 'violet' | 'rose'
 }) {
   const set = (k: keyof BirthFields, v: string | boolean) => onChange({ ...fields, [k]: v })
+  const focusCls = accent === 'rose'
+    ? 'focus:border-rose-400 focus:ring-2 focus:ring-rose-100'
+    : 'focus:border-violet-400 focus:ring-2 focus:ring-violet-100'
+  const unknownCls = accent === 'rose'
+    ? 'bg-rose-100 text-rose-600'
+    : 'bg-violet-100 text-violet-600'
+  const accentLine = accent === 'rose' ? 'bg-rose-400' : 'bg-violet-400'
+
   return (
     <div>
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-lg">{icon}</span>
+        <div className={`w-1 h-4 ${accentLine} rounded-full`} />
+        <span className="text-base">{icon}</span>
         <p className="text-sm font-bold text-stone-700">{title}</p>
       </div>
       <div className="space-y-2.5">
@@ -84,7 +101,7 @@ function PersonForm({
                 type="number" required placeholder={f.ph} min={f.min} max={f.max}
                 value={fields[f.k]}
                 onChange={e => set(f.k, e.target.value)}
-                className="w-full bg-stone-50 border border-stone-200 rounded-xl px-1 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition text-center"
+                className={`w-full bg-stone-50 border border-stone-200 rounded-xl px-1 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none transition text-center ${focusCls}`}
               />
             </div>
           ))}
@@ -96,7 +113,7 @@ function PersonForm({
               <button
                 type="button"
                 onClick={() => set('hourUnknown', !fields.hourUnknown)}
-                className={`text-[10px] font-semibold px-2 py-0.5 rounded-full transition ${fields.hourUnknown ? 'bg-violet-100 text-violet-600' : 'bg-stone-100 text-stone-400'}`}
+                className={`text-[10px] font-semibold px-2 py-0.5 rounded-full transition ${fields.hourUnknown ? unknownCls : 'bg-stone-100 text-stone-400'}`}
               >
                 {fields.hourUnknown ? '모름 ✓' : '모름'}
               </button>
@@ -106,7 +123,7 @@ function PersonForm({
               disabled={fields.hourUnknown}
               value={fields.hourUnknown ? '' : fields.hour}
               onChange={e => set('hour', e.target.value)}
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl px-1 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition text-center disabled:opacity-40"
+              className={`w-full bg-stone-50 border border-stone-200 rounded-xl px-1 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none transition text-center disabled:opacity-40 ${focusCls}`}
             />
           </div>
           <div>
@@ -116,7 +133,7 @@ function PersonForm({
               disabled={fields.hourUnknown}
               value={fields.hourUnknown ? '' : fields.minute}
               onChange={e => set('minute', e.target.value)}
-              className="w-full bg-stone-50 border border-stone-200 rounded-xl px-1 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition text-center disabled:opacity-40"
+              className={`w-full bg-stone-50 border border-stone-200 rounded-xl px-1 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none transition text-center disabled:opacity-40 ${focusCls}`}
             />
           </div>
         </div>
@@ -133,10 +150,11 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
   const [themName, setThemName] = useState('')
   const [result,   setResult]   = useState<GunghabResult | null>(null)
   const [toast,    setToast]    = useState<{ amount: number; total: number } | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (step !== 'loading') return
-    const t = setTimeout(() => { setStep('result'); window.scrollTo(0, 0) }, 1900)
+    const t = setTimeout(() => { setStep('result'); window.scrollTo(0, 0) }, 2000)
     return () => clearTimeout(t)
   }, [step])
 
@@ -158,6 +176,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
 
   const relOpt    = REL_OPTIONS.find(r => r.key === rel)!
   const nameLabel = themName.trim() || '상대방'
+  const nameInit  = nameLabel[0] ?? '?'
 
   return (
     <div className="min-h-screen bg-[#F4F2FF]">
@@ -176,37 +195,36 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
         <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
           {/* 히어로 배너 */}
           <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl p-6 shadow-xl shadow-violet-900/20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-36 h-36 rounded-full bg-pink-500/10 -translate-y-10 translate-x-10" />
-            <div className="absolute bottom-0 left-0 w-24 h-24 rounded-full bg-violet-400/10 translate-y-8 -translate-x-6" />
-            <div className="relative z-10">
-              <p className="text-violet-300/70 text-xs mb-2">사주팔자 기반 · 천간지지 분석</p>
-              <p className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                궁합 보기 💕
-              </p>
-              <p className="text-sm text-violet-300/80 leading-relaxed">
-                두 사람의 사주를 분석해<br />얼마나 잘 맞는지 알려드립니다
-              </p>
+            <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-rose-500/15 blur-2xl" />
+            <div className="absolute -bottom-8 -left-8 w-36 h-36 rounded-full bg-violet-400/15 blur-2xl" />
+            <div className="relative z-10 flex items-center gap-4">
+              <div className="flex-1">
+                <p className="text-violet-300/70 text-xs mb-2">사주팔자 기반 천간지지 분석</p>
+                <p className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                  궁합 보기
+                </p>
+                <p className="text-sm text-violet-300/80 leading-relaxed">두 사람의 사주를 분석해<br />얼마나 잘 맞는지 알려드립니다</p>
+              </div>
+              <div className="text-6xl opacity-80">💕</div>
             </div>
           </div>
 
           {/* 관계 선택 */}
           <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-1 h-5 bg-violet-500 rounded-full" />
-              <p className="text-sm font-bold text-stone-800">관계 선택</p>
-            </div>
+            <p className="text-xs font-semibold text-stone-400 mb-3">관계 선택</p>
             <div className="grid grid-cols-3 gap-2">
               {REL_OPTIONS.map(opt => (
                 <button
                   key={opt.key} type="button" onClick={() => setRel(opt.key)}
-                  className={`py-3.5 rounded-2xl text-center transition-all ${
+                  className={`py-3.5 rounded-2xl text-center transition-all active:scale-95 ${
                     rel === opt.key
-                      ? 'bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-md shadow-violet-200'
-                      : 'bg-stone-50 border border-stone-200 text-stone-500 hover:border-violet-300'
+                      ? 'bg-gradient-to-b from-violet-500 to-purple-700 text-white shadow-lg shadow-violet-300'
+                      : 'bg-stone-50 border border-stone-200 text-stone-500'
                   }`}
                 >
-                  <p className="text-xl mb-1">{opt.icon}</p>
+                  <p className="text-2xl mb-1">{opt.icon}</p>
                   <p className="text-xs font-bold">{opt.label}</p>
+                  <p className="text-[10px] opacity-60 mt-0.5">{opt.desc}</p>
                 </button>
               ))}
             </div>
@@ -214,37 +232,44 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {/* 나 */}
-            <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">
-              <PersonForm title="나" icon="🧑" fields={me} onChange={setMe} />
+            <div className="bg-white rounded-3xl border border-violet-100 shadow-[0_2px_16px_rgba(124,58,237,0.08)] p-5">
+              <PersonForm title="나" icon="🧑" fields={me} onChange={setMe} accent="violet" />
             </div>
 
             {/* VS 구분선 */}
-            <div className="flex items-center gap-3 px-2">
-              <div className="flex-1 h-px bg-stone-200" />
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center shadow-md text-white text-xs font-bold">VS</div>
-              <div className="flex-1 h-px bg-stone-200" />
+            <div className="flex items-center gap-3 py-1">
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-violet-200 to-transparent" />
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full bg-gradient-to-br from-violet-400 to-rose-400 animate-ping opacity-20" />
+                <div className="relative w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-rose-500 flex items-center justify-center shadow-lg text-white text-xs font-bold">
+                  VS
+                </div>
+              </div>
+              <div className="flex-1 h-px bg-gradient-to-r from-transparent via-rose-200 to-transparent" />
             </div>
 
             {/* 상대방 */}
-            <div className="bg-white rounded-3xl border border-violet-100 shadow-[0_2px_16px_rgba(124,58,237,0.1)] p-5 space-y-4">
+            <div className="bg-white rounded-3xl border border-rose-100 shadow-[0_2px_16px_rgba(244,63,94,0.08)] p-5 space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-stone-400 mb-1.5">
-                  {relOpt.icon} {relOpt.label} 이름 <span className="text-stone-300 font-normal">(선택)</span>
+                  {relOpt.icon} {relOpt.label} 이름
+                  <span className="text-stone-300 font-normal ml-1">(선택)</span>
                 </label>
                 <input
+                  ref={inputRef}
                   type="text"
                   placeholder={rel === 'couple' ? '연인 이름을 입력하세요' : rel === 'friend' ? '친구 이름을 입력하세요' : '동료 이름을 입력하세요'}
                   value={themName}
                   onChange={e => setThemName(e.target.value)}
-                  className="w-full bg-violet-50 border border-violet-200 rounded-xl px-3 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 transition"
+                  className="w-full bg-rose-50 border border-rose-200 rounded-xl px-3 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition"
                 />
               </div>
-              <PersonForm title="상대방" icon={relOpt.icon} fields={them} onChange={setThem} />
+              <PersonForm title="상대방" icon={relOpt.icon} fields={them} onChange={setThem} accent="rose" />
             </div>
 
             <button
               type="submit"
-              className="w-full py-4 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-bold rounded-2xl shadow-lg shadow-violet-200 hover:from-violet-500 hover:to-purple-500 transition-all text-sm active:scale-[0.98]"
+              className="w-full py-4 bg-gradient-to-r from-violet-600 via-purple-600 to-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-violet-200 transition-all text-sm active:scale-[0.98]"
             >
               {relOpt.icon} {nameLabel}과의 궁합 확인하기 →
             </button>
@@ -254,15 +279,26 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
 
       {/* ── LOADING ── */}
       {step === 'loading' && (
-        <div className="flex flex-col items-center justify-center min-h-[72vh] gap-6 px-4">
-          <div className="relative w-24 h-24">
-            <div className="absolute inset-0 rounded-full border-4 border-violet-200 animate-ping opacity-25" />
-            <div className="absolute inset-2 rounded-full border-4 border-t-transparent border-violet-500 animate-spin" />
-            <div className="absolute inset-0 flex items-center justify-center text-3xl">💕</div>
+        <div className="flex flex-col items-center justify-center min-h-[72vh] gap-8 px-4">
+          {/* 두 오브 회전 애니메이션 */}
+          <div className="relative w-32 h-32">
+            <div className="absolute inset-0 animate-spin" style={{ animationDuration: '2s' }}>
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1 w-6 h-6 rounded-full bg-violet-500 shadow-lg shadow-violet-300" />
+            </div>
+            <div className="absolute inset-0 animate-spin" style={{ animationDuration: '2s', animationDirection: 'reverse' }}>
+              <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1 w-6 h-6 rounded-full bg-rose-400 shadow-lg shadow-rose-200" />
+            </div>
+            <div className="absolute inset-4 rounded-full border-2 border-dashed border-stone-200 animate-spin" style={{ animationDuration: '4s', animationDirection: 'reverse' }} />
+            <div className="absolute inset-0 flex items-center justify-center text-4xl">💕</div>
           </div>
-          <div className="text-center space-y-1">
-            <p className="text-base font-bold text-stone-700">사주를 분석하는 중...</p>
+          <div className="text-center">
+            <p className="text-base font-bold text-stone-700 mb-1">사주를 분석하는 중</p>
             <p className="text-sm text-stone-400">{nameLabel}과의 궁합을 계산하고 있어요</p>
+            <div className="flex justify-center gap-1.5 mt-4">
+              {[0, 1, 2].map(i => (
+                <div key={i} className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: `${i * 0.2}s` }} />
+              ))}
+            </div>
           </div>
         </div>
       )}
@@ -272,36 +308,65 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
         <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
           {/* 결과 배너 */}
-          <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl p-6 shadow-xl shadow-violet-900/20 relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-44 h-44 rounded-full bg-pink-500/10 -translate-y-14 translate-x-14" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-violet-400/10 translate-y-10 -translate-x-8" />
-            <div className="relative z-10">
-              <p className="text-violet-300/60 text-xs mb-4">{relOpt.icon} {relOpt.label} 궁합 분석 결과</p>
-              <div className="flex items-center gap-5 mb-4">
-                {/* 원형 게이지 */}
-                <div className="relative shrink-0">
+          <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl overflow-hidden shadow-xl shadow-violet-900/20 relative">
+            <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-rose-500/10 blur-3xl" />
+            <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-violet-400/10 blur-3xl" />
+
+            <div className="relative z-10 p-6">
+              {/* 나 vs 상대방 */}
+              <div className="flex items-center gap-3 mb-5">
+                <div className="flex items-center gap-1.5 bg-violet-400/20 border border-violet-400/30 rounded-full px-2.5 py-1.5">
+                  <div className="w-5 h-5 rounded-full bg-violet-500 flex items-center justify-center text-[10px] text-white font-bold">나</div>
+                  <span className="text-xs text-violet-200 font-medium">나</span>
+                </div>
+                <span className="text-violet-400/60 text-sm">✕</span>
+                <div className="flex items-center gap-1.5 bg-rose-400/20 border border-rose-400/30 rounded-full px-2.5 py-1.5">
+                  <div className="w-5 h-5 rounded-full bg-rose-400 flex items-center justify-center text-[10px] text-white font-bold">{nameInit}</div>
+                  <span className="text-xs text-rose-200 font-medium">{nameLabel}</span>
+                </div>
+                <span className="ml-auto text-xs text-violet-300/60">{relOpt.icon} {relOpt.label}</span>
+              </div>
+
+              {/* 게이지 + 텍스트 */}
+              <div className="flex items-center gap-4">
+                <div className="relative shrink-0" style={{ filter: `drop-shadow(0 0 16px ${result.gradeColor}55)` }}>
                   <GaugeMeter value={result.total} color={result.gradeColor} />
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <p className="text-3xl font-bold text-white leading-none">{result.total}</p>
-                    <p className="text-sm text-violet-300 font-semibold">%</p>
+                    <p className="text-4xl font-bold text-white leading-none tabular-nums">{result.total}</p>
+                    <p className="text-base font-bold text-violet-300">%</p>
                   </div>
                 </div>
-                {/* 텍스트 */}
-                <div className="flex-1">
-                  <p className="text-lg font-bold text-white leading-snug mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                    {nameLabel}과의<br />궁합입니다
-                  </p>
+                <div className="flex-1 space-y-2">
                   <span
                     className="inline-block text-xs font-bold px-3 py-1.5 rounded-full"
-                    style={{ color: result.gradeColor, backgroundColor: result.gradeBg }}
+                    style={{ color: result.gradeColor, backgroundColor: result.gradeBg, boxShadow: `0 0 12px ${result.gradeColor}30` }}
                   >
                     {result.grade}
                   </span>
+                  <p className="text-base font-bold text-white leading-snug" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                    {result.headline}
+                  </p>
                 </div>
               </div>
-              <div className="pt-4 border-t border-white/10">
-                <p className="text-sm font-bold text-white">{result.headline}</p>
-              </div>
+            </div>
+
+            {/* 하단 점수 바 미니 */}
+            <div className="border-t border-white/10 px-6 py-3 flex gap-4">
+              {[
+                { label: '감정', score: result.emotion,     color: '#F43F5E' },
+                { label: '성격', score: result.personality, color: '#F59E0B' },
+                { label: '발전', score: result.future,      color: '#10B981' },
+              ].map(item => (
+                <div key={item.label} className="flex-1">
+                  <div className="flex justify-between mb-1">
+                    <span className="text-[10px] text-violet-300/60">{item.label}</span>
+                    <span className="text-[10px] font-bold" style={{ color: item.color }}>{item.score}%</span>
+                  </div>
+                  <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-full rounded-full" style={{ width: `${item.score}%`, backgroundColor: item.color }} />
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -313,23 +378,28 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
             </div>
             <div className="space-y-5">
               {[
-                { label: '감정 궁합', score: result.emotion,     icon: '💕', desc: rel === 'couple' ? '서로에 대한 감정과 유대감' : '서로에 대한 감정과 공감대' },
-                { label: '성격 궁합', score: result.personality, icon: '✨', desc: '가치관과 성격의 조화로움' },
-                { label: '발전 궁합', score: result.future,      icon: '🌱', desc: rel === 'work' ? '함께 이루는 성과와 성장' : '함께할 미래와 발전 가능성' },
-              ].map(item => (
+                { label: '감정 궁합', score: result.emotion,     icon: '💕', desc: rel === 'couple' ? '감정과 유대감' : '공감대와 감정' },
+                { label: '성격 궁합', score: result.personality, icon: '✨', desc: '가치관과 성격' },
+                { label: '발전 궁합', score: result.future,      icon: '🌱', desc: rel === 'work' ? '협업과 성과' : '미래와 성장' },
+              ].map((item, i) => (
                 <div key={item.label}>
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className="text-base">{item.icon}</span>
-                      <p className="text-xs font-semibold text-stone-700">{item.label}</p>
-                      <p className="text-[11px] text-stone-400">{item.desc}</p>
+                      <div>
+                        <span className="text-xs font-bold text-stone-700">{item.label}</span>
+                        <span className="text-[11px] text-stone-400 ml-1.5">{item.desc}</span>
+                      </div>
                     </div>
-                    <p className="text-sm font-bold text-violet-600 shrink-0">{item.score}%</p>
+                    <span className="text-sm font-bold tabular-nums" style={{ color: BAR_COLORS[i].from }}>{item.score}%</span>
                   </div>
-                  <div className="w-full h-2.5 bg-stone-100 rounded-full overflow-hidden">
+                  <div className="w-full h-3 bg-stone-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-violet-500 to-purple-500"
-                      style={{ width: `${item.score}%` }}
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${item.score}%`,
+                        background: `linear-gradient(to right, ${BAR_COLORS[i].from}, ${BAR_COLORS[i].to})`,
+                      }}
                     />
                   </div>
                 </div>
@@ -346,12 +416,10 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
               </div>
               <div className="space-y-2">
                 {result.tips.map((tip, i) => (
-                  <div
-                    key={i}
-                    className="flex items-start gap-3 px-4 py-3 rounded-2xl"
-                    style={{ backgroundColor: tip.good ? '#F3F0FF' : '#FFF1F2' }}
-                  >
-                    <span className="text-sm shrink-0 mt-0.5">{tip.good ? '✨' : '⚠️'}</span>
+                  <div key={i} className={`flex items-start gap-3 px-4 py-3 rounded-2xl ${tip.good ? 'bg-violet-50 border border-violet-100' : 'bg-rose-50 border border-rose-100'}`}>
+                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5 ${tip.good ? 'bg-violet-500 text-white' : 'bg-rose-400 text-white'}`}>
+                      {tip.good ? '✓' : '!'}
+                    </span>
                     <p className="text-xs text-stone-600 leading-relaxed">{tip.text}</p>
                   </div>
                 ))}
@@ -360,9 +428,10 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
           )}
 
           {/* 종합 설명 */}
-          <div className="bg-violet-50 border border-violet-100 rounded-3xl p-5">
-            <p className="text-xs font-semibold text-violet-600 mb-2">💌 종합 분석</p>
-            <p className="text-sm text-stone-600 leading-relaxed">{result.summary}</p>
+          <div className="rounded-3xl p-5 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F3F0FF 0%, #EFF6FF 100%)' }}>
+            <div className="absolute top-0 right-0 w-20 h-20 rounded-full bg-violet-200/30 -translate-y-4 translate-x-4" />
+            <p className="text-xs font-bold text-violet-600 mb-2">💌 종합 분석</p>
+            <p className="text-sm text-stone-600 leading-relaxed relative z-10">{result.summary}</p>
           </div>
 
           {toast && toast.amount > 0 && (
