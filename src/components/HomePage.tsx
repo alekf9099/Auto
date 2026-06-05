@@ -26,7 +26,10 @@ export default function HomePage({ user, onNavigate, onLogout }: Props) {
       {/* 상단 바 */}
       <div className="bg-white border-b border-stone-100 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-          <h1 className="text-lg font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>운세</h1>
+          <div>
+            <h1 className="text-lg font-bold text-stone-800 leading-tight" style={{ fontFamily: "'Noto Serif KR', serif" }}>천기누설</h1>
+            <p className="text-[10px] text-violet-400 font-medium tracking-widest leading-tight">天機漏泄</p>
+          </div>
           <div className="flex items-center gap-3">
             <button
               onClick={onLogout}

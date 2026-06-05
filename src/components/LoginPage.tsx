@@ -33,7 +33,12 @@ export default function LoginPage({ onLogin }: Props) {
       window.google.accounts.id.initialize({
         client_id: CLIENT_ID,
         callback: ({ credential }) => {
-          const payload = JSON.parse(atob(credential.split('.')[1]))
+          // base64url → UTF-8 (한글 등 멀티바이트 문자 처리)
+          const b64 = credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
+          const json = decodeURIComponent(
+            atob(b64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
+          )
+          const payload = JSON.parse(json)
           onLogin({ name: payload.name, email: payload.email, picture: payload.picture })
         },
       })
@@ -59,8 +64,9 @@ export default function LoginPage({ onLogin }: Props) {
         <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center shadow-xl shadow-violet-300/40 mb-4">
           <span className="text-4xl">☯</span>
         </div>
-        <h1 className="text-2xl font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>사주팔자</h1>
-        <p className="text-sm text-stone-400 mt-1">소름 돋는 미래 예측</p>
+        <h1 className="text-2xl font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>천기누설</h1>
+        <p className="text-xs text-violet-400 font-medium mt-0.5 tracking-widest">天機漏泄</p>
+        <p className="text-sm text-stone-400 mt-1">하늘의 비밀을 당신에게</p>
       </div>
 
       <div className="w-full max-w-sm bg-white rounded-3xl shadow-[0_4px_24px_rgba(124,58,237,0.12)] border border-violet-100 p-7">
