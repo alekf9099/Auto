@@ -10,6 +10,7 @@ interface Props {
   points: PointsState
   onPointsUpdate: (p: PointsState) => void
   onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun') => void
+  onAttendance: () => void
   onEditProfile: () => void
   onLogout: () => void
 }
@@ -23,7 +24,7 @@ const MENU = [
   { icon: '📊', label: '대운 분석',  dest: 'daun'      as const, sub: '10년 대운 흐름' },
 ]
 
-export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onEditProfile, onLogout }: Props) {
+export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onEditProfile, onLogout }: Props) {
   const today = new Date()
   const month = today.getMonth() + 1
   const day   = today.getDate()
@@ -108,6 +109,27 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
           <div className="absolute right-4 top-1/2 -translate-y-1/2 text-5xl opacity-20 select-none pointer-events-none">🏯</div>
           <div className="absolute right-10 top-4 text-2xl opacity-30 select-none pointer-events-none">🕊️</div>
         </div>
+
+        {/* 출석체크 배너 */}
+        {(() => {
+          const checked = points.lastDaily === new Date().toISOString().slice(0,10)
+          return (
+            <button
+              onClick={onAttendance}
+              className="w-full flex items-center justify-between px-5 py-4 rounded-3xl border transition-all active:scale-[0.99]"
+              style={{ background: checked ? '#F5F3FF' : 'linear-gradient(135deg,#EDE9FE,#DDD6FE)', borderColor: '#C4B5FD' }}
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{checked ? '✅' : '📅'}</span>
+                <div className="text-left">
+                  <p className="text-sm font-bold text-violet-700">{checked ? '오늘 출석 완료!' : '출석 체크하고 +10P 받기'}</p>
+                  <p className="text-xs text-violet-400">{checked ? `현재 ${points.balance.toLocaleString()}P 보유` : '매일 출석하면 포인트를 드려요'}</p>
+                </div>
+              </div>
+              <span className="text-violet-400 text-sm">→</span>
+            </button>
+          )
+        })()}
 
         {/* 날짜 */}
         <div className="flex items-center justify-between px-1">

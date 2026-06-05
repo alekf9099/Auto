@@ -3,6 +3,8 @@ import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin } from '../utils/saju'
 import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
 import { DAY_FORTUNE, LUCKY_COLOR_MAP, LUCKY_COLOR_NAME, LUCKY_NUM, LUCKY_DIR, LUCKY_FOOD } from '../utils/fortuneData'
+import { loadPoints, tryFeatureBonus } from '../utils/points'
+import PointsToast from './PointsToast'
 
 interface Props {
   dayOffset: 0 | 1   // 0 = 오늘, 1 = 내일
@@ -80,8 +82,16 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
   const [targetStem,   setTargetStem]   = useState(init?.targetStem   ?? 0)
   const [targetBranch, setTargetBranch] = useState(init?.targetBranch ?? 0)
 
-  const isToday = dayOffset === 0
-  const title   = isToday ? '오늘의 운세' : '내일의 운세'
+  const isToday  = dayOffset === 0
+  const title    = isToday ? '오늘의 운세' : '내일의 운세'
+  const featKey  = isToday ? 'today' : 'tomorrow'
+
+  const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
+  function handlePointsClaim() {
+    const { next, claimed } = tryFeatureBonus(loadPoints(), featKey, `${title} 확인 🔮`)
+    if (claimed) setToast({ amount: 5, total: next.balance })
+    else setToast({ amount: 0, total: loadPoints().balance })
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -268,6 +278,15 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
               </div>
             </div>
 
+            {toast && toast.amount > 0 && (
+              <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
+            )}
+            <button
+              onClick={handlePointsClaim}
+              className="w-full py-3.5 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold rounded-2xl text-sm shadow-md shadow-violet-200 active:scale-[0.98] transition-all"
+            >
+              {toast !== null && toast.amount === 0 ? '✓ 오늘 포인트 이미 받음' : '💎 포인트 받기 +5P'}
+            </button>
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-stone-100 text-stone-600 font-semibold rounded-2xl text-sm hover:bg-stone-200 transition active:scale-[0.98]"

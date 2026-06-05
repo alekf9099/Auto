@@ -3,6 +3,8 @@ import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin } from '../utils/saju'
 import { STEMS, ELEMENT_COLORS } from '../utils/constants'
 import { YEARLY_FORTUNE, MONTHLY_FORTUNE } from '../utils/fortuneData'
+import { loadPoints, tryFeatureBonus } from '../utils/points'
+import PointsToast from './PointsToast'
 
 interface Props {
   savedBirth?: BirthInput | null
@@ -110,6 +112,13 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
   const fortune  = YEARLY_FORTUNE[sipsin] ?? YEARLY_FORTUNE['비견']
   const dayStem  = STEMS[dayStemIdx]
   const yc       = ELEMENT_COLORS[yearStem.element]
+
+  const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
+  function handlePointsClaim() {
+    const { next, claimed } = tryFeatureBonus(loadPoints(), 'sinnyeon', '신년운세 확인 🗓️')
+    if (claimed) setToast({ amount: 5, total: next.balance })
+    else setToast({ amount: 0, total: loadPoints().balance })
+  }
 
   return (
     <div className="min-h-screen bg-[#F4F2FF]">
@@ -245,6 +254,15 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
             {/* 월별 운세 — 사주 십신 기반 */}
             <MonthlySection dayStemIdx={dayStemIdx} />
 
+            {toast && toast.amount > 0 && (
+              <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
+            )}
+            <button
+              onClick={handlePointsClaim}
+              className="w-full py-3.5 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold rounded-2xl text-sm shadow-md shadow-violet-200 active:scale-[0.98] transition-all"
+            >
+              {toast !== null && toast.amount === 0 ? '✓ 오늘 포인트 이미 받음' : '💎 포인트 받기 +5P'}
+            </button>
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-stone-100 text-stone-600 font-semibold rounded-2xl text-sm hover:bg-stone-200 transition active:scale-[0.98]"

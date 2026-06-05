@@ -8,6 +8,7 @@ import LoginPage        from './components/LoginPage'
 import ProfileSetupPage from './components/ProfileSetupPage'
 import SplashScreen     from './components/SplashScreen'
 import HomePage         from './components/HomePage'
+import AttendancePage from './components/AttendancePage'
 import SinnyeonPage   from './components/SinnyeonPage'
 import TojeongPage    from './components/TojeongPage'
 import DayFortunePage from './components/DayFortunePage'
@@ -23,7 +24,7 @@ import SummaryPage    from './components/SummaryPage'
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'form' | 'loading' | 'result' | 'summary'
+type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'form' | 'loading' | 'result' | 'summary'
 type Tab  = 'saju' | 'fortune' | 'analysis'
 
 const TABS: { id: Tab; label: string }[] = [
@@ -61,7 +62,7 @@ export default function App() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(b))
   }
 
-  function goHome() { setPage('home'); window.scrollTo(0, 0) }
+  function goHome() { setPoints(loadPoints()); setPage('home'); window.scrollTo(0, 0) }
 
   function handleLogin(u: UserInfo) {
     setUser(u)
@@ -134,11 +135,15 @@ export default function App() {
         points={points}
         onPointsUpdate={setPoints}
         onNavigate={handleHomeNavigate}
+        onAttendance={() => { setPage('attendance'); window.scrollTo(0, 0) }}
         onEditProfile={() => { setPage('profile'); window.scrollTo(0, 0) }}
         onLogout={() => { setUser(null); setPage('login'); window.scrollTo(0, 0) }}
       />
     )
   }
+
+  // ── 출석체크 ────────────────────────────────────────────────────────
+  if (page === 'attendance') return <AttendancePage onBack={goHome} onPointsUpdate={p => { setPoints(p) }} />
 
   // ── 신년운세 ────────────────────────────────────────────────────────
   if (page === 'sinnyeon') return <SinnyeonPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
