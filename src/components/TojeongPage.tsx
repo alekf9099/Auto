@@ -1,7 +1,10 @@
 import { useState } from 'react'
+import type { BirthInput } from '../types'
 import { calcTojeongGwe, getTojeongMonthly, getTojeongTotal } from '../utils/tojeong'
 
 interface Props {
+  savedBirth?: BirthInput | null
+  onSave?: (b: BirthInput) => void
   onBack: () => void
 }
 
@@ -22,21 +25,36 @@ const SCORE_LABEL: Record<number, { label: string; color: string; bg: string }> 
   1: { label: '흉',   color: '#DC2626', bg: '#FFF1F2' },
 }
 
-export default function TojeongPage({ onBack }: Props) {
-  const [step, setStep] = useState<'form' | 'result'>('form')
-  const [birth, setBirth] = useState({ year: '', month: '', day: '' })
-  const [gwe, setGwe]     = useState({ sang: 1, jung: 1, ha: 1, gwe: 0 })
-  const [monthly, setMonthly] = useState<{ month: number; score: number; text: string }[]>([])
-  const [total, setTotal] = useState('')
-  const [open, setOpen]   = useState<number | null>(null)
+function calcTojeong(birth: BirthInput) {
+  const g = calcTojeongGwe(birth.year, birth.month, birth.day)
+  return { gwe: g, monthly: getTojeongMonthly(g.sang, g.jung, g.ha), total: getTojeongTotal(g.sang) }
+}
+
+export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
+  const init = savedBirth ? calcTojeong(savedBirth) : null
+
+  const [step, setStep] = useState<'form' | 'result'>(init ? 'result' : 'form')
+  const [birth, setBirth] = useState({
+    year:  savedBirth ? String(savedBirth.year)  : '',
+    month: savedBirth ? String(savedBirth.month) : '',
+    day:   savedBirth ? String(savedBirth.day)   : '',
+  })
+  const [gwe, setGwe]         = useState(init?.gwe     ?? { sang: 1, jung: 1, ha: 1, gwe: 0 })
+  const [monthly, setMonthly] = useState(init?.monthly ?? [] as { month: number; score: number; text: string }[])
+  const [total, setTotal]     = useState(init?.total   ?? '')
+  const [open, setOpen]       = useState<number | null>(null)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    const y = Number(birth.year), m = Number(birth.month), d = Number(birth.day)
-    const g = calcTojeongGwe(y, m, d)
-    setGwe(g)
-    setMonthly(getTojeongMonthly(g.sang, g.jung, g.ha))
-    setTotal(getTojeongTotal(g.sang))
+    const inp: BirthInput = {
+      year: Number(birth.year), month: Number(birth.month),
+      day: Number(birth.day), hour: 12, minute: null, gender: 'male',
+    }
+    onSave?.(inp)
+    const r = calcTojeong(inp)
+    setGwe(r.gwe)
+    setMonthly(r.monthly)
+    setTotal(r.total)
     setStep('result')
     setOpen(null)
     window.scrollTo(0, 0)

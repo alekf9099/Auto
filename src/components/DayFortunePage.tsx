@@ -6,7 +6,28 @@ import { DAY_FORTUNE, LUCKY_COLOR_MAP, LUCKY_COLOR_NAME, LUCKY_NUM, LUCKY_DIR, L
 
 interface Props {
   dayOffset: 0 | 1   // 0 = 오늘, 1 = 내일
+  savedBirth?: BirthInput | null
+  onSave?: (b: BirthInput) => void
   onBack: () => void
+}
+
+function calcResult(birth: BirthInput, dayOffset: number) {
+  const userResult = calculateSaju(birth)
+  const userDayIdx = userResult.dayPillar.stemIndex
+  const target = new Date()
+  target.setDate(target.getDate() + dayOffset)
+  const targetResult = calculateSaju({
+    year: target.getFullYear(), month: target.getMonth() + 1,
+    day: target.getDate(), hour: 12, minute: null, gender: 'male',
+  })
+  return {
+    sipsin:       getSipsin(userDayIdx, targetResult.dayPillar.stemIndex) ?? '비견',
+    dayStemIdx:   userDayIdx,
+    luckyEl:      STEMS[userDayIdx].element,
+    targetDate:   target,
+    targetStem:   targetResult.dayPillar.stemIndex,
+    targetBranch: targetResult.dayPillar.branchIndex,
+  }
 }
 
 function Stars({ n }: { n: number }) {
@@ -43,15 +64,21 @@ function CategoryRow({ emoji, label, text, star }: { emoji: string; label: strin
   )
 }
 
-export default function DayFortunePage({ dayOffset, onBack }: Props) {
-  const [step,  setStep]  = useState<'form' | 'result'>('form')
-  const [birth, setBirth] = useState({ year: '', month: '', day: '' })
-  const [sipsin,     setSipsin]     = useState('')
-  const [dayStemIdx, setDayStemIdx] = useState(0)
-  const [luckyEl,    setLuckyEl]    = useState('wood')
-  const [targetDate, setTargetDate] = useState<Date>(new Date())
-  const [targetStem,   setTargetStem]   = useState(0)
-  const [targetBranch, setTargetBranch] = useState(0)
+export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }: Props) {
+  const init = savedBirth ? calcResult(savedBirth, dayOffset) : null
+
+  const [step,  setStep]  = useState<'form' | 'result'>(init ? 'result' : 'form')
+  const [birth, setBirth] = useState({
+    year:  savedBirth ? String(savedBirth.year)  : '',
+    month: savedBirth ? String(savedBirth.month) : '',
+    day:   savedBirth ? String(savedBirth.day)   : '',
+  })
+  const [sipsin,     setSipsin]     = useState(init?.sipsin       ?? '')
+  const [dayStemIdx, setDayStemIdx] = useState(init?.dayStemIdx   ?? 0)
+  const [luckyEl,    setLuckyEl]    = useState(init?.luckyEl      ?? 'wood')
+  const [targetDate, setTargetDate] = useState<Date>(init?.targetDate ?? new Date())
+  const [targetStem,   setTargetStem]   = useState(init?.targetStem   ?? 0)
+  const [targetBranch, setTargetBranch] = useState(init?.targetBranch ?? 0)
 
   const isToday = dayOffset === 0
   const title   = isToday ? '오늘의 운세' : '내일의 운세'
@@ -62,23 +89,14 @@ export default function DayFortunePage({ dayOffset, onBack }: Props) {
       year: Number(birth.year), month: Number(birth.month),
       day: Number(birth.day), hour: 12, minute: null, gender: 'male',
     }
-    const userResult = calculateSaju(inp)
-    const userDayIdx = userResult.dayPillar.stemIndex
-
-    const target = new Date()
-    target.setDate(target.getDate() + dayOffset)
-    const targetResult = calculateSaju({
-      year: target.getFullYear(), month: target.getMonth() + 1,
-      day: target.getDate(), hour: 12, minute: null, gender: 'male',
-    })
-
-    const s = getSipsin(userDayIdx, targetResult.dayPillar.stemIndex) ?? '비견'
-    setSipsin(s)
-    setDayStemIdx(userDayIdx)
-    setLuckyEl(STEMS[userDayIdx].element)
-    setTargetDate(target)
-    setTargetStem(targetResult.dayPillar.stemIndex)
-    setTargetBranch(targetResult.dayPillar.branchIndex)
+    onSave?.(inp)
+    const r = calcResult(inp, dayOffset)
+    setSipsin(r.sipsin)
+    setDayStemIdx(r.dayStemIdx)
+    setLuckyEl(r.luckyEl)
+    setTargetDate(r.targetDate)
+    setTargetStem(r.targetStem)
+    setTargetBranch(r.targetBranch)
     setStep('result')
     window.scrollTo(0, 0)
   }

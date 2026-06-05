@@ -5,6 +5,8 @@ import { STEMS, ELEMENT_COLORS } from '../utils/constants'
 import { YEARLY_FORTUNE } from '../utils/fortuneData'
 
 interface Props {
+  savedBirth?: BirthInput | null
+  onSave?: (b: BirthInput) => void
   onBack: () => void
 }
 
@@ -32,11 +34,23 @@ function Stars({ n }: { n: number }) {
   )
 }
 
-export default function SinnyeonPage({ onBack }: Props) {
-  const [step, setStep]   = useState<'form' | 'result'>('form')
-  const [birth, setBirth] = useState({ year: '', month: '', day: '' })
-  const [sipsin, setSipsin] = useState<string>('')
-  const [dayStemIdx, setDayStemIdx] = useState(0)
+function calcSinnyeon(birth: BirthInput) {
+  const res = calculateSaju(birth)
+  const idx = res.dayPillar.stemIndex
+  return { dayStemIdx: idx, sipsin: getSipsin(idx, YEAR_2026_STEM) ?? '비견' }
+}
+
+export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
+  const init = savedBirth ? calcSinnyeon(savedBirth) : null
+
+  const [step, setStep]   = useState<'form' | 'result'>(init ? 'result' : 'form')
+  const [birth, setBirth] = useState({
+    year:  savedBirth ? String(savedBirth.year)  : '',
+    month: savedBirth ? String(savedBirth.month) : '',
+    day:   savedBirth ? String(savedBirth.day)   : '',
+  })
+  const [sipsin, setSipsin]       = useState<string>(init?.sipsin ?? '')
+  const [dayStemIdx, setDayStemIdx] = useState(init?.dayStemIdx ?? 0)
 
   const yearStem = STEMS[YEAR_2026_STEM]
 
@@ -46,11 +60,10 @@ export default function SinnyeonPage({ onBack }: Props) {
       year: Number(birth.year), month: Number(birth.month),
       day: Number(birth.day), hour: 12, minute: null, gender: 'male',
     }
-    const res    = calculateSaju(inp)
-    const idx    = res.dayPillar.stemIndex
-    const s      = getSipsin(idx, YEAR_2026_STEM)
-    setDayStemIdx(idx)
-    setSipsin(s ?? '비견')
+    onSave?.(inp)
+    const r = calcSinnyeon(inp)
+    setDayStemIdx(r.dayStemIdx)
+    setSipsin(r.sipsin)
     setStep('result')
     window.scrollTo(0, 0)
   }

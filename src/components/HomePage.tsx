@@ -1,7 +1,8 @@
-import type { UserInfo } from '../types'
+import type { UserInfo, BirthInput } from '../types'
 
 interface Props {
   user: UserInfo
+  birthProfile: BirthInput | null
   onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun') => void
   onLogout: () => void
 }
@@ -15,7 +16,7 @@ const MENU = [
   { icon: '📊', label: '대운 분석',  dest: 'daun'      as const, sub: '10년 대운 흐름' },
 ]
 
-export default function HomePage({ user, onNavigate, onLogout }: Props) {
+export default function HomePage({ user, birthProfile, onNavigate, onLogout }: Props) {
   const today = new Date()
   const month = today.getMonth() + 1
   const day   = today.getDate()
@@ -79,6 +80,26 @@ export default function HomePage({ user, onNavigate, onLogout }: Props) {
             오늘의 운세 확인하기 →
           </button>
         </div>
+
+        {/* 저장된 프로필 배지 */}
+        {birthProfile && (
+          <div className="flex items-center justify-between bg-violet-50 border border-violet-100 rounded-2xl px-4 py-2.5">
+            <div className="flex items-center gap-2">
+              <span className="text-violet-500 text-sm">✓</span>
+              <p className="text-xs text-stone-600">
+                <span className="font-semibold">{birthProfile.year}.{String(birthProfile.month).padStart(2,'0')}.{String(birthProfile.day).padStart(2,'0')}</span>
+                <span className="text-stone-400 ml-1">· {birthProfile.gender === 'male' ? '남성' : '여성'}</span>
+                {birthProfile.hour !== null && <span className="text-stone-400 ml-1">· {birthProfile.hour}시</span>}
+              </p>
+            </div>
+            <button
+              onClick={() => onNavigate('saju')}
+              className="text-xs text-violet-500 font-semibold hover:text-violet-700 transition"
+            >
+              수정
+            </button>
+          </div>
+        )}
 
         {/* 메뉴 그리드 */}
         <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">

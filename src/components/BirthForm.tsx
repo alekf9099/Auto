@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { BirthInput, Gender } from '../types'
 
 interface Props {
+  savedBirth?: BirthInput | null
   onSubmit: (input: BirthInput) => void
 }
 
@@ -12,14 +13,14 @@ const inputCls = `
   transition text-sm font-medium
 `.trim()
 
-export default function BirthForm({ onSubmit }: Props) {
-  const [year,        setYear]        = useState('')
-  const [month,       setMonth]       = useState('')
-  const [day,         setDay]         = useState('')
-  const [hour,        setHour]        = useState('')
-  const [minute,      setMinute]      = useState('')
-  const [gender,      setGender]      = useState<Gender>('male')
-  const [unknownHour, setUnknownHour] = useState(false)
+export default function BirthForm({ savedBirth, onSubmit }: Props) {
+  const [year,        setYear]        = useState(savedBirth ? String(savedBirth.year)  : '')
+  const [month,       setMonth]       = useState(savedBirth ? String(savedBirth.month) : '')
+  const [day,         setDay]         = useState(savedBirth ? String(savedBirth.day)   : '')
+  const [hour,        setHour]        = useState(savedBirth?.hour   != null ? String(savedBirth.hour)   : '')
+  const [minute,      setMinute]      = useState(savedBirth?.minute != null ? String(savedBirth.minute) : '')
+  const [gender,      setGender]      = useState<Gender>(savedBirth?.gender ?? 'male')
+  const [unknownHour, setUnknownHour] = useState(savedBirth ? savedBirth.hour === null : false)
   const [error,       setError]       = useState('')
 
   function handleSubmit(e: React.FormEvent) {
