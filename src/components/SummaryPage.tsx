@@ -35,7 +35,7 @@ export default function SummaryPage({ input, result, ohaeng, onBack, onReset }: 
   const today = new Date()
   const todayResult = calculateSaju({
     year: today.getFullYear(), month: today.getMonth() + 1,
-    day: today.getDate(), hour: today.getHours(), gender: input.gender,
+    day: today.getDate(), hour: today.getHours(), minute: null, gender: input.gender,
   })
   const sipsin = getSipsin(result.dayPillar.stemIndex, todayResult.dayPillar.stemIndex)
   const todayStar: Record<string, number> = {
@@ -51,7 +51,9 @@ export default function SummaryPage({ input, result, ohaeng, onBack, onReset }: 
   }) ?? result.daun[0]
 
   const pillars = [result.yearPillar, result.monthPillar, result.dayPillar]
-  if (result.hourPillar) pillars.push(result.hourPillar)
+  if (result.hourPillar)   pillars.push(result.hourPillar)
+  if (result.minutePillar) pillars.push(result.minutePillar)
+  const pillarLabels = ['년', '월', '일', '시', '분']
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 flex flex-col">
@@ -75,7 +77,7 @@ export default function SummaryPage({ input, result, ohaeng, onBack, onReset }: 
 
         {/* 메인 카드 */}
         <div className="bg-gradient-to-br from-amber-900/60 to-stone-900/80 rounded-3xl border border-amber-700/30 p-6">
-          <p className="text-amber-400/70 text-xs mb-1">나의 사주팔자 요약</p>
+          <p className="text-amber-400/70 text-xs mb-1">{result.minutePillar ? '나의 오주십자 요약' : '나의 사주팔자 요약'}</p>
           <p className="text-stone-400 text-xs mb-4">
             {input.year}.{String(input.month).padStart(2,'0')}.{String(input.day).padStart(2,'0')}
             &nbsp;·&nbsp;{input.gender === 'male' ? '남성' : '여성'}
@@ -91,7 +93,7 @@ export default function SummaryPage({ input, result, ohaeng, onBack, onReset }: 
                 <div key={i} className="flex flex-col items-center">
                   <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[s.element] }}>{s.hanja}</span>
                   <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[b.element] }}>{b.hanja}</span>
-                  <span className="text-xs text-stone-500 mt-1">{['년','월','일','시'][i]}</span>
+                  <span className="text-xs text-stone-500 mt-1">{pillarLabels[i]}</span>
                 </div>
               )
             })}

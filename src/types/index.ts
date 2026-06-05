@@ -29,6 +29,7 @@ export interface SajuResult {
   monthPillar: Pillar
   dayPillar: Pillar
   hourPillar: Pillar | null
+  minutePillar: Pillar | null
   daun: DaunEntry[]
   daunStartAge: number
   isForward: boolean
@@ -59,5 +60,6 @@ export interface BirthInput {
   month: number
   day: number
   hour: number | null
+  minute: number | null
   gender: Gender
 }

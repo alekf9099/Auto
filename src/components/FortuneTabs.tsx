@@ -212,7 +212,7 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
   const today     = new Date()
   const todayCalc = calculateSaju({
     year: today.getFullYear(), month: today.getMonth() + 1,
-    day: today.getDate(), hour: today.getHours(), gender: 'male',
+    day: today.getDate(), hour: today.getHours(), minute: null, gender: 'male',
   })
 
   const dayStemIdx = result.dayPillar.stemIndex

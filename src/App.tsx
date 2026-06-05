@@ -47,7 +47,9 @@ export default function App() {
   const ohaeng    = getOhaengCount(result)
   const dayStem   = STEMS[result.dayPillar.stemIndex]
   const dayBranch = BRANCHES[result.dayPillar.branchIndex]
-  const hourLabel = input.hour !== null ? `${input.hour}시` : '시 불명'
+  const hourLabel = input.hour !== null
+    ? `${input.hour}시${input.minute !== null ? ` ${input.minute}분` : ''}`
+    : '시 불명'
 
   if (page === 'summary') {
     return (
@@ -112,11 +114,14 @@ export default function App() {
             {pillarName(result.yearPillar)}
             {pillarName(result.monthPillar)}
             {pillarName(result.dayPillar)}
-            {result.hourPillar ? pillarName(result.hourPillar) : ''}
+            {result.hourPillar   ? pillarName(result.hourPillar)   : ''}
+            {result.minutePillar ? pillarName(result.minutePillar) : ''}
           </span>
           <p className="text-amber-200 text-sm mt-1">
             ({pillarNameKo(result.yearPillar)}{pillarNameKo(result.monthPillar)}
-            {pillarNameKo(result.dayPillar)}{result.hourPillar ? pillarNameKo(result.hourPillar) : ''})
+            {pillarNameKo(result.dayPillar)}
+            {result.hourPillar   ? pillarNameKo(result.hourPillar)   : ''}
+            {result.minutePillar ? pillarNameKo(result.minutePillar) : ''})
           </p>
           <p className="text-amber-100 text-xs mt-2">
             일간 {dayStem.hanja}({dayStem.ko}) &middot;

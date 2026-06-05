@@ -46,25 +46,27 @@ function PillarCell({ label, stemIndex, branchIndex }: { label: string; stemInde
 }
 
 export default function SajuChart({ result }: Props) {
-  const { yearPillar, monthPillar, dayPillar, hourPillar } = result
+  const { yearPillar, monthPillar, dayPillar, hourPillar, minutePillar } = result
 
-  const pillars = hourPillar
-    ? [
-        { ...hourPillar,  label: '시주(時柱)' },
-        { ...dayPillar,   label: '일주(日柱)' },
-        { ...monthPillar, label: '월주(月柱)' },
-        { ...yearPillar,  label: '년주(年柱)' },
-      ]
-    : [
-        { ...dayPillar,   label: '일주(日柱)' },
-        { ...monthPillar, label: '월주(月柱)' },
-        { ...yearPillar,  label: '년주(年柱)' },
-      ]
+  const pillars = (() => {
+    const base = [
+      { ...dayPillar,   label: '일주(日柱)' },
+      { ...monthPillar, label: '월주(月柱)' },
+      { ...yearPillar,  label: '년주(年柱)' },
+    ]
+    if (hourPillar)   base.unshift({ ...hourPillar,   label: '시주(時柱)' })
+    if (minutePillar) base.unshift({ ...minutePillar, label: '분주(分柱)' })
+    return base
+  })()
+
+  const title = minutePillar
+    ? '오주십자 (五柱十字)'
+    : '사주팔자 (四柱八字)'
 
   return (
     <div className="bg-white rounded-3xl shadow-sm border border-stone-100 p-6">
       <h2 className="text-lg font-bold text-stone-700 mb-5 font-korean">
-        사주팔자 (四柱八字)
+        {title}
       </h2>
 
       <div className="flex justify-center gap-4">

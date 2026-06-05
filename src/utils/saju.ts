@@ -87,7 +87,7 @@ function daysToJieqi(year: number, month: number, day: number, forward: boolean)
 }
 
 export function calculateSaju(input: BirthInput): SajuResult {
-  const { year, month, day, hour, gender } = input
+  const { year, month, day, hour, minute, gender } = input
 
   // ── 년주 (Year Pillar) ──────────────────────────────────────────────
   const sajuYear = getSajuYear(year, month, day)
@@ -108,11 +108,22 @@ export function calculateSaju(input: BirthInput): SajuResult {
 
   // ── 시주 (Hour Pillar) ─────────────────────────────────────────────
   let hourPillar: Pillar | null = null
+  let hourStem = 0, hourBranch = 0
   if (hour !== null) {
-    const hourBranch     = Math.floor(((hour + 1) % 24) / 2)
-    const hourStartStem  = (dayStem % 5 * 2) % 10
-    const hourStem       = (hourStartStem + hourBranch) % 10
+    hourBranch          = Math.floor(((hour + 1) % 24) / 2)
+    const hourStartStem = (dayStem % 5 * 2) % 10
+    hourStem            = (hourStartStem + hourBranch) % 10
     hourPillar = makePillar(hourStem, hourBranch, '시주')
+  }
+
+  // ── 분주 (Minute Pillar) ───────────────────────────────────────────
+  // 분간: 시간 기준 오행군에서 12분 단위로 천간 순행
+  // 분지: 5분 단위로 지지 순행 (1시간 = 12지지 × 5분)
+  let minutePillar: Pillar | null = null
+  if (hour !== null && minute !== null) {
+    const minuteStem   = ((hourStem % 5 * 2) + Math.floor(minute / 12)) % 10
+    const minuteBranch = Math.floor(minute / 5) % 12
+    minutePillar = makePillar(minuteStem, minuteBranch, '분주')
   }
 
   // ── 대운 (Major Fortune) ───────────────────────────────────────────
@@ -138,6 +149,7 @@ export function calculateSaju(input: BirthInput): SajuResult {
     monthPillar: makePillar(monthStem, monthBranch, '월주'),
     dayPillar:   makePillar(dayStem, dayBranch, '일주'),
     hourPillar,
+    minutePillar,
     daun,
     daunStartAge: startAge,
     isForward,
@@ -160,7 +172,8 @@ export function getSipsin(dayStemIdx: number, targetStemIdx: number): string {
 export function getOhaengCount(result: SajuResult): OhaengCount {
   const count: OhaengCount = { wood: 0, fire: 0, earth: 0, metal: 0, water: 0 }
   const pillars = [result.yearPillar, result.monthPillar, result.dayPillar]
-  if (result.hourPillar) pillars.push(result.hourPillar)
+  if (result.hourPillar)   pillars.push(result.hourPillar)
+  if (result.minutePillar) pillars.push(result.minutePillar)
 
   for (const p of pillars) {
     count[STEMS[p.stemIndex].element]++

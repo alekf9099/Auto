@@ -10,6 +10,7 @@ export default function BirthForm({ onSubmit }: Props) {
   const [month,  setMonth]  = useState('')
   const [day,    setDay]    = useState('')
   const [hour,   setHour]   = useState('')
+  const [minute, setMinute] = useState('')
   const [gender, setGender] = useState<Gender>('male')
   const [unknownHour, setUnknownHour] = useState(false)
   const [error,  setError]  = useState('')
@@ -25,13 +26,18 @@ export default function BirthForm({ onSubmit }: Props) {
     if (!d || d < 1 || d > 31)       { setError('올바른 일을 입력해주세요 (1~31)'); return }
 
     let h: number | null = null
+    let min: number | null = null
     if (!unknownHour) {
       h = parseInt(hour)
       if (isNaN(h) || h < 0 || h > 23) { setError('올바른 시간을 입력해주세요 (0~23)'); return }
+      if (minute.trim() !== '') {
+        min = parseInt(minute)
+        if (isNaN(min) || min < 0 || min > 59) { setError('올바른 분을 입력해주세요 (0~59)'); return }
+      }
     }
 
     setError('')
-    onSubmit({ year: y, month: m, day: d, hour: h, gender })
+    onSubmit({ year: y, month: m, day: d, hour: h, minute: min, gender })
   }
 
   return (
@@ -76,10 +82,10 @@ export default function BirthForm({ onSubmit }: Props) {
             </div>
           </div>
 
-          {/* Hour field */}
+          {/* Hour + Minute fields */}
           <div className="mb-4">
             <div className="flex items-center justify-between mb-1">
-              <label className="block text-sm text-stone-500">시 (時) — 태어난 시각 (24h)</label>
+              <label className="block text-sm text-stone-500">시 · 분 — 태어난 시각 (24h)</label>
               <label className="flex items-center gap-1.5 text-sm text-stone-400 cursor-pointer">
                 <input
                   type="checkbox" checked={unknownHour}
@@ -89,14 +95,26 @@ export default function BirthForm({ onSubmit }: Props) {
                 모름
               </label>
             </div>
-            <input
-              type="number" placeholder="14" min="0" max="23" value={hour}
-              disabled={unknownHour}
-              onChange={e => setHour(e.target.value)}
-              className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-center text-stone-700 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition disabled:bg-stone-50 disabled:text-stone-300"
-            />
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <input
+                  type="number" placeholder="14 (시)" min="0" max="23" value={hour}
+                  disabled={unknownHour}
+                  onChange={e => setHour(e.target.value)}
+                  className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-center text-stone-700 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition disabled:bg-stone-50 disabled:text-stone-300"
+                />
+              </div>
+              <div className="flex-1">
+                <input
+                  type="number" placeholder="30 (분, 선택)" min="0" max="59" value={minute}
+                  disabled={unknownHour}
+                  onChange={e => setMinute(e.target.value)}
+                  className="w-full px-3 py-2.5 border border-stone-200 rounded-xl text-center text-stone-700 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-100 transition disabled:bg-stone-50 disabled:text-stone-300"
+                />
+              </div>
+            </div>
             {!unknownHour && (
-              <p className="text-xs text-stone-400 mt-1">예) 오전 2시 → 2, 오후 3시 → 15, 자정 → 0</p>
+              <p className="text-xs text-stone-400 mt-1">시: 오전2시→2, 오후3시→15, 자정→0 · 분: 입력 시 분주(分柱) 계산</p>
             )}
           </div>
 

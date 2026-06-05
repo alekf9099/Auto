@@ -408,7 +408,7 @@ export default function DailyFortune({ result, ohaeng }: Props) {
 
   const todayResult = calculateSaju({
     year: todayYear, month: todayMonth,
-    day: todayDay, hour: today.getHours(), gender: 'male',
+    day: todayDay, hour: today.getHours(), minute: null, gender: 'male',
   })
 
   const dayStemIdx     = result.dayPillar.stemIndex
