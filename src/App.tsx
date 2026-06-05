@@ -4,8 +4,9 @@ import { calculateSaju, getOhaengCount, pillarName, pillarNameKo } from './utils
 import { STEMS, BRANCHES } from './utils/constants'
 import LoginPage      from './components/LoginPage'
 import HomePage       from './components/HomePage'
-import SinnyeonPage   from './components/SinnyeonPage'
-import TojeongPage    from './components/TojeongPage'
+import SinnyeonPage    from './components/SinnyeonPage'
+import TojeongPage     from './components/TojeongPage'
+import DayFortunePage  from './components/DayFortunePage'
 import BirthForm      from './components/BirthForm'
 import LoadingScreen  from './components/LoadingScreen'
 import SajuChart      from './components/SajuChart'
@@ -16,7 +17,7 @@ import FortuneReading from './components/FortuneReading'
 import FortuneTabs    from './components/FortuneTabs'
 import SummaryPage    from './components/SummaryPage'
 
-type Page = 'login' | 'home' | 'sinnyeon' | 'tojeong' | 'form' | 'loading' | 'result' | 'summary'
+type Page = 'login' | 'home' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'form' | 'loading' | 'result' | 'summary'
 type Tab  = 'saju' | 'fortune' | 'analysis'
 
 const TABS: { id: Tab; label: string }[] = [
@@ -36,13 +37,11 @@ export default function App() {
 
   function handleLogin(u: UserInfo) { setUser(u); setPage('home'); window.scrollTo(0, 0) }
 
-  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'fortune-today' | 'daun') {
+  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun') {
     if (dest === 'sinnyeon') { setPage('sinnyeon'); window.scrollTo(0, 0); return }
     if (dest === 'tojeong')  { setPage('tojeong');  window.scrollTo(0, 0); return }
-    if (dest === 'fortune-today') {
-      if (result) { setTab('fortune'); setPage('result') } else { setPage('form') }
-      window.scrollTo(0, 0); return
-    }
+    if (dest === 'today')    { setPage('today');    window.scrollTo(0, 0); return }
+    if (dest === 'tomorrow') { setPage('tomorrow'); window.scrollTo(0, 0); return }
     if (dest === 'daun') {
       if (result) { setTab('analysis'); setPage('result') } else { setPage('form') }
       window.scrollTo(0, 0); return
@@ -78,6 +77,10 @@ export default function App() {
 
   // ── 토정비결 ────────────────────────────────────────────────────────
   if (page === 'tojeong') return <TojeongPage onBack={goHome} />
+
+  // ── 오늘/내일의 운세 ─────────────────────────────────────────────────
+  if (page === 'today')    return <DayFortunePage dayOffset={0} onBack={goHome} />
+  if (page === 'tomorrow') return <DayFortunePage dayOffset={1} onBack={goHome} />
 
   // ── 사주 입력 폼 ─────────────────────────────────────────────────────
   if (page === 'form') return <BirthForm onSubmit={handleSubmit} />

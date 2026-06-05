@@ -2,17 +2,17 @@ import type { UserInfo } from '../types'
 
 interface Props {
   user: UserInfo
-  onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'fortune-today' | 'daun') => void
+  onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun') => void
   onLogout: () => void
 }
 
 const MENU = [
-  { icon: '🗓️', label: '신년운세',   dest: 'sinnyeon'      as const, sub: '2026 병오년' },
-  { icon: '📖', label: '토정비결',   dest: 'tojeong'       as const, sub: '이지함 비결서' },
-  { icon: '☯',  label: '정통사주',   dest: 'saju'          as const, sub: '사주팔자 분석' },
-  { icon: '🔮', label: '오늘의 운세', dest: 'fortune-today' as const, sub: '일일 운세' },
-  { icon: '⏰', label: '내일의 운세', dest: 'fortune-today' as const, sub: '내일 미리보기' },
-  { icon: '📊', label: '대운 분석',  dest: 'daun'          as const, sub: '10년 대운 흐름' },
+  { icon: '🗓️', label: '신년운세',   dest: 'sinnyeon'  as const, sub: '2026 병오년' },
+  { icon: '📖', label: '토정비결',   dest: 'tojeong'   as const, sub: '이지함 비결서' },
+  { icon: '☯',  label: '정통사주',   dest: 'saju'      as const, sub: '사주팔자 분석' },
+  { icon: '🔮', label: '오늘의 운세', dest: 'today'     as const, sub: '오늘 일운 분석' },
+  { icon: '⏰', label: '내일의 운세', dest: 'tomorrow'  as const, sub: '내일 미리보기' },
+  { icon: '📊', label: '대운 분석',  dest: 'daun'      as const, sub: '10년 대운 흐름' },
 ]
 
 export default function HomePage({ user, onNavigate, onLogout }: Props) {
@@ -73,7 +73,7 @@ export default function HomePage({ user, onNavigate, onLogout }: Props) {
         <div className="flex items-center justify-between px-1">
           <p className="text-xs text-stone-400">{today.getFullYear()}년 {month}월 {day}일</p>
           <button
-            onClick={() => onNavigate('fortune-today')}
+            onClick={() => onNavigate('today')}
             className="text-xs text-violet-500 font-medium hover:text-violet-700 transition"
           >
             오늘의 운세 확인하기 →
