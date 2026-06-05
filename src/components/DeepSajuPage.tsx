@@ -198,7 +198,7 @@ export default function DeepSajuPage({ savedBirth, onBack }: Props) {
                 className="w-full py-4 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-bold rounded-2xl shadow-lg shadow-violet-200 hover:from-violet-500 hover:to-purple-500 transition-all text-sm active:scale-[0.99] flex items-center justify-center gap-2"
               >
                 <span className="text-base">✨</span>
-                <span>50코인으로 전체 잠금 해제</span>
+                <span>1코인으로 전체 잠금 해제</span>
               </button>
               <p className="text-center text-[11px] text-stone-300 mt-2.5">1회 결제 · 동일 계정 영구 열람</p>
             </div>
@@ -234,7 +234,7 @@ export default function DeepSajuPage({ savedBirth, onBack }: Props) {
         {!isFreeUsed && unlocked && (
           <div className="bg-violet-50 border border-violet-100 rounded-2xl px-4 py-3 text-center">
             <p className="text-xs text-violet-600 font-semibold">🎉 첫 심층 해석은 무료로 제공됩니다!</p>
-            <p className="text-[11px] text-violet-400 mt-0.5">다음 방문부터는 50코인이 필요합니다</p>
+            <p className="text-[11px] text-violet-400 mt-0.5">다음 방문부터는 1코인이 필요합니다</p>
           </div>
         )}
 
