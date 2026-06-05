@@ -79,36 +79,44 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-red-50">
+    <div className="min-h-screen bg-zinc-950 relative overflow-x-hidden">
+      {/* 배경 글로우 */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full bg-amber-500/8 blur-[120px] pointer-events-none" />
+
       {/* 상단 바 */}
-      <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-sm border-b border-stone-100">
+      <div className="sticky top-0 z-10 bg-zinc-950/90 backdrop-blur-md border-b border-white/[0.06]">
         <div className="max-w-2xl mx-auto px-4 pt-3 pb-0">
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <h1 className="text-base font-bold text-stone-700 font-korean">사주팔자 결과</h1>
-              <p className="text-xs text-stone-400">
+              <h1
+                className="text-base font-bold text-white"
+                style={{ fontFamily: "'Noto Serif KR', serif" }}
+              >
+                사주팔자 결과
+              </h1>
+              <p className="text-xs text-zinc-500">
                 {input.year}.{String(input.month).padStart(2,'0')}.{String(input.day).padStart(2,'0')}
                 &nbsp;{hourLabel}&nbsp;·&nbsp;{input.gender === 'male' ? '남성' : '여성'}
               </p>
             </div>
             <button
               onClick={handleReset}
-              className="text-sm text-amber-600 font-medium bg-amber-50 px-3 py-1.5 rounded-xl hover:bg-amber-100 transition"
+              className="text-xs text-zinc-400 border border-zinc-700 px-3 py-1.5 rounded-xl hover:border-zinc-500 hover:text-white transition"
             >
               다시 입력
             </button>
           </div>
 
-          {/* 탭 */}
-          <div className="flex gap-1">
+          {/* 탭 — 필 스타일 */}
+          <div className="flex bg-zinc-900/70 rounded-2xl p-1 gap-1 mb-1">
             {TABS.map(t => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`flex-1 py-2 text-sm font-semibold rounded-t-xl transition-all ${
+                className={`flex-1 py-2 text-sm font-semibold rounded-xl transition-all ${
                   tab === t.id
-                    ? 'bg-amber-500 text-white'
-                    : 'text-stone-500 hover:text-stone-700 hover:bg-stone-100'
+                    ? 'bg-amber-500 text-white shadow-lg shadow-amber-500/20'
+                    : 'text-zinc-500 hover:text-zinc-300'
                 }`}
               >
                 {t.label}
@@ -119,30 +127,40 @@ export default function App() {
       </div>
 
       {/* 콘텐츠 */}
-      <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
-        {/* 공통 배너 */}
-        <div className="bg-gradient-to-r from-amber-500 to-orange-500 rounded-3xl p-5 text-white shadow-lg">
-          <p className="text-amber-100 text-sm mb-1">
+      <div className="max-w-2xl mx-auto px-4 py-5 space-y-4 relative z-10">
+        {/* 배너 */}
+        <div className="bg-gradient-to-br from-amber-500/20 to-orange-600/10 border border-amber-500/20 rounded-3xl p-5">
+          <p className="text-amber-400/70 text-xs mb-2">
             {input.year}년 {input.month}월 {input.day}일생
           </p>
-          <span className="text-4xl font-bold tracking-wide">
+          <div
+            className="text-4xl font-bold tracking-wide text-white mb-1"
+            style={{ fontFamily: "'Noto Serif KR', serif", textShadow: '0 0 40px rgba(245,158,11,0.3)' }}
+          >
             {pillarName(result.yearPillar)}
             {pillarName(result.monthPillar)}
             {pillarName(result.dayPillar)}
             {result.hourPillar   ? pillarName(result.hourPillar)   : ''}
             {result.minutePillar ? pillarName(result.minutePillar) : ''}
-          </span>
-          <p className="text-amber-200 text-sm mt-1">
+          </div>
+          <p className="text-zinc-500 text-sm mb-2">
             ({pillarNameKo(result.yearPillar)}{pillarNameKo(result.monthPillar)}
             {pillarNameKo(result.dayPillar)}
             {result.hourPillar   ? pillarNameKo(result.hourPillar)   : ''}
             {result.minutePillar ? pillarNameKo(result.minutePillar) : ''})
           </p>
-          <p className="text-amber-100 text-xs mt-2">
-            일간 {dayStem.hanja}({dayStem.ko}) &middot;
-            {dayStem.element === 'wood' ? ' 목(木)' : dayStem.element === 'fire' ? ' 화(火)' : dayStem.element === 'earth' ? ' 토(土)' : dayStem.element === 'metal' ? ' 금(金)' : ' 수(水)'}
-            {dayStem.yinYang === 'yang' ? ' 양(陽)' : ' 음(陰)'} &middot; {dayBranch.animal}띠
-          </p>
+          <div className="flex gap-2 flex-wrap">
+            <span className="text-xs bg-amber-500/15 text-amber-400 border border-amber-500/20 px-2.5 py-1 rounded-full">
+              {dayStem.hanja}({dayStem.ko}) 일간
+            </span>
+            <span className="text-xs bg-white/5 text-zinc-400 border border-white/10 px-2.5 py-1 rounded-full">
+              {dayStem.element === 'wood' ? '목(木)' : dayStem.element === 'fire' ? '화(火)' : dayStem.element === 'earth' ? '토(土)' : dayStem.element === 'metal' ? '금(金)' : '수(水)'}
+              {dayStem.yinYang === 'yang' ? ' 양' : ' 음'}
+            </span>
+            <span className="text-xs bg-white/5 text-zinc-400 border border-white/10 px-2.5 py-1 rounded-full">
+              {dayBranch.animal}띠
+            </span>
+          </div>
         </div>
 
         {/* 탭별 콘텐츠 */}
@@ -153,11 +171,9 @@ export default function App() {
             <FortuneReading result={result} count={ohaeng} />
           </>
         )}
-
         {tab === 'fortune' && (
           <FortuneTabs result={result} ohaeng={ohaeng} />
         )}
-
         {tab === 'analysis' && (
           <>
             <SipsinChart result={result} />
@@ -168,7 +184,9 @@ export default function App() {
         {/* 요약 카드 버튼 */}
         <button
           onClick={() => { setPage('summary'); window.scrollTo(0, 0) }}
-          className="w-full py-4 bg-gradient-to-r from-stone-800 to-stone-700 text-white font-bold rounded-3xl shadow-lg hover:from-stone-700 hover:to-stone-600 transition-all duration-200 text-base flex items-center justify-center gap-2"
+          className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-3xl
+            shadow-lg shadow-amber-500/20 hover:shadow-amber-500/30 hover:from-amber-400 hover:to-orange-400
+            transition-all text-base flex items-center justify-center gap-2 active:scale-[0.99]"
         >
           <span>나의 사주 요약 카드 보기</span>
           <span className="text-lg">→</span>

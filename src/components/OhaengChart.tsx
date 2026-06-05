@@ -7,13 +7,8 @@ interface Props {
 }
 
 const ELEMENT_EMOJI: Record<string, string> = {
-  wood:  '🌳',
-  fire:  '🔥',
-  earth: '🪨',
-  metal: '⚔️',
-  water: '💧',
+  wood: '🌳', fire: '🔥', earth: '🪨', metal: '⚔️', water: '💧',
 }
-
 const ELEMENT_TRAITS: Record<string, string> = {
   wood:  '성장·인자·창의',
   fire:  '열정·예의·표현',
@@ -23,33 +18,36 @@ const ELEMENT_TRAITS: Record<string, string> = {
 }
 
 export default function OhaengChart({ count, hasHour }: Props) {
-  const total = hasHour ? 8 : 6
+  const total    = hasHour ? 8 : 6
   const elements = ['wood', 'fire', 'earth', 'metal', 'water'] as const
-
   const strongest = elements.reduce((a, b) => count[a] >= count[b] ? a : b)
   const weakest   = elements.reduce((a, b) => count[a] <= count[b] ? a : b)
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-stone-100 p-6">
-      <h2 className="text-lg font-bold text-stone-700 mb-5 font-korean">오행 분포 (五行)</h2>
+    <div className="bg-zinc-900 rounded-3xl border border-zinc-800 p-6">
+      <h2
+        className="text-base font-bold text-white mb-5"
+        style={{ fontFamily: "'Noto Serif KR', serif" }}
+      >
+        오행 분포 (五行)
+      </h2>
 
-      <div className="space-y-3">
+      <div className="space-y-3.5">
         {elements.map(el => {
-          const n     = count[el]
-          const pct   = Math.round((n / total) * 100)
-          const color = ELEMENT_COLORS[el]
+          const n   = count[el]
+          const pct = (n / total) * 100
+          const c   = ELEMENT_COLORS[el]
           return (
             <div key={el} className="flex items-center gap-3">
-              <span className="text-lg w-6">{ELEMENT_EMOJI[el]}</span>
-              <span className="w-16 text-sm font-medium text-stone-600">{ELEMENT_LABELS[el]}</span>
-              <div className="flex-1 bg-stone-100 rounded-full h-4 overflow-hidden">
+              <span className="text-base w-5">{ELEMENT_EMOJI[el]}</span>
+              <span className="w-14 text-sm text-zinc-400">{ELEMENT_LABELS[el]}</span>
+              <div className="flex-1 bg-zinc-800 rounded-full h-3 overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-700"
-                  style={{ width: `${(n / total) * 100}%`, backgroundColor: color }}
+                  style={{ width: `${pct}%`, backgroundColor: c, boxShadow: `0 0 8px ${c}66` }}
                 />
               </div>
-              <span className="w-8 text-right text-sm font-bold" style={{ color }}>{n}</span>
-              <span className="w-8 text-right text-xs text-stone-400">{pct}%</span>
+              <span className="w-4 text-right text-sm font-bold" style={{ color: c }}>{n}</span>
             </div>
           )
         })}
@@ -58,21 +56,21 @@ export default function OhaengChart({ count, hasHour }: Props) {
       <div className="mt-5 grid grid-cols-2 gap-3">
         <div
           className="rounded-2xl p-3 border"
-          style={{ backgroundColor: ELEMENT_COLORS[strongest] + '15', borderColor: ELEMENT_COLORS[strongest] + '40' }}
+          style={{ backgroundColor: ELEMENT_COLORS[strongest] + '12', borderColor: ELEMENT_COLORS[strongest] + '30' }}
         >
-          <p className="text-xs text-stone-400 mb-1">강한 기운</p>
-          <p className="font-bold" style={{ color: ELEMENT_COLORS[strongest] }}>
+          <p className="text-xs text-zinc-500 mb-1">강한 기운</p>
+          <p className="font-bold text-sm" style={{ color: ELEMENT_COLORS[strongest] }}>
             {ELEMENT_EMOJI[strongest]} {ELEMENT_LABELS[strongest]}
           </p>
-          <p className="text-xs text-stone-500 mt-0.5">{ELEMENT_TRAITS[strongest]}</p>
+          <p className="text-xs text-zinc-600 mt-0.5">{ELEMENT_TRAITS[strongest]}</p>
         </div>
         {count[weakest] < count[strongest] && (
-          <div className="rounded-2xl p-3 border border-stone-100 bg-stone-50">
-            <p className="text-xs text-stone-400 mb-1">약한 기운 (보완 필요)</p>
-            <p className="font-bold text-stone-500">
+          <div className="rounded-2xl p-3 border border-zinc-700/50 bg-zinc-800/50">
+            <p className="text-xs text-zinc-500 mb-1">약한 기운 (보완)</p>
+            <p className="font-bold text-sm" style={{ color: ELEMENT_COLORS[weakest] }}>
               {ELEMENT_EMOJI[weakest]} {ELEMENT_LABELS[weakest]}
             </p>
-            <p className="text-xs text-stone-400 mt-0.5">{ELEMENT_TRAITS[weakest]}</p>
+            <p className="text-xs text-zinc-600 mt-0.5">{ELEMENT_TRAITS[weakest]}</p>
           </div>
         )}
       </div>
