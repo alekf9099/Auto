@@ -20,7 +20,7 @@ import SummaryPage    from './components/SummaryPage'
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'login' | 'profile' | 'home' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'form' | 'loading' | 'result' | 'summary'
+type Page = 'login' | 'profile' | 'analyzing' | 'home' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'form' | 'loading' | 'result' | 'summary'
 type Tab  = 'saju' | 'fortune' | 'analysis'
 
 const TABS: { id: Tab; label: string }[] = [
@@ -67,7 +67,7 @@ export default function App() {
 
   function handleProfileSave(b: BirthInput) {
     saveBirthProfile(b)
-    setPage('home')
+    setPage('analyzing')
     window.scrollTo(0, 0)
   }
 
@@ -101,6 +101,9 @@ export default function App() {
 
   // ── 프로필 설정 ──────────────────────────────────────────────────────
   if (page === 'profile' && user) return <ProfileSetupPage user={user} onSave={handleProfileSave} />
+
+  // ── 프로필 저장 후 분석 중 ────────────────────────────────────────────
+  if (page === 'analyzing') return <LoadingScreen onComplete={() => { setPage('home'); window.scrollTo(0, 0) }} />
 
   // ── 홈 ──────────────────────────────────────────────────────────────
   if (page === 'home' && user) {
