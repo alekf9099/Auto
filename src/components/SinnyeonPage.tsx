@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin } from '../utils/saju'
 import { STEMS, ELEMENT_COLORS } from '../utils/constants'
-import { YEARLY_FORTUNE } from '../utils/fortuneData'
+import { YEARLY_FORTUNE, MONTHLY_FORTUNE } from '../utils/fortuneData'
 
 interface Props {
   savedBirth?: BirthInput | null
@@ -11,26 +11,65 @@ interface Props {
 }
 
 // 2026 = 병오년 (丙午) — stemIndex 2
-const YEAR_2026_STEM = 2   // 丙 fire yang
+const YEAR_2026_STEM = 2
 
-const MONTH_LUCK: string[] = [
-  '변화의 기운이 강합니다. 새로운 계획을 구체화하기 좋은 달입니다.',
-  '인내가 필요한 달입니다. 조용히 실력을 쌓으세요.',
-  '봄의 기운과 함께 활력이 넘치는 달입니다. 적극적으로 행동하세요.',
-  '귀인의 도움이 따르는 달입니다. 주변과의 협력이 빛납니다.',
-  '재물운이 상승하는 달입니다. 기회를 놓치지 마세요.',
-  '애정운이 좋아지는 달입니다. 소중한 사람에게 마음을 표현하세요.',
-  '직업·사업에서 성과가 나타나는 달입니다. 자신감을 가지세요.',
-  '건강 관리에 집중하는 달입니다. 무리하지 않고 충전하세요.',
-  '마무리를 잘 해야 하는 달입니다. 주변 정리와 계획 점검이 중요합니다.',
-  '새로운 도전의 싹이 트는 달입니다. 내년을 위한 준비를 시작하세요.',
-  '인간관계에서 기쁜 소식이 있는 달입니다. 사교 활동을 즐기세요.',
-  '한 해를 마무리하며 복이 모이는 달입니다. 감사한 마음으로 정리하세요.',
-]
+// 2026년 각 월의 월간(月干) — 해당 월 15일 기준 계산
+const MONTH_STEMS_2026 = Array.from({ length: 12 }, (_, i) =>
+  calculateSaju({ year: 2026, month: i + 1, day: 15, hour: 12, minute: null, gender: 'male' }).monthPillar.stemIndex
+)
 
 function Stars({ n }: { n: number }) {
   return (
     <span className="text-amber-400">{'★'.repeat(n)}<span className="text-stone-200">{'★'.repeat(5 - n)}</span></span>
+  )
+}
+
+function MonthlySection({ dayStemIdx }: { dayStemIdx: number }) {
+  const [open, setOpen] = useState<number | null>(null)
+
+  return (
+    <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-6">
+      <div className="flex items-center gap-2 mb-4">
+        <div className="w-1 h-5 bg-violet-500 rounded-full" />
+        <h2 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>월별 운세 흐름</h2>
+        <span className="text-xs text-stone-400 ml-1">사주 기반 · 2026년</span>
+      </div>
+      <div className="space-y-2">
+        {MONTH_STEMS_2026.map((stemIdx, i) => {
+          const sipsin  = getSipsin(dayStemIdx, stemIdx) ?? '비견'
+          const data    = MONTHLY_FORTUNE[sipsin] ?? MONTHLY_FORTUNE['비견']
+          const monthStem = STEMS[stemIdx]
+          const isOpen  = open === i
+          return (
+            <div key={i} className="border border-stone-100 rounded-2xl overflow-hidden">
+              <button
+                className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-stone-50 transition"
+                onClick={() => setOpen(isOpen ? null : i)}
+              >
+                <span className="text-xs font-bold text-stone-400 w-6 shrink-0">{i + 1}월</span>
+                <span
+                  className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
+                  style={{ color: ELEMENT_COLORS[monthStem.element], backgroundColor: ELEMENT_COLORS[monthStem.element] + '18' }}
+                >
+                  {sipsin}
+                </span>
+                <span className="flex-1 text-xs text-stone-400 truncate">{data.조언.slice(0, 20)}…</span>
+                <Stars n={data.star} />
+                <span className="text-stone-300 text-xs ml-1">{isOpen ? '▲' : '▼'}</span>
+              </button>
+              {isOpen && (
+                <div className="px-4 pb-4">
+                  <div className="h-px bg-stone-100 mb-3" />
+                  <p className="text-xs font-semibold text-violet-600 mb-1.5">✨ {i + 1}월 조언</p>
+                  <p className="text-sm text-stone-500 leading-relaxed mb-3">{data.조언}</p>
+                  <p className="text-sm text-stone-500 leading-relaxed">{data.총평}</p>
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </div>
   )
 }
 
@@ -203,27 +242,8 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
               <p className="text-sm text-stone-600 leading-relaxed">{fortune.조언}</p>
             </div>
 
-            {/* 월별 운세 */}
-            <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-1 h-5 bg-violet-500 rounded-full" />
-                <h2 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>월별 운세 흐름</h2>
-              </div>
-              <div className="space-y-2">
-                {MONTH_LUCK.map((text, i) => {
-                  const score = Math.min(5, Math.max(1, fortune.star + (([1,2,-1,0,1,-1,2,0,1,-1,0,1][i] ?? 0))))
-                  return (
-                    <div key={i} className="flex gap-3 items-start py-2.5 border-b border-stone-50 last:border-0">
-                      <span className="text-xs font-bold text-stone-400 w-8 shrink-0 pt-0.5">{i + 1}월</span>
-                      <div className="flex-1">
-                        <p className="text-xs text-stone-500 leading-relaxed">{text}</p>
-                      </div>
-                      <div className="shrink-0 text-xs"><Stars n={score} /></div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
+            {/* 월별 운세 — 사주 십신 기반 */}
+            <MonthlySection dayStemIdx={dayStemIdx} />
 
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
