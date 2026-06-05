@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react'
 import type { BirthInput, SajuResult, UserInfo } from './types'
 import { calculateSaju, getOhaengCount, pillarName, pillarNameKo } from './utils/saju'
 import { STEMS, BRANCHES } from './utils/constants'
-import LoginPage      from './components/LoginPage'
-import HomePage       from './components/HomePage'
+import LoginPage        from './components/LoginPage'
+import ProfileSetupPage from './components/ProfileSetupPage'
+import HomePage         from './components/HomePage'
 import SinnyeonPage   from './components/SinnyeonPage'
 import TojeongPage    from './components/TojeongPage'
 import DayFortunePage from './components/DayFortunePage'
@@ -19,7 +20,7 @@ import SummaryPage    from './components/SummaryPage'
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'login' | 'home' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'form' | 'loading' | 'result' | 'summary'
+type Page = 'login' | 'profile' | 'home' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'form' | 'loading' | 'result' | 'summary'
 type Tab  = 'saju' | 'fortune' | 'analysis'
 
 const TABS: { id: Tab; label: string }[] = [
@@ -58,9 +59,20 @@ export default function App() {
 
   function goHome() { setPage('home'); window.scrollTo(0, 0) }
 
-  function handleLogin(u: UserInfo) { setUser(u); setPage('home'); window.scrollTo(0, 0) }
+  function handleLogin(u: UserInfo) {
+    setUser(u)
+    setPage(loadBirthProfile() ? 'home' : 'profile')
+    window.scrollTo(0, 0)
+  }
+
+  function handleProfileSave(b: BirthInput) {
+    saveBirthProfile(b)
+    setPage('home')
+    window.scrollTo(0, 0)
+  }
 
   function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun') {
+    if (!birthProfile) { setPage('profile'); window.scrollTo(0, 0); return }
     if (dest === 'sinnyeon') { setPage('sinnyeon'); window.scrollTo(0, 0); return }
     if (dest === 'tojeong')  { setPage('tojeong');  window.scrollTo(0, 0); return }
     if (dest === 'today')    { setPage('today');    window.scrollTo(0, 0); return }
@@ -87,6 +99,9 @@ export default function App() {
   // ── 로그인 ───────────────────────────────────────────────────────────
   if (page === 'login') return <LoginPage onLogin={handleLogin} />
 
+  // ── 프로필 설정 ──────────────────────────────────────────────────────
+  if (page === 'profile' && user) return <ProfileSetupPage user={user} onSave={handleProfileSave} />
+
   // ── 홈 ──────────────────────────────────────────────────────────────
   if (page === 'home' && user) {
     return (
@@ -94,6 +109,7 @@ export default function App() {
         user={user}
         birthProfile={birthProfile}
         onNavigate={handleHomeNavigate}
+        onEditProfile={() => { setPage('profile'); window.scrollTo(0, 0) }}
         onLogout={() => { setUser(null); setPage('login'); window.scrollTo(0, 0) }}
       />
     )
@@ -159,7 +175,7 @@ export default function App() {
                 홈
               </button>
               <button
-                onClick={() => { setInput(null); setResult(null); setBirthProfile(null); localStorage.removeItem(STORAGE_KEY); setPage('form') }}
+                onClick={() => { setInput(null); setResult(null); setBirthProfile(null); localStorage.removeItem(STORAGE_KEY); setPage('profile'); window.scrollTo(0, 0) }}
                 className="text-xs text-violet-600 font-semibold bg-violet-50 border border-violet-200 px-3 py-1.5 rounded-xl hover:bg-violet-100 transition"
               >
                 정보 수정

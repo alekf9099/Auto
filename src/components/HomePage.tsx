@@ -4,6 +4,7 @@ interface Props {
   user: UserInfo
   birthProfile: BirthInput | null
   onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun') => void
+  onEditProfile: () => void
   onLogout: () => void
 }
 
@@ -16,7 +17,7 @@ const MENU = [
   { icon: '📊', label: '대운 분석',  dest: 'daun'      as const, sub: '10년 대운 흐름' },
 ]
 
-export default function HomePage({ user, birthProfile, onNavigate, onLogout }: Props) {
+export default function HomePage({ user, birthProfile, onNavigate, onEditProfile, onLogout }: Props) {
   const today = new Date()
   const month = today.getMonth() + 1
   const day   = today.getDate()
@@ -93,7 +94,7 @@ export default function HomePage({ user, birthProfile, onNavigate, onLogout }: P
               </p>
             </div>
             <button
-              onClick={() => onNavigate('saju')}
+              onClick={onEditProfile}
               className="text-xs text-violet-500 font-semibold hover:text-violet-700 transition"
             >
               수정
