@@ -13,6 +13,7 @@ import SinnyeonPage   from './components/SinnyeonPage'
 import TojeongPage    from './components/TojeongPage'
 import DayFortunePage from './components/DayFortunePage'
 import GunghabPage    from './components/GunghabPage'
+import DeepSajuPage  from './components/DeepSajuPage'
 import BirthForm      from './components/BirthForm'
 import LoadingScreen  from './components/LoadingScreen'
 import SajuChart      from './components/SajuChart'
@@ -25,7 +26,7 @@ import SummaryPage    from './components/SummaryPage'
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'gunghab' | 'form' | 'loading' | 'result' | 'summary'
+type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'gunghab' | 'deepsaju' | 'form' | 'loading' | 'result' | 'summary'
 type Tab  = 'saju' | 'fortune' | 'analysis'
 
 const TABS: { id: Tab; label: string }[] = [
@@ -55,9 +56,9 @@ export default function App() {
     const BACK_MAP: Partial<Record<Page, Page>> = {
       profile: 'login', analyzing: 'home', attendance: 'home',
       sinnyeon: 'home', tojeong: 'home', today: 'home', tomorrow: 'home',
-      gunghab: 'home', form: 'home', loading: 'home', result: 'home', summary: 'result',
+      gunghab: 'home', deepsaju: 'home', form: 'home', loading: 'home', result: 'home', summary: 'result',
     }
-    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','tomorrow','gunghab','form','result','summary','profile','analyzing']
+    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','tomorrow','gunghab','deepsaju','form','result','summary','profile','analyzing']
     if (navigable.includes(page)) history.pushState({ page }, '')
 
     function onPop() {
@@ -101,7 +102,7 @@ export default function App() {
     window.scrollTo(0, 0)
   }
 
-  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun' | 'gunghab') {
+  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun' | 'gunghab' | 'deepsaju') {
     if (!birthProfile) { setPage('profile'); window.scrollTo(0, 0); return }
     // 기능 첫 사용 하루 1회 +5P
     const LABELS: Record<string, string> = {
@@ -109,6 +110,7 @@ export default function App() {
       today: '오늘의 운세 확인 🔮', tomorrow: '내일의 운세 확인 ⏰',
       saju: '정통사주 확인 ☯', daun: '대운 분석 확인 📊',
       gunghab: '궁합 확인 💕',
+      deepsaju: '심층 사주 해석 🔮',
     }
     const { next, claimed } = tryFeatureBonus(points, dest, LABELS[dest] ?? dest)
     if (claimed) setPoints(next)
@@ -117,6 +119,7 @@ export default function App() {
     if (dest === 'today')    { setPage('today');    window.scrollTo(0, 0); return }
     if (dest === 'tomorrow') { setPage('tomorrow'); window.scrollTo(0, 0); return }
     if (dest === 'gunghab')  { setPage('gunghab');  window.scrollTo(0, 0); return }
+    if (dest === 'deepsaju') { setPage('deepsaju'); window.scrollTo(0, 0); return }
     if (dest === 'daun') {
       if (result) { setTab('analysis'); setPage('result') } else { setPage('form') }
       window.scrollTo(0, 0); return
@@ -179,6 +182,9 @@ export default function App() {
 
   // ── 궁합 ────────────────────────────────────────────────────────────
   if (page === 'gunghab') return <GunghabPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
+
+  // ── 심층 사주 해석 ────────────────────────────────────────────────────
+  if (page === 'deepsaju') return <DeepSajuPage savedBirth={birthProfile} onBack={goHome} />
 
   // ── 사주 입력 폼 ─────────────────────────────────────────────────────
   if (page === 'form') return <BirthForm savedBirth={birthProfile} onSubmit={handleSubmit} />
