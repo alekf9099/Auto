@@ -180,7 +180,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
 
   return (
     <div className="min-h-screen bg-[#F4F2FF]">
-      <div className="bg-white border-b border-stone-100 sticky top-0 z-10">
+      <div className="bg-white border-b border-stone-100 sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} className="text-stone-400 hover:text-stone-600 transition text-lg">←</button>
           <div>

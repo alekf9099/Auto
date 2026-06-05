@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { UserInfo, BirthInput } from '../types'
 import type { PointsState } from '../utils/points'
 import { tryClaimDaily } from '../utils/points'
@@ -69,7 +69,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
   const [showPoints, setShowPoints] = useState(false)
   const [dailyToast, setDailyToast] = useState(false)
   const [bannerIdx,  setBannerIdx]  = useState(0)
-  const [dragStartX, setDragStartX] = useState<number | null>(null)
+  const touchStartX = useRef<number | null>(null)
 
   useEffect(() => {
     const { next, claimed } = tryClaimDaily(points)
@@ -86,12 +86,12 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
     return () => clearInterval(t)
   }, [])
 
-  function handleDragEnd(endX: number) {
-    if (dragStartX === null) return
-    const diff = dragStartX - endX
+  function handleSwipeEnd(endX: number) {
+    if (touchStartX.current === null) return
+    const diff = touchStartX.current - endX
     if (diff > 40)       setBannerIdx(p => (p + 1) % BANNERS.length)
     else if (diff < -40) setBannerIdx(p => (p - 1 + BANNERS.length) % BANNERS.length)
-    setDragStartX(null)
+    touchStartX.current = null
   }
 
   return (
@@ -137,9 +137,10 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
         <div>
           <div
             className="overflow-hidden rounded-3xl shadow-md select-none"
-            onPointerDown={e => setDragStartX(e.clientX)}
-            onPointerUp={e => handleDragEnd(e.clientX)}
-            onPointerLeave={() => setDragStartX(null)}
+            onTouchStart={e => { touchStartX.current = e.touches[0].clientX }}
+            onTouchEnd={e => handleSwipeEnd(e.changedTouches[0].clientX)}
+            onMouseDown={e => { touchStartX.current = e.clientX }}
+            onMouseUp={e => handleSwipeEnd(e.clientX)}
           >
             <div
               className="flex transition-transform duration-500 ease-out"
