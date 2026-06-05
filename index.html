@@ -14,7 +14,21 @@
     <script src="https://accounts.google.com/gsi/client" async></script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><div id="_s" style="min-height:100svh;background:#F4F2FF;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;overflow:hidden;position:relative">
+      <!-- blob decorations -->
+      <div style="position:absolute;top:-80px;right:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(167,139,250,.45),transparent 70%);pointer-events:none"></div>
+      <div style="position:absolute;bottom:-60px;left:-40px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(196,181,253,.4),transparent 70%);pointer-events:none"></div>
+      <!-- logo ring -->
+      <div style="position:relative;width:180px;height:180px;display:flex;align-items:center;justify-content:center;margin-bottom:20px">
+        <div style="position:absolute;width:176px;height:176px;border-radius:50%;border:1px solid rgba(167,139,250,.4)"></div>
+        <div style="position:absolute;width:136px;height:136px;border-radius:50%;border:1px solid rgba(167,139,250,.3)"></div>
+        <div style="width:92px;height:92px;border-radius:50%;background:linear-gradient(135deg,#A78BFA,#7C3AED);padding:3px">
+          <div style="width:100%;height:100%;border-radius:50%;background:#F4F2FF;display:flex;align-items:center;justify-content:center;font-size:46px;color:#7C3AED;font-family:serif">☯</div>
+        </div>
+      </div>
+      <p style="font-size:30px;font-weight:700;color:#1c1917;font-family:'Noto Serif KR',serif,sans-serif;margin:0 0 6px">운명봄</p>
+      <p style="font-size:13px;color:#a8a29e;margin:0">당신의 운명을 봅니다</p>
+    </div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
