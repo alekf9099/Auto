@@ -47,23 +47,36 @@ export default function ProfileSetupPage({ user, onSave }: Props) {
     <div className="min-h-screen bg-[#F4F2FF] flex flex-col">
 
       {/* 상단 인사 영역 */}
-      <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] px-6 pt-14 pb-10 text-center">
-        <div className="flex justify-center mb-4">
+      <div className="px-6 pt-14 pb-8 text-center">
+        {/* 앱 로고 */}
+        <div className="flex justify-center mb-5">
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-violet-200/50 blur-xl" />
+            <div className="relative w-[64px] h-[64px] rounded-full p-[2.5px]"
+              style={{ background: 'linear-gradient(135deg, #A78BFA, #7C3AED)' }}>
+              <div className="w-full h-full rounded-full bg-[#F4F2FF] flex items-center justify-center">
+                <span className="text-3xl" style={{ color: '#7C3AED', fontFamily: 'serif' }}>☯</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* 사용자 프로필 */}
+        <div className="flex items-center justify-center gap-2.5 mb-3">
           {user.picture ? (
             <img src={user.picture} alt={user.name}
-              className="w-16 h-16 rounded-full border-2 border-violet-400/40 object-cover" />
+              className="w-8 h-8 rounded-full border border-violet-200 object-cover" />
           ) : (
-            <div className="w-16 h-16 rounded-full bg-violet-500/30 border-2 border-violet-400/40 flex items-center justify-center">
-              <span className="text-white text-2xl font-bold">{user.name[0]}</span>
+            <div className="w-8 h-8 rounded-full bg-violet-100 border border-violet-200 flex items-center justify-center">
+              <span className="text-violet-600 text-sm font-bold">{user.name[0]}</span>
             </div>
           )}
+          <p className="text-stone-600 text-sm font-semibold">{user.name}님, 반가워요</p>
         </div>
-        <p className="text-violet-300/80 text-sm mb-1">반가워요,</p>
-        <h1 className="text-xl font-bold text-white mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-          {user.name}님
+        <h1 className="text-xl font-bold text-stone-800 mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+          내 정보 입력
         </h1>
-        <p className="text-violet-300/60 text-xs leading-relaxed">
-          정확한 운세 분석을 위해<br />생년월일 정보를 입력해 주세요
+        <p className="text-stone-400 text-xs leading-relaxed">
+          정확한 운세 분석을 위해 생년월일을 입력해 주세요
         </p>
       </div>
 

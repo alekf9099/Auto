@@ -45,18 +45,22 @@ export default function LoadingScreen({ onComplete }: Props) {
     <div className="min-h-screen bg-[#F4F2FF] flex flex-col items-center justify-center px-8">
       {/* 아이콘 */}
       <div className="relative mb-10 flex items-center justify-center">
-        <div className="w-28 h-28 rounded-3xl bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center shadow-2xl shadow-violet-200">
+        {/* 바깥 글로우 */}
+        <div className="absolute w-36 h-36 rounded-full bg-violet-200/40 blur-2xl" />
+        {/* 회전 링 */}
+        <div
+          className="absolute rounded-full border-[3px] border-violet-100 border-t-violet-400 animate-spin"
+          style={{ width: 124, height: 124, animationDuration: '1.4s' }}
+        />
+        {/* 아이콘 원 */}
+        <div className="relative w-24 h-24 rounded-full bg-white border border-violet-100 shadow-[0_4px_24px_rgba(124,58,237,0.18)] flex items-center justify-center">
           <span
-            className="text-5xl text-white select-none animate-spin"
-            style={{ animationDuration: '5s', fontFamily: "'Noto Serif KR', serif" }}
+            className="text-5xl select-none animate-spin"
+            style={{ color: '#7C3AED', animationDuration: '6s', fontFamily: 'serif' }}
           >
             ☯
           </span>
         </div>
-        <div
-          className="absolute rounded-full border-4 border-violet-200 border-t-violet-500 animate-spin"
-          style={{ width: 120, height: 120, animationDuration: '1.2s' }}
-        />
       </div>
 
       <h2

@@ -51,10 +51,13 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
       <div className="w-full max-w-sm mb-6 text-center">
         {/* 아이콘 */}
         <div className="relative inline-flex items-center justify-center mb-5">
-          <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center shadow-xl shadow-violet-200">
-            <span className="text-4xl text-white select-none" style={{ fontFamily: "'Noto Serif KR', serif" }}>☯</span>
+          <div className="absolute w-28 h-28 rounded-full bg-violet-200/40 blur-2xl" />
+          <div className="relative w-[80px] h-[80px] rounded-full p-[3px]"
+            style={{ background: 'linear-gradient(135deg, #A78BFA, #7C3AED)' }}>
+            <div className="w-full h-full rounded-full bg-[#F4F2FF] flex items-center justify-center">
+              <span className="text-4xl" style={{ color: '#7C3AED', fontFamily: 'serif' }}>☯</span>
+            </div>
           </div>
-          <div className="absolute -inset-1 rounded-3xl bg-violet-400/20 blur-lg -z-10" />
         </div>
         <h1
           className="text-3xl font-bold text-stone-900 mb-1"

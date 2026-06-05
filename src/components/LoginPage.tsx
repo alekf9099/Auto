@@ -61,8 +61,16 @@ export default function LoginPage({ onLogin }: Props) {
   return (
     <div className="min-h-screen bg-[#F4F2FF] flex flex-col items-center justify-center px-6">
       <div className="mb-8 flex flex-col items-center">
-        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center shadow-xl shadow-violet-300/40 mb-4">
-          <span className="text-4xl">☯</span>
+        <div className="relative flex items-center justify-center mb-5">
+          {/* 글로우 */}
+          <div className="absolute w-28 h-28 rounded-full bg-violet-200/50 blur-2xl" />
+          {/* 그라데이션 링 */}
+          <div className="relative w-[72px] h-[72px] rounded-full p-[2.5px]"
+            style={{ background: 'linear-gradient(135deg, #A78BFA, #7C3AED)' }}>
+            <div className="w-full h-full rounded-full bg-[#F4F2FF] flex items-center justify-center">
+              <span className="text-3xl" style={{ color: '#7C3AED', fontFamily: 'serif' }}>☯</span>
+            </div>
+          </div>
         </div>
         <h1 className="text-2xl font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>운명봄</h1>
         <p className="text-sm text-stone-400 mt-1">당신의 운명을 봅니다</p>
