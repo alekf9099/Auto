@@ -42,11 +42,33 @@ export default function LoadingScreen({ onComplete }: Props) {
   }, [onComplete])
 
   return (
-    <div className="min-h-screen bg-[#F4F2FF] flex flex-col items-center justify-center px-8">
+    <div className="min-h-screen bg-[#F4F2FF] relative overflow-hidden flex flex-col items-center justify-center px-8">
+
+      {/* 배경 블롭 */}
+      <div className="absolute -top-20 -right-16 w-72 h-72 rounded-full bg-violet-200/45 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-16 -left-12 w-64 h-64 rounded-full bg-purple-200/40 blur-3xl pointer-events-none" />
+
+      {/* 배경 산점 */}
+      {[
+        { ch: '木', x: '9%',  y: '14%', c: '#86EFAC' },
+        { ch: '火', x: '86%', y: '12%', c: '#FCA5A5' },
+        { ch: '水', x: '7%',  y: '74%', c: '#93C5FD' },
+        { ch: '金', x: '88%', y: '70%', c: '#D1D5DB' },
+        { ch: '✦',  x: '78%', y: '35%', c: '#C4B5FD' },
+        { ch: '⋆',  x: '18%', y: '55%', c: '#DDD6FE' },
+      ].map((d, i) => (
+        <span key={i} className="absolute select-none pointer-events-none text-xs font-bold"
+          style={{ left: d.x, top: d.y, color: d.c, opacity: 0.7 }}>
+          {d.ch}
+        </span>
+      ))}
+
       {/* 아이콘 */}
       <div className="relative mb-10 flex items-center justify-center">
         {/* 바깥 글로우 */}
-        <div className="absolute w-36 h-36 rounded-full bg-violet-200/40 blur-2xl" />
+        <div className="absolute w-40 h-40 rounded-full bg-violet-200/40 blur-2xl" />
+        {/* 장식 링 */}
+        <div className="absolute rounded-full border border-violet-200/60" style={{ width: 160, height: 160 }} />
         {/* 회전 링 */}
         <div
           className="absolute rounded-full border-[3px] border-violet-100 border-t-violet-400 animate-spin"
