@@ -9,29 +9,30 @@ interface Props {
 }
 
 const POINT_GUIDE = [
-  { icon: '🎁', label: '가입 보너스',       amount: 100, desc: '처음 가입 시 1회 지급'          },
-  { icon: '📅', label: '매일 출석 체크',     amount: 10,  desc: '하루 1회, 출석 체크 시 지급'   },
-  { icon: '🔮', label: '오늘의 운세 확인',   amount: 5,   desc: '하루 1회, 운세 확인 후 지급'   },
-  { icon: '⏰', label: '내일의 운세 확인',   amount: 5,   desc: '하루 1회, 내일 운세 확인 후'   },
-  { icon: '🗓️', label: '신년운세 확인',      amount: 5,   desc: '하루 1회, 신년운세 확인 후'    },
-  { icon: '📖', label: '토정비결 확인',      amount: 5,   desc: '하루 1회, 토정비결 확인 후'    },
-  { icon: '☯',  label: '정통사주 확인',      amount: 5,   desc: '하루 1회, 사주 확인 후 지급'   },
-  { icon: '📊', label: '대운 분석 확인',     amount: 5,   desc: '하루 1회, 대운 분석 후 지급'   },
+  { icon: '🎁', label: '가입 보너스',       amount: 100, color: '#7C3AED', bg: '#F3F0FF' },
+  { icon: '📅', label: '매일 출석 체크',     amount: 10,  color: '#059669', bg: '#ECFDF5' },
+  { icon: '🔮', label: '오늘의 운세',        amount: 5,   color: '#D97706', bg: '#FFFBEB' },
+  { icon: '⏰', label: '내일의 운세',        amount: 5,   color: '#D97706', bg: '#FFFBEB' },
+  { icon: '🗓️', label: '신년운세',          amount: 5,   color: '#2563EB', bg: '#EFF6FF' },
+  { icon: '📖', label: '토정비결',           amount: 5,   color: '#DC2626', bg: '#FFF1F2' },
+  { icon: '☯',  label: '정통사주',           amount: 5,   color: '#7C3AED', bg: '#F3F0FF' },
+  { icon: '📊', label: '대운 분석',          amount: 5,   color: '#0891B2', bg: '#ECFEFF' },
 ]
 
-const today = () => new Date().toISOString().slice(0, 10)
+const todayStr = () => new Date().toISOString().slice(0, 10)
 
-// 이번 주 날짜 배열
 function getWeekDays() {
   const d = new Date()
-  const day = d.getDay() // 0=일
+  const day = d.getDay()
   const mon = new Date(d); mon.setDate(d.getDate() - ((day + 6) % 7))
   return Array.from({ length: 7 }, (_, i) => {
     const dd = new Date(mon); dd.setDate(mon.getDate() + i)
     return {
       label: ['월','화','수','목','금','토','일'][i],
       date: dd.toISOString().slice(0, 10),
-      isToday: dd.toISOString().slice(0, 10) === today(),
+      isToday: dd.toISOString().slice(0, 10) === todayStr(),
+      isSat: i === 5,
+      isSun: i === 6,
     }
   })
 }
@@ -39,11 +40,21 @@ function getWeekDays() {
 export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
   const [points,    setPoints]    = useState<PointsState>(loadPoints)
   const [toast,     setToast]     = useState<{ amount: number; total: number } | null>(null)
-  const checkedToday = points.lastDaily === today()
-  const weekDays     = getWeekDays()
 
-  // 체크된 날짜 set
+  useEffect(() => { setPoints(loadPoints()) }, [])
+
+  const checkedToday = points.lastDaily === todayStr()
+  const weekDays     = getWeekDays()
   const checkedDates = new Set(points.history.filter(h => h.label.includes('출석')).map(h => h.date))
+
+  // 연속 출석 스트릭 계산
+  let streak = 0
+  const today = new Date()
+  for (let i = 0; i < 60; i++) {
+    const d = new Date(today); d.setDate(today.getDate() - i)
+    if (checkedDates.has(d.toISOString().slice(0, 10))) streak++
+    else break
+  }
 
   function handleCheck() {
     if (checkedToday) return
@@ -54,10 +65,6 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
       setToast({ amount: 10, total: next.balance })
     }
   }
-
-  useEffect(() => {
-    setPoints(loadPoints())
-  }, [])
 
   return (
     <div className="min-h-screen bg-[#F4F2FF]">
@@ -71,91 +78,137 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
             <h1 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>출석 체크</h1>
             <p className="text-xs text-stone-400">매일 출석하고 포인트를 모으세요</p>
           </div>
-          <div className="ml-auto flex items-center gap-1 bg-violet-50 border border-violet-200 px-3 py-1.5 rounded-full">
-            <span className="text-xs">💎</span>
-            <span className="text-xs font-bold text-violet-600">{points.balance.toLocaleString()}P</span>
-          </div>
         </div>
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
-        {/* 이번 주 출석 캘린더 */}
+        {/* 히어로 배너 */}
+        <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl p-6 shadow-xl shadow-violet-900/20 relative overflow-hidden">
+          {/* 배경 장식 */}
+          <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-violet-500/10 -translate-y-10 translate-x-10" />
+          <div className="absolute bottom-0 left-0 w-28 h-28 rounded-full bg-purple-400/10 translate-y-8 -translate-x-6" />
+
+          <div className="relative z-10">
+            <p className="text-violet-300/70 text-xs mb-4">운명봄 포인트</p>
+            <div className="flex items-end justify-between mb-5">
+              <div>
+                <p className="text-violet-300/60 text-xs mb-1">현재 보유</p>
+                <p className="text-4xl font-bold text-white" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                  {points.balance.toLocaleString()}
+                  <span className="text-xl text-violet-300 ml-1">P</span>
+                </p>
+              </div>
+              <div className="text-right">
+                <div className="inline-flex flex-col items-center bg-white/10 border border-white/20 rounded-2xl px-4 py-2">
+                  <span className="text-2xl font-bold text-amber-400">{streak}</span>
+                  <span className="text-[10px] text-violet-300 mt-0.5">연속 출석</span>
+                </div>
+              </div>
+            </div>
+
+            {/* 출석 체크 버튼 */}
+            <button
+              onClick={handleCheck}
+              disabled={checkedToday}
+              className={`w-full py-4 rounded-2xl font-bold text-sm transition-all active:scale-[0.98] ${
+                checkedToday
+                  ? 'bg-white/10 text-violet-300 border border-violet-400/30 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-amber-400 to-orange-400 text-stone-900 shadow-lg shadow-amber-900/30 hover:from-amber-300 hover:to-orange-300'
+              }`}
+            >
+              {checkedToday ? '✓ 오늘 출석 완료 — +10P 적립됨' : '📅 출석 체크하고 +10P 받기'}
+            </button>
+          </div>
+        </div>
+
+        {/* 이번 주 캘린더 */}
         <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-5">
             <div className="w-1 h-5 bg-violet-500 rounded-full" />
             <h2 className="text-sm font-bold text-stone-800">이번 주 출석 현황</h2>
           </div>
-          <div className="grid grid-cols-7 gap-2">
+          <div className="grid grid-cols-7 gap-1.5">
             {weekDays.map(w => {
               const checked = checkedDates.has(w.date)
+              const dayNum  = new Date(w.date + 'T12:00:00').getDate()
               return (
-                <div key={w.date} className="flex flex-col items-center gap-1.5">
-                  <p className={`text-[10px] font-semibold ${w.label === '토' ? 'text-blue-400' : w.label === '일' ? 'text-red-400' : 'text-stone-400'}`}>{w.label}</p>
-                  <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm transition-all ${
-                    checked
-                      ? 'bg-violet-500 shadow-md shadow-violet-200'
+                <div key={w.date} className="flex flex-col items-center gap-2">
+                  <p className={`text-[11px] font-bold ${
+                    w.isSat ? 'text-blue-400' : w.isSun ? 'text-rose-400' : 'text-stone-400'
+                  }`}>{w.label}</p>
+                  <div className={`w-10 h-10 rounded-2xl flex flex-col items-center justify-center transition-all ${
+                    checked && w.isToday
+                      ? 'bg-gradient-to-br from-violet-500 to-purple-600 shadow-md shadow-violet-300'
+                      : checked
+                      ? 'bg-violet-100 border border-violet-200'
                       : w.isToday
-                      ? 'border-2 border-violet-400 border-dashed'
-                      : 'bg-stone-100'
+                      ? 'border-2 border-dashed border-violet-400 bg-violet-50'
+                      : 'bg-stone-50 border border-stone-100'
                   }`}>
-                    {checked ? <span className="text-white text-base">✓</span> : <span className="text-stone-300 text-xs">{new Date(w.date + 'T12:00:00').getDate()}</span>}
+                    {checked
+                      ? <span className={`text-base font-bold ${w.isToday ? 'text-white' : 'text-violet-500'}`}>✓</span>
+                      : <span className={`text-xs font-semibold ${w.isToday ? 'text-violet-600' : 'text-stone-300'}`}>{dayNum}</span>
+                    }
                   </div>
                 </div>
               )
             })}
           </div>
+          <div className="mt-4 pt-4 border-t border-stone-100 flex items-center gap-4 text-[11px] text-stone-400">
+            <span className="flex items-center gap-1.5">
+              <span className="w-3.5 h-3.5 rounded-md bg-violet-500 inline-block" />
+              출석 완료
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-3.5 h-3.5 rounded-md border-2 border-dashed border-violet-400 bg-violet-50 inline-block" />
+              오늘
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-3.5 h-3.5 rounded-md bg-stone-100 inline-block" />
+              미출석
+            </span>
+          </div>
         </div>
 
-        {/* 출석 체크 버튼 */}
-        <button
-          onClick={handleCheck}
-          disabled={checkedToday}
-          className={`w-full py-5 rounded-3xl font-bold text-base transition-all active:scale-[0.98] ${
-            checkedToday
-              ? 'bg-stone-100 text-stone-400 cursor-not-allowed'
-              : 'bg-gradient-to-r from-violet-600 to-purple-600 text-white shadow-lg shadow-violet-200 hover:from-violet-500 hover:to-purple-500'
-          }`}
-        >
-          {checkedToday ? '✓ 오늘 출석 완료 (+10P 지급됨)' : '📅 오늘 출석 체크하기 +10P'}
-        </button>
-
-        {/* 포인트 안내 */}
+        {/* 포인트 적립 안내 */}
         <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-1 h-5 bg-violet-500 rounded-full" />
-            <h2 className="text-sm font-bold text-stone-800">포인트 적립 안내</h2>
+            <h2 className="text-sm font-bold text-stone-800">포인트 적립 방법</h2>
           </div>
           <div className="space-y-2">
             {POINT_GUIDE.map(g => (
-              <div key={g.label} className="flex items-center gap-3 px-3 py-2.5 bg-stone-50 rounded-2xl">
+              <div key={g.label} className="flex items-center gap-3 px-4 py-3 rounded-2xl" style={{ backgroundColor: g.bg }}>
                 <span className="text-lg shrink-0">{g.icon}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-stone-700">{g.label}</p>
-                  <p className="text-[11px] text-stone-400">{g.desc}</p>
-                </div>
-                <span className="text-sm font-bold text-violet-600 shrink-0">+{g.amount}P</span>
+                <p className="flex-1 text-sm font-semibold" style={{ color: g.color }}>{g.label}</p>
+                <span className="text-sm font-bold shrink-0" style={{ color: g.color }}>+{g.amount}P</span>
               </div>
             ))}
           </div>
+          <p className="text-[11px] text-stone-400 text-center mt-3">하루 1회 · 매일 자정 초기화</p>
         </div>
 
         {/* 포인트 내역 */}
         <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-1 h-5 bg-violet-500 rounded-full" />
-            <h2 className="text-sm font-bold text-stone-800">포인트 내역</h2>
-            <span className="ml-auto text-xs text-stone-400">{points.balance.toLocaleString()}P 보유</span>
+            <h2 className="text-sm font-bold text-stone-800">적립 내역</h2>
+            <span className="ml-auto text-xs font-bold text-violet-500">{points.balance.toLocaleString()}P 보유</span>
           </div>
           {points.history.length === 0 ? (
-            <p className="text-center text-xs text-stone-400 py-6">아직 내역이 없습니다</p>
+            <div className="text-center py-8">
+              <p className="text-3xl mb-2">💎</p>
+              <p className="text-sm text-stone-400">아직 적립 내역이 없어요</p>
+              <p className="text-xs text-stone-300 mt-1">출석 체크부터 시작해보세요!</p>
+            </div>
           ) : (
             <div className="space-y-2">
-              {points.history.slice(0, 20).map((h, i) => (
-                <div key={i} className="flex items-center justify-between px-3 py-2.5 bg-stone-50 rounded-2xl">
+              {[...points.history].reverse().slice(0, 20).map((h, i) => (
+                <div key={i} className="flex items-center justify-between px-4 py-3 bg-stone-50 rounded-2xl">
                   <div>
-                    <p className="text-xs font-medium text-stone-700">{h.label}</p>
-                    <p className="text-[11px] text-stone-400">{h.date}</p>
+                    <p className="text-xs font-semibold text-stone-700">{h.label}</p>
+                    <p className="text-[11px] text-stone-400 mt-0.5">{h.date}</p>
                   </div>
                   <span className="text-sm font-bold text-violet-600">+{h.amount}P</span>
                 </div>
@@ -165,6 +218,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
         </div>
 
       </div>
+
       <div className="text-center pb-8 text-xs text-stone-300">운명봄 포인트는 서비스 내 전용 포인트입니다</div>
     </div>
   )
