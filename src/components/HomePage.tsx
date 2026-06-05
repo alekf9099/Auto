@@ -192,17 +192,30 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
           return (
             <button
               onClick={onAttendance}
-              className="w-full flex items-center justify-between px-5 py-4 rounded-3xl border transition-all active:scale-[0.99]"
-              style={{ background: checked ? '#F5F3FF' : 'linear-gradient(135deg,#EDE9FE,#DDD6FE)', borderColor: '#C4B5FD' }}
+              className="w-full bg-white rounded-3xl border border-stone-100 shadow-[0_2px_12px_rgba(124,58,237,0.06)] px-5 py-4 flex items-center gap-4 transition-all active:scale-[0.99]"
             >
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{checked ? '✅' : '📅'}</span>
-                <div className="text-left">
-                  <p className="text-sm font-bold text-violet-700">{checked ? '오늘 출석 완료!' : '출석 체크하고 +10P 받기'}</p>
-                  <p className="text-xs text-violet-400">{checked ? `현재 ${points.balance.toLocaleString()}P 보유` : '매일 출석하면 포인트를 드려요'}</p>
-                </div>
+              <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 transition-all ${
+                checked
+                  ? 'bg-violet-100'
+                  : 'bg-gradient-to-br from-violet-500 to-purple-600 shadow-md shadow-violet-200'
+              }`}>
+                {checked
+                  ? <span className="text-violet-500 text-lg font-bold">✓</span>
+                  : <span className="text-lg">📅</span>
+                }
               </div>
-              <span className="text-violet-400 text-sm">→</span>
+              <div className="flex-1 text-left">
+                <p className={`text-sm font-bold ${checked ? 'text-stone-500' : 'text-stone-800'}`}>
+                  {checked ? '오늘 출석 완료!' : '출석 체크하고 포인트 받기'}
+                </p>
+                <p className="text-xs text-stone-400 mt-0.5">
+                  {checked ? `누적 ${points.balance.toLocaleString()}P 보유` : '매일 출석하면 +10P 지급'}
+                </p>
+              </div>
+              {checked
+                ? <span className="text-[11px] text-violet-400 font-medium shrink-0">내역 보기 →</span>
+                : <span className="text-xs font-bold text-violet-600 bg-violet-50 border border-violet-200 rounded-full px-3 py-1 shrink-0">+10P</span>
+              }
             </button>
           )
         })()}

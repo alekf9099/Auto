@@ -50,6 +50,25 @@ export default function App() {
   const [result,       setResult]       = useState<SajuResult | null>(null)
   const [points,       setPoints]       = useState<PointsState>(loadPoints)
 
+  // 뒤로가기 버튼 지원
+  useEffect(() => {
+    const BACK_MAP: Partial<Record<Page, Page>> = {
+      profile: 'login', analyzing: 'home', attendance: 'home',
+      sinnyeon: 'home', tojeong: 'home', today: 'home', tomorrow: 'home',
+      gunghab: 'home', form: 'home', loading: 'home', result: 'home', summary: 'result',
+    }
+    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','tomorrow','gunghab','form','result','summary','profile','analyzing']
+    if (navigable.includes(page)) history.pushState({ page }, '')
+
+    function onPop() {
+      history.pushState(null, '')
+      setPage(prev => BACK_MAP[prev] ?? 'home')
+      window.scrollTo(0, 0)
+    }
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [page])
+
   // 사주 결과도 프로필과 동기화
   useEffect(() => {
     if (birthProfile && !result) {
