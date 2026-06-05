@@ -2,6 +2,8 @@ import { useState } from 'react'
 import type { BirthInput, SajuResult } from './types'
 import { calculateSaju, getOhaengCount, pillarName, pillarNameKo } from './utils/saju'
 import { STEMS, BRANCHES } from './utils/constants'
+import LoginPage      from './components/LoginPage'
+import HomePage       from './components/HomePage'
 import BirthForm      from './components/BirthForm'
 import LoadingScreen  from './components/LoadingScreen'
 import SajuChart      from './components/SajuChart'
@@ -12,7 +14,7 @@ import FortuneReading from './components/FortuneReading'
 import FortuneTabs    from './components/FortuneTabs'
 import SummaryPage    from './components/SummaryPage'
 
-type Page = 'form' | 'loading' | 'result' | 'summary'
+type Page = 'login' | 'home' | 'form' | 'loading' | 'result' | 'summary'
 type Tab  = 'saju' | 'fortune' | 'analysis'
 
 const TABS: { id: Tab; label: string }[] = [
@@ -22,10 +24,31 @@ const TABS: { id: Tab; label: string }[] = [
 ]
 
 export default function App() {
-  const [page,   setPage]   = useState<Page>('form')
-  const [tab,    setTab]    = useState<Tab>('saju')
-  const [input,  setInput]  = useState<BirthInput | null>(null)
-  const [result, setResult] = useState<SajuResult | null>(null)
+  const [page,     setPage]     = useState<Page>('login')
+  const [tab,      setTab]      = useState<Tab>('saju')
+  const [userName, setUserName] = useState<string>('')
+  const [input,    setInput]    = useState<BirthInput | null>(null)
+  const [result,   setResult]   = useState<SajuResult | null>(null)
+
+  function handleLogin(name: string) {
+    setUserName(name)
+    setPage('home')
+    window.scrollTo(0, 0)
+  }
+
+  function handleHomeNavigate(dest: 'saju' | 'fortune-today' | 'fortune-year') {
+    if (dest === 'fortune-today' || dest === 'fortune-year') {
+      if (result) {
+        setTab('fortune')
+        setPage('result')
+      } else {
+        setPage('form')
+      }
+    } else {
+      setPage('form')
+    }
+    window.scrollTo(0, 0)
+  }
 
   function handleSubmit(inp: BirthInput) {
     setInput(inp)
@@ -44,7 +67,22 @@ export default function App() {
   function handleReset() {
     setInput(null)
     setResult(null)
-    setPage('form')
+    setPage('home')
+    window.scrollTo(0, 0)
+  }
+
+  if (page === 'login') {
+    return <LoginPage onLogin={handleLogin} />
+  }
+
+  if (page === 'home') {
+    return (
+      <HomePage
+        userName={userName}
+        onNavigate={handleHomeNavigate}
+        onLogout={() => { setPage('login'); setUserName(''); window.scrollTo(0, 0) }}
+      />
+    )
   }
 
   if (page === 'form') {
@@ -97,12 +135,20 @@ export default function App() {
                 &nbsp;{hourLabel}&nbsp;·&nbsp;{input.gender === 'male' ? '남성' : '여성'}
               </p>
             </div>
-            <button
-              onClick={handleReset}
-              className="text-xs text-violet-600 font-semibold bg-violet-50 border border-violet-200 px-3 py-1.5 rounded-xl hover:bg-violet-100 transition"
-            >
-              다시 입력
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => { setPage('home'); window.scrollTo(0, 0) }}
+                className="text-xs text-stone-400 font-semibold bg-stone-50 border border-stone-200 px-3 py-1.5 rounded-xl hover:bg-stone-100 transition"
+              >
+                홈
+              </button>
+              <button
+                onClick={handleReset}
+                className="text-xs text-violet-600 font-semibold bg-violet-50 border border-violet-200 px-3 py-1.5 rounded-xl hover:bg-violet-100 transition"
+              >
+                다시 입력
+              </button>
+            </div>
           </div>
 
           {/* 탭 — 필 스타일 */}
