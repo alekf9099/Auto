@@ -3,6 +3,7 @@ import type { BirthInput, SajuResult } from './types'
 import { calculateSaju, getOhaengCount, pillarName, pillarNameKo } from './utils/saju'
 import { STEMS, BRANCHES } from './utils/constants'
 import BirthForm      from './components/BirthForm'
+import LoadingScreen  from './components/LoadingScreen'
 import SajuChart      from './components/SajuChart'
 import OhaengChart    from './components/OhaengChart'
 import SipsinChart    from './components/SipsinChart'
@@ -11,7 +12,7 @@ import FortuneReading from './components/FortuneReading'
 import FortuneTabs    from './components/FortuneTabs'
 import SummaryPage    from './components/SummaryPage'
 
-type Page = 'form' | 'result' | 'summary'
+type Page = 'form' | 'loading' | 'result' | 'summary'
 type Tab  = 'saju' | 'fortune' | 'analysis'
 
 const TABS: { id: Tab; label: string }[] = [
@@ -28,9 +29,15 @@ export default function App() {
 
   function handleSubmit(inp: BirthInput) {
     setInput(inp)
-    setResult(calculateSaju(inp))
-    setPage('result')
+    setPage('loading')
     setTab('saju')
+    window.scrollTo(0, 0)
+  }
+
+  function handleLoadingComplete() {
+    if (!input) return
+    setResult(calculateSaju(input))
+    setPage('result')
     window.scrollTo(0, 0)
   }
 
@@ -40,7 +47,15 @@ export default function App() {
     setPage('form')
   }
 
-  if (page === 'form' || !input || !result) {
+  if (page === 'form') {
+    return <BirthForm onSubmit={handleSubmit} />
+  }
+
+  if (page === 'loading' && input) {
+    return <LoadingScreen onComplete={handleLoadingComplete} />
+  }
+
+  if (!input || !result) {
     return <BirthForm onSubmit={handleSubmit} />
   }
 
