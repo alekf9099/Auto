@@ -64,9 +64,8 @@ export default function LoginPage({ onLogin }: Props) {
         <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-violet-600 to-purple-700 flex items-center justify-center shadow-xl shadow-violet-300/40 mb-4">
           <span className="text-4xl">☯</span>
         </div>
-        <h1 className="text-2xl font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>천기누설</h1>
-        <p className="text-xs text-violet-400 font-medium mt-0.5 tracking-widest">天機漏泄</p>
-        <p className="text-sm text-stone-400 mt-1">하늘의 비밀을 당신에게</p>
+        <h1 className="text-2xl font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>운명봄</h1>
+        <p className="text-sm text-stone-400 mt-1">당신의 운명을 봅니다</p>
       </div>
 
       <div className="w-full max-w-sm bg-white rounded-3xl shadow-[0_4px_24px_rgba(124,58,237,0.12)] border border-violet-100 p-7">
