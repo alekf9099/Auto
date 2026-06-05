@@ -7,6 +7,6 @@
   "background_color": "#F4F2FF",
   "theme_color": "#7C3AED",
   "icons": [
-    { "src": "/Auto/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "/Auto/icon-v2.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }
