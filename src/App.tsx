@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import type { BirthInput, SajuResult, UserInfo } from './types'
 import { calculateSaju, getOhaengCount, pillarName, pillarNameKo } from './utils/saju'
 import { STEMS, BRANCHES } from './utils/constants'
 import LoginPage      from './components/LoginPage'
 import HomePage       from './components/HomePage'
-import SinnyeonPage    from './components/SinnyeonPage'
-import TojeongPage     from './components/TojeongPage'
-import DayFortunePage  from './components/DayFortunePage'
+import SinnyeonPage   from './components/SinnyeonPage'
+import TojeongPage    from './components/TojeongPage'
+import DayFortunePage from './components/DayFortunePage'
 import BirthForm      from './components/BirthForm'
 import LoadingScreen  from './components/LoadingScreen'
 import SajuChart      from './components/SajuChart'
@@ -17,6 +17,8 @@ import FortuneReading from './components/FortuneReading'
 import FortuneTabs    from './components/FortuneTabs'
 import SummaryPage    from './components/SummaryPage'
 
+const STORAGE_KEY = 'unmyeongbom_birth'
+
 type Page = 'login' | 'home' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'form' | 'loading' | 'result' | 'summary'
 type Tab  = 'saju' | 'fortune' | 'analysis'
 
@@ -26,12 +28,33 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'analysis', label: '분석'    },
 ]
 
+function loadBirthProfile(): BirthInput | null {
+  try {
+    const s = localStorage.getItem(STORAGE_KEY)
+    return s ? (JSON.parse(s) as BirthInput) : null
+  } catch { return null }
+}
+
 export default function App() {
-  const [page,   setPage]   = useState<Page>('login')
-  const [tab,    setTab]    = useState<Tab>('saju')
-  const [user,   setUser]   = useState<UserInfo | null>(null)
-  const [input,  setInput]  = useState<BirthInput | null>(null)
-  const [result, setResult] = useState<SajuResult | null>(null)
+  const [page,         setPage]         = useState<Page>('login')
+  const [tab,          setTab]          = useState<Tab>('saju')
+  const [user,         setUser]         = useState<UserInfo | null>(null)
+  const [birthProfile, setBirthProfile] = useState<BirthInput | null>(loadBirthProfile)
+  const [input,        setInput]        = useState<BirthInput | null>(null)
+  const [result,       setResult]       = useState<SajuResult | null>(null)
+
+  // 사주 결과도 프로필과 동기화
+  useEffect(() => {
+    if (birthProfile && !result) {
+      setResult(calculateSaju(birthProfile))
+      setInput(birthProfile)
+    }
+  }, [birthProfile])
+
+  function saveBirthProfile(b: BirthInput) {
+    setBirthProfile(b)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(b))
+  }
 
   function goHome() { setPage('home'); window.scrollTo(0, 0) }
 
@@ -46,10 +69,13 @@ export default function App() {
       if (result) { setTab('analysis'); setPage('result') } else { setPage('form') }
       window.scrollTo(0, 0); return
     }
+    // 정통사주: 프로필 있으면 바로 결과
+    if (birthProfile && result) { setPage('result'); window.scrollTo(0, 0); return }
     setPage('form'); window.scrollTo(0, 0)
   }
 
   function handleSubmit(inp: BirthInput) {
+    saveBirthProfile(inp)
     setInput(inp); setPage('loading'); setTab('saju'); window.scrollTo(0, 0)
   }
 
@@ -66,6 +92,7 @@ export default function App() {
     return (
       <HomePage
         user={user}
+        birthProfile={birthProfile}
         onNavigate={handleHomeNavigate}
         onLogout={() => { setUser(null); setPage('login'); window.scrollTo(0, 0) }}
       />
@@ -73,23 +100,23 @@ export default function App() {
   }
 
   // ── 신년운세 ────────────────────────────────────────────────────────
-  if (page === 'sinnyeon') return <SinnyeonPage onBack={goHome} />
+  if (page === 'sinnyeon') return <SinnyeonPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
 
   // ── 토정비결 ────────────────────────────────────────────────────────
-  if (page === 'tojeong') return <TojeongPage onBack={goHome} />
+  if (page === 'tojeong') return <TojeongPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
 
   // ── 오늘/내일의 운세 ─────────────────────────────────────────────────
-  if (page === 'today')    return <DayFortunePage dayOffset={0} onBack={goHome} />
-  if (page === 'tomorrow') return <DayFortunePage dayOffset={1} onBack={goHome} />
+  if (page === 'today')    return <DayFortunePage dayOffset={0} savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
+  if (page === 'tomorrow') return <DayFortunePage dayOffset={1} savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
 
   // ── 사주 입력 폼 ─────────────────────────────────────────────────────
-  if (page === 'form') return <BirthForm onSubmit={handleSubmit} />
+  if (page === 'form') return <BirthForm savedBirth={birthProfile} onSubmit={handleSubmit} />
 
   // ── 로딩 ────────────────────────────────────────────────────────────
   if (page === 'loading' && input) return <LoadingScreen onComplete={handleLoadingComplete} />
 
   // ── 가드 ────────────────────────────────────────────────────────────
-  if (!input || !result) return <BirthForm onSubmit={handleSubmit} />
+  if (!input || !result) return <BirthForm savedBirth={birthProfile} onSubmit={handleSubmit} />
 
   // ── 요약 페이지 ──────────────────────────────────────────────────────
   const ohaeng    = getOhaengCount(result)
@@ -112,8 +139,6 @@ export default function App() {
   // ── 결과 페이지 ──────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-[#F4F2FF]">
-
-      {/* 상단 바 */}
       <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-violet-100">
         <div className="max-w-2xl mx-auto px-4 pt-3 pb-0">
           <div className="flex items-center justify-between mb-3">
@@ -134,15 +159,13 @@ export default function App() {
                 홈
               </button>
               <button
-                onClick={() => { setInput(null); setResult(null); setPage('form') }}
+                onClick={() => { setInput(null); setResult(null); setBirthProfile(null); localStorage.removeItem(STORAGE_KEY); setPage('form') }}
                 className="text-xs text-violet-600 font-semibold bg-violet-50 border border-violet-200 px-3 py-1.5 rounded-xl hover:bg-violet-100 transition"
               >
-                다시 입력
+                정보 수정
               </button>
             </div>
           </div>
-
-          {/* 탭 */}
           <div className="flex bg-stone-100 rounded-2xl p-1 gap-1 mb-1">
             {TABS.map(t => (
               <button
@@ -161,13 +184,9 @@ export default function App() {
         </div>
       </div>
 
-      {/* 콘텐츠 */}
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
-        {/* 배너 */}
         <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl p-5 shadow-xl shadow-violet-900/20">
-          <p className="text-violet-300/70 text-xs mb-2">
-            {input.year}년 {input.month}월 {input.day}일생
-          </p>
+          <p className="text-violet-300/70 text-xs mb-2">{input.year}년 {input.month}월 {input.day}일생</p>
           <div className="text-4xl font-bold tracking-wide text-white mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
             {pillarName(result.yearPillar)}{pillarName(result.monthPillar)}{pillarName(result.dayPillar)}
             {result.hourPillar   ? pillarName(result.hourPillar)   : ''}
@@ -192,7 +211,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* 탭별 콘텐츠 */}
         {tab === 'saju' && (
           <>
             <SajuChart      result={result} />
@@ -208,7 +226,6 @@ export default function App() {
           </>
         )}
 
-        {/* 요약 카드 버튼 */}
         <button
           onClick={() => { setPage('summary'); window.scrollTo(0, 0) }}
           className="w-full py-4 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-bold rounded-3xl shadow-lg shadow-violet-200 hover:from-violet-500 hover:to-purple-500 transition-all text-base flex items-center justify-center gap-2 active:scale-[0.99]"
