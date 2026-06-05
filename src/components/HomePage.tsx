@@ -9,7 +9,7 @@ interface Props {
   birthProfile: BirthInput | null
   points: PointsState
   onPointsUpdate: (p: PointsState) => void
-  onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun') => void
+  onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun' | 'gunghab') => void
   onAttendance: () => void
   onEditProfile: () => void
   onLogout: () => void
@@ -22,6 +22,7 @@ const MENU = [
   { icon: '🔮', label: '오늘의 운세', dest: 'today'     as const, sub: '오늘 일운 분석' },
   { icon: '⏰', label: '내일의 운세', dest: 'tomorrow'  as const, sub: '내일 미리보기' },
   { icon: '📊', label: '대운 분석',  dest: 'daun'      as const, sub: '10년 대운 흐름' },
+  { icon: '💕', label: '궁합 보기',  dest: 'gunghab'   as const, sub: '사주 기반 궁합' },
 ]
 
 export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onEditProfile, onLogout }: Props) {

@@ -12,6 +12,7 @@ import AttendancePage from './components/AttendancePage'
 import SinnyeonPage   from './components/SinnyeonPage'
 import TojeongPage    from './components/TojeongPage'
 import DayFortunePage from './components/DayFortunePage'
+import GunghabPage    from './components/GunghabPage'
 import BirthForm      from './components/BirthForm'
 import LoadingScreen  from './components/LoadingScreen'
 import SajuChart      from './components/SajuChart'
@@ -24,7 +25,7 @@ import SummaryPage    from './components/SummaryPage'
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'form' | 'loading' | 'result' | 'summary'
+type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'gunghab' | 'form' | 'loading' | 'result' | 'summary'
 type Tab  = 'saju' | 'fortune' | 'analysis'
 
 const TABS: { id: Tab; label: string }[] = [
@@ -81,13 +82,14 @@ export default function App() {
     window.scrollTo(0, 0)
   }
 
-  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun') {
+  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun' | 'gunghab') {
     if (!birthProfile) { setPage('profile'); window.scrollTo(0, 0); return }
     // 기능 첫 사용 하루 1회 +5P
     const LABELS: Record<string, string> = {
       sinnyeon: '신년운세 확인 ✨', tojeong: '토정비결 확인 📖',
       today: '오늘의 운세 확인 🔮', tomorrow: '내일의 운세 확인 ⏰',
       saju: '정통사주 확인 ☯', daun: '대운 분석 확인 📊',
+      gunghab: '궁합 확인 💕',
     }
     const { next, claimed } = tryFeatureBonus(points, dest, LABELS[dest] ?? dest)
     if (claimed) setPoints(next)
@@ -95,6 +97,7 @@ export default function App() {
     if (dest === 'tojeong')  { setPage('tojeong');  window.scrollTo(0, 0); return }
     if (dest === 'today')    { setPage('today');    window.scrollTo(0, 0); return }
     if (dest === 'tomorrow') { setPage('tomorrow'); window.scrollTo(0, 0); return }
+    if (dest === 'gunghab')  { setPage('gunghab');  window.scrollTo(0, 0); return }
     if (dest === 'daun') {
       if (result) { setTab('analysis'); setPage('result') } else { setPage('form') }
       window.scrollTo(0, 0); return
@@ -154,6 +157,9 @@ export default function App() {
   // ── 오늘/내일의 운세 ─────────────────────────────────────────────────
   if (page === 'today')    return <DayFortunePage dayOffset={0} savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   if (page === 'tomorrow') return <DayFortunePage dayOffset={1} savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
+
+  // ── 궁합 ────────────────────────────────────────────────────────────
+  if (page === 'gunghab') return <GunghabPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
 
   // ── 사주 입력 폼 ─────────────────────────────────────────────────────
   if (page === 'form') return <BirthForm savedBirth={birthProfile} onSubmit={handleSubmit} />
