@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import type { BirthInput, SajuResult, UserInfo } from './types'
 import { calculateSaju, getOhaengCount, pillarName, pillarNameKo } from './utils/saju'
 import { STEMS, BRANCHES } from './utils/constants'
+import { loadPoints, awardPoints, tryFeatureBonus } from './utils/points'
+import type { PointsState } from './utils/points'
 import LoginPage        from './components/LoginPage'
 import ProfileSetupPage from './components/ProfileSetupPage'
 import SplashScreen     from './components/SplashScreen'
@@ -44,6 +46,7 @@ export default function App() {
   const [birthProfile, setBirthProfile] = useState<BirthInput | null>(loadBirthProfile)
   const [input,        setInput]        = useState<BirthInput | null>(null)
   const [result,       setResult]       = useState<SajuResult | null>(null)
+  const [points,       setPoints]       = useState<PointsState>(loadPoints)
 
   // 사주 결과도 프로필과 동기화
   useEffect(() => {
@@ -68,12 +71,25 @@ export default function App() {
 
   function handleProfileSave(b: BirthInput) {
     saveBirthProfile(b)
+    // 최초 가입 보너스
+    const cur = loadPoints()
+    if (cur.history.length === 0) {
+      setPoints(awardPoints(cur, 100, '가입 보너스 🎉'))
+    }
     setPage('analyzing')
     window.scrollTo(0, 0)
   }
 
   function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun') {
     if (!birthProfile) { setPage('profile'); window.scrollTo(0, 0); return }
+    // 기능 첫 사용 하루 1회 +5P
+    const LABELS: Record<string, string> = {
+      sinnyeon: '신년운세 확인 ✨', tojeong: '토정비결 확인 📖',
+      today: '오늘의 운세 확인 🔮', tomorrow: '내일의 운세 확인 ⏰',
+      saju: '정통사주 확인 ☯', daun: '대운 분석 확인 📊',
+    }
+    const { next, claimed } = tryFeatureBonus(points, dest, LABELS[dest] ?? dest)
+    if (claimed) setPoints(next)
     if (dest === 'sinnyeon') { setPage('sinnyeon'); window.scrollTo(0, 0); return }
     if (dest === 'tojeong')  { setPage('tojeong');  window.scrollTo(0, 0); return }
     if (dest === 'today')    { setPage('today');    window.scrollTo(0, 0); return }
@@ -115,6 +131,8 @@ export default function App() {
       <HomePage
         user={user}
         birthProfile={birthProfile}
+        points={points}
+        onPointsUpdate={setPoints}
         onNavigate={handleHomeNavigate}
         onEditProfile={() => { setPage('profile'); window.scrollTo(0, 0) }}
         onLogout={() => { setUser(null); setPage('login'); window.scrollTo(0, 0) }}

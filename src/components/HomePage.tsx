@@ -1,8 +1,14 @@
+import { useState, useEffect } from 'react'
 import type { UserInfo, BirthInput } from '../types'
+import type { PointsState } from '../utils/points'
+import { tryClaimDaily } from '../utils/points'
+import PointsModal from './PointsModal'
 
 interface Props {
   user: UserInfo
   birthProfile: BirthInput | null
+  points: PointsState
+  onPointsUpdate: (p: PointsState) => void
   onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun') => void
   onEditProfile: () => void
   onLogout: () => void
@@ -17,19 +23,52 @@ const MENU = [
   { icon: '📊', label: '대운 분석',  dest: 'daun'      as const, sub: '10년 대운 흐름' },
 ]
 
-export default function HomePage({ user, birthProfile, onNavigate, onEditProfile, onLogout }: Props) {
+export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onEditProfile, onLogout }: Props) {
   const today = new Date()
   const month = today.getMonth() + 1
   const day   = today.getDate()
 
+  const [showPoints,  setShowPoints]  = useState(false)
+  const [dailyToast,  setDailyToast]  = useState(false)
+
+  // 매일 출석 보너스 자동 지급
+  useEffect(() => {
+    const { next, claimed } = tryClaimDaily(points)
+    if (claimed) {
+      onPointsUpdate(next)
+      setDailyToast(true)
+      setTimeout(() => setDailyToast(false), 2800)
+    }
+  }, [])
+
   return (
     <div className="min-h-screen bg-[#F4F2FF]">
+
+      {/* 매일 출석 토스트 */}
+      {dailyToast && (
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-violet-600 text-white text-xs font-semibold px-5 py-2.5 rounded-full shadow-lg shadow-violet-300 animate-bounce">
+          🎉 출석 보너스 +10P 지급!
+        </div>
+      )}
+
+      {/* 포인트 모달 */}
+      {showPoints && (
+        <PointsModal points={points} onClose={() => setShowPoints(false)} />
+      )}
 
       {/* 상단 바 */}
       <div className="bg-white border-b border-stone-100 sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <h1 className="text-lg font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>운명봄</h1>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {/* 포인트 배지 */}
+            <button
+              onClick={() => setShowPoints(true)}
+              className="flex items-center gap-1 bg-violet-50 border border-violet-200 px-3 py-1.5 rounded-full hover:bg-violet-100 transition"
+            >
+              <span className="text-xs">💎</span>
+              <span className="text-xs font-bold text-violet-600">{points.balance.toLocaleString()}P</span>
+            </button>
             <button
               onClick={onLogout}
               className="text-xs text-stone-400 hover:text-stone-600 transition px-2 py-1"
@@ -44,7 +83,6 @@ export default function HomePage({ user, birthProfile, onNavigate, onEditProfile
                   <span className="text-white text-xs font-bold">{user.name[0]}</span>
                 </div>
               )}
-              <span className="text-sm font-semibold text-stone-700">{user.name}</span>
             </div>
           </div>
         </div>
