@@ -150,7 +150,7 @@ function Stars({ n }: { n: number }) {
   return (
     <div className="flex gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
-        <span key={i} className={`text-sm ${i < n ? 'text-amber-400' : 'text-zinc-700'}`}>★</span>
+        <span key={i} className={`text-sm ${i < n ? 'text-amber-400' : 'text-stone-200'}`}>★</span>
       ))}
     </div>
   )
@@ -166,17 +166,17 @@ function CategoryRow({ emoji, label, summary, detail, star }: {
   emoji: string; label: string; summary: string; detail: string; star: number
 }) {
   return (
-    <details className="border border-zinc-800 rounded-2xl overflow-hidden group">
-      <summary className="flex items-center gap-2 p-3.5 cursor-pointer list-none select-none hover:bg-zinc-800/50 transition">
+    <details className="border border-stone-100 rounded-2xl overflow-hidden group">
+      <summary className="flex items-center gap-2 p-3.5 cursor-pointer list-none select-none hover:bg-stone-50 transition">
         <span className="text-base">{emoji}</span>
-        <span className="text-sm font-semibold text-zinc-200">{label}</span>
-        <span className="text-xs text-zinc-600 flex-1 truncate">{summary}</span>
+        <span className="text-sm font-semibold text-stone-700">{label}</span>
+        <span className="text-xs text-stone-400 flex-1 truncate">{summary}</span>
         <Stars n={star} />
-        <span className="text-zinc-600 text-xs ml-1 shrink-0 group-open:rotate-180 transition-transform">▼</span>
+        <span className="text-stone-400 text-xs ml-1 shrink-0 group-open:rotate-180 transition-transform">▼</span>
       </summary>
       <div className="px-4 pb-4">
-        <div className="h-px bg-zinc-800 mb-3" />
-        <p className="text-sm text-zinc-400 leading-relaxed">{detail}</p>
+        <div className="h-px bg-stone-100 mb-3" />
+        <p className="text-sm text-stone-500 leading-relaxed">{detail}</p>
       </div>
     </details>
   )
@@ -226,17 +226,17 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
   ]
 
   return (
-    <div className="bg-zinc-900 rounded-3xl border border-zinc-800 overflow-hidden">
+    <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] overflow-hidden">
       {/* 서브탭 */}
-      <div className="flex border-b border-zinc-800">
+      <div className="flex border-b border-stone-100 px-2 pt-2">
         {tabs.map(t => (
           <button
             key={t.id}
             onClick={() => setSub(t.id)}
-            className={`flex-1 py-3.5 text-sm font-semibold transition-all ${
+            className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all ${
               sub === t.id
-                ? 'text-amber-400 border-b-2 border-amber-500 bg-amber-500/5'
-                : 'text-zinc-500 hover:text-zinc-300'
+                ? 'text-violet-600 bg-violet-50'
+                : 'text-stone-400 hover:text-stone-600'
             }`}
           >
             <span>{t.label}</span>
@@ -256,11 +256,11 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
               style={{ backgroundColor: todayData.color + '10', borderColor: todayData.color + '30' }}
             >
               <div>
-                <p className="text-xs text-zinc-500 mb-1">오늘 일주 · {today.getMonth()+1}/{today.getDate()}</p>
+                <p className="text-xs text-stone-400 mb-1">오늘 일주 · {today.getMonth()+1}/{today.getDate()}</p>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[todayStem.element], filter: `drop-shadow(0 0 6px ${ELEMENT_COLORS[todayStem.element]}66)` }}>{todayStem.hanja}</span>
-                  <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[todayBranch.element], filter: `drop-shadow(0 0 6px ${ELEMENT_COLORS[todayBranch.element]}66)` }}>{todayBranch.hanja}</span>
-                  <span className="text-sm text-zinc-500 ml-1">{todayStem.ko}{todayBranch.ko} · {todayBranch.animal}</span>
+                  <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[todayStem.element] }}>{todayStem.hanja}</span>
+                  <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[todayBranch.element] }}>{todayBranch.hanja}</span>
+                  <span className="text-sm text-stone-400 ml-1">{todayStem.ko}{todayBranch.ko} · {todayBranch.animal}</span>
                 </div>
               </div>
               <div className="text-right">
@@ -272,13 +272,13 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
             </div>
 
             {/* 조언 + 주의 */}
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-3.5">
-              <p className="text-xs font-semibold text-amber-400 mb-1">✨ 오늘의 조언</p>
-              <p className="text-sm text-zinc-300 leading-relaxed">{todayData.조언}</p>
+            <div className="bg-violet-50 border border-violet-100 rounded-2xl p-3.5">
+              <p className="text-xs font-semibold text-violet-600 mb-1">✨ 오늘의 조언</p>
+              <p className="text-sm text-stone-600 leading-relaxed">{todayData.조언}</p>
             </div>
-            <div className="bg-red-500/10 border border-red-500/20 rounded-2xl px-4 py-2.5 flex items-center gap-2">
+            <div className="bg-red-50 border border-red-100 rounded-2xl px-4 py-2.5 flex items-center gap-2">
               <span>⚠️</span>
-              <p className="text-xs text-zinc-400"><span className="font-semibold text-red-400">주의 </span>{todayData.주의}</p>
+              <p className="text-xs text-stone-500"><span className="font-semibold text-red-500">주의 </span>{todayData.주의}</p>
             </div>
 
             {/* 항목별 */}
@@ -298,18 +298,18 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
 
             {/* 시간대별 */}
             <div>
-              <p className="text-sm font-semibold text-zinc-300 mb-2">🕐 시간대별</p>
+              <p className="text-sm font-semibold text-stone-700 mb-2">🕐 시간대별</p>
               <div className="space-y-2">
                 {[
                   { icon: '🌅', label: '오전 06~12시', text: todayData.시간오전 },
                   { icon: '☀️',  label: '오후 12~18시', text: todayData.시간오후 },
                   { icon: '🌙', label: '저녁 18~24시', text: todayData.시간저녁 },
                 ].map(t => (
-                  <div key={t.label} className="flex gap-3 bg-zinc-800/60 border border-zinc-700/50 rounded-2xl px-4 py-3">
+                  <div key={t.label} className="flex gap-3 bg-stone-50 border border-stone-100 rounded-2xl px-4 py-3">
                     <span className="shrink-0">{t.icon}</span>
                     <div>
-                      <p className="text-xs font-semibold text-zinc-500 mb-0.5">{t.label}</p>
-                      <p className="text-sm text-zinc-300">{t.text}</p>
+                      <p className="text-xs font-semibold text-stone-400 mb-0.5">{t.label}</p>
+                      <p className="text-sm text-stone-600">{t.text}</p>
                     </div>
                   </div>
                 ))}
@@ -318,7 +318,7 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
 
             {/* 행운 아이템 */}
             <div>
-              <p className="text-sm font-semibold text-zinc-300 mb-2">🍀 오늘의 행운</p>
+              <p className="text-sm font-semibold text-stone-700 mb-2">🍀 오늘의 행운</p>
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { label: '행운 색상', value: LUCKY_COLOR_NAME[luckyEl], dot: LUCKY_COLOR_MAP[luckyEl] },
@@ -326,11 +326,11 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
                   { label: '행운 방향', value: LUCKY_DIR[luckyEl],         dot: null },
                   { label: '행운 음식', value: LUCKY_FOOD[luckyEl],        dot: null },
                 ].map(item => (
-                  <div key={item.label} className="bg-amber-500/8 border border-amber-500/15 rounded-2xl p-3">
-                    <p className="text-xs text-zinc-500 mb-1">{item.label}</p>
+                  <div key={item.label} className="bg-violet-50 border border-violet-100 rounded-2xl p-3">
+                    <p className="text-xs text-stone-400 mb-1">{item.label}</p>
                     <div className="flex items-center gap-1.5">
                       {item.dot && <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.dot }} />}
-                      <p className="text-sm font-semibold text-zinc-200">{item.value}</p>
+                      <p className="text-sm font-semibold text-stone-700">{item.value}</p>
                     </div>
                   </div>
                 ))}
@@ -347,22 +347,22 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
               style={{ backgroundColor: ELEMENT_COLORS[monthStem.element] + '10', borderColor: ELEMENT_COLORS[monthStem.element] + '30' }}
             >
               <div>
-                <p className="text-xs text-zinc-500 mb-1">이달 월주 · {today.getFullYear()}.{String(today.getMonth()+1).padStart(2,'0')}</p>
+                <p className="text-xs text-stone-400 mb-1">이달 월주 · {today.getFullYear()}.{String(today.getMonth()+1).padStart(2,'0')}</p>
                 <div className="flex items-center gap-1.5">
                   <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[monthStem.element] }}>{monthStem.hanja}</span>
                   <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[monthBranch.element] }}>{monthBranch.hanja}</span>
-                  <span className="text-sm text-zinc-500 ml-1">{monthStem.ko}{monthBranch.ko}월</span>
+                  <span className="text-sm text-stone-400 ml-1">{monthStem.ko}{monthBranch.ko}월</span>
                 </div>
               </div>
               <div className="text-right">
-                <span className="text-xl font-bold px-3 py-1 rounded-xl bg-orange-500/15 text-orange-400">{monthSipsin}</span>
+                <span className="text-xl font-bold px-3 py-1 rounded-xl bg-violet-50 text-violet-600 border border-violet-200">{monthSipsin}</span>
                 <div className="mt-1.5 flex justify-end"><Stars n={monthData.star} /></div>
               </div>
             </div>
 
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-3.5">
-              <p className="text-xs font-semibold text-amber-400 mb-1">📅 이달의 조언</p>
-              <p className="text-sm text-zinc-300 leading-relaxed">{monthData.조언}</p>
+            <div className="bg-violet-50 border border-violet-100 rounded-2xl p-3.5">
+              <p className="text-xs font-semibold text-violet-600 mb-1">📅 이달의 조언</p>
+              <p className="text-sm text-stone-600 leading-relaxed">{monthData.조언}</p>
             </div>
 
             <div className="space-y-2">
@@ -389,22 +389,22 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
               style={{ backgroundColor: ELEMENT_COLORS[yearStem.element] + '10', borderColor: ELEMENT_COLORS[yearStem.element] + '30' }}
             >
               <div>
-                <p className="text-xs text-zinc-500 mb-1">올해 년주 · {today.getFullYear()}년</p>
+                <p className="text-xs text-stone-400 mb-1">올해 년주 · {today.getFullYear()}년</p>
                 <div className="flex items-center gap-1.5">
                   <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[yearStem.element] }}>{yearStem.hanja}</span>
                   <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[yearBranch.element] }}>{yearBranch.hanja}</span>
-                  <span className="text-sm text-zinc-500 ml-1">{yearStem.ko}{yearBranch.ko}년 · {yearBranch.animal}의 해</span>
+                  <span className="text-sm text-stone-400 ml-1">{yearStem.ko}{yearBranch.ko}년 · {yearBranch.animal}의 해</span>
                 </div>
               </div>
               <div className="text-right">
-                <span className="text-xl font-bold px-3 py-1 rounded-xl bg-blue-500/15 text-blue-400">{yearSipsin}</span>
+                <span className="text-xl font-bold px-3 py-1 rounded-xl bg-violet-50 text-violet-600 border border-violet-200">{yearSipsin}</span>
                 <div className="mt-1.5 flex justify-end"><Stars n={yearData.star} /></div>
               </div>
             </div>
 
-            <div className="bg-amber-500/10 border border-amber-500/20 rounded-2xl p-3.5">
-              <p className="text-xs font-semibold text-amber-400 mb-1">🗓️ 올해의 조언</p>
-              <p className="text-sm text-zinc-300 leading-relaxed">{yearData.조언}</p>
+            <div className="bg-violet-50 border border-violet-100 rounded-2xl p-3.5">
+              <p className="text-xs font-semibold text-violet-600 mb-1">🗓️ 올해의 조언</p>
+              <p className="text-sm text-stone-600 leading-relaxed">{yearData.조언}</p>
             </div>
 
             <div className="space-y-2">

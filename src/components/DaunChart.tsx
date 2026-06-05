@@ -13,18 +13,18 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
   const dayStemIdx = result.dayPillar.stemIndex
 
   return (
-    <div className="bg-zinc-900 rounded-3xl border border-zinc-800 p-6">
-      <div className="flex items-center justify-between mb-5">
-        <h2
-          className="text-base font-bold text-white"
-          style={{ fontFamily: "'Noto Serif KR', serif" }}
-        >
+    <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-6">
+      <div className="flex items-center gap-2 mb-1">
+        <div className="w-1 h-5 bg-violet-500 rounded-full" />
+        <h2 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>
           대운 (大運)
         </h2>
-        <span className="text-xs bg-zinc-800 text-zinc-400 border border-zinc-700 px-2.5 py-1 rounded-full">
+        <div className="flex-1" />
+        <span className="text-xs bg-violet-50 text-violet-600 border border-violet-200 px-2.5 py-1 rounded-full font-medium">
           {isForward ? '순행 ▶' : '역행 ◀'} · {daunStartAge}세
         </span>
       </div>
+      <p className="text-xs text-stone-400 mb-5 ml-3">10년 단위 대운 흐름</p>
 
       <div className="overflow-x-auto -mx-2 px-2">
         <div className="flex gap-2 min-w-max pb-2">
@@ -49,15 +49,15 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
                 key={age}
                 className={`flex flex-col items-center rounded-2xl p-3 min-w-[76px] border transition-all ${
                   isCurrent
-                    ? 'border-amber-500/50 bg-amber-500/10 shadow-lg shadow-amber-500/10'
-                    : 'border-zinc-700/60 bg-zinc-800/40'
+                    ? 'border-amber-400/60 bg-amber-50 shadow-md shadow-amber-100'
+                    : 'border-stone-100 bg-stone-50'
                 }`}
               >
                 {isCurrent && (
-                  <span className="text-[10px] bg-amber-500 text-white px-1.5 py-0.5 rounded-full mb-1 font-bold">현재</span>
+                  <span className="text-[10px] bg-amber-400 text-white px-1.5 py-0.5 rounded-full mb-1 font-bold">현재</span>
                 )}
-                <span className="text-xs text-zinc-500 mb-0.5">{age}세</span>
-                <span className="text-[10px] text-zinc-600">{ageYear}~</span>
+                <span className="text-xs text-stone-400 mb-0.5">{age}세</span>
+                <span className="text-[10px] text-stone-300">{ageYear}~</span>
 
                 {/* 천간 */}
                 <div
@@ -67,7 +67,7 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
                   <span className="text-base font-bold leading-none" style={{ color: stemColor }}>{stem.hanja}</span>
                   <span className="text-[10px]" style={{ color: stemColor + 'cc' }}>{stem.ko}</span>
                 </div>
-                <span className="text-[10px] mt-1 text-zinc-500">{sipsinStem}</span>
+                <span className="text-[10px] mt-1 text-stone-400">{sipsinStem}</span>
 
                 {/* 지지 */}
                 <div
@@ -77,16 +77,16 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
                   <span className="text-base font-bold leading-none" style={{ color: branchColor }}>{branch.hanja}</span>
                   <span className="text-[10px]" style={{ color: branchColor + 'cc' }}>{branch.ko}</span>
                 </div>
-                <span className="text-[10px] mt-1 text-zinc-500">{sipsinBranch}</span>
-                <span className="text-[10px] text-zinc-600 mt-1">{pillarName(entry.pillar)}</span>
+                <span className="text-[10px] mt-1 text-stone-400">{sipsinBranch}</span>
+                <span className="text-[10px] text-stone-300 mt-1">{pillarName(entry.pillar)}</span>
               </div>
             )
           })}
         </div>
       </div>
 
-      <p className="text-xs text-zinc-700 mt-3">
-        * 대운은 10년 단위로 운의 흐름을 보여줍니다. 절기 날짜는 근사값이므로 참고용으로 활용하세요.
+      <p className="text-xs text-stone-300 mt-3">
+        * 절기 날짜는 근사값이므로 참고용으로 활용하세요.
       </p>
     </div>
   )
