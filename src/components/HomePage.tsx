@@ -72,6 +72,23 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
   const [bannerIdx,  setBannerIdx]  = useState(0)
   const touchStartX = useRef<number | null>(null)
 
+  // 연속 출석 스트릭 계산
+  const streak = (() => {
+    const dailyDates = new Set(
+      points.history.filter(h => h.label === '매일 출석 보너스').map(h => h.date)
+    )
+    const todayStr = new Date().toISOString().slice(0, 10)
+    let count = 0
+    const d = new Date()
+    // 오늘 체크했으면 오늘부터, 아니면 어제부터
+    if (!dailyDates.has(todayStr)) d.setDate(d.getDate() - 1)
+    while (dailyDates.has(d.toISOString().slice(0, 10))) {
+      count++
+      d.setDate(d.getDate() - 1)
+    }
+    return count
+  })()
+
   useEffect(() => {
     const { next, claimed } = tryClaimDaily(points)
     if (claimed) {
@@ -187,36 +204,98 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
           </div>
         </div>
 
-        {/* 출석체크 배너 */}
+        {/* 출석체크 배너 — 전통 도장 스타일 */}
         {(() => {
           const checked = points.lastDaily === new Date().toISOString().slice(0, 10)
+          const TOTAL_DAYS = 7
           return (
             <button
               onClick={onAttendance}
-              className="w-full bg-white rounded-3xl border border-stone-100 shadow-[0_2px_12px_rgba(124,58,237,0.06)] px-5 py-4 flex items-center gap-4 transition-all active:scale-[0.99]"
+              className="w-full overflow-hidden rounded-3xl shadow-[0_2px_16px_rgba(180,30,30,0.10)] active:scale-[0.99] transition-all"
             >
-              <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 transition-all ${
-                checked
-                  ? 'bg-violet-100'
-                  : 'bg-gradient-to-br from-violet-500 to-purple-600 shadow-md shadow-violet-200'
-              }`}>
-                {checked
-                  ? <span className="text-violet-500 text-lg font-bold">✓</span>
-                  : <span className="text-lg">📅</span>
-                }
+              <div className="relative bg-[#FFFAF4] border border-red-100 rounded-3xl px-5 pt-4 pb-3">
+
+                {/* 배경 장식 — 학(鶴) */}
+                <div className="absolute right-3 top-2 text-5xl opacity-[0.07] select-none pointer-events-none rotate-12">🦢</div>
+                <div className="absolute right-10 bottom-7 text-2xl opacity-[0.06] select-none pointer-events-none -rotate-6">🌸</div>
+                <div className="absolute left-1 bottom-5 text-3xl opacity-[0.05] select-none pointer-events-none rotate-6">🌿</div>
+
+                <div className="flex items-center gap-4 mb-3">
+                  {/* 원형 도장 */}
+                  <div className="relative shrink-0 w-[60px] h-[60px] flex items-center justify-center">
+                    <div className={`absolute inset-0 rounded-full border-[3px] transition-all ${
+                      checked ? 'border-red-300' : 'border-red-500'
+                    }`} />
+                    <div className="absolute inset-[5px] rounded-full border border-red-300 opacity-40" />
+                    {checked ? (
+                      <div className="flex flex-col items-center">
+                        <span className="text-red-500 text-xl font-bold leading-none">✓</span>
+                        <span className="text-[9px] text-red-400 font-bold mt-0.5">완료</span>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <span className="text-[11px] font-bold text-red-600 leading-tight text-center" style={{ fontFamily: "'Noto Serif KR', serif" }}>출석<br/>도장</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 텍스트 */}
+                  <div className="flex-1 text-left">
+                    <p className="text-[10px] text-stone-400 mb-0.5 font-medium">출석체크하고</p>
+                    <p className="text-base font-bold leading-tight" style={{ fontFamily: "'Noto Serif KR', serif", color: checked ? '#78716C' : '#1C1917' }}>
+                      {checked ? '오늘 도장 찍었어요!' : '포인트 받아가세요!'}
+                    </p>
+                    <p className="text-[11px] text-stone-400 mt-0.5">
+                      {checked
+                        ? `${streak}일 연속 출석 중 · 누적 ${points.balance.toLocaleString()}P`
+                        : `${streak > 0 ? `${streak}일 연속 출석 중 · ` : ''}매일 +10P 지급`}
+                    </p>
+                  </div>
+
+                  {/* 우측 뱃지 */}
+                  {!checked
+                    ? <div className="shrink-0 w-10 h-10 rounded-full bg-red-500 flex items-center justify-center shadow-md shadow-red-200">
+                        <span className="text-white text-[10px] font-bold leading-tight text-center">+10P</span>
+                      </div>
+                    : <span className="text-[11px] text-stone-400 font-medium shrink-0">내역 →</span>
+                  }
+                </div>
+
+                {/* 7일 도장 스탬프 */}
+                <div className="flex items-center gap-1.5">
+                  {Array.from({ length: TOTAL_DAYS }).map((_, i) => {
+                    const filled = i < streak
+                    const isToday = checked && i === streak - 1
+                    return (
+                      <div
+                        key={i}
+                        className={`flex-1 aspect-square rounded-full border-2 flex items-center justify-center transition-all ${
+                          filled
+                            ? isToday
+                              ? 'border-red-500 bg-red-500 shadow-sm shadow-red-300'
+                              : 'border-red-300 bg-red-100'
+                            : 'border-stone-200 bg-white'
+                        }`}
+                      >
+                        {filled && (
+                          <span className={`text-[8px] font-bold ${isToday ? 'text-white' : 'text-red-400'}`}>
+                            {i + 1}일
+                          </span>
+                        )}
+                        {!filled && (
+                          <span className="text-[8px] text-stone-300">{i + 1}</span>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {/* 하단 라인 */}
+                <div className="mt-2.5 pt-2 border-t border-red-50 flex items-center justify-between">
+                  <span className="text-[10px] text-stone-300">7일 연속 출석 시 특별 보너스 지급</span>
+                  <span className="text-[10px] text-red-400 font-semibold">자세히 보기 →</span>
+                </div>
               </div>
-              <div className="flex-1 text-left">
-                <p className={`text-sm font-bold ${checked ? 'text-stone-500' : 'text-stone-800'}`}>
-                  {checked ? '오늘 출석 완료!' : '출석 체크하고 포인트 받기'}
-                </p>
-                <p className="text-xs text-stone-400 mt-0.5">
-                  {checked ? `누적 ${points.balance.toLocaleString()}P 보유` : '매일 출석하면 +10P 지급'}
-                </p>
-              </div>
-              {checked
-                ? <span className="text-[11px] text-violet-400 font-medium shrink-0">내역 보기 →</span>
-                : <span className="text-xs font-bold text-violet-600 bg-violet-50 border border-violet-200 rounded-full px-3 py-1 shrink-0">+10P</span>
-              }
             </button>
           )
         })()}
