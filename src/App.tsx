@@ -16,6 +16,7 @@ import GunghabPage    from './components/GunghabPage'
 import DeepSajuPage  from './components/DeepSajuPage'
 import SajuPage      from './components/SajuPage'
 import DaunPage      from './components/DaunPage'
+import DreamPage     from './components/DreamPage'
 import BirthForm      from './components/BirthForm'
 import LoadingScreen  from './components/LoadingScreen'
 import SajuChart      from './components/SajuChart'
@@ -28,7 +29,7 @@ import SummaryPage    from './components/SummaryPage'
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'form' | 'loading' | 'result' | 'summary'
+type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'form' | 'loading' | 'result' | 'summary'
 type Tab  = 'saju' | 'fortune' | 'analysis'
 
 const TABS: { id: Tab; label: string }[] = [
@@ -58,10 +59,10 @@ export default function App() {
     const BACK_MAP: Partial<Record<Page, Page>> = {
       profile: 'login', analyzing: 'home', attendance: 'home',
       sinnyeon: 'home', tojeong: 'home', today: 'home', tomorrow: 'home',
-      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home',
+      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home', dream: 'home',
       form: 'home', loading: 'home', result: 'home', summary: 'result',
     }
-    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','tomorrow','gunghab','deepsaju','saju','daun','form','result','summary','profile','analyzing']
+    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','tomorrow','gunghab','deepsaju','saju','daun','dream','form','result','summary','profile','analyzing']
     if (navigable.includes(page)) history.pushState({ page }, '')
 
     function onPop() {
@@ -105,15 +106,15 @@ export default function App() {
     window.scrollTo(0, 0)
   }
 
-  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun' | 'gunghab' | 'deepsaju') {
+  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun' | 'gunghab' | 'deepsaju' | 'dream') {
     if (!birthProfile) { setPage('profile'); window.scrollTo(0, 0); return }
     // 기능 첫 사용 하루 1회 +5P
     const LABELS: Record<string, string> = {
       sinnyeon: '신년운세 확인 ✨', tojeong: '토정비결 확인 📖',
       today: '오늘의 운세 확인 🔮', tomorrow: '내일의 운세 확인 ⏰',
       saju: '정통사주 확인 ☯', daun: '대운 분석 확인 📊',
-      gunghab: '궁합 확인 💕',
-      deepsaju: '심층 사주 해석 🔮',
+      gunghab: '궁합 확인 💕', deepsaju: '심층 사주 해석 🔮',
+      dream: '꿈해몽 확인 💭',
     }
     const { next, claimed } = tryFeatureBonus(points, dest, LABELS[dest] ?? dest)
     if (claimed) setPoints(next)
@@ -123,8 +124,9 @@ export default function App() {
     if (dest === 'tomorrow') { setPage('tomorrow'); window.scrollTo(0, 0); return }
     if (dest === 'gunghab')  { setPage('gunghab');  window.scrollTo(0, 0); return }
     if (dest === 'deepsaju') { setPage('deepsaju'); window.scrollTo(0, 0); return }
-    if (dest === 'daun') { setPage('daun'); window.scrollTo(0, 0); return }
-    if (dest === 'saju') { setPage('saju'); window.scrollTo(0, 0); return }
+    if (dest === 'daun')  { setPage('daun');  window.scrollTo(0, 0); return }
+    if (dest === 'saju')  { setPage('saju');  window.scrollTo(0, 0); return }
+    if (dest === 'dream') { setPage('dream'); window.scrollTo(0, 0); return }
   }
 
   function handleSubmit(inp: BirthInput) {
@@ -195,6 +197,9 @@ export default function App() {
 
   // ── 대운 분석 ────────────────────────────────────────────────────────
   if (page === 'daun') return <DaunPage savedBirth={birthProfile} onBack={goHome} />
+
+  // ── 꿈해몽 ───────────────────────────────────────────────────────────
+  if (page === 'dream') return <DreamPage onBack={goHome} />
 
   // ── 사주 입력 폼 ─────────────────────────────────────────────────────
   if (page === 'form') return <BirthForm savedBirth={birthProfile} onSubmit={handleSubmit} />

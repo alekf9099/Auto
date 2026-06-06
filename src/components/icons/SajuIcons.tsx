@@ -183,6 +183,22 @@ export function IcStamp({ size = 24, className = '' }: P) {
   )
 }
 
+// 꿈해몽 — 생각 거품(思夢雲) + 초승달
+export function IcDream({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      {/* Dream thought bubble — cloud with bumps */}
+      <path d="M6.5 10.8 C6.2 9.0 7.5 7.2 9.5 7.0 C9.8 5.8 11.0 5 12.5 5 C14.0 5 15.3 5.9 15.7 7.2 C16.0 7.1 16.4 7 16.8 7 C18.3 7 19.5 8.2 19.5 9.8 C19.5 9.9 19.5 10.0 19.5 10.1 C20.4 10.5 21 11.4 21 12.5 C21 14.0 19.7 15.2 18.2 15.2 L7.8 15.2 C6.2 15.2 4.9 13.9 4.9 12.3 C4.9 11.5 5.2 10.8 6.5 10.8 Z" opacity="0.9"/>
+      {/* Thought bubble tail — 3 diminishing dots */}
+      <circle cx="7.5" cy="17" r="1.3"/>
+      <circle cx="5.5" cy="19.3" r="0.9"/>
+      <circle cx="4" cy="21.2" r="0.6"/>
+      {/* Crescent moon inside cloud */}
+      <path d="M15 10.5 C15 12.2 13.5 13.5 11.7 13.5 C10.8 13.5 10.0 13.2 9.4 12.7 C9.9 12.8 10.4 12.9 11 12.9 C12.7 12.9 14.1 11.5 14.1 9.8 C14.1 9.2 13.9 8.6 13.6 8.1 C14.5 8.6 15 9.5 15 10.5 Z" fill="white" opacity="0.65"/>
+    </svg>
+  )
+}
+
 // 사용자 프로필 — 전통 조각 문양
 export function IcProfile({ size = 24, className = '' }: P) {
   return (

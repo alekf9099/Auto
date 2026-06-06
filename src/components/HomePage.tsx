@@ -5,7 +5,7 @@ import { tryClaimDaily } from '../utils/points'
 import PointsModal from './PointsModal'
 import {
   IcSaju, IcSinnyeon, IcTojeong, IcTodayFortune,
-  IcTomorrowFortune, IcDaun, IcGunghab, IcDeepSaju, IcGem, IcStamp,
+  IcTomorrowFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcGem, IcStamp,
 } from './icons/SajuIcons'
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
   birthProfile: BirthInput | null
   points: PointsState
   onPointsUpdate: (p: PointsState) => void
-  onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun' | 'gunghab' | 'deepsaju') => void
+  onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'daun' | 'gunghab' | 'deepsaju' | 'dream') => void
   onAttendance: () => void
   onEditProfile: () => void
   onLogout: () => void
@@ -46,7 +46,7 @@ const BANNERS = [
   },
 ]
 
-type MenuDest = 'sinnyeon' | 'tojeong' | 'saju' | 'today' | 'tomorrow' | 'daun' | 'gunghab' | 'deepsaju'
+type MenuDest = 'sinnyeon' | 'tojeong' | 'saju' | 'today' | 'tomorrow' | 'daun' | 'gunghab' | 'deepsaju' | 'dream'
 
 const MENU: { Icon: React.FC<{ size?: number; className?: string }>; label: string; dest: MenuDest; sub: string }[] = [
   { Icon: IcSinnyeon,       label: '신년운세',   dest: 'sinnyeon', sub: '2026 병오년' },
@@ -57,6 +57,7 @@ const MENU: { Icon: React.FC<{ size?: number; className?: string }>; label: stri
   { Icon: IcDaun,           label: '대운 분석',  dest: 'daun',     sub: '10년 대운 흐름' },
   { Icon: IcGunghab,        label: '궁합 보기',  dest: 'gunghab',  sub: '사주 기반 궁합' },
   { Icon: IcDeepSaju,       label: '심층 해석',  dest: 'deepsaju', sub: '일간 심층 분석' },
+  { Icon: IcDream,          label: '꿈해몽',     dest: 'dream',    sub: '전통 꿈 풀이' },
 ]
 
 export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onEditProfile, onLogout }: Props) {
