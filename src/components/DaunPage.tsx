@@ -472,7 +472,7 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
                     {reading?.title ?? sipsin + '의 대운'}
                   </p>
                   {reading && (
-                    <p className="text-xs text-stone-500 mt-1 leading-relaxed line-clamp-2">
+                    <p className="text-xs text-stone-500 mt-1 leading-relaxed">
                       {reading.summary}
                     </p>
                   )}

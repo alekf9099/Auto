@@ -1,0 +1,194 @@
+interface P { size?: number; className?: string }
+
+// 정통사주 — 사주팔자 천간(위)/지지(아래) 4쌍 그리드
+export function IcSaju({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <rect x="1.5" y="3" width="4.5" height="5" rx="1" opacity="0.45"/>
+      <rect x="7"   y="3" width="4.5" height="5" rx="1" opacity="0.45"/>
+      <rect x="12.5" y="3" width="4.5" height="5" rx="1" opacity="0.7"/>
+      <rect x="18"  y="3" width="4.5" height="5" rx="1" opacity="0.45"/>
+      <rect x="1.5" y="9.5" width="4.5" height="11.5" rx="1"/>
+      <rect x="7"   y="9.5" width="4.5" height="11.5" rx="1" opacity="0.75"/>
+      <rect x="12.5" y="9.5" width="4.5" height="11.5" rx="1"/>
+      <rect x="18"  y="9.5" width="4.5" height="11.5" rx="1" opacity="0.75"/>
+    </svg>
+  )
+}
+
+// 신년운세 — 팔방(八方)으로 퍼지는 태양
+export function IcSinnyeon({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <circle cx="12" cy="12" r="4.2"/>
+      {/* 8 rays */}
+      <rect x="11.1" y="1.5" width="1.8" height="4" rx="0.9"/>
+      <rect x="11.1" y="18.5" width="1.8" height="4" rx="0.9"/>
+      <rect x="1.5" y="11.1" width="4" height="1.8" rx="0.9"/>
+      <rect x="18.5" y="11.1" width="4" height="1.8" rx="0.9"/>
+      <rect x="4.1" y="4.1" width="1.8" height="4" rx="0.9" transform="rotate(-45 5 6.1)"/>
+      <rect x="18.1" y="4.1" width="1.8" height="4" rx="0.9" transform="rotate(45 19 6.1)"/>
+      <rect x="4.1" y="15.9" width="1.8" height="4" rx="0.9" transform="rotate(45 5 17.9)"/>
+      <rect x="18.1" y="15.9" width="1.8" height="4" rx="0.9" transform="rotate(-45 19 17.9)"/>
+    </svg>
+  )
+}
+
+// 토정비결 — 두루마리 고서(古書)
+export function IcTojeong({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      {/* Scroll body */}
+      <rect x="4" y="5" width="16" height="14" rx="1.5" fill="currentColor" opacity="0.15"/>
+      <rect x="4" y="5" width="16" height="14" rx="1.5" stroke="currentColor" strokeWidth="1.6"/>
+      {/* Top rolled edge */}
+      <path d="M4 7 C4 5.3 5.8 4 8 4 L16 4 C18.2 4 20 5.3 20 7" fill="currentColor" opacity="0.35"/>
+      <path d="M4 7 C4 5.3 5.8 4 8 4 L16 4 C18.2 4 20 5.3 20 7" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+      {/* Bottom rolled edge */}
+      <path d="M4 17 C4 18.7 5.8 20 8 20 L16 20 C18.2 20 20 18.7 20 17" fill="currentColor" opacity="0.35"/>
+      <path d="M4 17 C4 18.7 5.8 20 8 20 L16 20 C18.2 20 20 18.7 20 17" stroke="currentColor" strokeWidth="1.4" fill="none"/>
+      {/* Text lines */}
+      <line x1="7.5" y1="9.5" x2="16.5" y2="9.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" opacity="0.7"/>
+      <line x1="7.5" y1="12" x2="16.5" y2="12" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" opacity="0.7"/>
+      <line x1="7.5" y1="14.5" x2="12.5" y2="14.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" opacity="0.5"/>
+    </svg>
+  )
+}
+
+// 오늘의 운세 — 수정구슬 (크리스탈 오브)
+export function IcTodayFortune({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      {/* Orb */}
+      <circle cx="12" cy="11" r="7.5" fill="currentColor" opacity="0.12"/>
+      <circle cx="12" cy="11" r="7.5" stroke="currentColor" strokeWidth="1.6"/>
+      {/* Inner glow ring */}
+      <circle cx="12" cy="11" r="4.5" fill="currentColor" opacity="0.3"/>
+      {/* Core */}
+      <circle cx="12" cy="11" r="2" fill="currentColor"/>
+      {/* Glint */}
+      <path d="M8 7.5 C8.8 6.5 10 6 11 6.3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" fill="none" opacity="0.6"/>
+      {/* Base */}
+      <path d="M9 19.5 L15 19.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M10 18.5 L14 18.5 L13.5 19.5 L10.5 19.5 Z" fill="currentColor" opacity="0.5"/>
+    </svg>
+  )
+}
+
+// 내일의 운세 — 초승달과 별
+export function IcTomorrowFortune({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      {/* Moon crescent via clip */}
+      <path d="M18 12.5 C18 17.2 14.4 21 10 21 C6.7 21 3.9 18.9 2.7 16 C4 16.6 5.5 17 7 17 C12.5 17 17 12.5 17 7 C17 5.5 16.6 4 16 2.7 C18.9 3.9 21 6.7 21 10 C21 10.9 20.9 11.7 20.7 12.5 Z" opacity="0.9"/>
+      {/* Stars */}
+      <circle cx="19" cy="5" r="1.2"/>
+      <circle cx="22" cy="9" r="0.9" opacity="0.7"/>
+      <circle cx="16" cy="2" r="0.8" opacity="0.6"/>
+    </svg>
+  )
+}
+
+// 대운 분석 — 흐르는 운세 물결 (10년 단위 노드)
+export function IcDaun({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      {/* Flowing S-curve timeline */}
+      <path
+        d="M2 17 C5 17 5 7 8 7 C11 7 11 17 14 17 C17 17 17 7 22 7"
+        stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.5"
+      />
+      {/* Decade node dots */}
+      <circle cx="2" cy="17" r="2.2" fill="currentColor"/>
+      <circle cx="8" cy="7" r="2.2" fill="currentColor"/>
+      <circle cx="14" cy="17" r="2.2" fill="currentColor"/>
+      <circle cx="22" cy="7" r="2.2" fill="currentColor"/>
+      {/* Current year marker */}
+      <circle cx="14" cy="17" r="4" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.4"/>
+    </svg>
+  )
+}
+
+// 궁합 — 두 원의 만남 (음양 교차)
+export function IcGunghab({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      {/* Left circle */}
+      <circle cx="9" cy="12" r="6.5" opacity="0.6"/>
+      {/* Right circle (overlapping, slightly lighter at overlap via SVG blend) */}
+      <circle cx="15" cy="12" r="6.5" opacity="0.6"/>
+      {/* Overlap region — brighter */}
+      <path
+        d="M12 6.3 C13.8 7.7 15 9.7 15 12 C15 14.3 13.8 16.3 12 17.7 C10.2 16.3 9 14.3 9 12 C9 9.7 10.2 7.7 12 6.3 Z"
+        fill="currentColor" opacity="0.6"
+      />
+      {/* Small heart/star at center */}
+      <circle cx="12" cy="12" r="1.6" fill="white" opacity="0.9"/>
+    </svg>
+  )
+}
+
+// 심층 해석 — 연꽃/동심원 (깊은 통찰)
+export function IcDeepSaju({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      {/* Outer ring */}
+      <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.4" opacity="0.3"/>
+      {/* Middle ring */}
+      <circle cx="12" cy="12" r="6.5" stroke="currentColor" strokeWidth="1.5" opacity="0.55"/>
+      {/* Inner ring */}
+      <circle cx="12" cy="12" r="3.8" stroke="currentColor" strokeWidth="1.6" opacity="0.8"/>
+      {/* Core filled */}
+      <circle cx="12" cy="12" r="2" fill="currentColor"/>
+      {/* 4 axis marks (방위 direction) */}
+      <line x1="12" y1="1.5" x2="12" y2="4.5" stroke="currentColor" strokeWidth="1.4" opacity="0.4" strokeLinecap="round"/>
+      <line x1="12" y1="19.5" x2="12" y2="22.5" stroke="currentColor" strokeWidth="1.4" opacity="0.4" strokeLinecap="round"/>
+      <line x1="1.5" y1="12" x2="4.5" y2="12" stroke="currentColor" strokeWidth="1.4" opacity="0.4" strokeLinecap="round"/>
+      <line x1="19.5" y1="12" x2="22.5" y2="12" stroke="currentColor" strokeWidth="1.4" opacity="0.4" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+// 포인트 코인 — 팔각형 보석
+export function IcGem({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      {/* Diamond shape */}
+      <path d="M12 2 L20 8 L17 22 L7 22 L4 8 Z" opacity="0.9"/>
+      {/* Facet lines */}
+      <line x1="4" y1="8" x2="20" y2="8" stroke="white" strokeWidth="1" opacity="0.4"/>
+      <line x1="12" y1="2" x2="4" y2="8" stroke="white" strokeWidth="0.8" opacity="0.3"/>
+      <line x1="12" y1="2" x2="20" y2="8" stroke="white" strokeWidth="0.8" opacity="0.3"/>
+      <line x1="8" y1="8" x2="12" y2="22" stroke="white" strokeWidth="0.7" opacity="0.2"/>
+      <line x1="16" y1="8" x2="12" y2="22" stroke="white" strokeWidth="0.7" opacity="0.2"/>
+    </svg>
+  )
+}
+
+// 출석 도장 — 전통 인장(印章)
+export function IcStamp({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2"/>
+      <circle cx="12" cy="12" r="6.5" stroke="currentColor" strokeWidth="1" opacity="0.4"/>
+      <text
+        x="12" y="16"
+        textAnchor="middle"
+        fontSize="8"
+        fontWeight="bold"
+        fill="currentColor"
+        fontFamily="'Noto Serif KR', serif"
+      >印</text>
+    </svg>
+  )
+}
+
+// 사용자 프로필 — 전통 조각 문양
+export function IcProfile({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <circle cx="12" cy="8" r="4"/>
+      <path d="M4 20 C4 16 7.6 13 12 13 C16.4 13 20 16 20 20 Z" opacity="0.85"/>
+    </svg>
+  )
+}

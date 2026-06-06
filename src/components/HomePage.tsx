@@ -3,6 +3,10 @@ import type { UserInfo, BirthInput } from '../types'
 import type { PointsState } from '../utils/points'
 import { tryClaimDaily } from '../utils/points'
 import PointsModal from './PointsModal'
+import {
+  IcSaju, IcSinnyeon, IcTojeong, IcTodayFortune,
+  IcTomorrowFortune, IcDaun, IcGunghab, IcDeepSaju, IcGem, IcStamp,
+} from './icons/SajuIcons'
 
 interface Props {
   user: UserInfo
@@ -22,10 +26,7 @@ const BANNERS = [
     title: '미리보고 준비!\n2026 신년운세',
     sub: '얼른 복 잡아가세요!',
     bg: 'linear-gradient(135deg, #e8f4f0 0%, #ddeef8 100%)',
-    deco: [
-      { emoji: '🏯', cls: 'right-4 top-1/2 -translate-y-1/2 text-6xl opacity-20' },
-      { emoji: '🕊️', cls: 'right-14 top-3 text-2xl opacity-30' },
-    ],
+    accentColor: '#2D8C6A',
   },
   {
     dest: 'tojeong' as const,
@@ -33,10 +34,7 @@ const BANNERS = [
     title: '2026년 나의\n한 해 운세는?',
     sub: '이지함 선생의 전통 비결서',
     bg: 'linear-gradient(135deg, #fdf4ff 0%, #ede9fe 100%)',
-    deco: [
-      { emoji: '📖', cls: 'right-4 top-1/2 -translate-y-1/2 text-6xl opacity-20' },
-      { emoji: '✨', cls: 'right-14 top-3 text-2xl opacity-30' },
-    ],
+    accentColor: '#7C3AED',
   },
   {
     dest: 'gunghab' as const,
@@ -44,22 +42,21 @@ const BANNERS = [
     title: '나와 잘 맞는\n사람은 누구?',
     sub: '사주로 보는 두 사람의 궁합',
     bg: 'linear-gradient(135deg, #fff0f9 0%, #fce7f3 100%)',
-    deco: [
-      { emoji: '💕', cls: 'right-4 top-1/2 -translate-y-1/2 text-6xl opacity-20' },
-      { emoji: '💫', cls: 'right-14 top-3 text-2xl opacity-30' },
-    ],
+    accentColor: '#BE185D',
   },
 ]
 
-const MENU = [
-  { icon: '🗓️', label: '신년운세',   dest: 'sinnyeon'  as const, sub: '2026 병오년' },
-  { icon: '📖', label: '토정비결',   dest: 'tojeong'   as const, sub: '이지함 비결서' },
-  { icon: '☯',  label: '정통사주',   dest: 'saju'      as const, sub: '사주팔자 분석' },
-  { icon: '🔮', label: '오늘의 운세', dest: 'today'     as const, sub: '오늘 일운 분석' },
-  { icon: '⏰', label: '내일의 운세', dest: 'tomorrow'  as const, sub: '내일 미리보기' },
-  { icon: '📊', label: '대운 분석',  dest: 'daun'      as const, sub: '10년 대운 흐름' },
-  { icon: '💕', label: '궁합 보기',  dest: 'gunghab'   as const, sub: '사주 기반 궁합' },
-  { icon: '🪬', label: '심층 해석',  dest: 'deepsaju'  as const, sub: '일간 심층 분석' },
+type MenuDest = 'sinnyeon' | 'tojeong' | 'saju' | 'today' | 'tomorrow' | 'daun' | 'gunghab' | 'deepsaju'
+
+const MENU: { Icon: React.FC<{ size?: number; className?: string }>; label: string; dest: MenuDest; sub: string }[] = [
+  { Icon: IcSinnyeon,       label: '신년운세',   dest: 'sinnyeon', sub: '2026 병오년' },
+  { Icon: IcTojeong,        label: '토정비결',   dest: 'tojeong',  sub: '이지함 비결서' },
+  { Icon: IcSaju,           label: '정통사주',   dest: 'saju',     sub: '사주팔자 분석' },
+  { Icon: IcTodayFortune,   label: '오늘의 운세', dest: 'today',    sub: '오늘 일운 분석' },
+  { Icon: IcTomorrowFortune,label: '내일의 운세', dest: 'tomorrow', sub: '내일 미리보기' },
+  { Icon: IcDaun,           label: '대운 분석',  dest: 'daun',     sub: '10년 대운 흐름' },
+  { Icon: IcGunghab,        label: '궁합 보기',  dest: 'gunghab',  sub: '사주 기반 궁합' },
+  { Icon: IcDeepSaju,       label: '심층 해석',  dest: 'deepsaju', sub: '일간 심층 분석' },
 ]
 
 export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onEditProfile, onLogout }: Props) {
@@ -132,7 +129,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
               onClick={() => setShowPoints(true)}
               className="flex items-center gap-1 bg-violet-50 border border-violet-200 px-3 py-1.5 rounded-full hover:bg-violet-100 transition"
             >
-              <span className="text-xs">💎</span>
+              <IcGem size={14} className="text-violet-500"/>
               <span className="text-xs font-bold text-violet-600">{points.balance.toLocaleString()}P</span>
             </button>
             <button onClick={onLogout} className="text-xs text-stone-400 hover:text-stone-600 transition px-2 py-1">
@@ -167,10 +164,16 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
               {BANNERS.map(b => (
                 <div
                   key={b.dest}
-                  className="w-full shrink-0 relative cursor-pointer active:scale-[0.99] transition-transform"
+                  className="w-full shrink-0 relative cursor-pointer active:scale-[0.99] transition-transform overflow-hidden"
                   style={{ background: b.bg }}
                   onClick={() => onNavigate(b.dest)}
                 >
+                  {/* Background SVG decoration */}
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none select-none opacity-[0.08]" style={{ color: b.accentColor }}>
+                    {b.dest === 'sinnyeon' && <IcSinnyeon size={90}/>}
+                    {b.dest === 'tojeong'  && <IcTojeong  size={90}/>}
+                    {b.dest === 'gunghab'  && <IcGunghab  size={90}/>}
+                  </div>
                   <div className="p-5 pb-6 min-h-[120px]">
                     <span className="inline-flex items-center gap-1 text-xs font-bold bg-stone-800 text-white px-3 py-1 rounded-full mb-3">
                       {b.tag} ›
@@ -182,9 +185,6 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                     </p>
                     <p className="text-sm text-stone-500">{b.sub}</p>
                   </div>
-                  {b.deco.map((d, i) => (
-                    <div key={i} className={`absolute select-none pointer-events-none ${d.cls}`}>{d.emoji}</div>
-                  ))}
                 </div>
               ))}
             </div>
@@ -215,10 +215,13 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
             >
               <div className="relative bg-[#FFFAF4] border border-red-100 rounded-3xl px-5 pt-4 pb-3">
 
-                {/* 배경 장식 — 학(鶴) */}
-                <div className="absolute right-3 top-2 text-5xl opacity-[0.07] select-none pointer-events-none rotate-12">🦢</div>
-                <div className="absolute right-10 bottom-7 text-2xl opacity-[0.06] select-none pointer-events-none -rotate-6">🌸</div>
-                <div className="absolute left-1 bottom-5 text-3xl opacity-[0.05] select-none pointer-events-none rotate-6">🌿</div>
+                {/* 배경 장식 — 전통 문양 SVG */}
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-[0.06] select-none pointer-events-none text-red-800 rotate-12">
+                  <IcStamp size={72}/>
+                </div>
+                <div className="absolute right-16 bottom-3 opacity-[0.04] select-none pointer-events-none text-red-700 -rotate-6">
+                  <IcSinnyeon size={32}/>
+                </div>
 
                 <div className="flex items-center gap-4 mb-3">
                   {/* 원형 도장 */}
@@ -335,7 +338,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
             {MENU.map(item => (
               <button key={item.label} onClick={() => onNavigate(item.dest)} className="flex flex-col items-center gap-2 group">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm bg-gradient-to-br from-violet-50 to-purple-100 border border-violet-100 group-active:scale-95 transition-transform">
-                  <span className="text-2xl">{item.icon}</span>
+                  <item.Icon size={28} className="text-violet-600"/>
                 </div>
                 <div className="text-center">
                   <p className="text-xs text-stone-700 font-semibold leading-tight">{item.label}</p>
