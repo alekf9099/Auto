@@ -14,6 +14,8 @@ import TojeongPage    from './components/TojeongPage'
 import DayFortunePage from './components/DayFortunePage'
 import GunghabPage    from './components/GunghabPage'
 import DeepSajuPage  from './components/DeepSajuPage'
+import SajuPage      from './components/SajuPage'
+import DaunPage      from './components/DaunPage'
 import BirthForm      from './components/BirthForm'
 import LoadingScreen  from './components/LoadingScreen'
 import SajuChart      from './components/SajuChart'
@@ -26,7 +28,7 @@ import SummaryPage    from './components/SummaryPage'
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'gunghab' | 'deepsaju' | 'form' | 'loading' | 'result' | 'summary'
+type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'tomorrow' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'form' | 'loading' | 'result' | 'summary'
 type Tab  = 'saju' | 'fortune' | 'analysis'
 
 const TABS: { id: Tab; label: string }[] = [
@@ -56,9 +58,10 @@ export default function App() {
     const BACK_MAP: Partial<Record<Page, Page>> = {
       profile: 'login', analyzing: 'home', attendance: 'home',
       sinnyeon: 'home', tojeong: 'home', today: 'home', tomorrow: 'home',
-      gunghab: 'home', deepsaju: 'home', form: 'home', loading: 'home', result: 'home', summary: 'result',
+      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home',
+      form: 'home', loading: 'home', result: 'home', summary: 'result',
     }
-    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','tomorrow','gunghab','deepsaju','form','result','summary','profile','analyzing']
+    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','tomorrow','gunghab','deepsaju','saju','daun','form','result','summary','profile','analyzing']
     if (navigable.includes(page)) history.pushState({ page }, '')
 
     function onPop() {
@@ -120,13 +123,8 @@ export default function App() {
     if (dest === 'tomorrow') { setPage('tomorrow'); window.scrollTo(0, 0); return }
     if (dest === 'gunghab')  { setPage('gunghab');  window.scrollTo(0, 0); return }
     if (dest === 'deepsaju') { setPage('deepsaju'); window.scrollTo(0, 0); return }
-    if (dest === 'daun') {
-      if (result) { setTab('analysis'); setPage('result') } else { setPage('form') }
-      window.scrollTo(0, 0); return
-    }
-    // 정통사주: 프로필 있으면 바로 결과
-    if (birthProfile && result) { setPage('result'); window.scrollTo(0, 0); return }
-    setPage('form'); window.scrollTo(0, 0)
+    if (dest === 'daun') { setPage('daun'); window.scrollTo(0, 0); return }
+    if (dest === 'saju') { setPage('saju'); window.scrollTo(0, 0); return }
   }
 
   function handleSubmit(inp: BirthInput) {
@@ -185,6 +183,18 @@ export default function App() {
 
   // ── 심층 사주 해석 ────────────────────────────────────────────────────
   if (page === 'deepsaju') return <DeepSajuPage savedBirth={birthProfile} onBack={goHome} />
+
+  // ── 정통 사주 ────────────────────────────────────────────────────────
+  if (page === 'saju') return (
+    <SajuPage
+      savedBirth={birthProfile}
+      onBack={goHome}
+      onDeepSaju={() => { setPage('deepsaju'); window.scrollTo(0, 0) }}
+    />
+  )
+
+  // ── 대운 분석 ────────────────────────────────────────────────────────
+  if (page === 'daun') return <DaunPage savedBirth={birthProfile} onBack={goHome} />
 
   // ── 사주 입력 폼 ─────────────────────────────────────────────────────
   if (page === 'form') return <BirthForm savedBirth={birthProfile} onSubmit={handleSubmit} />
