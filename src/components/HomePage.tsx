@@ -25,24 +25,24 @@ const BANNERS = [
     tag: '신년운세',
     title: '미리보고 준비!\n2026 신년운세',
     sub: '얼른 복 잡아가세요!',
-    bg: 'linear-gradient(135deg, #e8f4f0 0%, #ddeef8 100%)',
-    accentColor: '#2D8C6A',
+    bg: 'linear-gradient(135deg, #0D1A16 0%, #0A1520 100%)',
+    accentColor: '#C9962A',
   },
   {
     dest: 'tojeong' as const,
     tag: '토정비결',
     title: '2026년 나의\n한 해 운세는?',
     sub: '이지함 선생의 전통 비결서',
-    bg: 'linear-gradient(135deg, #fdf4ff 0%, #ede9fe 100%)',
-    accentColor: '#7C3AED',
+    bg: 'linear-gradient(135deg, #13081C 0%, #190D2E 100%)',
+    accentColor: '#C9962A',
   },
   {
     dest: 'gunghab' as const,
     tag: '궁합 보기',
     title: '나와 잘 맞는\n사람은 누구?',
     sub: '사주로 보는 두 사람의 궁합',
-    bg: 'linear-gradient(135deg, #fff0f9 0%, #fce7f3 100%)',
-    accentColor: '#BE185D',
+    bg: 'linear-gradient(135deg, #1C0A16 0%, #200E22 100%)',
+    accentColor: '#C9962A',
   },
 ]
 
@@ -110,10 +110,10 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F2FF]">
+    <div className="min-h-screen bg-[#0D0A1A]">
 
       {dailyToast && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-violet-600 text-white text-xs font-semibold px-5 py-2.5 rounded-full shadow-lg shadow-violet-300 animate-bounce">
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-[#C9962A] text-[#0D0A1A] text-xs font-semibold px-5 py-2.5 rounded-full shadow-lg shadow-[#C9962A30] animate-bounce">
           🎉 출석 보너스 +10P 지급!
         </div>
       )}
@@ -121,18 +121,18 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
       {showPoints && <PointsModal points={points} onClose={() => setShowPoints(false)} />}
 
       {/* 상단 바 */}
-      <div className="bg-white border-b border-stone-100 sticky top-0 z-10">
+      <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-          <h1 className="text-lg font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>운명봄</h1>
+          <h1 className="text-lg font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>운명봄</h1>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowPoints(true)}
-              className="flex items-center gap-1 bg-violet-50 border border-violet-200 px-3 py-1.5 rounded-full hover:bg-violet-100 transition"
+              className="flex items-center gap-1 bg-[#C9962A15] border border-[#C9962A30] px-3 py-1.5 rounded-full hover:bg-[#C9962A25] transition"
             >
-              <IcGem size={14} className="text-violet-500"/>
-              <span className="text-xs font-bold text-violet-600">{points.balance.toLocaleString()}P</span>
+              <IcGem size={14} className="text-[#C9962A]"/>
+              <span className="text-xs font-bold text-[#C9962A]">{points.balance.toLocaleString()}P</span>
             </button>
-            <button onClick={onLogout} className="text-xs text-stone-400 hover:text-stone-600 transition px-2 py-1">
+            <button onClick={onLogout} className="text-xs text-[#A89BC0] hover:text-[#C4B8D8] transition px-2 py-1">
               로그아웃
             </button>
             {user.picture ? (

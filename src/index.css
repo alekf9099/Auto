@@ -10,6 +10,8 @@
   body {
     font-family: 'Noto Sans KR', sans-serif;
     -webkit-font-smoothing: antialiased;
+    background-color: #0D0A1A;
+    color: #F5EDD4;
   }
 
   .font-korean {

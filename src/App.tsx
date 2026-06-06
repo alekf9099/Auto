@@ -225,15 +225,15 @@ export default function App() {
 
   // ── 결과 페이지 ──────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#F4F2FF]">
-      <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-violet-100">
+    <div className="min-h-screen bg-[#0D0A1A]">
+      <div className="sticky top-0 z-10 bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#C9962A30]">
         <div className="max-w-2xl mx-auto px-4 pt-3 pb-0">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <h1 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
                 사주팔자 결과
               </h1>
-              <p className="text-xs text-stone-400">
+              <p className="text-xs text-[#7B6F9A]">
                 {input.year}.{String(input.month).padStart(2,'0')}.{String(input.day).padStart(2,'0')}
                 &nbsp;{hourLabel}&nbsp;·&nbsp;{input.gender === 'male' ? '남성' : '여성'}
               </p>
@@ -241,27 +241,27 @@ export default function App() {
             <div className="flex items-center gap-2">
               <button
                 onClick={goHome}
-                className="text-xs text-stone-400 font-semibold bg-stone-50 border border-stone-200 px-3 py-1.5 rounded-xl hover:bg-stone-100 transition"
+                className="text-xs text-[#7B6F9A] font-semibold bg-[#1C1438] border border-[#2A1F4A] px-3 py-1.5 rounded-xl hover:bg-[#231844] transition"
               >
                 홈
               </button>
               <button
                 onClick={() => { setInput(null); setResult(null); setBirthProfile(null); localStorage.removeItem(STORAGE_KEY); setPage('profile'); window.scrollTo(0, 0) }}
-                className="text-xs text-violet-600 font-semibold bg-violet-50 border border-violet-200 px-3 py-1.5 rounded-xl hover:bg-violet-100 transition"
+                className="text-xs text-[#C9962A] font-semibold bg-[#C9962A15] border border-[#C9962A40] px-3 py-1.5 rounded-xl hover:bg-[#C9962A25] transition"
               >
                 정보 수정
               </button>
             </div>
           </div>
-          <div className="flex bg-stone-100 rounded-2xl p-1 gap-1 mb-1">
+          <div className="flex bg-[#1C1438] rounded-2xl p-1 gap-1 mb-1 border border-[#2A1F4A]">
             {TABS.map(t => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
                 className={`flex-1 py-2 text-sm font-semibold rounded-xl transition-all ${
                   tab === t.id
-                    ? 'bg-violet-600 text-white shadow-md shadow-violet-200'
-                    : 'text-stone-400 hover:text-stone-600'
+                    ? 'bg-[#C9962A] text-[#0D0A1A] shadow-md shadow-[#C9962A40]'
+                    : 'text-[#6B5F8A] hover:text-[#A89BC0]'
                 }`}
               >
                 {t.label}
@@ -272,7 +272,7 @@ export default function App() {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
-        <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl p-5 shadow-xl shadow-violet-900/20">
+        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
           <p className="text-violet-300/70 text-xs mb-2">{input.year}년 {input.month}월 {input.day}일생</p>
           <div className="text-4xl font-bold tracking-wide text-white mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
             {pillarName(result.yearPillar)}{pillarName(result.monthPillar)}{pillarName(result.dayPillar)}
@@ -315,14 +315,14 @@ export default function App() {
 
         <button
           onClick={() => { setPage('summary'); window.scrollTo(0, 0) }}
-          className="w-full py-4 bg-gradient-to-r from-violet-600 to-purple-600 text-white font-bold rounded-3xl shadow-lg shadow-violet-200 hover:from-violet-500 hover:to-purple-500 transition-all text-base flex items-center justify-center gap-2 active:scale-[0.99]"
+          className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-3xl shadow-lg shadow-[#C9962A30] hover:from-[#B8871F] hover:to-[#D4A030] transition-all text-base flex items-center justify-center gap-2 active:scale-[0.99]"
         >
           <span>나의 사주 요약 카드 보기</span>
           <span className="text-lg">→</span>
         </button>
       </div>
 
-      <div className="text-center pb-8 text-xs text-stone-300">
+      <div className="text-center pb-8 text-xs text-[#4A4060]">
         사주팔자 계산기 — 양력 기준 · 절기 근사값 적용
       </div>
     </div>
