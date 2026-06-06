@@ -439,11 +439,11 @@ export default function DailyFortune({ result, ohaeng }: Props) {
   ]
 
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-stone-100 p-6">
+    <div className="bg-[#130E24] rounded-3xl shadow-sm border border-[#2A1F4A] p-6">
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-bold text-stone-700 font-korean">오늘의 운세</h2>
-        <span className="text-xs text-stone-400 bg-stone-50 px-2 py-1 rounded-full">
+        <h2 className="text-lg font-bold text-[#F5EDD4] font-korean">오늘의 운세</h2>
+        <span className="text-xs text-[#7B6F9A] bg-[#1C1438] px-2 py-1 rounded-full">
           {todayYear}.{String(todayMonth).padStart(2,'0')}.{String(todayDay).padStart(2,'0')}
         </span>
       </div>
@@ -455,7 +455,7 @@ export default function DailyFortune({ result, ohaeng }: Props) {
       >
         <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="text-xs text-stone-400 mb-1">오늘의 일주</p>
+            <p className="text-xs text-[#7B6F9A] mb-1">오늘의 일주</p>
             <div className="flex items-center gap-2">
               <span className="text-4xl font-bold" style={{ color: ELEMENT_COLORS[todayStem.element] }}>
                 {todayStem.hanja}
@@ -464,13 +464,13 @@ export default function DailyFortune({ result, ohaeng }: Props) {
                 {todayBranch.hanja}
               </span>
               <div className="ml-1">
-                <p className="text-sm text-stone-500">{todayStem.ko}{todayBranch.ko}일</p>
-                <p className="text-xs text-stone-400">{todayBranch.animal}의 날</p>
+                <p className="text-sm text-[#A89BC0]">{todayStem.ko}{todayBranch.ko}일</p>
+                <p className="text-xs text-[#7B6F9A]">{todayBranch.animal}의 날</p>
               </div>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-xs text-stone-400 mb-1">내 일간과의 관계</p>
+            <p className="text-xs text-[#7B6F9A] mb-1">내 일간과의 관계</p>
             <span
               className="text-2xl font-bold px-3 py-1.5 rounded-xl inline-block"
               style={{ backgroundColor: fortune.color + '20', color: fortune.color }}
@@ -484,18 +484,18 @@ export default function DailyFortune({ result, ohaeng }: Props) {
         </div>
 
         {/* 조언 */}
-        <div className="bg-white/60 rounded-xl p-3">
+        <div className="bg-[#1C1438] rounded-xl p-3">
           <p className="text-xs font-semibold mb-1" style={{ color: fortune.color }}>✨ 오늘의 조언</p>
-          <p className="text-sm text-stone-600 leading-relaxed">{fortune.조언}</p>
+          <p className="text-sm text-[#C4B8D8] leading-relaxed">{fortune.조언}</p>
         </div>
       </div>
 
       {/* 주의사항 */}
-      <div className="bg-red-50 border border-red-100 rounded-2xl px-4 py-2.5 mb-4 flex items-start gap-2">
+      <div className="bg-red-900/20 border border-red-900/40 rounded-2xl px-4 py-2.5 mb-4 flex items-start gap-2">
         <span className="text-sm">⚠️</span>
         <div>
-          <span className="text-xs font-semibold text-red-500">오늘 조심할 것 </span>
-          <span className="text-xs text-stone-500">{fortune.주의}</span>
+          <span className="text-xs font-semibold text-red-400">오늘 조심할 것 </span>
+          <span className="text-xs text-[#A89BC0]">{fortune.주의}</span>
         </div>
       </div>
 
@@ -504,21 +504,21 @@ export default function DailyFortune({ result, ohaeng }: Props) {
         {categories.map(({ key, emoji, label }) => {
           const f = fortune[key]
           return (
-            <details key={key} className="border border-stone-100 rounded-2xl overflow-hidden group">
-              <summary className="flex items-center justify-between p-4 cursor-pointer list-none select-none hover:bg-stone-50 transition">
+            <details key={key} className="border border-[#2A1F4A] rounded-2xl overflow-hidden group">
+              <summary className="flex items-center justify-between p-4 cursor-pointer list-none select-none hover:bg-[#1C1438] transition">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">{emoji}</span>
-                  <span className="text-sm font-semibold text-stone-700">{label}</span>
-                  <span className="text-xs text-stone-400 ml-1">{f.summary}</span>
+                  <span className="text-sm font-semibold text-[#C4B8D8]">{label}</span>
+                  <span className="text-xs text-[#7B6F9A] ml-1">{f.summary}</span>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <Stars n={f.star} />
-                  <span className="text-stone-300 text-xs group-open:rotate-180 transition-transform">▼</span>
+                  <span className="text-[#4A4060] text-xs group-open:rotate-180 transition-transform">▼</span>
                 </div>
               </summary>
               <div className="px-4 pb-4 pt-0">
-                <div className="h-px bg-stone-100 mb-3" />
-                <p className="text-sm text-stone-500 leading-relaxed">{f.detail}</p>
+                <div className="h-px bg-[#2A1F4A] mb-3" />
+                <p className="text-sm text-[#A89BC0] leading-relaxed">{f.detail}</p>
               </div>
             </details>
           )
@@ -527,18 +527,18 @@ export default function DailyFortune({ result, ohaeng }: Props) {
 
       {/* 시간대별 운세 */}
       <div className="mb-5">
-        <p className="text-sm font-semibold text-stone-600 mb-3">🕐 시간대별 운세</p>
+        <p className="text-sm font-semibold text-[#C4B8D8] mb-3">🕐 시간대별 운세</p>
         <div className="space-y-2">
           {([
             { label: '오전 (06~12시)', icon: '🌅', text: fortune.시간.오전 },
             { label: '오후 (12~18시)', icon: '☀️',  text: fortune.시간.오후 },
             { label: '저녁 (18~24시)', icon: '🌙', text: fortune.시간.저녁 },
           ]).map(t => (
-            <div key={t.label} className="flex gap-3 bg-stone-50 rounded-2xl px-4 py-3">
+            <div key={t.label} className="flex gap-3 bg-[#1C1438] rounded-2xl px-4 py-3">
               <span className="text-lg shrink-0">{t.icon}</span>
               <div>
-                <p className="text-xs font-semibold text-stone-500 mb-0.5">{t.label}</p>
-                <p className="text-sm text-stone-600 leading-relaxed">{t.text}</p>
+                <p className="text-xs font-semibold text-[#7B6F9A] mb-0.5">{t.label}</p>
+                <p className="text-sm text-[#C4B8D8] leading-relaxed">{t.text}</p>
               </div>
             </div>
           ))}
@@ -547,7 +547,7 @@ export default function DailyFortune({ result, ohaeng }: Props) {
 
       {/* 행운 아이템 */}
       <div>
-        <p className="text-sm font-semibold text-stone-600 mb-3">🍀 오늘의 행운 아이템</p>
+        <p className="text-sm font-semibold text-[#C4B8D8] mb-3">🍀 오늘의 행운 아이템</p>
         <div className="grid grid-cols-2 gap-2">
           {[
             { label: '행운 색상', value: LUCKY_COLOR[luckyEl].name, icon: '🎨',
@@ -556,13 +556,13 @@ export default function DailyFortune({ result, ohaeng }: Props) {
             { label: '행운 방향', value: LUCKY_DIR[luckyEl], icon: '🧭', dot: null },
             { label: '행운 음식', value: LUCKY_FOOD[luckyEl], icon: '🍽️', dot: null },
           ].map(item => (
-            <div key={item.label} className="bg-amber-50 border border-amber-100 rounded-2xl p-3">
-              <p className="text-xs text-stone-400 mb-1">{item.icon} {item.label}</p>
+            <div key={item.label} className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl p-3">
+              <p className="text-xs text-[#7B6F9A] mb-1">{item.icon} {item.label}</p>
               <div className="flex items-center gap-1.5">
                 {item.dot && (
                   <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.dot }} />
                 )}
-                <p className="text-sm font-semibold text-stone-700">{item.value}</p>
+                <p className="text-sm font-semibold text-[#C4B8D8]">{item.value}</p>
               </div>
             </div>
           ))}

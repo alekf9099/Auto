@@ -39,10 +39,10 @@ const PILLAR_INSIGHTS: string[] = [
 export default function SajuPage({ savedBirth, onBack, onDeepSaju }: Props) {
   if (!savedBirth) {
     return (
-      <div className="min-h-screen bg-[#F4F2FF] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[#0D0A1A] flex items-center justify-center p-6">
         <div className="text-center">
-          <p className="text-stone-500 mb-4">생년월일 정보를 먼저 입력해 주세요.</p>
-          <button onClick={onBack} className="text-violet-600 font-semibold">← 돌아가기</button>
+          <p className="text-[#A89BC0] mb-4">생년월일 정보를 먼저 입력해 주세요.</p>
+          <button onClick={onBack} className="text-[#C9962A] font-semibold">← 돌아가기</button>
         </div>
       </div>
     )
@@ -63,21 +63,21 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju }: Props) {
   })()
 
   return (
-    <div className="min-h-screen bg-[#F4F2FF]">
+    <div className="min-h-screen bg-[#0D0A1A]">
       {/* Sticky header */}
-      <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-violet-100">
+      <div className="sticky top-0 z-10 bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#C9962A30]">
         <div className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex items-center gap-3">
           <button
             onClick={onBack}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-stone-100 transition text-stone-600 text-lg"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#231844] transition text-[#C4B8D8] text-lg"
           >
             ←
           </button>
           <div>
-            <h1 className="text-base font-bold text-stone-800 leading-tight" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Noto Serif KR', serif" }}>
               정통 사주 (正統四柱)
             </h1>
-            <p className="text-xs text-stone-400">사주팔자 명식 전체 분석</p>
+            <p className="text-xs text-[#7B6F9A]">사주팔자 명식 전체 분석</p>
           </div>
         </div>
       </div>
@@ -85,7 +85,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju }: Props) {
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
         {/* Dark hero */}
-        <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl p-5 shadow-xl shadow-violet-900/20">
+        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
           <p className="text-violet-300/70 text-xs mb-2">
             {savedBirth.year}년 {savedBirth.month}월 {savedBirth.day}일생 · {savedBirth.gender === 'male' ? '남성' : '여성'}
           </p>
@@ -106,20 +106,20 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju }: Props) {
             <span className="text-xs bg-violet-400/20 text-violet-200 border border-violet-400/30 px-2.5 py-1 rounded-full font-medium">
               {dayStem.hanja}({dayStem.ko}) 일간
             </span>
-            <span className="text-xs bg-white/10 text-violet-200 border border-white/20 px-2.5 py-1 rounded-full">
+            <span className="text-xs bg-[#C9962A15] text-[#E8B84B] border border-[#C9962A30] px-2.5 py-1 rounded-full">
               {ELEMENT_KO[dayStem.element]}{dayStem.yinYang === 'yang' ? ' 양' : ' 음'}
             </span>
-            <span className="text-xs bg-white/10 text-violet-200 border border-white/20 px-2.5 py-1 rounded-full">
+            <span className="text-xs bg-[#C9962A15] text-[#E8B84B] border border-[#C9962A30] px-2.5 py-1 rounded-full">
               {dayBranch.animal}띠
             </span>
           </div>
         </div>
 
         {/* Day stem card */}
-        <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-6">
+        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-1 h-5 bg-violet-500 rounded-full" />
-            <h2 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+            <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
               일간 기질 (日干 氣質)
             </h2>
           </div>
@@ -127,25 +127,25 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju }: Props) {
             <div className="flex items-center gap-3 mb-3">
               <span className="text-3xl">{nature.symbol}</span>
               <div>
-                <p className="text-sm font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
                   {nature.title}
                 </p>
-                <p className="text-xs text-stone-400">
+                <p className="text-xs text-[#7B6F9A]">
                   {ELEMENT_KO[dayStem.element]} {dayStem.yinYang === 'yang' ? '양(陽)' : '음(陰)'}
                 </p>
               </div>
             </div>
-            <p className="text-sm text-stone-600 leading-relaxed">{nature.nature}</p>
+            <p className="text-sm text-[#C4B8D8] leading-relaxed">{nature.nature}</p>
           </div>
 
           {/* Pillar guide */}
           <div className="mt-4 space-y-2">
             {pillarsDesc.map((desc, i) => (
               <div key={i} className="flex gap-2.5 items-start">
-                <span className="w-5 h-5 rounded-full bg-violet-100 text-violet-600 text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="w-5 h-5 rounded-full bg-[#C9962A20] text-[#C9962A] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                   {i + 1}
                 </span>
-                <p className="text-xs text-stone-500 leading-relaxed">{desc}</p>
+                <p className="text-xs text-[#A89BC0] leading-relaxed">{desc}</p>
               </div>
             ))}
           </div>
@@ -164,7 +164,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju }: Props) {
         <SipsinChart result={result} />
 
         {/* Deep saju CTA */}
-        <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl p-6 shadow-xl shadow-violet-900/20">
+        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
           <div className="flex items-center gap-2 mb-2">
             <span className="text-2xl">🪬</span>
             <h3
@@ -179,13 +179,13 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju }: Props) {
           </p>
           <button
             onClick={onDeepSaju}
-            className="w-full py-3.5 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold rounded-2xl shadow-lg hover:from-violet-400 hover:to-purple-400 transition-all active:scale-[0.99]"
+            className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99]"
           >
             심층 해석 열기 →
           </button>
         </div>
 
-        <p className="text-center text-xs text-stone-300 pb-6">
+        <p className="text-center text-xs text-[#4A4060] pb-6">
           사주팔자 계산기 — 양력 기준 · 절기 근사값 적용
         </p>
       </div>

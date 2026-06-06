@@ -24,40 +24,40 @@ export default function FortuneReading({ result, count }: Props) {
   const sc = ELEMENT_COLORS[dayStem.element]
 
   return (
-    <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-6">
+    <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
       <div className="flex items-center gap-2 mb-5">
-        <div className="w-1 h-5 bg-violet-500 rounded-full" />
-        <h2 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>명식 해석 (命式)</h2>
+        <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+        <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>명식 해석 (命式)</h2>
       </div>
 
       {/* 일주 특성 */}
       <div className="rounded-2xl p-4 mb-3 border" style={{ backgroundColor: sc + '0D', borderColor: sc + '30' }}>
         <div className="flex items-center gap-2 mb-2">
           <span className="text-2xl font-bold" style={{ color: sc }}>{dayStem.hanja}{dayBranch.hanja}</span>
-          <span className="text-xs text-stone-400 bg-stone-100 px-2 py-0.5 rounded-full">일주 특성</span>
+          <span className="text-xs text-[#7B6F9A] bg-[#231844] px-2 py-0.5 rounded-full">일주 특성</span>
         </div>
-        <p className="text-sm text-stone-600 leading-relaxed">{ILJU_MEANING[result.dayPillar.stemIndex]}</p>
+        <p className="text-sm text-[#C4B8D8] leading-relaxed">{ILJU_MEANING[result.dayPillar.stemIndex]}</p>
       </div>
 
       {/* 오행 균형 */}
-      <div className="rounded-2xl bg-violet-50 border border-violet-100 p-4 mb-3">
-        <p className="text-xs font-semibold text-violet-600 mb-2">🔮 오행 균형 분석</p>
+      <div className="rounded-2xl bg-[#C9962A15] border border-[#C9962A30] p-4 mb-3">
+        <p className="text-xs font-semibold text-[#C9962A] mb-2">🔮 오행 균형 분석</p>
         {isBalanced ? (
-          <p className="text-sm text-stone-600">오행이 전체적으로 균형 잡혀 있습니다. 다양한 분야에서 고루 능력을 발휘할 수 있습니다.</p>
+          <p className="text-sm text-[#C4B8D8]">오행이 전체적으로 균형 잡혀 있습니다. 다양한 분야에서 고루 능력을 발휘할 수 있습니다.</p>
         ) : (
-          <p className="text-sm text-stone-600">
+          <p className="text-sm text-[#C4B8D8]">
             <strong style={{ color: ELEMENT_COLORS[strongest] }}>{KEYWORDS[strongest][0]}</strong>과{' '}
             <strong style={{ color: ELEMENT_COLORS[strongest] }}>{KEYWORDS[strongest][1]}</strong>의 기운이 강합니다.{' '}
             {count[weakest] === 0
-              ? <><strong className="text-stone-800">{weakest === 'wood' ? '목(木)' : weakest === 'fire' ? '화(火)' : weakest === 'earth' ? '토(土)' : weakest === 'metal' ? '금(金)' : '수(水)'}</strong>의 기운이 없으니 관련 색상·방위를 보완하세요.</>
+              ? <><strong className="text-[#F5EDD4]">{weakest === 'wood' ? '목(木)' : weakest === 'fire' ? '화(火)' : weakest === 'earth' ? '토(土)' : weakest === 'metal' ? '금(金)' : '수(水)'}</strong>의 기운이 없으니 관련 색상·방위를 보완하세요.</>
               : <>약한 기운을 보완하면 더욱 균형 잡힌 삶을 이룰 수 있습니다.</>}
           </p>
         )}
       </div>
 
       {/* 적성 */}
-      <div className="rounded-2xl bg-stone-50 border border-stone-100 p-4 mb-3">
-        <p className="text-xs font-semibold text-stone-600 mb-2.5">💼 적성 &amp; 직업</p>
+      <div className="rounded-2xl bg-[#1C1438] border border-[#2A1F4A] p-4 mb-3">
+        <p className="text-xs font-semibold text-[#C4B8D8] mb-2.5">💼 적성 &amp; 직업</p>
         <div className="flex flex-wrap gap-1.5">
           {[...CAREER[strongest], ...CAREER[dayStem.element]]
             .filter((v, i, a) => a.indexOf(v) === i).slice(0, 6)
@@ -71,18 +71,18 @@ export default function FortuneReading({ result, count }: Props) {
       </div>
 
       {/* 키워드 */}
-      <div className="rounded-2xl bg-stone-50 border border-stone-100 p-4">
-        <p className="text-xs font-semibold text-stone-600 mb-2.5">✨ 핵심 키워드</p>
+      <div className="rounded-2xl bg-[#1C1438] border border-[#2A1F4A] p-4">
+        <p className="text-xs font-semibold text-[#C4B8D8] mb-2.5">✨ 핵심 키워드</p>
         <div className="flex flex-wrap gap-1.5">
           {[...KEYWORDS[dayStem.element], ...KEYWORDS[strongest]]
             .filter((v, i, a) => a.indexOf(v) === i).slice(0, 6)
             .map(kw => (
-              <span key={kw} className="text-xs bg-violet-50 text-violet-600 border border-violet-200 px-2.5 py-1 rounded-full font-medium">{kw}</span>
+              <span key={kw} className="text-xs bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40] px-2.5 py-1 rounded-full font-medium">{kw}</span>
             ))}
         </div>
       </div>
 
-      <p className="text-xs text-stone-300 mt-4 text-center">※ 본 해석은 참고용이며, 전문 역술가의 상담을 권장합니다.</p>
+      <p className="text-xs text-[#4A4060] mt-4 text-center">※ 본 해석은 참고용이며, 전문 역술가의 상담을 권장합니다.</p>
     </div>
   )
 }

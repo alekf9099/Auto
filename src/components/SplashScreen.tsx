@@ -20,13 +20,13 @@ export default function SplashScreen({ onDone }: Props) {
 
   return (
     <div
-      className="min-h-screen bg-[#F4F2FF] relative overflow-hidden flex flex-col items-center justify-center transition-opacity duration-500"
+      className="min-h-screen bg-[#0D0A1A] relative overflow-hidden flex flex-col items-center justify-center transition-opacity duration-500"
       style={{ opacity: fade ? 0 : visible ? 1 : 0 }}
     >
       {/* 배경 블롭 */}
-      <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-violet-200/50 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-20 -left-16 w-72 h-72 rounded-full bg-purple-200/45 blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 -right-12 w-40 h-40 rounded-full bg-indigo-100/50 blur-2xl pointer-events-none" />
+      <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-[#C9962A]/8 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-20 -left-16 w-72 h-72 rounded-full bg-violet-900/20 blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 -right-12 w-40 h-40 rounded-full bg-[#C9962A]/5 blur-2xl pointer-events-none" />
 
       {/* 배경 기호 */}
       {[
@@ -49,10 +49,10 @@ export default function SplashScreen({ onDone }: Props) {
       {/* 로고 */}
       <div className="relative flex items-center justify-center mb-7" style={{ width: 220, height: 220 }}>
         {/* 동심원 링 */}
-        <div className="absolute rounded-full border border-violet-200/50" style={{ width: 216, height: 216 }} />
-        <div className="absolute rounded-full border border-violet-300/35" style={{ width: 168, height: 168 }} />
+        <div className="absolute rounded-full border border-[#C9962A]/20" style={{ width: 216, height: 216 }} />
+        <div className="absolute rounded-full border border-[#C9962A]/15" style={{ width: 168, height: 168 }} />
         {/* 글로우 */}
-        <div className="absolute w-36 h-36 rounded-full bg-violet-300/25 blur-2xl" />
+        <div className="absolute w-36 h-36 rounded-full bg-[#C9962A]/10 blur-2xl" />
 
         {/* 오행 라벨 */}
         <span className="absolute text-xs font-bold" style={{ color: '#86EFAC', top: 6,   left: '50%', transform: 'translateX(-50%)' }}>木</span>
@@ -62,22 +62,22 @@ export default function SplashScreen({ onDone }: Props) {
 
         {/* 메인 아이콘 */}
         <div className="relative w-[110px] h-[110px] rounded-full p-[3px]"
-          style={{ background: 'linear-gradient(135deg, #A78BFA, #7C3AED)' }}>
-          <div className="w-full h-full rounded-full bg-[#F4F2FF] flex items-center justify-center">
-            <span className="text-[52px]" style={{ color: '#7C3AED', fontFamily: 'serif' }}>☯</span>
+          style={{ background: 'linear-gradient(135deg, #C9962A, #E8B84B)' }}>
+          <div className="w-full h-full rounded-full bg-[#0D0A1A] flex items-center justify-center">
+            <span className="text-[52px]" style={{ color: '#C9962A', fontFamily: 'serif' }}>☯</span>
           </div>
         </div>
       </div>
 
       {/* 앱 이름 */}
       <h1
-        className="text-4xl font-bold text-stone-800 mb-2 tracking-tight"
+        className="text-4xl font-bold text-[#F5EDD4] mb-2 tracking-tight"
         style={{ fontFamily: "'Noto Serif KR', serif" }}
       >
         운명봄
       </h1>
-      <p className="text-sm text-stone-400 mb-1">당신의 운명을 봅니다</p>
-      <p className="text-xs text-violet-400/70">사주팔자 · 신년운세 · 토정비결</p>
+      <p className="text-sm text-[#7B6F9A] mb-1">당신의 운명을 봅니다</p>
+      <p className="text-xs text-[#C9962A]/70">사주팔자 · 신년운세 · 토정비결</p>
     </div>
   )
 }

@@ -74,19 +74,19 @@ function PersonForm({
 }) {
   const set = (k: keyof BirthFields, v: string | boolean) => onChange({ ...fields, [k]: v })
   const focusCls = accent === 'rose'
-    ? 'focus:border-rose-400 focus:ring-2 focus:ring-rose-100'
-    : 'focus:border-violet-400 focus:ring-2 focus:ring-violet-100'
+    ? 'focus:border-rose-400 focus:ring-2 focus:ring-rose-900/20'
+    : 'focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20]'
   const unknownCls = accent === 'rose'
-    ? 'bg-rose-100 text-rose-600'
-    : 'bg-violet-100 text-violet-600'
-  const accentLine = accent === 'rose' ? 'bg-rose-400' : 'bg-violet-400'
+    ? 'bg-rose-900/30 text-rose-300'
+    : 'bg-[#C9962A20] text-[#C9962A]'
+  const accentLine = accent === 'rose' ? 'bg-rose-400' : 'bg-[#C9962A]'
 
   return (
     <div>
       <div className="flex items-center gap-2 mb-3">
         <div className={`w-1 h-4 ${accentLine} rounded-full`} />
         <span className="text-base">{icon}</span>
-        <p className="text-sm font-bold text-stone-700">{title}</p>
+        <p className="text-sm font-bold text-[#F5EDD4]">{title}</p>
       </div>
       <div className="space-y-2.5">
         <div className="grid grid-cols-3 gap-2">
@@ -96,12 +96,12 @@ function PersonForm({
             { k: 'day'   as const, label: '일',       ph: '1',    min: 1,    max: 31   },
           ]).map(f => (
             <div key={f.k}>
-              <label className="block text-[11px] font-semibold text-stone-400 mb-1">{f.label}</label>
+              <label className="block text-[11px] font-semibold text-[#A89BC0] mb-1">{f.label}</label>
               <input
                 type="number" required placeholder={f.ph} min={f.min} max={f.max}
                 value={fields[f.k]}
                 onChange={e => set(f.k, e.target.value)}
-                className={`w-full bg-stone-50 border border-stone-200 rounded-xl px-1 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none transition text-center ${focusCls}`}
+                className={`w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-1 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none transition text-center ${focusCls}`}
               />
             </div>
           ))}
@@ -109,11 +109,11 @@ function PersonForm({
         <div className="grid grid-cols-2 gap-2">
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="text-[11px] font-semibold text-stone-400">시간</label>
+              <label className="text-[11px] font-semibold text-[#A89BC0]">시간</label>
               <button
                 type="button"
                 onClick={() => set('hourUnknown', !fields.hourUnknown)}
-                className={`text-[10px] font-semibold px-2 py-0.5 rounded-full transition ${fields.hourUnknown ? unknownCls : 'bg-stone-100 text-stone-400'}`}
+                className={`text-[10px] font-semibold px-2 py-0.5 rounded-full transition ${fields.hourUnknown ? unknownCls : 'bg-[#231844] text-[#7B6F9A]'}`}
               >
                 {fields.hourUnknown ? '모름 ✓' : '모름'}
               </button>
@@ -123,17 +123,17 @@ function PersonForm({
               disabled={fields.hourUnknown}
               value={fields.hourUnknown ? '' : fields.hour}
               onChange={e => set('hour', e.target.value)}
-              className={`w-full bg-stone-50 border border-stone-200 rounded-xl px-1 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none transition text-center disabled:opacity-40 ${focusCls}`}
+              className={`w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-1 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none transition text-center disabled:opacity-40 ${focusCls}`}
             />
           </div>
           <div>
-            <label className="block text-[11px] font-semibold text-stone-400 mb-1">분 (선택)</label>
+            <label className="block text-[11px] font-semibold text-[#A89BC0] mb-1">분 (선택)</label>
             <input
               type="number" placeholder="0~59" min={0} max={59}
               disabled={fields.hourUnknown}
               value={fields.hourUnknown ? '' : fields.minute}
               onChange={e => set('minute', e.target.value)}
-              className={`w-full bg-stone-50 border border-stone-200 rounded-xl px-1 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none transition text-center disabled:opacity-40 ${focusCls}`}
+              className={`w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-1 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none transition text-center disabled:opacity-40 ${focusCls}`}
             />
           </div>
         </div>
@@ -179,13 +179,13 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
   const nameInit  = nameLabel[0] ?? '?'
 
   return (
-    <div className="min-h-screen bg-[#F4F2FF]">
-      <div className="bg-white border-b border-stone-100 sticky top-0 z-20">
+    <div className="min-h-screen bg-[#0D0A1A]">
+      <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} className="text-stone-400 hover:text-stone-600 transition text-lg">←</button>
+          <button onClick={onBack} className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
-            <h1 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>궁합 보기</h1>
-            <p className="text-xs text-stone-400">사주 기반 두 사람의 궁합 분석</p>
+            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>궁합 보기</h1>
+            <p className="text-xs text-[#7B6F9A]">사주 기반 두 사람의 궁합 분석</p>
           </div>
         </div>
       </div>
@@ -194,7 +194,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
       {step === 'form' && (
         <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
           {/* 히어로 배너 */}
-          <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl p-6 shadow-xl shadow-violet-900/20 relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative overflow-hidden">
             <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-rose-500/15 blur-2xl" />
             <div className="absolute -bottom-8 -left-8 w-36 h-36 rounded-full bg-violet-400/15 blur-2xl" />
             <div className="relative z-10 flex items-center gap-4">
@@ -210,16 +210,16 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
           </div>
 
           {/* 관계 선택 */}
-          <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">
-            <p className="text-xs font-semibold text-stone-400 mb-3">관계 선택</p>
+          <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
+            <p className="text-xs font-semibold text-[#A89BC0] mb-3">관계 선택</p>
             <div className="grid grid-cols-3 gap-2">
               {REL_OPTIONS.map(opt => (
                 <button
                   key={opt.key} type="button" onClick={() => setRel(opt.key)}
                   className={`py-3.5 rounded-2xl text-center transition-all active:scale-95 ${
                     rel === opt.key
-                      ? 'bg-gradient-to-b from-violet-500 to-purple-700 text-white shadow-lg shadow-violet-300'
-                      : 'bg-stone-50 border border-stone-200 text-stone-500'
+                      ? 'bg-gradient-to-b from-[#C9962A] to-[#B8871F] text-[#0D0A1A] shadow-lg shadow-[#C9962A30]'
+                      : 'bg-[#1C1438] border border-[#2A1F4A] text-[#A89BC0]'
                   }`}
                 >
                   <p className="text-2xl mb-1">{opt.icon}</p>
@@ -232,7 +232,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {/* 나 */}
-            <div className="bg-white rounded-3xl border border-violet-100 shadow-[0_2px_16px_rgba(124,58,237,0.08)] p-5">
+            <div className="bg-[#130E24] rounded-3xl border border-[#C9962A30] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
               <PersonForm title="나" icon="🧑" fields={me} onChange={setMe} accent="violet" />
             </div>
 
@@ -249,11 +249,11 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
             </div>
 
             {/* 상대방 */}
-            <div className="bg-white rounded-3xl border border-rose-100 shadow-[0_2px_16px_rgba(244,63,94,0.08)] p-5 space-y-4">
+            <div className="bg-[#130E24] rounded-3xl border border-rose-900/40 shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-stone-400 mb-1.5">
+                <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">
                   {relOpt.icon} {relOpt.label} 이름
-                  <span className="text-stone-300 font-normal ml-1">(선택)</span>
+                  <span className="text-[#4A4060] font-normal ml-1">(선택)</span>
                 </label>
                 <input
                   ref={inputRef}
@@ -261,7 +261,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
                   placeholder={rel === 'couple' ? '연인 이름을 입력하세요' : rel === 'friend' ? '친구 이름을 입력하세요' : '동료 이름을 입력하세요'}
                   value={themName}
                   onChange={e => setThemName(e.target.value)}
-                  className="w-full bg-rose-50 border border-rose-200 rounded-xl px-3 py-2.5 text-sm text-stone-800 placeholder:text-stone-300 focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-100 transition"
+                  className="w-full bg-[#1C1438] border border-rose-900/40 rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-900/20 transition"
                 />
               </div>
               <PersonForm title="상대방" icon={relOpt.icon} fields={them} onChange={setThem} accent="rose" />
@@ -269,7 +269,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
 
             <button
               type="submit"
-              className="w-full py-4 bg-gradient-to-r from-violet-600 via-purple-600 to-rose-500 text-white font-bold rounded-2xl shadow-lg shadow-violet-200 transition-all text-sm active:scale-[0.98]"
+              className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] transition-all text-sm active:scale-[0.98]"
             >
               {relOpt.icon} {nameLabel}과의 궁합 확인하기 →
             </button>
@@ -288,15 +288,15 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
             <div className="absolute inset-0 animate-spin" style={{ animationDuration: '2s', animationDirection: 'reverse' }}>
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1 w-6 h-6 rounded-full bg-rose-400 shadow-lg shadow-rose-200" />
             </div>
-            <div className="absolute inset-4 rounded-full border-2 border-dashed border-stone-200 animate-spin" style={{ animationDuration: '4s', animationDirection: 'reverse' }} />
+            <div className="absolute inset-4 rounded-full border-2 border-dashed border-[#2A1F4A] animate-spin" style={{ animationDuration: '4s', animationDirection: 'reverse' }} />
             <div className="absolute inset-0 flex items-center justify-center text-4xl">💕</div>
           </div>
           <div className="text-center">
-            <p className="text-base font-bold text-stone-700 mb-1">사주를 분석하는 중</p>
-            <p className="text-sm text-stone-400">{nameLabel}과의 궁합을 계산하고 있어요</p>
+            <p className="text-base font-bold text-[#F5EDD4] mb-1">사주를 분석하는 중</p>
+            <p className="text-sm text-[#7B6F9A]">{nameLabel}과의 궁합을 계산하고 있어요</p>
             <div className="flex justify-center gap-1.5 mt-4">
               {[0, 1, 2].map(i => (
-                <div key={i} className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-bounce" style={{ animationDelay: `${i * 0.2}s` }} />
+                <div key={i} className="w-1.5 h-1.5 rounded-full bg-[#C9962A] animate-bounce" style={{ animationDelay: `${i * 0.2}s` }} />
               ))}
             </div>
           </div>
@@ -308,7 +308,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
         <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
           {/* 결과 배너 */}
-          <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl overflow-hidden shadow-xl shadow-violet-900/20 relative">
+          <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl overflow-hidden shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative">
             <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-rose-500/10 blur-3xl" />
             <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-violet-400/10 blur-3xl" />
 
@@ -371,10 +371,10 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
           </div>
 
           {/* 분야별 궁합 */}
-          <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">
+          <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
             <div className="flex items-center gap-2 mb-5">
-              <div className="w-1 h-5 bg-violet-500 rounded-full" />
-              <h2 className="text-sm font-bold text-stone-800">분야별 궁합</h2>
+              <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+              <h2 className="text-sm font-bold text-[#F5EDD4]">분야별 궁합</h2>
             </div>
             <div className="space-y-5">
               {[
@@ -387,13 +387,13 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
                     <div className="flex items-center gap-2">
                       <span className="text-base">{item.icon}</span>
                       <div>
-                        <span className="text-xs font-bold text-stone-700">{item.label}</span>
-                        <span className="text-[11px] text-stone-400 ml-1.5">{item.desc}</span>
+                        <span className="text-xs font-bold text-[#C4B8D8]">{item.label}</span>
+                        <span className="text-[11px] text-[#7B6F9A] ml-1.5">{item.desc}</span>
                       </div>
                     </div>
                     <span className="text-sm font-bold tabular-nums" style={{ color: BAR_COLORS[i].from }}>{item.score}%</span>
                   </div>
-                  <div className="w-full h-3 bg-stone-100 rounded-full overflow-hidden">
+                  <div className="w-full h-3 bg-[#231844] rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full"
                       style={{
@@ -409,18 +409,18 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
 
           {/* 궁합 포인트 */}
           {result.tips.length > 0 && (
-            <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">
+            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
               <div className="flex items-center gap-2 mb-4">
-                <div className="w-1 h-5 bg-violet-500 rounded-full" />
-                <h2 className="text-sm font-bold text-stone-800">궁합 포인트</h2>
+                <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+                <h2 className="text-sm font-bold text-[#F5EDD4]">궁합 포인트</h2>
               </div>
               <div className="space-y-2">
                 {result.tips.map((tip, i) => (
-                  <div key={i} className={`flex items-start gap-3 px-4 py-3 rounded-2xl ${tip.good ? 'bg-violet-50 border border-violet-100' : 'bg-rose-50 border border-rose-100'}`}>
-                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5 ${tip.good ? 'bg-violet-500 text-white' : 'bg-rose-400 text-white'}`}>
+                  <div key={i} className={`flex items-start gap-3 px-4 py-3 rounded-2xl ${tip.good ? 'bg-[#C9962A15] border border-[#C9962A30]' : 'bg-rose-900/20 border border-rose-900/40'}`}>
+                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5 ${tip.good ? 'bg-[#C9962A] text-[#0D0A1A]' : 'bg-rose-500 text-white'}`}>
                       {tip.good ? '✓' : '!'}
                     </span>
-                    <p className="text-xs text-stone-600 leading-relaxed">{tip.text}</p>
+                    <p className="text-xs text-[#A89BC0] leading-relaxed">{tip.text}</p>
                   </div>
                 ))}
               </div>
@@ -428,10 +428,10 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
           )}
 
           {/* 종합 설명 */}
-          <div className="rounded-3xl p-5 relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #F3F0FF 0%, #EFF6FF 100%)' }}>
-            <div className="absolute top-0 right-0 w-20 h-20 rounded-full bg-violet-200/30 -translate-y-4 translate-x-4" />
-            <p className="text-xs font-bold text-violet-600 mb-2">💌 종합 분석</p>
-            <p className="text-sm text-stone-600 leading-relaxed relative z-10">{result.summary}</p>
+          <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-3xl p-5 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-20 h-20 rounded-full bg-[#C9962A]/10 -translate-y-4 translate-x-4" />
+            <p className="text-xs font-bold text-[#C9962A] mb-2">💌 종합 분석</p>
+            <p className="text-sm text-[#C4B8D8] leading-relaxed relative z-10">{result.summary}</p>
           </div>
 
           {toast && toast.amount > 0 && (
@@ -439,20 +439,20 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
           )}
           <button
             onClick={handlePointsClaim}
-            className="w-full py-3.5 bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold rounded-2xl text-sm shadow-md shadow-violet-200 active:scale-[0.98] transition-all"
+            className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl text-sm shadow-md shadow-[#C9962A30] active:scale-[0.98] transition-all"
           >
             {toast !== null && toast.amount === 0 ? '✓ 오늘 포인트 이미 받음' : '💎 포인트 받기 +5P'}
           </button>
           <button
             onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
-            className="w-full py-3.5 bg-stone-100 text-stone-600 font-semibold rounded-2xl text-sm hover:bg-stone-200 transition active:scale-[0.98]"
+            className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
           >
             다시 조회하기
           </button>
         </div>
       )}
 
-      <div className="text-center pb-8 text-xs text-stone-300">궁합 — 참고용 · 사주 기반 분석</div>
+      <div className="text-center pb-8 text-xs text-[#4A4060]">궁합 — 참고용 · 사주 기반 분석</div>
     </div>
   )
 }

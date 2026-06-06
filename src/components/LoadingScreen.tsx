@@ -42,11 +42,11 @@ export default function LoadingScreen({ onComplete }: Props) {
   }, [onComplete])
 
   return (
-    <div className="min-h-screen bg-[#F4F2FF] relative overflow-hidden flex flex-col items-center justify-center px-8">
+    <div className="min-h-screen bg-[#0D0A1A] relative overflow-hidden flex flex-col items-center justify-center px-8">
 
       {/* 배경 블롭 */}
-      <div className="absolute -top-20 -right-16 w-72 h-72 rounded-full bg-violet-200/45 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-16 -left-12 w-64 h-64 rounded-full bg-purple-200/40 blur-3xl pointer-events-none" />
+      <div className="absolute -top-20 -right-16 w-72 h-72 rounded-full bg-[#C9962A]/10 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-16 -left-12 w-64 h-64 rounded-full bg-violet-900/20 blur-3xl pointer-events-none" />
 
       {/* 배경 산점 */}
       {[
@@ -66,19 +66,19 @@ export default function LoadingScreen({ onComplete }: Props) {
       {/* 아이콘 */}
       <div className="relative mb-10 flex items-center justify-center">
         {/* 바깥 글로우 */}
-        <div className="absolute w-40 h-40 rounded-full bg-violet-200/40 blur-2xl" />
+        <div className="absolute w-40 h-40 rounded-full bg-[#C9962A]/10 blur-2xl" />
         {/* 장식 링 */}
-        <div className="absolute rounded-full border border-violet-200/60" style={{ width: 160, height: 160 }} />
+        <div className="absolute rounded-full border border-[#C9962A]/20" style={{ width: 160, height: 160 }} />
         {/* 회전 링 */}
         <div
-          className="absolute rounded-full border-[3px] border-violet-100 border-t-violet-400 animate-spin"
+          className="absolute rounded-full border-[3px] border-[#2A1F4A] border-t-[#C9962A] animate-spin"
           style={{ width: 124, height: 124, animationDuration: '1.4s' }}
         />
         {/* 아이콘 원 */}
-        <div className="relative w-24 h-24 rounded-full bg-white border border-violet-100 shadow-[0_4px_24px_rgba(124,58,237,0.18)] flex items-center justify-center">
+        <div className="relative w-24 h-24 rounded-full bg-[#130E24] border border-[#2A1F4A] shadow-[0_4px_24px_rgba(201,150,42,0.18)] flex items-center justify-center">
           <span
             className="text-5xl select-none animate-spin"
-            style={{ color: '#7C3AED', animationDuration: '6s', fontFamily: 'serif' }}
+            style={{ color: '#C9962A', animationDuration: '6s', fontFamily: 'serif' }}
           >
             ☯
           </span>
@@ -86,21 +86,21 @@ export default function LoadingScreen({ onComplete }: Props) {
       </div>
 
       <h2
-        className="text-2xl font-bold text-stone-800 mb-2"
+        className="text-2xl font-bold text-[#F5EDD4] mb-2"
         style={{ fontFamily: "'Noto Serif KR', serif" }}
       >
         사주 분석중
       </h2>
-      <p className="text-sm text-stone-400 mb-8 text-center h-5">{MESSAGES[msgIdx]}</p>
+      <p className="text-sm text-[#7B6F9A] mb-8 text-center h-5">{MESSAGES[msgIdx]}</p>
 
       {/* 진행 바 */}
-      <div className="w-56 bg-violet-100 rounded-full h-2 overflow-hidden mb-2">
+      <div className="w-56 bg-[#231844] rounded-full h-2 overflow-hidden mb-2">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-violet-500 to-purple-500 transition-all duration-150"
+          className="h-full rounded-full bg-gradient-to-r from-[#C9962A] to-[#E8B84B] transition-all duration-150"
           style={{ width: `${progress}%` }}
         />
       </div>
-      <p className="text-xs text-stone-400 mb-12">{Math.round(progress)}%</p>
+      <p className="text-xs text-[#7B6F9A] mb-12">{Math.round(progress)}%</p>
 
       {/* 오행 도트 */}
       <div className="flex items-end gap-4">
@@ -110,7 +110,7 @@ export default function LoadingScreen({ onComplete }: Props) {
               className="w-3 h-3 rounded-full animate-bounce"
               style={{ backgroundColor: c, animationDelay: `${i * 0.15}s`, animationDuration: '0.9s' }}
             />
-            <span className="text-[10px] text-stone-400">{OHAENG_LABELS[i]}</span>
+            <span className="text-[10px] text-[#7B6F9A]">{OHAENG_LABELS[i]}</span>
           </div>
         ))}
       </div>

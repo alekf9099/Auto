@@ -59,12 +59,12 @@ export default function LoginPage({ onLogin }: Props) {
   }, [])
 
   return (
-    <div className="min-h-screen bg-[#F4F2FF] relative overflow-hidden flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen bg-[#0D0A1A] relative overflow-hidden flex flex-col items-center justify-center px-6">
 
       {/* ── 배경 블롭 ── */}
-      <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-violet-200/50 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-20 -left-16 w-72 h-72 rounded-full bg-purple-200/45 blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 -right-12 w-40 h-40 rounded-full bg-indigo-100/50 blur-2xl pointer-events-none" />
+      <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-[#C9962A]/8 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-20 -left-16 w-72 h-72 rounded-full bg-violet-900/20 blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 -right-12 w-40 h-40 rounded-full bg-[#C9962A]/5 blur-2xl pointer-events-none" />
 
       {/* ── 배경 산점 기호 ── */}
       {[
@@ -90,13 +90,13 @@ export default function LoginPage({ onLogin }: Props) {
         {/* 장식 링 */}
         <div className="relative flex items-center justify-center mb-5" style={{ width: 200, height: 200 }}>
           {/* 가장 바깥 링 */}
-          <div className="absolute rounded-full border border-violet-200/50"
+          <div className="absolute rounded-full border border-[#C9962A]/20"
             style={{ width: 196, height: 196 }} />
           {/* 중간 링 */}
-          <div className="absolute rounded-full border border-violet-300/40"
+          <div className="absolute rounded-full border border-[#C9962A]/15"
             style={{ width: 152, height: 152 }} />
           {/* 글로우 */}
-          <div className="absolute w-32 h-32 rounded-full bg-violet-300/25 blur-2xl" />
+          <div className="absolute w-32 h-32 rounded-full bg-[#C9962A]/10 blur-2xl" />
 
           {/* 링 위 오행 레이블 */}
           <span className="absolute text-[11px] font-bold" style={{ color: '#86EFAC', top: 4,   left: '50%', transform: 'translateX(-50%)' }}>木</span>
@@ -106,22 +106,22 @@ export default function LoginPage({ onLogin }: Props) {
 
           {/* 로고 */}
           <div className="relative w-[100px] h-[100px] rounded-full p-[3px]"
-            style={{ background: 'linear-gradient(135deg, #A78BFA, #7C3AED)' }}>
-            <div className="w-full h-full rounded-full bg-[#F4F2FF] flex items-center justify-center">
-              <span className="text-5xl" style={{ color: '#7C3AED', fontFamily: 'serif' }}>☯</span>
+            style={{ background: 'linear-gradient(135deg, #C9962A, #E8B84B)' }}>
+            <div className="w-full h-full rounded-full bg-[#0D0A1A] flex items-center justify-center">
+              <span className="text-5xl" style={{ color: '#C9962A', fontFamily: 'serif' }}>☯</span>
             </div>
           </div>
         </div>
 
-        <h1 className="text-3xl font-bold text-stone-800 mb-1"
+        <h1 className="text-3xl font-bold text-[#F5EDD4] mb-1"
           style={{ fontFamily: "'Noto Serif KR', serif" }}>운명봄</h1>
-        <p className="text-sm text-stone-400">당신의 운명을 봅니다</p>
+        <p className="text-sm text-[#7B6F9A]">당신의 운명을 봅니다</p>
       </div>
 
       {/* ── 로그인 카드 ── */}
-      <div className="w-full max-w-sm bg-white/80 backdrop-blur-sm rounded-3xl shadow-[0_4px_24px_rgba(124,58,237,0.12)] border border-violet-100 p-7">
-        <h2 className="text-base font-bold text-stone-800 mb-1 text-center">로그인</h2>
-        <p className="text-xs text-stone-400 mb-6 text-center">구글 계정으로 운세를 확인하세요</p>
+      <div className="w-full max-w-sm bg-[#130E24] rounded-3xl shadow-[0_4px_24px_rgba(201,150,42,0.12)] border border-[#2A1F4A] p-7">
+        <h2 className="text-base font-bold text-[#F5EDD4] mb-1 text-center">로그인</h2>
+        <p className="text-xs text-[#7B6F9A] mb-6 text-center">구글 계정으로 운세를 확인하세요</p>
 
         {CLIENT_ID ? (
           <div className="flex justify-center">
@@ -129,15 +129,15 @@ export default function LoginPage({ onLogin }: Props) {
           </div>
         ) : (
           <div className="text-center space-y-3">
-            <div className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-2xl p-3 leading-relaxed">
+            <div className="text-xs text-amber-300 bg-amber-900/20 border border-amber-700/40 rounded-2xl p-3 leading-relaxed">
               <p className="font-semibold mb-1">⚙️ Google 로그인 설정 필요</p>
-              <p>GitHub 저장소 Settings → Secrets에서<br /><code className="bg-amber-100 px-1 rounded">VITE_GOOGLE_CLIENT_ID</code> 를 추가하세요</p>
+              <p>GitHub 저장소 Settings → Secrets에서<br /><code className="bg-amber-900/40 px-1 rounded">VITE_GOOGLE_CLIENT_ID</code> 를 추가하세요</p>
             </div>
           </div>
         )}
       </div>
 
-      <p className="mt-6 text-xs text-stone-300 text-center">본 서비스는 참고용이며 정확성을 보장하지 않습니다</p>
+      <p className="mt-6 text-xs text-[#4A4060] text-center">본 서비스는 참고용이며 정확성을 보장하지 않습니다</p>
     </div>
   )
 }

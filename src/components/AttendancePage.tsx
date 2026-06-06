@@ -67,16 +67,16 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F2FF]">
+    <div className="min-h-screen bg-[#0D0A1A]">
       {toast && <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />}
 
       {/* 헤더 */}
-      <div className="bg-white border-b border-stone-100 sticky top-0 z-10">
+      <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} className="text-stone-400 hover:text-stone-600 transition text-lg">←</button>
+          <button onClick={onBack} className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
-            <h1 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>출석 체크</h1>
-            <p className="text-xs text-stone-400">매일 출석하고 포인트를 모으세요</p>
+            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>출석 체크</h1>
+            <p className="text-xs text-[#7B6F9A]">매일 출석하고 포인트를 모으세요</p>
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
         {/* 히어로 배너 */}
-        <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl p-6 shadow-xl shadow-violet-900/20 relative overflow-hidden">
+        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative overflow-hidden">
           {/* 배경 장식 */}
           <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-violet-500/10 -translate-y-10 translate-x-10" />
           <div className="absolute bottom-0 left-0 w-28 h-28 rounded-full bg-purple-400/10 translate-y-8 -translate-x-6" />
@@ -123,10 +123,10 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
         </div>
 
         {/* 이번 주 캘린더 */}
-        <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">
+        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
           <div className="flex items-center gap-2 mb-5">
-            <div className="w-1 h-5 bg-violet-500 rounded-full" />
-            <h2 className="text-sm font-bold text-stone-800">이번 주 출석 현황</h2>
+            <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+            <h2 className="text-sm font-bold text-[#F5EDD4]">이번 주 출석 현황</h2>
           </div>
           <div className="grid grid-cols-7 gap-1.5">
             {weekDays.map(w => {
@@ -139,43 +139,43 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
                   }`}>{w.label}</p>
                   <div className={`w-10 h-10 rounded-2xl flex flex-col items-center justify-center transition-all ${
                     checked && w.isToday
-                      ? 'bg-gradient-to-br from-violet-500 to-purple-600 shadow-md shadow-violet-300'
+                      ? 'bg-gradient-to-br from-[#C9962A] to-[#E8B84B] shadow-md shadow-[#C9962A40]'
                       : checked
-                      ? 'bg-violet-100 border border-violet-200'
+                      ? 'bg-[#C9962A20] border border-[#C9962A40]'
                       : w.isToday
-                      ? 'border-2 border-dashed border-violet-400 bg-violet-50'
-                      : 'bg-stone-50 border border-stone-100'
+                      ? 'border-2 border-dashed border-[#C9962A] bg-[#C9962A10]'
+                      : 'bg-[#1C1438] border border-[#2A1F4A]'
                   }`}>
                     {checked
-                      ? <span className={`text-base font-bold ${w.isToday ? 'text-white' : 'text-violet-500'}`}>✓</span>
-                      : <span className={`text-xs font-semibold ${w.isToday ? 'text-violet-600' : 'text-stone-300'}`}>{dayNum}</span>
+                      ? <span className={`text-base font-bold ${w.isToday ? 'text-[#0D0A1A]' : 'text-[#C9962A]'}`}>✓</span>
+                      : <span className={`text-xs font-semibold ${w.isToday ? 'text-[#C9962A]' : 'text-[#4A4060]'}`}>{dayNum}</span>
                     }
                   </div>
                 </div>
               )
             })}
           </div>
-          <div className="mt-4 pt-4 border-t border-stone-100 flex items-center gap-4 text-[11px] text-stone-400">
+          <div className="mt-4 pt-4 border-t border-[#2A1F4A] flex items-center gap-4 text-[11px] text-[#7B6F9A]">
             <span className="flex items-center gap-1.5">
-              <span className="w-3.5 h-3.5 rounded-md bg-violet-500 inline-block" />
+              <span className="w-3.5 h-3.5 rounded-md bg-[#C9962A] inline-block" />
               출석 완료
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-3.5 h-3.5 rounded-md border-2 border-dashed border-violet-400 bg-violet-50 inline-block" />
+              <span className="w-3.5 h-3.5 rounded-md border-2 border-dashed border-[#C9962A] bg-[#C9962A10] inline-block" />
               오늘
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-3.5 h-3.5 rounded-md bg-stone-100 inline-block" />
+              <span className="w-3.5 h-3.5 rounded-md bg-[#231844] inline-block" />
               미출석
             </span>
           </div>
         </div>
 
         {/* 포인트 적립 안내 */}
-        <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">
+        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-1 h-5 bg-violet-500 rounded-full" />
-            <h2 className="text-sm font-bold text-stone-800">포인트 적립 방법</h2>
+            <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+            <h2 className="text-sm font-bold text-[#F5EDD4]">포인트 적립 방법</h2>
           </div>
           <div className="space-y-2">
             {POINT_GUIDE.map(g => (
@@ -186,31 +186,31 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
               </div>
             ))}
           </div>
-          <p className="text-[11px] text-stone-400 text-center mt-3">하루 1회 · 매일 자정 초기화</p>
+          <p className="text-[11px] text-[#7B6F9A] text-center mt-3">하루 1회 · 매일 자정 초기화</p>
         </div>
 
         {/* 포인트 내역 */}
-        <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">
+        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
           <div className="flex items-center gap-2 mb-4">
-            <div className="w-1 h-5 bg-violet-500 rounded-full" />
-            <h2 className="text-sm font-bold text-stone-800">적립 내역</h2>
-            <span className="ml-auto text-xs font-bold text-violet-500">{points.balance.toLocaleString()}P 보유</span>
+            <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+            <h2 className="text-sm font-bold text-[#F5EDD4]">적립 내역</h2>
+            <span className="ml-auto text-xs font-bold text-[#C9962A]">{points.balance.toLocaleString()}P 보유</span>
           </div>
           {points.history.length === 0 ? (
             <div className="text-center py-8">
               <p className="text-3xl mb-2">💎</p>
-              <p className="text-sm text-stone-400">아직 적립 내역이 없어요</p>
-              <p className="text-xs text-stone-300 mt-1">출석 체크부터 시작해보세요!</p>
+              <p className="text-sm text-[#7B6F9A]">아직 적립 내역이 없어요</p>
+              <p className="text-xs text-[#4A4060] mt-1">출석 체크부터 시작해보세요!</p>
             </div>
           ) : (
             <div className="space-y-2">
               {[...points.history].reverse().slice(0, 20).map((h, i) => (
-                <div key={i} className="flex items-center justify-between px-4 py-3 bg-stone-50 rounded-2xl">
+                <div key={i} className="flex items-center justify-between px-4 py-3 bg-[#1C1438] rounded-2xl">
                   <div>
-                    <p className="text-xs font-semibold text-stone-700">{h.label}</p>
-                    <p className="text-[11px] text-stone-400 mt-0.5">{h.date}</p>
+                    <p className="text-xs font-semibold text-[#E8DFC8]">{h.label}</p>
+                    <p className="text-[11px] text-[#7B6F9A] mt-0.5">{h.date}</p>
                   </div>
-                  <span className="text-sm font-bold text-violet-600">+{h.amount}P</span>
+                  <span className="text-sm font-bold text-[#C9962A]">+{h.amount}P</span>
                 </div>
               ))}
             </div>
@@ -219,7 +219,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
 
       </div>
 
-      <div className="text-center pb-8 text-xs text-stone-300">운명봄 포인트는 서비스 내 전용 포인트입니다</div>
+      <div className="text-center pb-8 text-xs text-[#4A4060]">운명봄 포인트는 서비스 내 전용 포인트입니다</div>
     </div>
   )
 }

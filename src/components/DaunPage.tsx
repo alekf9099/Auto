@@ -173,10 +173,10 @@ const BADGE: Record<string, string> = {
 export default function DaunPage({ savedBirth, onBack }: Props) {
   if (!savedBirth) {
     return (
-      <div className="min-h-screen bg-[#F4F2FF] flex items-center justify-center p-6">
+      <div className="min-h-screen bg-[#0D0A1A] flex items-center justify-center p-6">
         <div className="text-center">
-          <p className="text-stone-500 mb-4">생년월일 정보를 먼저 입력해 주세요.</p>
-          <button onClick={onBack} className="text-violet-600 font-semibold">← 돌아가기</button>
+          <p className="text-[#A89BC0] mb-4">생년월일 정보를 먼저 입력해 주세요.</p>
+          <button onClick={onBack} className="text-[#C9962A] font-semibold">← 돌아가기</button>
         </div>
       </div>
     )
@@ -209,21 +209,21 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
   const dayStem = STEMS[dayStemIdx]
 
   return (
-    <div className="min-h-screen bg-[#F4F2FF]">
+    <div className="min-h-screen bg-[#0D0A1A]">
       {/* Sticky header */}
-      <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-md border-b border-violet-100">
+      <div className="sticky top-0 z-10 bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#C9962A30]">
         <div className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex items-center gap-3">
           <button
             onClick={onBack}
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-stone-100 transition text-stone-600 text-lg"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#231844] transition text-[#C4B8D8] text-lg"
           >
             ←
           </button>
           <div>
-            <h1 className="text-base font-bold text-stone-800 leading-tight" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Noto Serif KR', serif" }}>
               대운 분석 (大運 分析)
             </h1>
-            <p className="text-xs text-stone-400">10년 단위 운세 흐름</p>
+            <p className="text-xs text-[#7B6F9A]">10년 단위 운세 흐름</p>
           </div>
         </div>
       </div>
@@ -231,7 +231,7 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
         {/* Dark hero */}
-        <div className="bg-gradient-to-br from-[#1A1035] via-[#251545] to-[#120B28] rounded-3xl p-5 shadow-xl shadow-violet-900/30">
+        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
           <p className="text-violet-300/70 text-xs mb-3">
             {savedBirth.year}년생 · {savedBirth.gender === 'male' ? '남성' : '여성'} · 일간{' '}
             <span style={{ color: ELEMENT_COLORS[dayStem.element] }}>
@@ -286,17 +286,17 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
           const stemC   = ELEMENT_COLORS[stem.element]
 
           return (
-            <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-6">
+            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
               <div className="flex items-center gap-2 mb-1">
                 <div className="w-1 h-5 bg-amber-400 rounded-full" />
-                <h2 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
                   현재 대운 심층 해석
                 </h2>
                 <span className="ml-auto text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-bold">
                   현재
                 </span>
               </div>
-              <p className="text-xs text-stone-400 mb-5 ml-3">
+              <p className="text-xs text-[#7B6F9A] mb-5 ml-3">
                 {currentDaun.age}세 대운 ({ageYear}년 ~ {ageYear + 9}년)
               </p>
 
@@ -318,12 +318,12 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[sipsin] ?? 'bg-stone-100 text-stone-600 border-stone-200'}`}>
+                    <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[sipsin] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>
                       {sipsin}
                     </span>
-                    {desc && <span className="text-xs text-stone-400">{desc.meaning}</span>}
+                    {desc && <span className="text-xs text-[#7B6F9A]">{desc.meaning}</span>}
                   </div>
-                  <p className="text-sm font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                  <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
                     {reading?.title ?? sipsin + '의 대운'}
                   </p>
                 </div>
@@ -331,7 +331,7 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
 
               {reading && (
                 <div className="space-y-3">
-                  <p className="text-sm text-stone-600 leading-relaxed bg-stone-50 rounded-2xl p-4">
+                  <p className="text-sm text-[#C4B8D8] leading-relaxed bg-[#1C1438] rounded-2xl p-4">
                     {reading.summary}
                   </p>
 
@@ -340,15 +340,15 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
                     { label: '💼 직업운', text: reading.career },
                     { label: '💕 애정운', text: reading.love },
                   ].map(({ label, text }) => (
-                    <div key={label} className="rounded-2xl border border-stone-100 p-4">
-                      <p className="text-xs font-bold text-stone-500 mb-1.5">{label}</p>
-                      <p className="text-sm text-stone-600 leading-relaxed">{text}</p>
+                    <div key={label} className="rounded-2xl border border-[#2A1F4A] p-4">
+                      <p className="text-xs font-bold text-[#A89BC0] mb-1.5">{label}</p>
+                      <p className="text-sm text-[#C4B8D8] leading-relaxed">{text}</p>
                     </div>
                   ))}
 
                   <div className="rounded-2xl bg-amber-50 border border-amber-100 p-4">
                     <p className="text-xs font-bold text-amber-700 mb-1.5">⚠ 주의사항</p>
-                    <p className="text-sm text-stone-600 leading-relaxed">{reading.caution}</p>
+                    <p className="text-sm text-[#C4B8D8] leading-relaxed">{reading.caution}</p>
                   </div>
                 </div>
               )}
@@ -357,20 +357,20 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
         })()}
 
         {/* 2026년 세운 분석 */}
-        <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-6">
+        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
           <div className="flex items-center gap-2 mb-1">
             <div className="w-1 h-5 bg-red-400 rounded-full" />
-            <h2 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
               2026년 세운 (歲運)
             </h2>
             <span className="ml-auto text-xs bg-red-50 text-red-600 border border-red-200 px-2.5 py-1 rounded-full font-medium">
               병오년 丙午
             </span>
           </div>
-          <p className="text-xs text-stone-400 mb-5 ml-3">올해의 연간 운세 분석</p>
+          <p className="text-xs text-[#7B6F9A] mb-5 ml-3">올해의 연간 운세 분석</p>
 
           {/* Year info */}
-          <div className="flex items-center gap-3 mb-5 p-4 bg-stone-50 rounded-2xl border border-stone-100">
+          <div className="flex items-center gap-3 mb-5 p-4 bg-[#1C1438] rounded-2xl border border-[#2A1F4A]">
             <div
               className="w-12 h-12 rounded-xl flex flex-col items-center justify-center border-2"
               style={{ borderColor: ELEMENT_COLORS[seunStem.element] + '50', backgroundColor: ELEMENT_COLORS[seunStem.element] + '12' }}
@@ -386,25 +386,25 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
               <span className="text-[10px]" style={{ color: ELEMENT_COLORS[seunBranch.element] + 'cc' }}>{seunBranch.ko}</span>
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold text-stone-700 mb-1">
+              <p className="text-sm font-semibold text-[#E8DFC8] mb-1">
                 {ELEMENT_KO[seunStem.element]} 양(陽)의 해
               </p>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-[#A89BC0]">
                 {seunBranch.animal}띠 해 · 화기(火氣) 집중
               </p>
               <div className="flex items-center gap-2 mt-1.5">
-                <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[seunSipsin] ?? 'bg-stone-100 text-stone-600 border-stone-200'}`}>
+                <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[seunSipsin] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>
                   {seunSipsin}
                 </span>
-                <span className="text-xs text-stone-400">일간 기준</span>
+                <span className="text-xs text-[#7B6F9A]">일간 기준</span>
               </div>
             </div>
           </div>
 
           {/* Seun general note */}
-          <div className="rounded-2xl bg-red-50/50 border border-red-100 p-4 mb-3">
-            <p className="text-xs font-bold text-red-600 mb-2">병오년(丙午年) 특징</p>
-            <p className="text-sm text-stone-600 leading-relaxed">
+          <div className="rounded-2xl bg-red-900/15 border border-red-900/40 p-4 mb-3">
+            <p className="text-xs font-bold text-red-400 mb-2">병오년(丙午年) 특징</p>
+            <p className="text-sm text-[#C4B8D8] leading-relaxed">
               2026년은 병(丙)과 오(午) 모두 화(火) 기운으로 이루어진 강렬한 불의 해입니다.
               태양처럼 뜨겁고 밝은 에너지가 넘치며, 활동력·표현력·열정이 극대화됩니다.
               화기가 강한 해는 빠른 성과를 낼 수 있지만 과열되면 충돌과 소진도 옵니다.
@@ -413,20 +413,20 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
 
           {seunReading && (
             <div className="space-y-3">
-              <div className="rounded-2xl bg-stone-50 border border-stone-100 p-4">
-                <p className="text-xs font-bold text-stone-500 mb-2">
+              <div className="rounded-2xl bg-[#1C1438] border border-[#2A1F4A] p-4">
+                <p className="text-xs font-bold text-[#A89BC0] mb-2">
                   일간 {dayStem.hanja}({dayStem.ko}) 기준 — {seunSipsin} 해
                 </p>
-                <p className="text-sm text-stone-600 leading-relaxed">{seunReading.summary}</p>
+                <p className="text-sm text-[#C4B8D8] leading-relaxed">{seunReading.summary}</p>
               </div>
               <div className="flex gap-2">
-                <div className="flex-1 rounded-2xl bg-violet-50 border border-violet-100 p-3">
-                  <p className="text-[10px] font-bold text-violet-500 mb-1">핵심 키워드</p>
-                  <p className="text-xs text-violet-700 font-medium">{seunReading.keyword}</p>
+                <div className="flex-1 rounded-2xl bg-[#C9962A15] border border-[#C9962A30] p-3">
+                  <p className="text-[10px] font-bold text-[#C9962A] mb-1">핵심 키워드</p>
+                  <p className="text-xs text-[#E8B84B] font-medium">{seunReading.keyword}</p>
                 </div>
                 <div className="flex-1 rounded-2xl bg-amber-50 border border-amber-100 p-3">
                   <p className="text-[10px] font-bold text-amber-600 mb-1">조언</p>
-                  <p className="text-xs text-stone-600 leading-relaxed">{seunReading.advice}</p>
+                  <p className="text-xs text-[#C4B8D8] leading-relaxed">{seunReading.advice}</p>
                 </div>
               </div>
             </div>
@@ -442,19 +442,19 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
           const stemC    = ELEMENT_COLORS[stem.element]
 
           return (
-            <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-6">
+            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
               <div className="flex items-center gap-2 mb-1">
-                <div className="w-1 h-5 bg-stone-300 rounded-full" />
-                <h2 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <div className="w-1 h-5 bg-[#3D3358] rounded-full" />
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
                   다음 대운 예고
                 </h2>
-                <span className="ml-auto text-xs bg-stone-50 text-stone-500 border border-stone-200 px-2.5 py-1 rounded-full">
+                <span className="ml-auto text-xs bg-[#1C1438] text-[#A89BC0] border border-[#2A1F4A] px-2.5 py-1 rounded-full">
                   {nextDaun.age}세 ~ {ageYear}년 시작
                 </span>
               </div>
-              <p className="text-xs text-stone-400 mb-4 ml-3">다음 10년 사이클 미리보기</p>
+              <p className="text-xs text-[#7B6F9A] mb-4 ml-3">다음 10년 사이클 미리보기</p>
 
-              <div className="flex items-center gap-3 p-4 bg-stone-50 rounded-2xl border border-stone-100">
+              <div className="flex items-center gap-3 p-4 bg-[#1C1438] rounded-2xl border border-[#2A1F4A]">
                 <div
                   className="w-12 h-12 rounded-xl flex flex-col items-center justify-center border-2"
                   style={{ borderColor: stemC + '50', backgroundColor: stemC + '12' }}
@@ -464,15 +464,15 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[sipsin] ?? 'bg-stone-100 text-stone-600 border-stone-200'}`}>
+                    <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[sipsin] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>
                       {sipsin}
                     </span>
                   </div>
-                  <p className="text-sm font-semibold text-stone-700">
+                  <p className="text-sm font-semibold text-[#E8DFC8]">
                     {reading?.title ?? sipsin + '의 대운'}
                   </p>
                   {reading && (
-                    <p className="text-xs text-stone-500 mt-1 leading-relaxed">
+                    <p className="text-xs text-[#A89BC0] mt-1 leading-relaxed">
                       {reading.summary}
                     </p>
                   )}
@@ -482,7 +482,7 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
           )
         })()}
 
-        <p className="text-center text-xs text-stone-300 pb-6">
+        <p className="text-center text-xs text-[#4A4060] pb-6">
           사주팔자 계산기 — 양력 기준 · 절기 근사값 적용
         </p>
       </div>

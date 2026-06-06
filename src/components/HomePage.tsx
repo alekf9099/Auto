@@ -175,15 +175,15 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                     {b.dest === 'gunghab'  && <IcGunghab  size={90}/>}
                   </div>
                   <div className="p-5 pb-6 min-h-[120px]">
-                    <span className="inline-flex items-center gap-1 text-xs font-bold bg-stone-800 text-white px-3 py-1 rounded-full mb-3">
+                    <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40] px-3 py-1 rounded-full mb-3">
                       {b.tag} ›
                     </span>
-                    <p className="text-xl font-bold text-stone-800 leading-snug mb-1">
+                    <p className="text-xl font-bold text-[#F5EDD4] leading-snug mb-1">
                       {b.title.split('\n').map((line, i, arr) => (
                         <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
                       ))}
                     </p>
-                    <p className="text-sm text-stone-500">{b.sub}</p>
+                    <p className="text-sm text-[#A89BC0]">{b.sub}</p>
                   </div>
                 </div>
               ))}
@@ -197,7 +197,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                 key={i}
                 onClick={() => setBannerIdx(i)}
                 className={`rounded-full transition-all duration-300 ${
-                  i === bannerIdx ? 'w-5 h-1.5 bg-violet-500' : 'w-1.5 h-1.5 bg-stone-300'
+                  i === bannerIdx ? 'w-5 h-1.5 bg-[#C9962A]' : 'w-1.5 h-1.5 bg-[#2A1F4A]'
                 }`}
               />
             ))}
@@ -213,7 +213,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
               onClick={onAttendance}
               className="w-full overflow-hidden rounded-3xl shadow-[0_2px_16px_rgba(180,30,30,0.10)] active:scale-[0.99] transition-all"
             >
-              <div className="relative bg-[#FFFAF4] border border-red-100 rounded-3xl px-5 pt-4 pb-3">
+              <div className="relative bg-[#130E24] border border-red-900/40 rounded-3xl px-5 pt-4 pb-3">
 
                 {/* 배경 장식 — 전통 문양 SVG */}
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-[0.06] select-none pointer-events-none text-red-800 rotate-12">
@@ -244,11 +244,11 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
 
                   {/* 텍스트 */}
                   <div className="flex-1 text-left">
-                    <p className="text-[10px] text-stone-400 mb-0.5 font-medium">출석체크하고</p>
-                    <p className="text-base font-bold leading-tight" style={{ fontFamily: "'Noto Serif KR', serif", color: checked ? '#78716C' : '#1C1917' }}>
+                    <p className="text-[10px] text-[#7B6F9A] mb-0.5 font-medium">출석체크하고</p>
+                    <p className="text-base font-bold leading-tight" style={{ fontFamily: "'Noto Serif KR', serif", color: checked ? '#A89BC0' : '#F5EDD4' }}>
                       {checked ? '오늘 도장 찍었어요!' : '포인트 받아가세요!'}
                     </p>
-                    <p className="text-[11px] text-stone-400 mt-0.5">
+                    <p className="text-[11px] text-[#7B6F9A] mt-0.5">
                       {checked
                         ? `${streak}일 연속 출석 중 · 누적 ${points.balance.toLocaleString()}P`
                         : `${streak > 0 ? `${streak}일 연속 출석 중 · ` : ''}매일 +10P 지급`}
@@ -257,10 +257,10 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
 
                   {/* 우측 뱃지 */}
                   {!checked
-                    ? <div className="shrink-0 w-10 h-10 rounded-full bg-red-500 flex items-center justify-center shadow-md shadow-red-200">
+                    ? <div className="shrink-0 w-10 h-10 rounded-full bg-red-500 flex items-center justify-center shadow-md shadow-red-900/30">
                         <span className="text-white text-[10px] font-bold leading-tight text-center">+10P</span>
                       </div>
-                    : <span className="text-[11px] text-stone-400 font-medium shrink-0">내역 →</span>
+                    : <span className="text-[11px] text-[#7B6F9A] font-medium shrink-0">내역 →</span>
                   }
                 </div>
 
@@ -275,9 +275,9 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                         className={`flex-1 aspect-square rounded-full border-2 flex items-center justify-center transition-all ${
                           filled
                             ? isToday
-                              ? 'border-red-500 bg-red-500 shadow-sm shadow-red-300'
-                              : 'border-red-300 bg-red-100'
-                            : 'border-stone-200 bg-white'
+                              ? 'border-red-500 bg-red-500 shadow-sm shadow-red-900/30'
+                              : 'border-red-900/50 bg-red-900/30'
+                            : 'border-[#2A1F4A] bg-[#1C1438]'
                         }`}
                       >
                         {filled && (
@@ -286,7 +286,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                           </span>
                         )}
                         {!filled && (
-                          <span className="text-[8px] text-stone-300">{i + 1}</span>
+                          <span className="text-[8px] text-[#4A4060]">{i + 1}</span>
                         )}
                       </div>
                     )
@@ -294,8 +294,8 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                 </div>
 
                 {/* 하단 라인 */}
-                <div className="mt-2.5 pt-2 border-t border-red-50 flex items-center justify-between">
-                  <span className="text-[10px] text-stone-300">7일 연속 출석 시 특별 보너스 지급</span>
+                <div className="mt-2.5 pt-2 border-t border-red-900/30 flex items-center justify-between">
+                  <span className="text-[10px] text-[#4A4060]">7일 연속 출석 시 특별 보너스 지급</span>
                   <span className="text-[10px] text-red-400 font-semibold">자세히 보기 →</span>
                 </div>
               </div>
@@ -305,44 +305,44 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
 
         {/* 날짜 */}
         <div className="flex items-center justify-between px-1">
-          <p className="text-xs text-stone-400">{todayDate.getFullYear()}년 {month}월 {day}일</p>
-          <button onClick={() => onNavigate('today')} className="text-xs text-violet-500 font-medium hover:text-violet-700 transition">
+          <p className="text-xs text-[#7B6F9A]">{todayDate.getFullYear()}년 {month}월 {day}일</p>
+          <button onClick={() => onNavigate('today')} className="text-xs text-[#C9962A] font-medium hover:text-[#E8B84B] transition">
             오늘의 운세 확인하기 →
           </button>
         </div>
 
         {/* 저장된 프로필 배지 */}
         {birthProfile && (
-          <div className="flex items-center justify-between bg-violet-50 border border-violet-100 rounded-2xl px-4 py-2.5">
+          <div className="flex items-center justify-between bg-[#C9962A15] border border-[#C9962A30] rounded-2xl px-4 py-2.5">
             <div className="flex items-center gap-2">
-              <span className="text-violet-500 text-sm">✓</span>
-              <p className="text-xs text-stone-600">
+              <span className="text-[#C9962A] text-sm">✓</span>
+              <p className="text-xs text-[#C4B8D8]">
                 <span className="font-semibold">{birthProfile.year}.{String(birthProfile.month).padStart(2,'0')}.{String(birthProfile.day).padStart(2,'0')}</span>
-                <span className="text-stone-400 ml-1">· {birthProfile.gender === 'male' ? '남성' : '여성'}</span>
-                {birthProfile.hour !== null && <span className="text-stone-400 ml-1">· {birthProfile.hour}시</span>}
+                <span className="text-[#7B6F9A] ml-1">· {birthProfile.gender === 'male' ? '남성' : '여성'}</span>
+                {birthProfile.hour !== null && <span className="text-[#7B6F9A] ml-1">· {birthProfile.hour}시</span>}
               </p>
             </div>
-            <button onClick={onEditProfile} className="text-xs text-violet-500 font-semibold hover:text-violet-700 transition">
+            <button onClick={onEditProfile} className="text-xs text-[#C9962A] font-semibold hover:text-[#E8B84B] transition">
               수정
             </button>
           </div>
         )}
 
         {/* 메뉴 그리드 */}
-        <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-5">
-          <p className="text-xs text-stone-400 mb-0.5">소름 돋는 미래 예측</p>
-          <p className="text-base font-bold text-stone-800 mb-5" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
+          <p className="text-xs text-[#7B6F9A] mb-0.5">소름 돋는 미래 예측</p>
+          <p className="text-base font-bold text-[#F5EDD4] mb-5" style={{ fontFamily: "'Noto Serif KR', serif" }}>
             가장 정확한 사주 풀이
           </p>
           <div className="grid grid-cols-3 gap-4">
             {MENU.map(item => (
               <button key={item.label} onClick={() => onNavigate(item.dest)} className="flex flex-col items-center gap-2 group">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm bg-gradient-to-br from-violet-50 to-purple-100 border border-violet-100 group-active:scale-95 transition-transform">
-                  <item.Icon size={28} className="text-violet-600"/>
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm bg-[#C9962A15] border border-[#C9962A30] group-active:scale-95 transition-transform">
+                  <item.Icon size={28} className="text-[#C9962A]"/>
                 </div>
                 <div className="text-center">
-                  <p className="text-xs text-stone-700 font-semibold leading-tight">{item.label}</p>
-                  <p className="text-[10px] text-stone-400 leading-tight mt-0.5">{item.sub}</p>
+                  <p className="text-xs text-[#C4B8D8] font-semibold leading-tight">{item.label}</p>
+                  <p className="text-[10px] text-[#7B6F9A] leading-tight mt-0.5">{item.sub}</p>
                 </div>
               </button>
             ))}
@@ -350,7 +350,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
         </div>
 
         {/* CTA 카드 */}
-        <div className="bg-gradient-to-br from-[#1E1152] via-[#2D1B69] to-[#160F3E] rounded-3xl p-5 shadow-xl shadow-violet-900/20">
+        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
           <p className="text-violet-300/70 text-xs mb-2">✨ {user.name}님을 위한 오늘의 한마디</p>
           <p className="text-white font-bold text-base mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
             하늘의 기운이 당신 편입니다
@@ -358,7 +358,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
           <p className="text-violet-300/60 text-sm mb-4">오늘은 새로운 시작에 좋은 날입니다</p>
           <button
             onClick={() => onNavigate('saju')}
-            className="w-full py-3 bg-white/15 border border-white/20 text-white font-semibold rounded-2xl text-sm hover:bg-white/20 transition active:scale-[0.98]"
+            className="w-full py-3 bg-[#C9962A20] border border-[#C9962A40] text-[#E8B84B] font-semibold rounded-2xl text-sm hover:bg-[#C9962A30] transition active:scale-[0.98]"
           >
             내 정통사주 확인하기 →
           </button>
@@ -366,7 +366,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
 
       </div>
 
-      <div className="text-center pb-8 text-xs text-stone-300">사주팔자 — 양력 기준 · 절기 근사값 적용</div>
+      <div className="text-center pb-8 text-xs text-[#4A4060]">사주팔자 — 양력 기준 · 절기 근사값 적용</div>
     </div>
   )
 }

@@ -21,8 +21,8 @@ function SipsinBadge({ name }: { name: string }) {
   const desc = SIPSIN_DESC[name]
   return (
     <div className="text-right">
-      <span className={`inline-block px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[name] ?? 'bg-stone-100 text-stone-600 border-stone-200'}`}>{name}</span>
-      {desc && <p className="text-xs text-stone-400 mt-0.5">{desc.meaning}</p>}
+      <span className={`inline-block px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[name] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>{name}</span>
+      {desc && <p className="text-xs text-[#7B6F9A] mt-0.5">{desc.meaning}</p>}
     </div>
   )
 }
@@ -34,12 +34,12 @@ export default function SipsinChart({ result }: Props) {
   if (result.hourPillar) pillars.push(result.hourPillar)
 
   return (
-    <div className="bg-white rounded-3xl border border-stone-100 shadow-[0_2px_16px_rgba(124,58,237,0.07)] p-6">
+    <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
       <div className="flex items-center gap-2 mb-1">
-        <div className="w-1 h-5 bg-violet-500 rounded-full" />
-        <h2 className="text-base font-bold text-stone-800" style={{ fontFamily: "'Noto Serif KR', serif" }}>십신 분석 (十神)</h2>
+        <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+        <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>십신 분석 (十神)</h2>
       </div>
-      <p className="text-xs text-stone-400 mb-5 ml-3">
+      <p className="text-xs text-[#7B6F9A] mb-5 ml-3">
         일간 <span className="font-bold" style={{ color: ELEMENT_COLORS[dayStem.element] }}>{dayStem.hanja}({dayStem.ko})</span> 기준
       </p>
 
@@ -49,8 +49,8 @@ export default function SipsinChart({ result }: Props) {
           const stem = STEMS[p.stemIndex], c = ELEMENT_COLORS[stem.element]
           const sipsin = p.label === '일주' ? null : getSipsin(dayStemIdx, p.stemIndex)
           return (
-            <div key={i} className="flex items-center gap-3 py-2.5 border-b border-stone-50 last:border-0">
-              <span className="w-14 text-xs text-stone-400">{p.label} 천간</span>
+            <div key={i} className="flex items-center gap-3 py-2.5 border-b border-[#1C1438] last:border-0">
+              <span className="w-14 text-xs text-[#7B6F9A]">{p.label} 천간</span>
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl" style={{ backgroundColor: c + '12' }}>
                 <span className="text-base font-bold" style={{ color: c }}>{stem.hanja}</span>
                 <span className="text-xs" style={{ color: c + 'cc' }}>{stem.ko}</span>
@@ -58,15 +58,15 @@ export default function SipsinChart({ result }: Props) {
               <div className="flex-1" />
               {sipsin
                 ? <SipsinBadge name={sipsin} />
-                : <span className="text-xs bg-violet-50 text-violet-600 border border-violet-200 px-2 py-0.5 rounded-lg font-bold">나 (我)</span>}
+                : <span className="text-xs bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40] px-2 py-0.5 rounded-lg font-bold">나 (我)</span>}
             </div>
           )
         })}
       </div>
 
       {/* 지지 */}
-      <div className="border-t border-stone-100 pt-4">
-        <p className="text-xs text-stone-400 mb-3">지지 (地支) 장간 기준</p>
+      <div className="border-t border-[#2A1F4A] pt-4">
+        <p className="text-xs text-[#7B6F9A] mb-3">지지 (地支) 장간 기준</p>
         <div className="space-y-1">
           {pillars.map((p, i) => {
             const branch = BRANCHES[p.branchIndex], c = ELEMENT_COLORS[branch.element]
@@ -77,17 +77,17 @@ export default function SipsinChart({ result }: Props) {
                          : branch.yinYang === 'yang'  ? 8 : 9
             const sipsin = p.label === '일주' ? null : getSipsin(dayStemIdx, equiv)
             return (
-              <div key={i} className="flex items-center gap-3 py-2.5 border-b border-stone-50 last:border-0">
-                <span className="w-14 text-xs text-stone-400">{p.label} 지지</span>
+              <div key={i} className="flex items-center gap-3 py-2.5 border-b border-[#1C1438] last:border-0">
+                <span className="w-14 text-xs text-[#7B6F9A]">{p.label} 지지</span>
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl" style={{ backgroundColor: c + '12' }}>
                   <span className="text-base font-bold" style={{ color: c }}>{branch.hanja}</span>
                   <span className="text-xs" style={{ color: c + 'cc' }}>{branch.ko}</span>
-                  <span className="text-xs text-stone-400">{branch.animal}</span>
+                  <span className="text-xs text-[#7B6F9A]">{branch.animal}</span>
                 </div>
                 <div className="flex-1" />
                 {sipsin
                   ? <SipsinBadge name={sipsin} />
-                  : <span className="text-xs bg-violet-50 text-violet-600 border border-violet-200 px-2 py-0.5 rounded-lg font-bold">나 (我)</span>}
+                  : <span className="text-xs bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40] px-2 py-0.5 rounded-lg font-bold">나 (我)</span>}
               </div>
             )
           })}
