@@ -189,6 +189,15 @@ export default function DreamPage({ onBack }: Props) {
                 </span>
               </div>
 
+              {/* 한 줄 요약 callout */}
+              <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3 mb-1">
+                <span className="text-sm flex-shrink-0">💬</span>
+                <div>
+                  <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">이 꿈을 한 줄로 말하면</p>
+                  <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">{selectedSym.shortDesc}</p>
+                </div>
+              </div>
+
               {/* General */}
               <div className="rounded-2xl p-4" style={{ backgroundColor: luck.bg, border: `1px solid ${luck.border}` }}>
                 <div className="flex items-center gap-2 mb-2">

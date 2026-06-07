@@ -10,6 +10,7 @@ interface Props {
 
 interface DaunReading {
   title: string
+  plain: string
   summary: string
   wealth: string
   career: string
@@ -20,6 +21,7 @@ interface DaunReading {
 const DAUN_READING: Record<string, DaunReading> = {
   비견: {
     title: '동등한 경쟁의 대운',
+    plain: '지금은 나와 비슷한 경쟁자들이 많아지는 시기입니다. 독립심이 강해지고 혼자 하고 싶은 욕구가 올라옵니다.',
     summary: '나와 비슷한 위치의 사람들이 주변에 많아지는 시기입니다. 경쟁이 심화되지만 동류끼리의 협력도 강해집니다. 독립심이 강해지며 자기 방식대로 하고 싶은 욕구가 올라옵니다.',
     wealth: '재물에 경쟁자가 나타납니다. 돈이 들어오는 만큼 나가기도 합니다. 타인에게 보증이나 대출을 서주는 일은 피해야 합니다.',
     career: '독립, 창업, 프리랜서 전환을 생각하게 됩니다. 조직 안에 있다면 내 영역을 지키려는 경쟁 심리가 강해지는 시기입니다.',
@@ -28,6 +30,7 @@ const DAUN_READING: Record<string, DaunReading> = {
   },
   겁재: {
     title: '투쟁과 변동의 대운',
+    plain: '에너지는 넘치지만 돈과 인간관계에서 예상 밖의 변수가 생기는 시기입니다. 충동적인 결정은 금물입니다.',
     summary: '에너지는 충만하지만 그 에너지가 엉뚱한 방향으로 흐르기 쉬운 시기입니다. 손재수가 따르고 인간관계에서 예기치 않은 갈등이 생길 수 있습니다. 도전 정신은 넘치지만 무모한 도박은 금물입니다.',
     wealth: '투자나 투기에 손대면 손해를 보기 쉽습니다. 지인이나 친구를 통해 재물이 나가는 경우가 많으니 돈 거래는 철저히 문서화하세요.',
     career: '직업의 급작스러운 변동이 생기거나 스스로 원하게 됩니다. 정공법보다 창의적인 방식으로 돌파구를 찾아야 합니다.',
@@ -36,6 +39,7 @@ const DAUN_READING: Record<string, DaunReading> = {
   },
   식신: {
     title: '재능과 풍요의 대운',
+    plain: '인생에서 가장 여유롭고 풍요로운 시기 중 하나입니다. 먹고사는 걱정이 줄고 하고 싶은 일을 할 수 있습니다.',
     summary: '가장 편안하고 여유로운 대운 중 하나입니다. 먹고사는 걱정이 줄고 자신의 재능과 취미를 마음껏 펼칠 수 있는 시기입니다. 건강이 좋아지고 주변에 사람이 모여듭니다.',
     wealth: '꾸준하게 수입이 들어오는 시기입니다. 투자보다 안정적인 수입원을 만드는 것이 더 잘 맞습니다.',
     career: '자신의 장기를 살리는 직업, 특히 요리·예술·교육·서비스 쪽에서 빛을 발합니다. 조직 내에서도 전문성을 인정받습니다.',
@@ -44,6 +48,7 @@ const DAUN_READING: Record<string, DaunReading> = {
   },
   상관: {
     title: '표현과 변화의 대운',
+    plain: '창의력과 표현력이 폭발하는 시기입니다. 기존 틀을 깨고 싶어지며 직업과 관계에 큰 변화가 일어납니다.',
     summary: '창의력과 언변이 폭발하는 시기입니다. 기존의 틀을 깨고 싶은 욕구가 강해지며, 직업과 관계 모두에서 큰 변화가 일어납니다. 두뇌 회전이 빠르고 표현이 날카로워집니다.',
     wealth: '한꺼번에 크게 벌거나 크게 잃는 기복이 있습니다. 부업, 프리랜서, 창작 활동으로 돈을 버는 경향이 있습니다.',
     career: '예술·방송·IT·스타트업처럼 창의성이 요구되는 분야에서 두각을 나타냅니다. 기존 직장이 답답하게 느껴져 이직이나 창업을 선택하는 사람이 많습니다.',
@@ -52,6 +57,7 @@ const DAUN_READING: Record<string, DaunReading> = {
   },
   편재: {
     title: '투자와 활동의 대운',
+    plain: '돈과 활동력이 왕성해지는 시기입니다. 투자·사업으로 큰돈을 움직이게 되지만 기복도 큽니다.',
     summary: '돈과 활동력이 왕성해지는 시기입니다. 투자·사업·부동산 등으로 큰돈을 움직이게 됩니다. 역마살처럼 이동과 변화가 많고, 아버지나 남성과의 인연이 강해집니다.',
     wealth: '재물운이 강하지만 기복이 큽니다. 대박도 가능하지만 큰 손실도 가능합니다. 분산 투자가 중요하고, 한 곳에 모든 걸 걸면 위험합니다.',
     career: '사업가·영업·무역·투자·금융 분야에서 두각을 나타냅니다. 새로운 프로젝트나 비즈니스 개발 쪽에서 힘을 발휘합니다.',
@@ -60,6 +66,7 @@ const DAUN_READING: Record<string, DaunReading> = {
   },
   정재: {
     title: '안정과 성실의 대운',
+    plain: '꾸준히 노력하면 착실하게 결실이 쌓이는 시기입니다. 부동산·저축·결혼 같은 인생의 기반을 다집니다.',
     summary: '꾸준한 노력이 결실을 맺는 시기입니다. 급하게 큰돈을 버는 것보다 착실하게 쌓아가는 과정이 잘 맞습니다. 부동산 취득·직업 안정화·결혼 등 인생의 기반을 다지는 사건들이 일어납니다.',
     wealth: '안정적인 수입이 보장됩니다. 저축과 부동산이 잘 맞습니다. 재물이 천천히, 그러나 확실하게 쌓입니다.',
     career: '전문직·회계·금융·공직·관리직에서 안정적인 성과를 냅니다. 새로운 것보다 기존의 것을 충실히 해나가는 것이 최선입니다.',
@@ -68,6 +75,7 @@ const DAUN_READING: Record<string, DaunReading> = {
   },
   편관: {
     title: '도전과 권위의 대운',
+    plain: '강한 외부 압력과 마찰이 생기는 시기입니다. 힘들지만 이겨내면 강한 권위와 사회적 지위를 얻습니다.',
     summary: '강한 외부 압력과 마찰이 생기는 시기입니다. 권위자와의 갈등, 관재수, 건강 이상 등이 생길 수 있습니다. 하지만 이 압력을 이겨낸다면 강한 권위와 사회적 지위를 얻을 수 있습니다.',
     wealth: '재물이 묶이거나 예상치 못한 지출이 생깁니다. 소송·세금·벌금 관련 문제가 생길 수 있으니 서류와 계약을 꼼꼼히 하세요.',
     career: '승진의 기회와 동시에 권력 다툼이 생기는 시기입니다. 군인·경찰·법조인·의사처럼 강인함이 요구되는 분야에서 두각을 보입니다.',
@@ -76,6 +84,7 @@ const DAUN_READING: Record<string, DaunReading> = {
   },
   정관: {
     title: '명예와 성취의 대운',
+    plain: '조직에서 인정받고 지위가 높아지는 시기입니다. 규칙을 따르는 것이 오히려 출세의 길이 됩니다.',
     summary: '사회적으로 인정받고 지위가 높아지는 시기입니다. 규칙과 원칙을 따르는 것이 오히려 출세의 길이 됩니다. 직장에서 승진하고 사회적으로 명성을 쌓는 좋은 시기입니다.',
     wealth: '안정적이고 꾸준한 재물 흐름이 유지됩니다. 직위에 걸맞은 수입 증가가 이루어집니다.',
     career: '조직·공공기관·교육·법률·행정 쪽에서 크게 두각을 나타냅니다. 실력으로 인정받고 승진하는 경향이 강합니다.',
@@ -84,6 +93,7 @@ const DAUN_READING: Record<string, DaunReading> = {
   },
   편인: {
     title: '학문과 역마의 대운',
+    plain: '이동과 새로운 공부, 특수한 재능이 꽃피는 시기입니다. 혼자 있고 싶은 경향과 고독함이 생깁니다.',
     summary: '이동과 학문, 특수한 재능이 꽃을 피우는 시기입니다. 새로운 학문이나 철학, 특이한 재주를 익히게 됩니다. 고독한 경향이 있고 주변과의 거리감이 생깁니다.',
     wealth: '재물보다 지식과 경험에 투자하게 됩니다. 불규칙한 수입이 생기기 쉽고, 프리랜서나 전문직이 더 잘 맞습니다.',
     career: '연구·철학·종교·예술·IT·의술 같은 특수한 분야에서 성과를 냅니다. 조직보다는 독립적으로 일하는 것이 맞습니다.',
@@ -92,6 +102,7 @@ const DAUN_READING: Record<string, DaunReading> = {
   },
   정인: {
     title: '학문과 모성의 대운',
+    plain: '인생에서 가장 안정적인 배움의 시기입니다. 귀인의 도움이 생기고 학문·자격증에서 큰 성과를 냅니다.',
     summary: '인생에서 가장 안정적이고 풍요로운 배움의 시기입니다. 어머니나 보살펴 주는 사람의 도움이 생기고, 학문과 자기계발에 큰 성과를 거둡니다. 심리적으로도 안정됩니다.',
     wealth: '큰 재물은 아니지만 항상 부족하지 않은 수준의 안정적인 재물이 유지됩니다.',
     career: '교육·학술·출판·상담·의료·공직에서 탁월한 성과를 냅니다. 자격증, 학위 취득이 큰 도움이 됩니다.',
@@ -331,6 +342,11 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
 
               {reading && (
                 <div className="space-y-3">
+                  {/* 한 줄 요약 */}
+                  <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3">
+                    <span className="text-sm flex-shrink-0">💬</span>
+                    <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">{reading.plain}</p>
+                  </div>
                   <p className="text-sm text-[#C4B8D8] leading-relaxed bg-[#1C1438] rounded-2xl p-4">
                     {reading.summary}
                   </p>
@@ -413,6 +429,14 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
 
           {seunReading && (
             <div className="space-y-3">
+              {/* 한 줄 요약 */}
+              <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3">
+                <span className="text-sm flex-shrink-0">💬</span>
+                <div>
+                  <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">올해를 한 줄로 요약하면</p>
+                  <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">{seunReading.summary.split('.')[0]}.</p>
+                </div>
+              </div>
               <div className="rounded-2xl bg-[#1C1438] border border-[#2A1F4A] p-4">
                 <p className="text-xs font-bold text-[#A89BC0] mb-2">
                   일간 {dayStem.hanja}({dayStem.ko}) 기준 — {seunSipsin} 해

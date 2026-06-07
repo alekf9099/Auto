@@ -4,6 +4,19 @@ import { getSipsin } from '../utils/saju'
 
 interface Props { result: SajuResult }
 
+const SIPSIN_PLAIN: Record<string, string> = {
+  비견: '나와 비슷한 경쟁자가 늘고 독립 욕구가 강해집니다',
+  겁재: '충동적 결정이 재물 손실을 부를 수 있으니 신중해야 합니다',
+  식신: '하고 싶은 것을 마음껏 할 수 있는 여유롭고 풍요로운 별입니다',
+  상관: '창의력이 폭발하고 기존 틀을 깨고 싶어지는 변화의 별입니다',
+  편재: '돈이 크게 움직이는 투자와 기회의 별, 리스크도 함께 옵니다',
+  정재: '착실한 노력이 안정적인 결실로 돌아오는 성실 보상의 별입니다',
+  편관: '외부 압박이 강해지지만 이겨내면 큰 도약이 기다리는 별입니다',
+  정관: '조직에서 인정받고 명예와 승진이 따르는 안정 성취의 별입니다',
+  편인: '새 학문이나 특이한 재능이 개발되고 이동이 잦아지는 별입니다',
+  정인: '배움과 안정, 귀인의 도움이 함께 찾아오는 풍요로운 별입니다',
+}
+
 const BADGE: Record<string, string> = {
   비견: 'bg-emerald-50 text-emerald-700 border-emerald-200',
   겁재: 'bg-emerald-100 text-emerald-800 border-emerald-300',
@@ -18,11 +31,19 @@ const BADGE: Record<string, string> = {
 }
 
 function SipsinBadge({ name }: { name: string }) {
-  const desc = SIPSIN_DESC[name]
+  const desc  = SIPSIN_DESC[name]
+  const plain = SIPSIN_PLAIN[name]
   return (
-    <div className="text-right">
-      <span className={`inline-block px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[name] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>{name}</span>
-      {desc && <p className="text-xs text-[#7B6F9A] mt-0.5">{desc.meaning}</p>}
+    <div className="text-right max-w-[180px]">
+      <div className="flex items-center justify-end gap-1.5 mb-0.5">
+        <span className={`inline-block px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[name] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>{name}</span>
+        {desc && <span className="text-[10px] text-[#7B6F9A]">{desc.meaning}</span>}
+      </div>
+      {plain && (
+        <p className="text-[10px] text-[#C9962A]/80 leading-snug">
+          💬 {plain}
+        </p>
+      )}
     </div>
   )
 }
