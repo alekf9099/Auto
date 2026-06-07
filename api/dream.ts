@@ -1,5 +1,5 @@
-// v1beta 버전 주소로 사용해야 1.5-flash 모델을 찾을 수 있습니다!
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
+// v1 버전 주소로 설정해야 gemini-1.5-flash 모델이 정상 호출됩니다!
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent'
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
