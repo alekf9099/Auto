@@ -10,7 +10,8 @@ export default async function handler(req: any, res: any) {
   }
 
   // 1. process.env 대신 import.meta.env를 사용합니다.
-  const apiKey = import.meta.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY
+  const apiKey = process.env.GEMINI_API_KEY
+  
   if (!apiKey) {
     return res.status(500).json({ error: 'API 키가 설정되지 않았습니다' })
   }
