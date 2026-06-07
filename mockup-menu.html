@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>메뉴 목업 비교</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1a1a2e;
+    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    gap: 32px;
+    min-height: 100vh;
+  }
+
+  h1 { color: #F5EDD4; font-size: 18px; letter-spacing: -0.3px; }
+  .label { color: #C9962A; font-size: 13px; font-weight: 700; margin-bottom: 12px; text-align: center; }
+  .sublabel { color: #7B6F9A; font-size: 11px; text-align: center; margin-top: 6px; }
+
+  .compare {
+    display: flex;
+    gap: 32px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .phone {
+    width: 280px;
+    background: #0D0A1A;
+    border-radius: 36px;
+    padding: 16px;
+    border: 1.5px solid #2A1F4A;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    overflow: hidden;
+  }
+
+  /* Top bar */
+  .topbar {
+    background: #130E24;
+    border-bottom: 1px solid #2A1F4A;
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: -16px -16px 12px -16px;
+    border-radius: 28px 28px 0 0;
+  }
+  .topbar-title { color: #F5EDD4; font-size: 15px; font-weight: 700; }
+  .topbar-pts {
+    background: rgba(201,150,42,0.12);
+    border: 1px solid rgba(201,150,42,0.3);
+    color: #C9962A;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+  }
+
+  /* Banner */
+  .banner {
+    background: linear-gradient(135deg, #0D1A16 0%, #0A1520 100%);
+    border-radius: 18px;
+    padding: 14px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(201,150,42,0.15);
+    min-height: 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .banner-tag {
+    display: inline-block;
+    background: rgba(201,150,42,0.15);
+    border: 1px solid rgba(201,150,42,0.35);
+    color: #C9962A;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-bottom: 6px;
+  }
+  .banner-title { color: #F5EDD4; font-size: 14px; font-weight: 700; line-height: 1.3; }
+  .banner-sub { color: #A89BC0; font-size: 11px; margin-top: 3px; }
+  .banner-dots { display: flex; gap: 4px; justify-content: center; margin-top: 8px; }
+  .dot { width: 6px; height: 6px; border-radius: 999px; background: #2A1F4A; }
+  .dot.active { width: 16px; background: #C9962A; }
+
+  /* Menu card */
+  .menu-card {
+    background: #130E24;
+    border: 1px solid #2A1F4A;
+    border-radius: 20px;
+    padding: 14px;
+    margin-bottom: 10px;
+  }
+  .menu-card-title { color: #F5EDD4; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
+  .menu-card-sub { color: #7B6F9A; font-size: 10px; margin-bottom: 10px; }
+
+  /* 3x3 grid */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .grid-3 .item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+  .grid-3 .icon-box {
+    width: 52px;
+    height: 52px;
+    background: rgba(201,150,42,0.08);
+    border: 1px solid rgba(201,150,42,0.2);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+  .grid-3 .item-label { color: #C4B8D8; font-size: 10px; font-weight: 600; text-align: center; line-height: 1.2; }
+  .grid-3 .item-sub { color: #7B6F9A; font-size: 9px; text-align: center; }
+
+  /* 2x3 grid (6개) */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .grid-2 .item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    background: rgba(201,150,42,0.05);
+    border: 1px solid rgba(201,150,42,0.18);
+    border-radius: 14px;
+    padding: 10px 10px;
+  }
+  .grid-2 .icon-box {
+    width: 40px;
+    height: 40px;
+    background: rgba(201,150,42,0.1);
+    border: 1px solid rgba(201,150,42,0.25);
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .grid-2 .text { display: flex; flex-direction: column; gap: 1px; }
+  .grid-2 .item-label { color: #F5EDD4; font-size: 11px; font-weight: 700; }
+  .grid-2 .item-sub { color: #7B6F9A; font-size: 9px; }
+
+  /* Tab design */
+  .tab-section {
+    background: #130E24;
+    border: 1px solid #2A1F4A;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  .tab-header {
+    display: flex;
+    padding: 8px;
+    gap: 6px;
+    background: rgba(28,20,56,0.8);
+    border-bottom: 1px solid #2A1F4A;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 7px;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    color: #6B5F8A;
+  }
+  .tab-btn.active {
+    background: #C9962A;
+    color: #0D0A1A;
+  }
+  .tab-content {
+    padding: 12px;
+  }
+  .fortune-card {
+    background: rgba(201,150,42,0.06);
+    border: 1px solid rgba(201,150,42,0.2);
+    border-radius: 12px;
+    padding: 10px 12px;
+  }
+  .fortune-date { color: #7B6F9A; font-size: 10px; margin-bottom: 4px; }
+  .fortune-text { color: #C4B8D8; font-size: 11px; line-height: 1.5; }
+  .fortune-lucky {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .lucky-chip {
+    background: rgba(201,150,42,0.12);
+    border: 1px solid rgba(201,150,42,0.3);
+    color: #C9962A;
+    font-size: 9px;
+    padding: 2px 7px;
+    border-radius: 999px;
+  }
+
+  .arrow {
+    color: #C9962A;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    margin-top: 160px;
+  }
+
+  .badge-new {
+    background: #C9962A;
+    color: #0D0A1A;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 1px 5px;
+    border-radius: 4px;
+    margin-left: 4px;
+    vertical-align: middle;
+  }
+
+  /* Bottom section labels */
+  .change-note {
+    background: rgba(201,150,42,0.08);
+    border: 1px solid rgba(201,150,42,0.2);
+    border-radius: 12px;
+    padding: 10px 14px;
+    margin-top: 8px;
+  }
+  .change-note p { color: #A89BC0; font-size: 10px; line-height: 1.6; }
+  .change-note p span { color: #C9962A; font-weight: 700; }
+
+  @media (max-width: 680px) {
+    .arrow { display: none; }
+    .compare { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>메뉴 구조 비교 목업</h1>
+
+<div class="compare">
+
+  <!-- BEFORE -->
+  <div>
+    <div class="label">⬅ 현재 (9개)</div>
+    <div class="phone">
+      <div class="topbar">
+        <span class="topbar-title">운명봄</span>
+        <span class="topbar-pts">💎 120P</span>
+      </div>
+
+      <div class="banner">
+        <div class="banner-tag">신년운세 ›</div>
+        <div class="banner-title">미리보고 준비!<br>2026 신년운세</div>
+        <div class="banner-sub">얼른 복 잡아가세요!</div>
+      </div>
+      <div class="banner-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="menu-card" style="margin-top:10px">
+        <div class="menu-card-sub">소름 돋는 미래 예측</div>
+        <div class="menu-card-title">가장 정확한 사주 풀이</div>
+        <div class="grid-3">
+          <div class="item">
+            <div class="icon-box">✨</div>
+            <div class="item-label">신년운세</div>
+            <div class="item-sub">2026 병오년</div>
+          </div>
+          <div class="item">
+            <div class="icon-box">📜</div>
+            <div class="item-label">토정비결</div>
+            <div class="item-sub">이지함 비결서</div>
+          </div>
+          <div class="item">
+            <div class="icon-box">☯</div>
+            <div class="item-label">정통사주</div>
+            <div class="item-sub">사주팔자 분석</div>
+          </div>
+          <div class="item">
+            <div class="icon-box">🔮</div>
+            <div class="item-label">오늘의 운세</div>
+            <div class="item-sub">오늘 일운 분석</div>
+          </div>
+          <div class="item">
+            <div class="icon-box">🌙</div>
+            <div class="item-label">내일의 운세</div>
+            <div class="item-sub">내일 미리보기</div>
+          </div>
+          <div class="item">
+            <div class="icon-box">📊</div>
+            <div class="item-label">대운 분석</div>
+            <div class="item-sub">10년 대운 흐름</div>
+          </div>
+          <div class="item">
+            <div class="icon-box">💕</div>
+            <div class="item-label">궁합 보기</div>
+            <div class="item-sub">사주 기반 궁합</div>
+          </div>
+          <div class="item">
+            <div class="icon-box">🔵</div>
+            <div class="item-label">심층 해석</div>
+            <div class="item-sub">일간 심층 분석</div>
+          </div>
+          <div class="item">
+            <div class="icon-box">💭</div>
+            <div class="item-label">꿈해몽</div>
+            <div class="item-sub">전통 꿈 풀이</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sublabel">아이콘 작고 글씨 빽빽함<br>신년·토정은 연중 항상 자리 차지</div>
+  </div>
+
+  <div class="arrow">→</div>
+
+  <!-- AFTER -->
+  <div>
+    <div class="label">추천안 (6개) ✓</div>
+    <div class="phone">
+      <div class="topbar">
+        <span class="topbar-title">운명봄</span>
+        <span class="topbar-pts">💎 120P</span>
+      </div>
+
+      <!-- 배너 (시즌 콘텐츠 여기로) -->
+      <div class="banner">
+        <div class="banner-tag">신년운세 ›</div>
+        <div class="banner-title">미리보고 준비!<br>2026 신년운세</div>
+        <div class="banner-sub">토정비결도 함께 확인하세요</div>
+      </div>
+      <div class="banner-dots">
+        <div class="dot active"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+
+      <!-- 메뉴 6개 -->
+      <div class="menu-card" style="margin-top:10px">
+        <div class="menu-card-sub">소름 돋는 미래 예측</div>
+        <div class="menu-card-title">가장 정확한 사주 풀이</div>
+        <div class="grid-2">
+          <div class="item">
+            <div class="icon-box">☯</div>
+            <div class="text">
+              <div class="item-label">정통사주</div>
+              <div class="item-sub">사주팔자 분석</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="icon-box">🔮</div>
+            <div class="text">
+              <div class="item-label">일운 운세 <span class="badge-new">탭</span></div>
+              <div class="item-sub">오늘 · 내일</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="icon-box">📊</div>
+            <div class="text">
+              <div class="item-label">대운 분석</div>
+              <div class="item-sub">10년 흐름</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="icon-box">💕</div>
+            <div class="text">
+              <div class="item-label">궁합 보기</div>
+              <div class="item-sub">사주 기반 궁합</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="icon-box">🔵</div>
+            <div class="text">
+              <div class="item-label">심층 해석</div>
+              <div class="item-sub">일간 심층 분석</div>
+            </div>
+          </div>
+          <div class="item">
+            <div class="icon-box">💭</div>
+            <div class="text">
+              <div class="item-label">꿈해몽</div>
+              <div class="item-sub">전통 꿈 풀이</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 일운 운세 진입 시 탭 -->
+      <div class="tab-section">
+        <div class="tab-header">
+          <div class="tab-btn active">오늘 운세</div>
+          <div class="tab-btn">내일 운세</div>
+        </div>
+        <div class="tab-content">
+          <div class="fortune-card">
+            <div class="fortune-date">2026년 6월 7일 · 목(木) 기운</div>
+            <div class="fortune-text">오늘은 새로운 시작에 좋은 날입니다. 오전에 중요한 결정을 내리면 좋은 결과가 따릅니다.</div>
+            <div class="fortune-lucky">
+              <span class="lucky-chip">행운색 · 금색</span>
+              <span class="lucky-chip">행운수 · 7</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="sublabel">카드 커서 한눈에 읽힘<br>시즌 콘텐츠는 배너로 자연스럽게 노출</div>
+  </div>
+
+</div>
+
+<!-- 변경 포인트 요약 -->
+<div style="max-width:620px; width:100%">
+  <div class="change-note">
+    <p>
+      <span>① 신년운세 · 토정비결</span> → 배너 캐러셀에만 유지 (시즌에만 강조, 1~3월 이후엔 다른 배너로 교체 가능)<br>
+      <span>② 오늘/내일 운세</span> → "일운 운세" 하나로 합치고 내부에서 탭 전환<br>
+      <span>③ 메뉴 카드 레이아웃</span> → 3열→2열, 카드 커지고 아이콘·텍스트 여유있게<br>
+      <span>④ 총 메뉴</span> → 9개 → 6개 (33% 감소), 선택 부담 줄어듦
+    </p>
+  </div>
+</div>
+
+</body>
+</html>
