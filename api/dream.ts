@@ -1,5 +1,3 @@
-/// <reference types="node" />
-
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -11,7 +9,8 @@ export default async function handler(req: any, res: any) {
     return res.status(400).json({ error: '꿈 내용을 입력해주세요' })
   }
 
-  const apiKey = process.env.GEMINI_API_KEY
+  // 1. process.env 대신 import.meta.env를 사용합니다.
+  const apiKey = import.meta.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY
   if (!apiKey) {
     return res.status(500).json({ error: 'API 키가 설정되지 않았습니다' })
   }
