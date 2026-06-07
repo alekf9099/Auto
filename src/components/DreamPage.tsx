@@ -178,7 +178,7 @@ export default function DreamPage({ onBack }: Props) {
               <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
                 {selectedSym.name} 꿈
               </h2>
-              <p className="text-sm text-[#A89BC0] mb-4">{selectedSym.shortDesc}</p>
+              <p className="text-xs text-[#7B6F9A] mb-3">{selectedSym.shortDesc}</p>
 
               <div className="flex gap-2 flex-wrap mb-4">
                 <span className="text-xs bg-[#C9962A15] text-[#E8B84B] border border-[#C9962A30] px-2.5 py-1 rounded-full">
@@ -189,12 +189,14 @@ export default function DreamPage({ onBack }: Props) {
                 </span>
               </div>
 
-              {/* 한 줄 요약 callout */}
+              {/* 핵심 해몽 callout */}
               <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3 mb-1">
                 <span className="text-sm flex-shrink-0">💬</span>
                 <div>
-                  <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">이 꿈을 한 줄로 말하면</p>
-                  <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">{selectedSym.shortDesc}</p>
+                  <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">전통 해몽 핵심</p>
+                  <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">
+                    {selectedSym.general.split('.')[0]}.
+                  </p>
                 </div>
               </div>
 
