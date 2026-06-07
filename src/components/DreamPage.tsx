@@ -1,20 +1,25 @@
 import { useState } from 'react'
-import { DREAM_CATEGORIES } from '../utils/dreamData'
-import type { DreamSymbol, DreamCategory } from '../utils/dreamData'
 
 interface Props {
   onBack: () => void
 }
 
-const LUCK_CFG = {
-  great:   { label: '대길몽', color: '#C9962A', bg: '#C9962A18', border: '#C9962A45' },
-  good:    { label: '길몽',   color: '#4BBF7E', bg: '#4BBF7E18', border: '#4BBF7E45' },
-  neutral: { label: '평몽',   color: '#8B8FA8', bg: '#8B8FA818', border: '#8B8FA845' },
-  caution: { label: '주의',   color: '#E05252', bg: '#E0525218', border: '#E0525245' },
+interface DreamResult {
+  luck: 'great' | 'good' | 'neutral' | 'caution'
+  summary: string
+  general: string
+  wealth: string
+  love: string
+  career: string
+  health: string
+  advice: string
 }
 
-const OHAENG_KO: Record<string, string> = {
-  wood: '목(木)', fire: '화(火)', earth: '토(土)', metal: '금(金)', water: '수(水)',
+const LUCK_CFG = {
+  great:   { label: '대길몽', color: '#C9962A', bg: '#C9962A18', border: '#C9962A45', emoji: '✨' },
+  good:    { label: '길몽',   color: '#4BBF7E', bg: '#4BBF7E18', border: '#4BBF7E45', emoji: '🌟' },
+  neutral: { label: '평몽',   color: '#8B8FA8', bg: '#8B8FA818', border: '#8B8FA845', emoji: '🌙' },
+  caution: { label: '주의몽', color: '#E05252', bg: '#E0525218', border: '#E0525245', emoji: '⚡' },
 }
 
 const DETAIL_SECTIONS = [
@@ -25,25 +30,38 @@ const DETAIL_SECTIONS = [
 ] as const
 
 export default function DreamPage({ onBack }: Props) {
-  const [step, setStep]                       = useState<1 | 2 | 3>(1)
-  const [selectedCat, setSelectedCat]         = useState<DreamCategory | null>(null)
-  const [selectedSym, setSelectedSym]         = useState<DreamSymbol | null>(null)
+  const [step,      setStep]      = useState<'input' | 'loading' | 'result'>('input')
+  const [dreamText, setDreamText] = useState('')
+  const [result,    setResult]    = useState<DreamResult | null>(null)
+  const [error,     setError]     = useState('')
 
-  function handleCatSelect(cat: DreamCategory) {
-    setSelectedCat(cat); setStep(2); window.scrollTo(0, 0)
-  }
-
-  function handleSymSelect(sym: DreamSymbol) {
-    setSelectedSym(sym); setStep(3); window.scrollTo(0, 0)
+  async function handleSubmit() {
+    if (!dreamText.trim()) return
+    setStep('loading')
+    setError('')
+    try {
+      const resp = await fetch('/api/dream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dream: dreamText }),
+      })
+      const data = await resp.json() as DreamResult & { error?: string }
+      if (!resp.ok) throw new Error(data.error ?? '오류가 발생했습니다')
+      setResult(data)
+      setStep('result')
+      window.scrollTo(0, 0)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : '오류가 발생했습니다')
+      setStep('input')
+    }
   }
 
   function handleBack() {
-    if (step === 3) { setStep(2); window.scrollTo(0, 0) }
-    else if (step === 2) { setStep(1); window.scrollTo(0, 0) }
+    if (step === 'result') { setStep('input'); window.scrollTo(0, 0) }
     else onBack()
   }
 
-  const luck = selectedSym ? LUCK_CFG[selectedSym.luck] : null
+  const luck = result ? LUCK_CFG[result.luck] : null
 
   return (
     <div className="min-h-screen bg-[#0D0A1A]">
@@ -62,103 +80,81 @@ export default function DreamPage({ onBack }: Props) {
               꿈해몽 (夢解夢)
             </h1>
             <p className="text-xs text-[#7B6F9A] truncate">
-              {step === 1
-                ? '꿈의 주제를 선택하세요'
-                : step === 2
-                  ? `${selectedCat?.name} — 꿈 속 대상 선택`
-                  : '꿈 해몽 결과'}
+              {step === 'input' ? 'AI 전통 해몽' : step === 'loading' ? '해몽 중...' : '해몽 결과'}
             </p>
           </div>
-          {/* Step dots */}
-          <div className="flex gap-1 flex-shrink-0">
-            {([1, 2, 3] as const).map(s => (
-              <div
-                key={s}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  s === step ? 'w-5 bg-[#C9962A]' : s < step ? 'w-3 bg-[#C9962A60]' : 'w-3 bg-[#2A1F4A]'
-                }`}
-              />
-            ))}
-          </div>
+          <span className="text-[10px] text-[#4BBF7E] bg-[#4BBF7E15] border border-[#4BBF7E30] px-2 py-1 rounded-full flex-shrink-0 font-semibold">
+            AI 해몽
+          </span>
         </div>
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-5">
 
-        {/* ── STEP 1: Category ── */}
-        {step === 1 && (
+        {/* ── INPUT ── */}
+        {step === 'input' && (
           <div className="space-y-4">
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
-              <p className="text-violet-300/70 text-xs mb-1">전통 꿈 풀이</p>
+              <p className="text-violet-300/70 text-xs mb-1">AI 전통 해몽</p>
               <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                오늘 꿈에 무엇이 나왔나요?
+                어떤 꿈을 꾸셨나요?
               </h2>
               <p className="text-sm text-[#A89BC0] leading-relaxed">
-                꿈의 주제를 선택하면 재물·애정·직업·건강 운세와 함께 상세한 전통 해몽을 알려드립니다.
+                꿈 내용을 자유롭게 입력하면 AI가 전통 해몽 방식으로 재물·애정·직업·건강 운세를 풀어드립니다.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              {DREAM_CATEGORIES.map(cat => (
-                <button
-                  key={cat.id}
-                  onClick={() => handleCatSelect(cat)}
-                  className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-4 text-left hover:border-[#C9962A50] active:scale-[0.97] transition-all"
-                >
-                  <div className="text-3xl mb-2">{cat.emoji}</div>
-                  <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                    {cat.name}
-                  </p>
-                  <p className="text-xs text-[#7B6F9A] mt-0.5">{cat.desc}</p>
-                  <p className="text-xs text-[#C9962A] mt-2 font-medium">{cat.symbols.length}가지 →</p>
-                </button>
-              ))}
+            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5">
+              <textarea
+                value={dreamText}
+                onChange={e => setDreamText(e.target.value)}
+                placeholder="예) 돼지 세 마리가 집 안으로 들어오는 꿈을 꿨어요. 황금색이었고 매우 기분이 좋았습니다."
+                maxLength={300}
+                rows={5}
+                className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-4 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition resize-none leading-relaxed"
+              />
+              <div className="flex items-center justify-between mt-2 px-1">
+                <p className="text-xs text-[#4A4060]">{dreamText.length}/300자</p>
+                {error && <p className="text-xs text-red-400">{error}</p>}
+              </div>
+            </div>
+
+            <button
+              onClick={handleSubmit}
+              disabled={!dreamText.trim()}
+              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              💭 해몽하기
+            </button>
+
+            <div className="flex items-center gap-2 justify-center">
+              <div className="h-px flex-1 bg-[#2A1F4A]"/>
+              <p className="text-[10px] text-[#4A4060]">Google Gemini AI · 전통 해몽 기반</p>
+              <div className="h-px flex-1 bg-[#2A1F4A]"/>
             </div>
           </div>
         )}
 
-        {/* ── STEP 2: Symbol ── */}
-        {step === 2 && selectedCat && (
-          <div className="space-y-4">
-            <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
-              <span className="text-4xl">{selectedCat.emoji}</span>
-              <h2 className="text-xl font-bold text-[#F5EDD4] mt-2 mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                {selectedCat.name}
-              </h2>
-              <p className="text-sm text-[#A89BC0]">꿈에 나온 대상을 선택하세요</p>
+        {/* ── LOADING ── */}
+        {step === 'loading' && (
+          <div className="flex flex-col items-center justify-center py-24 space-y-6">
+            <div className="relative w-20 h-20">
+              <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
+              <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
+              <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
+              <div className="absolute inset-0 flex items-center justify-center text-3xl">💭</div>
             </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              {selectedCat.symbols.map(sym => {
-                const lc = LUCK_CFG[sym.luck]
-                return (
-                  <button
-                    key={sym.id}
-                    onClick={() => handleSymSelect(sym)}
-                    className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-4 text-left hover:border-[#C9962A50] active:scale-[0.97] transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <span className="text-3xl">{sym.emoji}</span>
-                      <span
-                        className="text-[10px] font-bold px-2 py-0.5 rounded-full flex-shrink-0"
-                        style={{ color: lc.color, backgroundColor: lc.bg, border: `1px solid ${lc.border}` }}
-                      >
-                        {lc.label}
-                      </span>
-                    </div>
-                    <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                      {sym.name}
-                    </p>
-                    <p className="text-xs text-[#7B6F9A] mt-0.5 line-clamp-2">{sym.shortDesc}</p>
-                  </button>
-                )
-              })}
+            <div className="text-center">
+              <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                해몽 중...
+              </p>
+              <p className="text-sm text-[#7B6F9A]">AI가 전통 해몽을 분석하고 있습니다</p>
             </div>
           </div>
         )}
 
-        {/* ── STEP 3: Result ── */}
-        {step === 3 && selectedSym && luck && (
+        {/* ── RESULT ── */}
+        {step === 'result' && result && luck && (
           <div className="space-y-4">
 
             {/* Hero */}
@@ -167,7 +163,7 @@ export default function DreamPage({ onBack }: Props) {
               style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)', borderColor: luck.border }}
             >
               <div className="flex items-start justify-between mb-4">
-                <span className="text-6xl leading-none">{selectedSym.emoji}</span>
+                <span className="text-6xl leading-none">{luck.emoji}</span>
                 <span
                   className="text-sm font-bold px-3 py-1.5 rounded-full"
                   style={{ color: luck.color, backgroundColor: luck.bg, border: `1px solid ${luck.border}` }}
@@ -176,26 +172,17 @@ export default function DreamPage({ onBack }: Props) {
                 </span>
               </div>
               <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                {selectedSym.name} 꿈
+                꿈 해몽 결과
               </h2>
-              <p className="text-xs text-[#7B6F9A] mb-3">{selectedSym.shortDesc}</p>
-
-              <div className="flex gap-2 flex-wrap mb-4">
-                <span className="text-xs bg-[#C9962A15] text-[#E8B84B] border border-[#C9962A30] px-2.5 py-1 rounded-full">
-                  {OHAENG_KO[selectedSym.ohaeng]} 기운
-                </span>
-                <span className="text-xs bg-violet-400/15 text-violet-300 border border-violet-400/25 px-2.5 py-1 rounded-full">
-                  {selectedCat?.name}
-                </span>
-              </div>
+              <p className="text-xs text-[#7B6F9A] mb-3">{result.summary}</p>
 
               {/* 핵심 해몽 callout */}
-              <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3 mb-1">
+              <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3 mb-3">
                 <span className="text-sm flex-shrink-0">💬</span>
                 <div>
                   <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">전통 해몽 핵심</p>
                   <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">
-                    {selectedSym.general.split('.')[0]}.
+                    {result.general.split('.')[0]}.
                   </p>
                 </div>
               </div>
@@ -206,7 +193,7 @@ export default function DreamPage({ onBack }: Props) {
                   <div className="w-1 h-4 rounded-full" style={{ backgroundColor: luck.color }}/>
                   <p className="text-xs font-bold" style={{ color: luck.color }}>총운 해몽</p>
                 </div>
-                <p className="text-sm text-[#C4B8D8] leading-relaxed">{selectedSym.general}</p>
+                <p className="text-sm text-[#C4B8D8] leading-relaxed">{result.general}</p>
               </div>
             </div>
 
@@ -219,7 +206,7 @@ export default function DreamPage({ onBack }: Props) {
                     {sec.label}
                   </h3>
                 </div>
-                <p className="text-sm text-[#C4B8D8] leading-relaxed">{(selectedSym as unknown as Record<string, string>)[sec.key]}</p>
+                <p className="text-sm text-[#C4B8D8] leading-relaxed">{result[sec.key]}</p>
               </div>
             ))}
 
@@ -231,22 +218,21 @@ export default function DreamPage({ onBack }: Props) {
                   오늘의 행동 지침
                 </h3>
               </div>
-              <p className="text-sm text-[#C4B8D8] leading-relaxed">{selectedSym.advice}</p>
+              <p className="text-sm text-[#C4B8D8] leading-relaxed">{result.advice}</p>
             </div>
 
             {/* Restart CTA */}
             <button
-              onClick={() => { setStep(1); setSelectedCat(null); setSelectedSym(null); window.scrollTo(0, 0) }}
+              onClick={() => { setStep('input'); setResult(null); setDreamText(''); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99]"
             >
               다른 꿈 해몽하기 →
             </button>
-
           </div>
         )}
 
         <p className="text-center text-xs text-[#4A4060] pb-6 pt-4">
-          꿈해몽 — 전통 해몽 사전 기반 · 참고용으로만 활용하세요
+          꿈해몽 — Google Gemini AI · 전통 해몽 기반 · 참고용으로만 활용하세요
         </p>
       </div>
     </div>
