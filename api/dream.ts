@@ -1,5 +1,6 @@
-// v1을 v1beta로 변경합니다. (1.5-flash 모델이 지원되는 유일한 주소 체계입니다)
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
+// 중간에 'models/'의 위치와 구조를 구글 공식 규격(v1beta)에 맞게 수정한 주소입니다.
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/gemini-1.5-flash:generateContent'
+
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function handler(req: any, res: any) {
