@@ -1,5 +1,6 @@
 // v1beta 버전과 models/ 명세를 완벽하게 조합한 구글 공식 주소입니다.
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
+// v1beta 주소 체계에 모델명만 2.0-flash로 변경합니다.
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function handler(req: any, res: any) {
