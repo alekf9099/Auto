@@ -1,5 +1,5 @@
-// gemini-1.5-flash 모델을 순수 fetch로 호출할 때 가장 안정적인 정식 v1 주소입니다.
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent'
+// v1beta 버전과 models/ 명세를 완벽하게 조합한 구글 공식 주소입니다.
+const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function handler(req: any, res: any) {
@@ -18,7 +18,7 @@ export default async function handler(req: any, res: any) {
   const prompt = `당신은 한국 전통 해몽 전문가입니다. 사용자의 꿈을 전통 해몽 방식으로 해석해주세요. 꿈 내용: "${dream.slice(0, 300)}" 반드시 아래 JSON 형식으로만 응답하세요. 설명 텍스트 없이 JSON만 출력하세요. {"luck": "great", "summary": "재물과 풍요를 암시하는 대길몽", "general": "전통 해몽 전체 설명 (2~3문장, 구체적으로)", "wealth": "재물운 해석 (1~2문장)", "love": "애정운 해석 (1~2문장)", "career": "직업/사업운 해석 (1~2문장)", "health": "건강운 해석 (1~2문장)", "advice": "오늘의 행동 지침 (1~2문장)" } luck 값 기준: great=대길몽, good=길몽, neutral=평몽, caution=주의몽`
 
   try {
-    // v1 주소 뒤에 key 파라미터를 붙여서 정석대로 요청을 보냅니다.
+    // 주소 뒤에 key 파라미터로 API 키를 안전하게 전달합니다.
     const resp = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
       method: 'POST',
       headers: {
