@@ -1,11 +1,13 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import type { UserInfo, BirthInput } from '../types'
 import type { PointsState } from '../utils/points'
 import { tryClaimDaily } from '../utils/points'
+import { calculateSaju, getSipsin, pillarName } from '../utils/saju'
+import { SIPSIN_DESC } from '../utils/constants'
+import { DAY_FORTUNE } from '../utils/fortuneData'
 import PointsModal from './PointsModal'
 import {
-  IcSaju, IcSinnyeon, IcTojeong, IcTodayFortune,
-  IcTomorrowFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcGem, IcStamp,
+  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcGem, IcStamp, IcSinnyeon,
 } from './icons/SajuIcons'
 
 interface Props {
@@ -19,45 +21,23 @@ interface Props {
   onLogout: () => void
 }
 
-const BANNERS = [
-  {
-    dest: 'sinnyeon' as const,
-    tag: '신년운세',
-    title: '미리보고 준비!\n2026 신년운세',
-    sub: '얼른 복 잡아가세요!',
-    bg: 'linear-gradient(135deg, #0D1A16 0%, #0A1520 100%)',
-    accentColor: '#C9962A',
-  },
-  {
-    dest: 'tojeong' as const,
-    tag: '토정비결',
-    title: '2026년 나의\n한 해 운세는?',
-    sub: '이지함 선생의 전통 비결서',
-    bg: 'linear-gradient(135deg, #13081C 0%, #190D2E 100%)',
-    accentColor: '#C9962A',
-  },
-  {
-    dest: 'gunghab' as const,
-    tag: '궁합 보기',
-    title: '나와 잘 맞는\n사람은 누구?',
-    sub: '사주로 보는 두 사람의 궁합',
-    bg: 'linear-gradient(135deg, #1C0A16 0%, #200E22 100%)',
-    accentColor: '#C9962A',
-  },
+const DAILY_FALLBACK = [
+  '하늘의 기운이 오늘 당신 편입니다. 새로운 도전에 과감히 나서보세요.',
+  '작은 실천이 큰 변화를 만드는 날입니다. 미루던 일을 시작하세요.',
+  '균형과 조화를 중심에 두면 좋은 결과가 따르는 날입니다.',
+  '오늘은 내면의 목소리에 귀 기울여 보세요. 직감이 맞습니다.',
+  '주변 사람들과의 소통이 행운을 불러오는 날입니다.',
+  '차분한 마음으로 결정하면 후회 없는 선택이 됩니다.',
+  '주말의 여유로 내일을 위한 에너지를 충전하는 날입니다.',
 ]
 
-type MenuDest = 'sinnyeon' | 'tojeong' | 'saju' | 'today' | 'tomorrow' | 'daun' | 'gunghab' | 'deepsaju' | 'dream'
-
-const MENU: { Icon: React.FC<{ size?: number; className?: string }>; label: string; dest: MenuDest; sub: string }[] = [
-  { Icon: IcSinnyeon,       label: '신년운세',   dest: 'sinnyeon', sub: '2026 병오년' },
-  { Icon: IcTojeong,        label: '토정비결',   dest: 'tojeong',  sub: '이지함 비결서' },
-  { Icon: IcSaju,           label: '정통사주',   dest: 'saju',     sub: '사주팔자 분석' },
-  { Icon: IcTodayFortune,   label: '오늘의 운세', dest: 'today',    sub: '오늘 일운 분석' },
-  { Icon: IcTomorrowFortune,label: '내일의 운세', dest: 'tomorrow', sub: '내일 미리보기' },
-  { Icon: IcDaun,           label: '대운 분석',  dest: 'daun',     sub: '10년 대운 흐름' },
-  { Icon: IcGunghab,        label: '궁합 보기',  dest: 'gunghab',  sub: '사주 기반 궁합' },
-  { Icon: IcDeepSaju,       label: '심층 해석',  dest: 'deepsaju', sub: '일간 심층 분석' },
-  { Icon: IcDream,          label: '꿈해몽',     dest: 'dream',    sub: '전통 꿈 풀이' },
+const CHIPS: { Icon: React.FC<{ size?: number; className?: string }>; label: string; dest: 'today' | 'saju' | 'daun' | 'gunghab' | 'dream' | 'deepsaju'; sub: string }[] = [
+  { Icon: IcTodayFortune, label: '오늘운세',  dest: 'today',     sub: '오늘 · 내일' },
+  { Icon: IcSaju,         label: '정통사주',  dest: 'saju',      sub: '사주팔자' },
+  { Icon: IcDaun,         label: '대운분석',  dest: 'daun',      sub: '10년 흐름' },
+  { Icon: IcGunghab,      label: '궁합보기',  dest: 'gunghab',   sub: '사주 궁합' },
+  { Icon: IcDream,        label: '꿈해몽',    dest: 'dream',     sub: '전통 풀이' },
+  { Icon: IcDeepSaju,     label: '심층해석',  dest: 'deepsaju',  sub: '일간 분석' },
 ]
 
 export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onEditProfile, onLogout }: Props) {
@@ -67,10 +47,8 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
 
   const [showPoints, setShowPoints] = useState(false)
   const [dailyToast, setDailyToast] = useState(false)
-  const [bannerIdx,  setBannerIdx]  = useState(0)
-  const touchStartX = useRef<number | null>(null)
 
-  // 연속 출석 스트릭 계산
+  // 연속 출석 스트릭
   const streak = (() => {
     const dailyDates = new Set(
       points.history.filter(h => h.label === '매일 출석 보너스').map(h => h.date)
@@ -78,7 +56,6 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
     const todayStr = new Date().toISOString().slice(0, 10)
     let count = 0
     const d = new Date()
-    // 오늘 체크했으면 오늘부터, 아니면 어제부터
     if (!dailyDates.has(todayStr)) d.setDate(d.getDate() - 1)
     while (dailyDates.has(d.toISOString().slice(0, 10))) {
       count++
@@ -96,29 +73,53 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
     }
   }, [])
 
-  // 4초마다 자동 롤링
-  useEffect(() => {
-    const t = setInterval(() => setBannerIdx(p => (p + 1) % BANNERS.length), 4000)
-    return () => clearInterval(t)
-  }, [])
+  // 오늘 한 줄 운세
+  const todayOneliner = useMemo(() => {
+    if (!birthProfile) return DAILY_FALLBACK[todayDate.getDay()]
+    try {
+      const userResult = calculateSaju(birthProfile)
+      const todayResult = calculateSaju({
+        year: todayDate.getFullYear(), month: todayDate.getMonth() + 1,
+        day: todayDate.getDate(), hour: 12, minute: null, gender: 'male',
+      })
+      const sipsin = getSipsin(userResult.dayPillar.stemIndex, todayResult.dayPillar.stemIndex) ?? '비견'
+      const fortune = DAY_FORTUNE[sipsin]
+      if (fortune?.총평) return fortune.총평.split('.')[0] + '.'
+    } catch { /* */ }
+    return DAILY_FALLBACK[todayDate.getDay()]
+  }, [birthProfile])
 
-  function handleSwipeEnd(endX: number) {
-    if (touchStartX.current === null) return
-    const diff = touchStartX.current - endX
-    if (diff > 40)       setBannerIdx(p => (p + 1) % BANNERS.length)
-    else if (diff < -40) setBannerIdx(p => (p - 1 + BANNERS.length) % BANNERS.length)
-    touchStartX.current = null
-  }
+  // 현재 대운 요약
+  const daunInfo = useMemo(() => {
+    if (!birthProfile) return null
+    try {
+      const result = calculateSaju(birthProfile)
+      const currentYear = new Date().getFullYear()
+      const dayStemIdx = result.dayPillar.stemIndex
+      const currentDaun = result.daun.find(entry => {
+        const ageYear = birthProfile.year + entry.age
+        return ageYear <= currentYear && currentYear < ageYear + 10
+      })
+      if (!currentDaun) return null
+      const sipsin = getSipsin(dayStemIdx, currentDaun.pillar.stemIndex) ?? '비견'
+      const desc = SIPSIN_DESC[sipsin]
+      return {
+        sipsin,
+        pillarStr: pillarName(currentDaun.pillar),
+        meaning: desc?.meaning ?? '',
+        ageRange: `${currentDaun.age}~${currentDaun.age + 9}세`,
+      }
+    } catch { return null }
+  }, [birthProfile])
 
   return (
     <div className="min-h-screen bg-[#0D0A1A]">
 
       {dailyToast && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-[#C9962A] text-[#0D0A1A] text-xs font-semibold px-5 py-2.5 rounded-full shadow-lg shadow-[#C9962A30] animate-bounce">
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-[#C9962A] text-[#0D0A1A] text-xs font-semibold px-5 py-2.5 rounded-full shadow-lg animate-bounce">
           🎉 출석 보너스 +10P 지급!
         </div>
       )}
-
       {showPoints && <PointsModal points={points} onClose={() => setShowPoints(false)} />}
 
       {/* 상단 바 */}
@@ -133,79 +134,63 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
               <IcGem size={14} className="text-[#C9962A]"/>
               <span className="text-xs font-bold text-[#C9962A]">{points.balance.toLocaleString()}P</span>
             </button>
-            <button onClick={onLogout} className="text-xs text-[#A89BC0] hover:text-[#C4B8D8] transition px-2 py-1">
-              로그아웃
-            </button>
-            {user.picture ? (
-              <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full object-cover" />
-            ) : (
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-                <span className="text-white text-xs font-bold">{user.name[0]}</span>
-              </div>
-            )}
+            <button onClick={onLogout} className="text-xs text-[#A89BC0] hover:text-[#C4B8D8] transition px-2 py-1">로그아웃</button>
+            {user.picture
+              ? <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full object-cover"/>
+              : <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center"><span className="text-white text-xs font-bold">{user.name[0]}</span></div>
+            }
           </div>
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
+      <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
-        {/* ── 배너 캐러셀 ── */}
-        <div>
-          <div
-            className="overflow-hidden rounded-3xl shadow-md select-none"
-            onTouchStart={e => { touchStartX.current = e.touches[0].clientX }}
-            onTouchEnd={e => handleSwipeEnd(e.changedTouches[0].clientX)}
-            onMouseDown={e => { touchStartX.current = e.clientX }}
-            onMouseUp={e => handleSwipeEnd(e.clientX)}
-          >
-            <div
-              className="flex transition-transform duration-500 ease-out"
-              style={{ transform: `translateX(-${bannerIdx * 100}%)` }}
-            >
-              {BANNERS.map(b => (
-                <div
-                  key={b.dest}
-                  className="w-full shrink-0 relative cursor-pointer active:scale-[0.99] transition-transform overflow-hidden"
-                  style={{ background: b.bg }}
-                  onClick={() => onNavigate(b.dest)}
-                >
-                  {/* Background SVG decoration */}
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none select-none opacity-[0.08]" style={{ color: b.accentColor }}>
-                    {b.dest === 'sinnyeon' && <IcSinnyeon size={90}/>}
-                    {b.dest === 'tojeong'  && <IcTojeong  size={90}/>}
-                    {b.dest === 'gunghab'  && <IcGunghab  size={90}/>}
-                  </div>
-                  <div className="p-5 pb-6 min-h-[120px]">
-                    <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40] px-3 py-1 rounded-full mb-3">
-                      {b.tag} ›
-                    </span>
-                    <p className="text-xl font-bold text-[#F5EDD4] leading-snug mb-1">
-                      {b.title.split('\n').map((line, i, arr) => (
-                        <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
-                      ))}
-                    </p>
-                    <p className="text-sm text-[#A89BC0]">{b.sub}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {/* 인사 + 오늘 운세 한 줄 */}
+        <div
+          className="rounded-3xl p-5 border shadow-xl shadow-[#000]/40"
+          style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)', borderColor: 'rgba(201,150,42,0.25)' }}
+        >
+          <p className="text-violet-300/70 text-xs mb-1">
+            {todayDate.getFullYear()}년 {month}월 {day}일 · 안녕하세요, {user.name}님
+          </p>
+          <p className="text-base font-bold text-[#F5EDD4] mb-3" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            오늘의 한 줄 운세
+          </p>
+          <div className="flex gap-2 items-start bg-[#C9962A0A] border border-[#C9962A25] rounded-2xl px-4 py-3">
+            <span className="text-sm flex-shrink-0">💬</span>
+            <p className="text-sm text-[#E8B84B] leading-relaxed font-medium">{todayOneliner}</p>
           </div>
+          <button
+            onClick={() => onNavigate('today')}
+            className="mt-3 text-xs text-[#C9962A] font-semibold hover:text-[#E8B84B] transition"
+          >
+            오늘 전체 운세 보기 →
+          </button>
+        </div>
 
-          {/* 인디케이터 도트 */}
-          <div className="flex justify-center gap-1.5 mt-2.5">
-            {BANNERS.map((_, i) => (
+        {/* 가로 스크롤 칩 메뉴 */}
+        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-4">
+          <p className="text-xs text-[#7B6F9A] mb-3 px-1">기능 바로가기</p>
+          <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1" style={{ scrollbarWidth: 'none' }}>
+            {CHIPS.map(chip => (
               <button
-                key={i}
-                onClick={() => setBannerIdx(i)}
-                className={`rounded-full transition-all duration-300 ${
-                  i === bannerIdx ? 'w-5 h-1.5 bg-[#C9962A]' : 'w-1.5 h-1.5 bg-[#2A1F4A]'
-                }`}
-              />
+                key={chip.dest}
+                onClick={() => onNavigate(chip.dest)}
+                className="flex flex-col items-center gap-2 flex-shrink-0 active:scale-95 transition-transform"
+              >
+                <div className="w-14 h-14 rounded-2xl bg-[#C9962A10] border border-[#C9962A28] flex items-center justify-center shadow-sm hover:bg-[#C9962A18] transition">
+                  <chip.Icon size={26} className="text-[#C9962A]"/>
+                </div>
+                <div className="text-center">
+                  <p className="text-xs text-[#C4B8D8] font-semibold leading-tight">{chip.label}</p>
+                  <p className="text-[9px] text-[#7B6F9A] mt-0.5">{chip.sub}</p>
+                </div>
+              </button>
             ))}
           </div>
         </div>
 
-        {/* 출석체크 배너 — 전통 도장 스타일 */}
+        {/* 출석체크 배너 */}
         {(() => {
           const checked = points.lastDaily === new Date().toISOString().slice(0, 10)
           const TOTAL_DAYS = 7
@@ -215,35 +200,21 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
               className="w-full overflow-hidden rounded-3xl shadow-[0_2px_16px_rgba(180,30,30,0.10)] active:scale-[0.99] transition-all"
             >
               <div className="relative bg-[#130E24] border border-red-900/40 rounded-3xl px-5 pt-4 pb-3">
-
-                {/* 배경 장식 — 전통 문양 SVG */}
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-[0.06] select-none pointer-events-none text-red-800 rotate-12">
                   <IcStamp size={72}/>
                 </div>
                 <div className="absolute right-16 bottom-3 opacity-[0.04] select-none pointer-events-none text-red-700 -rotate-6">
                   <IcSinnyeon size={32}/>
                 </div>
-
                 <div className="flex items-center gap-4 mb-3">
-                  {/* 원형 도장 */}
-                  <div className="relative shrink-0 w-[60px] h-[60px] flex items-center justify-center">
-                    <div className={`absolute inset-0 rounded-full border-[3px] transition-all ${
-                      checked ? 'border-red-300' : 'border-red-500'
-                    }`} />
-                    <div className="absolute inset-[5px] rounded-full border border-red-300 opacity-40" />
-                    {checked ? (
-                      <div className="flex flex-col items-center">
-                        <span className="text-red-500 text-xl font-bold leading-none">✓</span>
-                        <span className="text-[9px] text-red-400 font-bold mt-0.5">완료</span>
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center">
-                        <span className="text-[11px] font-bold text-red-600 leading-tight text-center" style={{ fontFamily: "'Noto Serif KR', serif" }}>출석<br/>도장</span>
-                      </div>
-                    )}
+                  <div className="relative shrink-0 w-[56px] h-[56px] flex items-center justify-center">
+                    <div className={`absolute inset-0 rounded-full border-[3px] transition-all ${checked ? 'border-red-300' : 'border-red-500'}`}/>
+                    <div className="absolute inset-[5px] rounded-full border border-red-300 opacity-40"/>
+                    {checked
+                      ? <div className="flex flex-col items-center"><span className="text-red-500 text-xl font-bold leading-none">✓</span><span className="text-[9px] text-red-400 font-bold mt-0.5">완료</span></div>
+                      : <div className="flex flex-col items-center"><span className="text-[11px] font-bold text-red-600 leading-tight text-center" style={{ fontFamily: "'Noto Serif KR', serif" }}>출석<br/>도장</span></div>
+                    }
                   </div>
-
-                  {/* 텍스트 */}
                   <div className="flex-1 text-left">
                     <p className="text-[10px] text-[#7B6F9A] mb-0.5 font-medium">출석체크하고</p>
                     <p className="text-base font-bold leading-tight" style={{ fontFamily: "'Noto Serif KR', serif", color: checked ? '#A89BC0' : '#F5EDD4' }}>
@@ -255,46 +226,23 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                         : `${streak > 0 ? `${streak}일 연속 출석 중 · ` : ''}매일 +10P 지급`}
                     </p>
                   </div>
-
-                  {/* 우측 뱃지 */}
                   {!checked
-                    ? <div className="shrink-0 w-10 h-10 rounded-full bg-red-500 flex items-center justify-center shadow-md shadow-red-900/30">
-                        <span className="text-white text-[10px] font-bold leading-tight text-center">+10P</span>
-                      </div>
+                    ? <div className="shrink-0 w-10 h-10 rounded-full bg-red-500 flex items-center justify-center shadow-md shadow-red-900/30"><span className="text-white text-[10px] font-bold">+10P</span></div>
                     : <span className="text-[11px] text-[#7B6F9A] font-medium shrink-0">내역 →</span>
                   }
                 </div>
-
-                {/* 7일 도장 스탬프 */}
                 <div className="flex items-center gap-1.5">
                   {Array.from({ length: TOTAL_DAYS }).map((_, i) => {
                     const filled = i < streak
                     const isToday = checked && i === streak - 1
                     return (
-                      <div
-                        key={i}
-                        className={`flex-1 aspect-square rounded-full border-2 flex items-center justify-center transition-all ${
-                          filled
-                            ? isToday
-                              ? 'border-red-500 bg-red-500 shadow-sm shadow-red-900/30'
-                              : 'border-red-900/50 bg-red-900/30'
-                            : 'border-[#2A1F4A] bg-[#1C1438]'
-                        }`}
-                      >
-                        {filled && (
-                          <span className={`text-[8px] font-bold ${isToday ? 'text-white' : 'text-red-400'}`}>
-                            {i + 1}일
-                          </span>
-                        )}
-                        {!filled && (
-                          <span className="text-[8px] text-[#4A4060]">{i + 1}</span>
-                        )}
+                      <div key={i} className={`flex-1 aspect-square rounded-full border-2 flex items-center justify-center transition-all ${filled ? (isToday ? 'border-red-500 bg-red-500 shadow-sm shadow-red-900/30' : 'border-red-900/50 bg-red-900/30') : 'border-[#2A1F4A] bg-[#1C1438]'}`}>
+                        {filled && <span className={`text-[8px] font-bold ${isToday ? 'text-white' : 'text-red-400'}`}>{i + 1}일</span>}
+                        {!filled && <span className="text-[8px] text-[#4A4060]">{i + 1}</span>}
                       </div>
                     )
                   })}
                 </div>
-
-                {/* 하단 라인 */}
                 <div className="mt-2.5 pt-2 border-t border-red-900/30 flex items-center justify-between">
                   <span className="text-[10px] text-[#4A4060]">7일 연속 출석 시 특별 보너스 지급</span>
                   <span className="text-[10px] text-red-400 font-semibold">자세히 보기 →</span>
@@ -303,14 +251,6 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
             </button>
           )
         })()}
-
-        {/* 날짜 */}
-        <div className="flex items-center justify-between px-1">
-          <p className="text-xs text-[#7B6F9A]">{todayDate.getFullYear()}년 {month}월 {day}일</p>
-          <button onClick={() => onNavigate('today')} className="text-xs text-[#C9962A] font-medium hover:text-[#E8B84B] transition">
-            오늘의 운세 확인하기 →
-          </button>
-        </div>
 
         {/* 저장된 프로필 배지 */}
         {birthProfile && (
@@ -323,47 +263,84 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                 {birthProfile.hour !== null && <span className="text-[#7B6F9A] ml-1">· {birthProfile.hour}시</span>}
               </p>
             </div>
-            <button onClick={onEditProfile} className="text-xs text-[#C9962A] font-semibold hover:text-[#E8B84B] transition">
-              수정
-            </button>
+            <button onClick={onEditProfile} className="text-xs text-[#C9962A] font-semibold hover:text-[#E8B84B] transition">수정</button>
           </div>
         )}
 
-        {/* 메뉴 그리드 */}
-        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
-          <p className="text-xs text-[#7B6F9A] mb-0.5">소름 돋는 미래 예측</p>
-          <p className="text-base font-bold text-[#F5EDD4] mb-5" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-            가장 정확한 사주 풀이
-          </p>
-          <div className="grid grid-cols-3 gap-4">
-            {MENU.map(item => (
-              <button key={item.label} onClick={() => onNavigate(item.dest)} className="flex flex-col items-center gap-2 group">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center shadow-sm bg-[#C9962A15] border border-[#C9962A30] group-active:scale-95 transition-transform">
-                  <item.Icon size={28} className="text-[#C9962A]"/>
-                </div>
-                <div className="text-center">
-                  <p className="text-xs text-[#C4B8D8] font-semibold leading-tight">{item.label}</p>
-                  <p className="text-[10px] text-[#7B6F9A] leading-tight mt-0.5">{item.sub}</p>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
+        {/* ── 피드 카드 ── */}
 
-        {/* CTA 카드 */}
-        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-          <p className="text-violet-300/70 text-xs mb-2">✨ {user.name}님을 위한 오늘의 한마디</p>
-          <p className="text-white font-bold text-base mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-            하늘의 기운이 당신 편입니다
-          </p>
-          <p className="text-violet-300/60 text-sm mb-4">오늘은 새로운 시작에 좋은 날입니다</p>
+        {/* 현재 대운 요약 */}
+        {daunInfo && (
           <button
-            onClick={() => onNavigate('saju')}
-            className="w-full py-3 bg-[#C9962A20] border border-[#C9962A40] text-[#E8B84B] font-semibold rounded-2xl text-sm hover:bg-[#C9962A30] transition active:scale-[0.98]"
+            onClick={() => onNavigate('daun')}
+            className="w-full bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 text-left hover:border-[#C9962A40] active:scale-[0.99] transition-all shadow-[0_2px_20px_rgba(0,0,0,0.3)]"
           >
-            내 정통사주 확인하기 →
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-[#C9962A12] border border-[#C9962A30] flex items-center justify-center flex-shrink-0">
+                <IcDaun size={20} className="text-[#C9962A]"/>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="text-xs font-bold text-[#C9962A]">현재 대운</p>
+                  <span className="text-xs bg-amber-900/30 text-amber-400 border border-amber-900/50 px-2 py-0.5 rounded-full font-bold">
+                    {daunInfo.pillarStr} · {daunInfo.sipsin}
+                  </span>
+                </div>
+                <p className="text-sm font-bold text-[#F5EDD4] mb-0.5" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                  💬 {daunInfo.sipsin === '정관' ? '조직에서 인정받고 명예가 따르는 시기입니다' :
+                      daunInfo.sipsin === '편관' ? '강한 압박이 있지만 이겨내면 도약하는 시기입니다' :
+                      daunInfo.sipsin === '식신' ? '재능을 펼치고 풍요를 누리는 여유로운 시기입니다' :
+                      daunInfo.sipsin === '정재' ? '꾸준한 노력이 결실로 돌아오는 안정의 시기입니다' :
+                      daunInfo.sipsin === '편재' ? '돈이 크게 움직이는 투자와 기회의 시기입니다' :
+                      daunInfo.sipsin === '상관' ? '창의력이 폭발하고 변화가 일어나는 시기입니다' :
+                      daunInfo.sipsin === '비견' ? '독립심이 강해지고 경쟁이 심화되는 시기입니다' :
+                      daunInfo.sipsin === '겁재' ? '변동과 충동을 조심해야 하는 시기입니다' :
+                      daunInfo.sipsin === '정인' ? '배움과 안정, 귀인의 도움이 찾아오는 시기입니다' :
+                      daunInfo.sipsin === '편인' ? '새 학문과 이동이 잦아지는 역마의 시기입니다' :
+                      `${daunInfo.meaning}의 기운이 흐르는 시기입니다`}
+                </p>
+                <p className="text-xs text-[#7B6F9A]">{daunInfo.ageRange} · 자세히 보기 →</p>
+              </div>
+            </div>
           </button>
-        </div>
+        )}
+
+        {/* 신년운세 프로모 카드 */}
+        <button
+          onClick={() => onNavigate('sinnyeon')}
+          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all"
+          style={{ background: 'linear-gradient(135deg, #0D1A16 0%, #0A1520 100%)' }}
+        >
+          <div className="relative p-5 border border-[rgba(201,150,42,0.2)] rounded-3xl">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-[0.07] pointer-events-none text-[#C9962A]">
+              <IcSinnyeon size={80}/>
+            </div>
+            <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40] px-3 py-1 rounded-full mb-3">
+              신년운세 ›
+            </span>
+            <p className="text-base font-bold text-[#F5EDD4] leading-snug mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              미리보고 준비!<br/>2026 신년운세
+            </p>
+            <p className="text-sm text-[#A89BC0]">얼른 복 잡아가세요!</p>
+          </div>
+        </button>
+
+        {/* 토정비결 프로모 카드 */}
+        <button
+          onClick={() => onNavigate('tojeong')}
+          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all"
+          style={{ background: 'linear-gradient(135deg, #13081C 0%, #190D2E 100%)' }}
+        >
+          <div className="relative p-5 border border-[rgba(201,150,42,0.2)] rounded-3xl">
+            <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40] px-3 py-1 rounded-full mb-3">
+              토정비결 ›
+            </span>
+            <p className="text-base font-bold text-[#F5EDD4] leading-snug mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              2026년 나의<br/>한 해 운세는?
+            </p>
+            <p className="text-sm text-[#A89BC0]">이지함 선생의 전통 비결서</p>
+          </div>
+        </button>
 
       </div>
 

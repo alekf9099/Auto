@@ -69,7 +69,8 @@ function CategoryRow({ emoji, label, text, star }: { emoji: string; label: strin
 export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }: Props) {
   const init = savedBirth ? calcResult(savedBirth, dayOffset) : null
 
-  const [step,  setStep]  = useState<'form' | 'result'>(init ? 'result' : 'form')
+  const [step,        setStep]        = useState<'form' | 'result'>(init ? 'result' : 'form')
+  const [activeOffset, setActiveOffset] = useState<0|1>(dayOffset)
   const [birth, setBirth] = useState({
     year:  savedBirth ? String(savedBirth.year)  : '',
     month: savedBirth ? String(savedBirth.month) : '',
@@ -82,7 +83,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
   const [targetStem,   setTargetStem]   = useState(init?.targetStem   ?? 0)
   const [targetBranch, setTargetBranch] = useState(init?.targetBranch ?? 0)
 
-  const isToday  = dayOffset === 0
+  const isToday  = activeOffset === 0
   const title    = isToday ? '오늘의 운세' : '내일의 운세'
   const featKey  = isToday ? 'today' : 'tomorrow'
 
@@ -93,6 +94,28 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
     else setToast({ amount: 0, total: loadPoints().balance })
   }
 
+  function applyResult(inp: BirthInput, offset: 0|1) {
+    const r = calcResult(inp, offset)
+    setSipsin(r.sipsin)
+    setDayStemIdx(r.dayStemIdx)
+    setLuckyEl(r.luckyEl)
+    setTargetDate(r.targetDate)
+    setTargetStem(r.targetStem)
+    setTargetBranch(r.targetBranch)
+  }
+
+  function handleTabChange(offset: 0|1) {
+    if (step !== 'result') return
+    setActiveOffset(offset)
+    setToast(null)
+    const inp: BirthInput = {
+      year: Number(birth.year), month: Number(birth.month),
+      day: Number(birth.day), hour: 12, minute: null, gender: 'male',
+    }
+    applyResult(inp, offset)
+    window.scrollTo(0, 0)
+  }
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     const inp: BirthInput = {
@@ -100,13 +123,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
       day: Number(birth.day), hour: 12, minute: null, gender: 'male',
     }
     onSave?.(inp)
-    const r = calcResult(inp, dayOffset)
-    setSipsin(r.sipsin)
-    setDayStemIdx(r.dayStemIdx)
-    setLuckyEl(r.luckyEl)
-    setTargetDate(r.targetDate)
-    setTargetStem(r.targetStem)
-    setTargetBranch(r.targetBranch)
+    applyResult(inp, activeOffset)
     setStep('result')
     window.scrollTo(0, 0)
   }
@@ -121,11 +138,28 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
       {/* 헤더 */}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
-          <div>
+          <button onClick={onBack} className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg flex-shrink-0">←</button>
+          <div className="flex-1 min-w-0">
             <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>{title}</h1>
             <p className="text-xs text-[#7B6F9A]">사주 기반 일일 운세 분석</p>
           </div>
+          {step === 'result' && (
+            <div className="flex bg-[#1C1438] rounded-2xl p-1 gap-1 border border-[#2A1F4A] flex-shrink-0">
+              {([{ label: '오늘', offset: 0 }, { label: '내일', offset: 1 }] as const).map(({ label, offset }) => (
+                <button
+                  key={label}
+                  onClick={() => handleTabChange(offset)}
+                  className={`px-3 py-1.5 text-xs font-semibold rounded-xl transition-all ${
+                    activeOffset === offset
+                      ? 'bg-[#C9962A] text-[#0D0A1A]'
+                      : 'text-[#6B5F8A] hover:text-[#C4B8D8]'
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
@@ -134,7 +168,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
           <>
             {/* 배너 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-              <p className="text-violet-300/70 text-xs mb-2">{isToday ? '🔮 오늘' : '⏰ 내일'} · {new Date(Date.now() + dayOffset * 86400000).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })}</p>
+              <p className="text-violet-300/70 text-xs mb-2">{isToday ? '🔮 오늘' : '⏰ 내일'} · {new Date(Date.now() + activeOffset * 86400000).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })}</p>
               <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>{title}</p>
               <p className="text-violet-300/60 text-sm">생년월일로 나만의 {isToday ? '오늘' : '내일'} 운세를 확인하세요</p>
             </div>
