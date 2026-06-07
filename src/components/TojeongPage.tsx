@@ -35,7 +35,7 @@ function calcTojeong(birth: BirthInput) {
 export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
   const init = savedBirth ? calcTojeong(savedBirth) : null
 
-  const [step, setStep] = useState<'form' | 'result'>(init ? 'result' : 'form')
+  const [step, setStep] = useState<'form' | 'loading' | 'result'>('form')
   const [birth, setBirth] = useState({
     year:  savedBirth ? String(savedBirth.year)  : '',
     month: savedBirth ? String(savedBirth.month) : '',
@@ -63,9 +63,10 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
     setGwe(r.gwe)
     setMonthly(r.monthly)
     setTotal(r.total)
-    setStep('result')
     setOpen(null)
+    setStep('loading')
     window.scrollTo(0, 0)
+    setTimeout(() => { setStep('result'); window.scrollTo(0, 0) }, 2500)
   }
 
   const avgScore = monthly.length ? Math.round(monthly.reduce((s, m) => s + m.score, 0) / monthly.length) : 3
@@ -133,6 +134,21 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
               </form>
             </div>
           </>
+        )}
+
+        {step === 'loading' && (
+          <div className="flex flex-col items-center justify-center py-24 space-y-6">
+            <div className="relative w-20 h-20">
+              <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
+              <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
+              <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
+              <div className="absolute inset-0 flex items-center justify-center text-3xl">📖</div>
+            </div>
+            <div className="text-center space-y-1">
+              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>토정비결 풀이 중...</p>
+              <p className="text-sm text-[#7B6F9A]">이지함 선생의 비결서를 펼치고 있습니다</p>
+            </div>
+          </div>
         )}
 
         {step === 'result' && (

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import type { BirthInput } from '../types'
 import { calculateSaju, getOhaengCount, pillarName, pillarNameKo } from '../utils/saju'
 import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
@@ -37,12 +38,35 @@ const PILLAR_INSIGHTS: string[] = [
 ]
 
 export default function SajuPage({ savedBirth, onBack, onDeepSaju }: Props) {
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setReady(true), 2500)
+    return () => clearTimeout(t)
+  }, [])
+
   if (!savedBirth) {
     return (
       <div className="min-h-screen bg-[#0D0A1A] flex items-center justify-center p-6">
         <div className="text-center">
           <p className="text-[#A89BC0] mb-4">생년월일 정보를 먼저 입력해 주세요.</p>
           <button onClick={onBack} className="text-[#C9962A] font-semibold">← 돌아가기</button>
+        </div>
+      </div>
+    )
+  }
+
+  if (!ready) {
+    return (
+      <div className="min-h-screen bg-[#0D0A1A] flex flex-col items-center justify-center space-y-6">
+        <div className="relative w-20 h-20">
+          <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
+          <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
+          <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
+          <div className="absolute inset-0 flex items-center justify-center text-3xl">☯️</div>
+        </div>
+        <div className="text-center space-y-1">
+          <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>사주팔자 분석 중...</p>
+          <p className="text-sm text-[#7B6F9A]">천간지지를 풀이하고 있습니다</p>
         </div>
       </div>
     )
