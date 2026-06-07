@@ -1,20 +1,17 @@
-export const config = { runtime: 'edge' }
-
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
 
-export default async function handler(request: Request): Promise<Response> {
-  if (request.method !== 'POST') {
-    return new Response(null, { status: 405 })
-  }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export default async function handler(req: any, res: any) {
+  if (req.method !== 'POST') return res.status(405).end()
 
-  const { dream } = await request.json() as { dream?: string }
+  const { dream } = req.body as { dream?: string }
   if (!dream?.trim()) {
-    return new Response(JSON.stringify({ error: '꿈 내용을 입력해주세요' }), { status: 400, headers: { 'Content-Type': 'application/json' } })
+    return res.status(400).json({ error: '꿈 내용을 입력해주세요' })
   }
 
-  const apiKey = (process as NodeJS.Process & { env: Record<string, string | undefined> }).env.GEMINI_API_KEY
+  const apiKey = process.env.GEMINI_API_KEY
   if (!apiKey) {
-    return new Response(JSON.stringify({ error: 'API 키가 설정되지 않았습니다' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
+    return res.status(500).json({ error: 'API 키가 설정되지 않았습니다' })
   }
 
   const prompt = `당신은 한국 전통 해몽 전문가입니다. 사용자의 꿈을 전통 해몽 방식으로 해석해주세요.
@@ -47,15 +44,18 @@ luck 값 기준: great=대길몽, good=길몽, neutral=평몽, caution=주의몽
     })
 
     if (!resp.ok) {
-      return new Response(JSON.stringify({ error: 'AI 서비스 오류가 발생했습니다' }), { status: 502, headers: { 'Content-Type': 'application/json' } })
+      const errText = await resp.text()
+      console.error('Gemini error:', resp.status, errText)
+      return res.status(502).json({ error: `Gemini 오류 (${resp.status}): ${errText.slice(0, 200)}` })
     }
 
-    const data = await resp.json() as { candidates?: { content?: { parts?: { text?: string }[] } }[] }
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
+    const data = await resp.json()
+    const text: string = data.candidates?.[0]?.content?.parts?.[0]?.text ?? ''
 
     const match = text.match(/\{[\s\S]*\}/)
     if (!match) {
-      return new Response(JSON.stringify({ error: 'AI 응답 파싱 오류' }), { status: 502, headers: { 'Content-Type': 'application/json' } })
+      console.error('Parse error, raw text:', text)
+      return res.status(502).json({ error: 'AI 응답 파싱 오류' })
     }
 
     const result = JSON.parse(match[0]) as { luck?: string }
@@ -63,8 +63,9 @@ luck 값 기준: great=대길몽, good=길몽, neutral=평몽, caution=주의몽
       result.luck = 'neutral'
     }
 
-    return new Response(JSON.stringify(result), { status: 200, headers: { 'Content-Type': 'application/json' } })
-  } catch {
-    return new Response(JSON.stringify({ error: '서버 오류가 발생했습니다' }), { status: 500, headers: { 'Content-Type': 'application/json' } })
+    return res.status(200).json(result)
+  } catch (e) {
+    console.error('Handler error:', e)
+    return res.status(500).json({ error: String(e) })
   }
 }
