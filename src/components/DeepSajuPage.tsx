@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calcDeepSaju, isDeepFreeUsed, markDeepFreeUsed } from '../utils/deepSaju'
 
 interface Props {
   savedBirth: BirthInput | null
   onBack: () => void
+  onSave?: (b: BirthInput) => void
 }
 
 const ELEM_COLOR: Record<string, { bg: string; text: string; border: string; glow: string }> = {
@@ -29,39 +30,51 @@ const LOCKED_SECTIONS = [
   { icon: '✨', label: '조언',         sub: '당신을 위한 한마디' },
 ]
 
-export default function DeepSajuPage({ savedBirth, onBack }: Props) {
+export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
+  const [step, setStep] = useState<'form' | 'loading' | 'result'>('form')
   const [unlocked, setUnlocked] = useState(false)
+  const [wasFirstFree, setWasFirstFree] = useState(false)
+  const [birth, setBirth] = useState({
+    year:   savedBirth ? String(savedBirth.year)   : '',
+    month:  savedBirth ? String(savedBirth.month)  : '',
+    day:    savedBirth ? String(savedBirth.day)    : '',
+    hour:   savedBirth?.hour != null ? String(savedBirth.hour) : '',
+    gender: (savedBirth?.gender ?? 'male') as 'male' | 'female',
+  })
+  const [submitted, setSubmitted] = useState<BirthInput | null>(null)
 
-  const data       = savedBirth ? calcDeepSaju(savedBirth) : null
-  const content    = data?.content
-  const ohaengText = data?.ohaengText ?? ''
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const inp: BirthInput = {
+      year: Number(birth.year), month: Number(birth.month),
+      day: Number(birth.day),
+      hour: birth.hour !== '' ? Number(birth.hour) : null,
+      minute: null,
+      gender: birth.gender,
+    }
+    onSave?.(inp)
+    setSubmitted(inp)
 
-  const isFreeUsed = isDeepFreeUsed()
-
-  useEffect(() => {
-    if (!isFreeUsed) {
+    if (!isDeepFreeUsed()) {
       markDeepFreeUsed()
       setUnlocked(true)
+      setWasFirstFree(true)
     }
-  }, [])
+
+    setStep('loading')
+    window.scrollTo(0, 0)
+    setTimeout(() => { setStep('result'); window.scrollTo(0, 0) }, 2500)
+  }
+
+  const data       = submitted ? calcDeepSaju(submitted) : null
+  const content    = data?.content
+  const ohaengText = data?.ohaengText ?? ''
 
   const elemStyle = content ? (ELEM_COLOR[content.element] ?? ELEM_COLOR['목(木)']) : ELEM_COLOR['목(木)']
   const [ohaengLines, ohaengVerdict] = ohaengText.split('\n\n')
 
-  if (!content || !savedBirth) {
-    return (
-      <div className="min-h-screen bg-[#0D0A1A] flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-[#A89BC0] mb-4">생년월일 정보가 없습니다.</p>
-          <button onClick={onBack} className="text-[#C9962A] font-semibold">← 홈으로</button>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-[#0D0A1A]">
-
       {/* 상단 바 */}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
@@ -72,7 +85,7 @@ export default function DeepSajuPage({ savedBirth, onBack }: Props) {
             ←
           </button>
           <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>심층 사주 해석</h1>
-          {!unlocked && (
+          {step !== 'result' && (
             <span className="ml-auto text-[10px] bg-[#C9962A15] text-[#C9962A] border border-[#C9962A30] px-2.5 py-1 rounded-full font-semibold">11개 섹션</span>
           )}
         </div>
@@ -80,164 +93,252 @@ export default function DeepSajuPage({ savedBirth, onBack }: Props) {
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
-        {/* 일간 히어로 배너 */}
-        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative overflow-hidden">
-          <div
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-[120px] font-bold opacity-[0.06] select-none pointer-events-none leading-none"
-            style={{ fontFamily: "'Noto Serif KR', serif" }}
-          >
-            {content.stemHanja}
-          </div>
-          <p className="text-violet-300/60 text-xs mb-3">일간(日干) · 타고난 본질의 기운</p>
-          <div className="flex items-end gap-4 mb-4">
-            <span className="text-6xl font-bold text-white" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-              {content.stemHanja}
-            </span>
-            <div>
-              <p className="text-2xl font-bold text-white leading-tight">{content.stemName}일간</p>
-              <p className="text-violet-300/70 text-sm mt-0.5">{content.element} · {content.yinYang}</p>
+        {step === 'form' && (
+          <>
+            <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
+              <p className="text-violet-300/70 text-xs mb-2">사주팔자 심층 분석</p>
+              <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                深層 解釋
+              </p>
+              <p className="text-sm text-violet-300/80 leading-relaxed">
+                재물·직업·애정·건강·용신·귀인 등<br />11가지 심층 항목을 분석합니다.
+              </p>
             </div>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <span
-              className="text-xs font-semibold px-3 py-1 rounded-full border"
-              style={{ background: elemStyle.bg + '30', color: '#fff', borderColor: 'rgba(255,255,255,0.2)' }}
-            >
-              {content.element}
-            </span>
-            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#C9962A20] border border-[#C9962A40] text-[#E8B84B]">
-              {content.yinYang}
-            </span>
-            <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#C9962A15] border border-[#C9962A30] text-[#C9962A]">
-              {savedBirth.year}.{String(savedBirth.month).padStart(2,'0')}.{String(savedBirth.day).padStart(2,'0')}
-            </span>
-          </div>
-        </div>
 
-        {/* ── 무료 섹션 1: 성향 분석 ── */}
-        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-lg">🧠</span>
-            <p className="text-sm font-bold text-[#F5EDD4]">성향 분석</p>
-            <span className="ml-auto text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">무료</span>
-          </div>
-          <p className="text-sm font-semibold text-[#E8DFC8] mb-2">{content.personality}</p>
-          <p className="text-sm text-[#A89BC0] leading-relaxed">{content.personalityDetail}</p>
-        </div>
-
-        {/* ── 무료 섹션 2: 오행 분포 ── */}
-        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-lg">⚖️</span>
-            <p className="text-sm font-bold text-[#F5EDD4]">오행 분포 분석</p>
-            <span className="ml-auto text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">무료</span>
-          </div>
-          <div className="flex gap-2 mb-3">
-            {ohaengLines.split(' · ').map((item, i) => {
-              const parts = item.split(' ')
-              const name = parts.slice(0, -1).join(' ')
-              const pctStr = parts[parts.length - 1]
-              const val = parseInt(pctStr)
-              const colors = ['#22C55E', '#F97316', '#EAB308', '#94A3B8', '#3B82F6']
-              return (
-                <div key={i} className="flex-1">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-[10px] text-[#7B6F9A]">{name}</span>
-                    <span className="text-[10px] font-bold" style={{ color: colors[i] }}>{pctStr}</span>
+            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
+              <div className="flex items-center gap-2 mb-5">
+                <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+                <h2 className="text-base font-bold text-[#F5EDD4]">생년월일 입력</h2>
+              </div>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { label: '출생년도', name: 'year',  placeholder: '1990', min: 1900, max: 2010 },
+                    { label: '월',       name: 'month', placeholder: '1',    min: 1,    max: 12 },
+                    { label: '일',       name: 'day',   placeholder: '1',    min: 1,    max: 31 },
+                  ].map(f => (
+                    <div key={f.name}>
+                      <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">{f.label}</label>
+                      <input
+                        type="number" required placeholder={f.placeholder}
+                        min={f.min} max={f.max}
+                        value={birth[f.name as 'year' | 'month' | 'day']}
+                        onChange={e => setBirth(p => ({ ...p, [f.name]: e.target.value }))}
+                        className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                      />
+                    </div>
+                  ))}
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">출생 시간 <span className="text-[#4A4060] font-normal">(선택)</span></label>
+                    <input
+                      type="number" placeholder="0~23"
+                      min={0} max={23}
+                      value={birth.hour}
+                      onChange={e => setBirth(p => ({ ...p, hour: e.target.value }))}
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                    />
                   </div>
-                  <div className="h-1.5 bg-[#231844] rounded-full overflow-hidden">
-                    <div className="h-full rounded-full" style={{ width: `${val}%`, background: colors[i] }} />
+                  <div>
+                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">성별</label>
+                    <div className="flex gap-2 h-[46px]">
+                      {(['male', 'female'] as const).map(g => (
+                        <button
+                          key={g}
+                          type="button"
+                          onClick={() => setBirth(p => ({ ...p, gender: g }))}
+                          className={`flex-1 text-sm font-semibold rounded-2xl border transition ${
+                            birth.gender === g
+                              ? 'bg-[#C9962A] border-[#C9962A] text-[#0D0A1A]'
+                              : 'bg-[#1C1438] border-[#2A1F4A] text-[#A89BC0]'
+                          }`}
+                        >
+                          {g === 'male' ? '남성' : '여성'}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
-              )
-            })}
-          </div>
-          <p className="text-sm text-[#A89BC0] leading-relaxed">{ohaengVerdict}</p>
-        </div>
-
-        {/* ── 유료 잠금 구역 ── */}
-        {!unlocked ? (
-          <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] overflow-hidden">
-
-            {/* 재물운 미리보기 (30%) */}
-            <div className="p-5 pb-0">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-lg">💰</span>
-                <p className="text-sm font-bold text-[#F5EDD4]">재물운</p>
-                <span className="ml-auto text-[10px] bg-amber-50 text-amber-600 border border-amber-200 px-2 py-0.5 rounded-full font-semibold">미리보기</span>
-              </div>
-              <div className="relative mb-4">
-                <p className="text-sm text-[#A89BC0] leading-relaxed line-clamp-2">{content.wealth}</p>
-                <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#130E24] to-transparent" />
-              </div>
+                <button
+                  type="submit"
+                  className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] hover:from-[#B8871F] hover:to-[#D4A030] transition-all text-sm active:scale-[0.98]"
+                >
+                  심층 해석 열기 →
+                </button>
+              </form>
             </div>
-
-            {/* 잠금 월 */}
-            <div className="bg-gradient-to-b from-[#1C1438] to-[#C9962A15] border-t border-[#2A1F4A] px-5 pt-5 pb-6">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="text-base">🔒</span>
-                <p className="text-sm font-bold text-[#F5EDD4]">아래 {LOCKED_SECTIONS.length}개 섹션이 잠겨 있습니다</p>
-              </div>
-              <p className="text-xs text-[#7B6F9A] mb-4 ml-6">잠금 해제 후 영구 열람 가능</p>
-
-              <div className="space-y-2 mb-5">
-                {LOCKED_SECTIONS.map(sec => (
-                  <div key={sec.label} className="flex items-center gap-3 bg-[#130E24]/70 border border-[#2A1F4A] rounded-2xl px-3.5 py-2.5">
-                    <span className="text-base shrink-0">{sec.icon}</span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-xs font-semibold text-[#E8DFC8]">{sec.label}</p>
-                      <p className="text-[10px] text-[#7B6F9A]">{sec.sub}</p>
-                    </div>
-                    <span className="text-[#3D3358] text-sm shrink-0">🔒</span>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={() => setUnlocked(true)}
-                className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] hover:from-[#B8871F] hover:to-[#D4A030] transition-all text-sm active:scale-[0.99] flex items-center justify-center gap-2"
-              >
-                <span className="text-base">✨</span>
-                <span>1코인으로 전체 잠금 해제</span>
-              </button>
-              <p className="text-center text-[11px] text-[#4A4060] mt-2.5">1회 결제 · 동일 계정 영구 열람</p>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* 재물운 */}
-            <SectionCard icon="💰" title="재물운" content={content.wealth} accent={elemStyle} />
-            {/* 직업/직장운 */}
-            <SectionCard icon="💼" title="직업/직장운" content={content.career} accent={elemStyle} />
-            {/* 애정운 */}
-            <SectionCard icon="💖" title="애정운" content={content.love} accent={elemStyle} />
-            {/* 건강운 */}
-            <SectionCard icon="🌿" title="건강운" content={content.health} accent={elemStyle} />
-            {/* 2026년 운세 */}
-            <SectionCard icon="📅" title="2026년 운세" content={content.year2026} accent={elemStyle} highlight />
-            {/* 용신 분석 */}
-            <SectionCard icon="🌀" title="용신(用神) 분석" content={content.yongshin} accent={elemStyle} />
-            {/* 귀인 분석 */}
-            <SectionCard icon="🤝" title="귀인(貴人) 분석" content={content.guardian} accent={elemStyle} />
-            {/* 대인관계 */}
-            <SectionCard icon="🌐" title="대인관계" content={content.relationship} accent={elemStyle} />
-            {/* 행운 키워드 */}
-            <LuckyCard content={content.lucky} elemStyle={elemStyle} />
-            {/* 총평 */}
-            <SectionCard icon="📜" title="총평" content={content.overall} accent={elemStyle} highlight />
-            {/* 조언 */}
-            <AdviceCard content={content.advice} />
           </>
         )}
 
-        {/* 첫 무료 안내 */}
-        {!isFreeUsed && unlocked && (
-          <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl px-4 py-3 text-center">
-            <p className="text-xs text-[#C9962A] font-semibold">🎉 첫 심층 해석은 무료로 제공됩니다!</p>
-            <p className="text-[11px] text-[#A89BC0] mt-0.5">다음 방문부터는 1코인이 필요합니다</p>
+        {step === 'loading' && (
+          <div className="flex flex-col items-center justify-center py-24 space-y-6">
+            <div className="relative w-20 h-20">
+              <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
+              <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
+              <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
+              <div className="absolute inset-0 flex items-center justify-center text-3xl">🔮</div>
+            </div>
+            <div className="text-center space-y-1">
+              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>심층 분석 중...</p>
+              <p className="text-sm text-[#7B6F9A]">사주팔자를 깊이 풀이하고 있습니다</p>
+            </div>
           </div>
         )}
 
+        {step === 'result' && submitted && content && (
+          <>
+            {/* 일간 히어로 배너 */}
+            <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative overflow-hidden">
+              <div
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[120px] font-bold opacity-[0.06] select-none pointer-events-none leading-none"
+                style={{ fontFamily: "'Noto Serif KR', serif" }}
+              >
+                {content.stemHanja}
+              </div>
+              <p className="text-violet-300/60 text-xs mb-3">일간(日干) · 타고난 본질의 기운</p>
+              <div className="flex items-end gap-4 mb-4">
+                <span className="text-6xl font-bold text-white" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                  {content.stemHanja}
+                </span>
+                <div>
+                  <p className="text-2xl font-bold text-white leading-tight">{content.stemName}일간</p>
+                  <p className="text-violet-300/70 text-sm mt-0.5">{content.element} · {content.yinYang}</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <span
+                  className="text-xs font-semibold px-3 py-1 rounded-full border"
+                  style={{ background: elemStyle.bg + '30', color: '#fff', borderColor: 'rgba(255,255,255,0.2)' }}
+                >
+                  {content.element}
+                </span>
+                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#C9962A20] border border-[#C9962A40] text-[#E8B84B]">
+                  {content.yinYang}
+                </span>
+                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#C9962A15] border border-[#C9962A30] text-[#C9962A]">
+                  {submitted.year}.{String(submitted.month).padStart(2,'0')}.{String(submitted.day).padStart(2,'0')}
+                </span>
+              </div>
+            </div>
+
+            {/* 무료 섹션 1: 성향 분석 */}
+            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-lg">🧠</span>
+                <p className="text-sm font-bold text-[#F5EDD4]">성향 분석</p>
+                <span className="ml-auto text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">무료</span>
+              </div>
+              <p className="text-sm font-semibold text-[#E8DFC8] mb-2">{content.personality}</p>
+              <p className="text-sm text-[#A89BC0] leading-relaxed">{content.personalityDetail}</p>
+            </div>
+
+            {/* 무료 섹션 2: 오행 분포 */}
+            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-lg">⚖️</span>
+                <p className="text-sm font-bold text-[#F5EDD4]">오행 분포 분석</p>
+                <span className="ml-auto text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">무료</span>
+              </div>
+              <div className="flex gap-2 mb-3">
+                {ohaengLines.split(' · ').map((item, i) => {
+                  const parts = item.split(' ')
+                  const name = parts.slice(0, -1).join(' ')
+                  const pctStr = parts[parts.length - 1]
+                  const val = parseInt(pctStr)
+                  const colors = ['#22C55E', '#F97316', '#EAB308', '#94A3B8', '#3B82F6']
+                  return (
+                    <div key={i} className="flex-1">
+                      <div className="flex justify-between items-center mb-1">
+                        <span className="text-[10px] text-[#7B6F9A]">{name}</span>
+                        <span className="text-[10px] font-bold" style={{ color: colors[i] }}>{pctStr}</span>
+                      </div>
+                      <div className="h-1.5 bg-[#231844] rounded-full overflow-hidden">
+                        <div className="h-full rounded-full" style={{ width: `${val}%`, background: colors[i] }} />
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              <p className="text-sm text-[#A89BC0] leading-relaxed">{ohaengVerdict}</p>
+            </div>
+
+            {/* 유료 잠금 구역 */}
+            {!unlocked ? (
+              <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] overflow-hidden">
+                <div className="p-5 pb-0">
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-lg">💰</span>
+                    <p className="text-sm font-bold text-[#F5EDD4]">재물운</p>
+                    <span className="ml-auto text-[10px] bg-amber-50 text-amber-600 border border-amber-200 px-2 py-0.5 rounded-full font-semibold">미리보기</span>
+                  </div>
+                  <div className="relative mb-4">
+                    <p className="text-sm text-[#A89BC0] leading-relaxed line-clamp-2">{content.wealth}</p>
+                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#130E24] to-transparent" />
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-b from-[#1C1438] to-[#C9962A15] border-t border-[#2A1F4A] px-5 pt-5 pb-6">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-base">🔒</span>
+                    <p className="text-sm font-bold text-[#F5EDD4]">아래 {LOCKED_SECTIONS.length}개 섹션이 잠겨 있습니다</p>
+                  </div>
+                  <p className="text-xs text-[#7B6F9A] mb-4 ml-6">잠금 해제 후 영구 열람 가능</p>
+
+                  <div className="space-y-2 mb-5">
+                    {LOCKED_SECTIONS.map(sec => (
+                      <div key={sec.label} className="flex items-center gap-3 bg-[#130E24]/70 border border-[#2A1F4A] rounded-2xl px-3.5 py-2.5">
+                        <span className="text-base shrink-0">{sec.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-xs font-semibold text-[#E8DFC8]">{sec.label}</p>
+                          <p className="text-[10px] text-[#7B6F9A]">{sec.sub}</p>
+                        </div>
+                        <span className="text-[#3D3358] text-sm shrink-0">🔒</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setUnlocked(true)}
+                    className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] hover:from-[#B8871F] hover:to-[#D4A030] transition-all text-sm active:scale-[0.99] flex items-center justify-center gap-2"
+                  >
+                    <span className="text-base">✨</span>
+                    <span>1코인으로 전체 잠금 해제</span>
+                  </button>
+                  <p className="text-center text-[11px] text-[#4A4060] mt-2.5">1회 결제 · 동일 계정 영구 열람</p>
+                </div>
+              </div>
+            ) : (
+              <>
+                <SectionCard icon="💰" title="재물운" content={content.wealth} accent={elemStyle} />
+                <SectionCard icon="💼" title="직업/직장운" content={content.career} accent={elemStyle} />
+                <SectionCard icon="💖" title="애정운" content={content.love} accent={elemStyle} />
+                <SectionCard icon="🌿" title="건강운" content={content.health} accent={elemStyle} />
+                <SectionCard icon="📅" title="2026년 운세" content={content.year2026} accent={elemStyle} highlight />
+                <SectionCard icon="🌀" title="용신(用神) 분석" content={content.yongshin} accent={elemStyle} />
+                <SectionCard icon="🤝" title="귀인(貴人) 분석" content={content.guardian} accent={elemStyle} />
+                <SectionCard icon="🌐" title="대인관계" content={content.relationship} accent={elemStyle} />
+                <LuckyCard content={content.lucky} elemStyle={elemStyle} />
+                <SectionCard icon="📜" title="총평" content={content.overall} accent={elemStyle} highlight />
+                <AdviceCard content={content.advice} />
+              </>
+            )}
+
+            {wasFirstFree && unlocked && (
+              <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl px-4 py-3 text-center">
+                <p className="text-xs text-[#C9962A] font-semibold">🎉 첫 심층 해석은 무료로 제공됩니다!</p>
+                <p className="text-[11px] text-[#A89BC0] mt-0.5">다음 방문부터는 1코인이 필요합니다</p>
+              </div>
+            )}
+
+            <button
+              onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
+              className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
+            >
+              다시 조회하기
+            </button>
+          </>
+        )}
       </div>
 
       <div className="text-center pb-8 text-xs text-[#4A4060]">사주팔자 — 양력 기준 · 절기 근사값 적용</div>

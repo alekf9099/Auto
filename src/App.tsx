@@ -115,15 +115,16 @@ export default function App() {
   if (page === 'tojeong')    return <TojeongPage  savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   if (page === 'today')      return <DayFortunePage dayOffset={0} savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   if (page === 'gunghab')    return <GunghabPage  savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
-  if (page === 'deepsaju')   return <DeepSajuPage savedBirth={birthProfile} onBack={goHome} />
+  if (page === 'deepsaju')   return <DeepSajuPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   if (page === 'saju') return (
     <SajuPage
       savedBirth={birthProfile}
       onBack={goHome}
+      onSave={saveBirthProfile}
       onDeepSaju={() => { setPage('deepsaju'); window.scrollTo(0, 0) }}
     />
   )
-  if (page === 'daun')  return <DaunPage  savedBirth={birthProfile} onBack={goHome} />
+  if (page === 'daun')  return <DaunPage  savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   if (page === 'dream') return <DreamPage onBack={goHome} />
 
   return <LoadingScreen onComplete={() => { setPage('home'); window.scrollTo(0, 0) }} />

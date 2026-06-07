@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin, pillarName } from '../utils/saju'
 import { STEMS, BRANCHES, ELEMENT_COLORS, SIPSIN_DESC } from '../utils/constants'
@@ -7,6 +7,7 @@ import DaunChart from './DaunChart'
 interface Props {
   savedBirth: BirthInput | null
   onBack: () => void
+  onSave?: (b: BirthInput) => void
 }
 
 interface DaunReading {
@@ -182,66 +183,56 @@ const BADGE: Record<string, string> = {
   정인: 'bg-blue-100 text-blue-800 border-blue-300',
 }
 
-export default function DaunPage({ savedBirth, onBack }: Props) {
-  const [ready, setReady] = useState(false)
-  useEffect(() => {
-    const t = setTimeout(() => setReady(true), 2500)
-    return () => clearTimeout(t)
-  }, [])
-
-  if (!savedBirth) {
-    return (
-      <div className="min-h-screen bg-[#0D0A1A] flex items-center justify-center p-6">
-        <div className="text-center">
-          <p className="text-[#A89BC0] mb-4">생년월일 정보를 먼저 입력해 주세요.</p>
-          <button onClick={onBack} className="text-[#C9962A] font-semibold">← 돌아가기</button>
-        </div>
-      </div>
-    )
-  }
-
-  if (!ready) {
-    return (
-      <div className="min-h-screen bg-[#0D0A1A] flex flex-col items-center justify-center space-y-6">
-        <div className="relative w-20 h-20">
-          <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
-          <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
-          <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
-          <div className="absolute inset-0 flex items-center justify-center text-3xl">📊</div>
-        </div>
-        <div className="text-center space-y-1">
-          <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>대운 분석 중...</p>
-          <p className="text-sm text-[#7B6F9A]">10년 단위 운세 흐름을 계산하고 있습니다</p>
-        </div>
-      </div>
-    )
-  }
-
-  const result = calculateSaju(savedBirth)
-  const currentYear = new Date().getFullYear()
-  const dayStemIdx  = result.dayPillar.stemIndex
-  const { daun, daunStartAge, isForward } = result
-
-  // Current daun
-  const currentDaun = daun.find(entry => {
-    const ageYear = savedBirth.year + entry.age
-    return ageYear <= currentYear && currentYear < ageYear + 10
+export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
+  const [step, setStep] = useState<'form' | 'loading' | 'result'>('form')
+  const [birth, setBirth] = useState({
+    year:   savedBirth ? String(savedBirth.year)   : '',
+    month:  savedBirth ? String(savedBirth.month)  : '',
+    day:    savedBirth ? String(savedBirth.day)    : '',
+    hour:   savedBirth?.hour != null ? String(savedBirth.hour) : '',
+    gender: (savedBirth?.gender ?? 'male') as 'male' | 'female',
   })
+  const [submitted, setSubmitted] = useState<BirthInput | null>(null)
 
-  // Next daun
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const inp: BirthInput = {
+      year: Number(birth.year), month: Number(birth.month),
+      day: Number(birth.day),
+      hour: birth.hour !== '' ? Number(birth.hour) : null,
+      minute: null,
+      gender: birth.gender,
+    }
+    onSave?.(inp)
+    setSubmitted(inp)
+    setStep('loading')
+    window.scrollTo(0, 0)
+    setTimeout(() => { setStep('result'); window.scrollTo(0, 0) }, 2500)
+  }
+
+  const result = submitted ? calculateSaju(submitted) : null
+  const currentYear = new Date().getFullYear()
+  const dayStemIdx  = result ? result.dayPillar.stemIndex : 0
+  const daun        = result?.daun ?? []
+  const daunStartAge = result?.daunStartAge ?? 0
+  const isForward   = result?.isForward ?? true
+  const dayStem     = result ? STEMS[dayStemIdx] : null
+
+  const currentDaun = submitted ? daun.find(entry => {
+    const ageYear = submitted.year + entry.age
+    return ageYear <= currentYear && currentYear < ageYear + 10
+  }) : null
+
   const nextDaun = currentDaun
     ? daun.find(e => e.age === currentDaun.age + 10)
     : null
 
-  // 2026년 세운 분석 — 병오년(丙午) stem=2(丙, yang fire), branch=6(午, yang fire)
   const seun2026StemIdx   = 2
   const seun2026BranchIdx = 6
   const seunStem   = STEMS[seun2026StemIdx]
   const seunBranch = BRANCHES[seun2026BranchIdx]
-  const seunSipsin = getSipsin(dayStemIdx, seun2026StemIdx)
+  const seunSipsin = result ? getSipsin(dayStemIdx, seun2026StemIdx) : '비견'
   const seunReading = SEUN_READING[seunSipsin]
-
-  const dayStem = STEMS[dayStemIdx]
 
   return (
     <div className="min-h-screen bg-[#0D0A1A]">
@@ -265,274 +256,373 @@ export default function DaunPage({ savedBirth, onBack }: Props) {
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
-        {/* Dark hero */}
-        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-          <p className="text-violet-300/70 text-xs mb-3">
-            {savedBirth.year}년생 · {savedBirth.gender === 'male' ? '남성' : '여성'} · 일간{' '}
-            <span style={{ color: ELEMENT_COLORS[dayStem.element] }}>
-              {dayStem.hanja}({dayStem.ko})
-            </span>
-          </p>
-
-          <div className="flex items-center gap-4 mb-4">
-            <div className="text-center">
-              <p className="text-violet-300/60 text-xs mb-1">대운 시작</p>
-              <p className="text-2xl font-bold text-white" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                {daunStartAge}세
+        {step === 'form' && (
+          <>
+            <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
+              <p className="text-violet-300/70 text-xs mb-2">10년 단위 운의 큰 흐름</p>
+              <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                大運 分析
+              </p>
+              <p className="text-sm text-violet-300/80 leading-relaxed">
+                사주를 바탕으로 10년마다 바뀌는<br />대운의 흐름과 현재 시기를 분석합니다.
               </p>
             </div>
-            <div className="w-px h-10 bg-violet-400/30" />
-            <div className="text-center">
-              <p className="text-violet-300/60 text-xs mb-1">진행 방향</p>
-              <p className="text-lg font-bold text-white">
-                {isForward ? '순행 ▶' : '역행 ◀'}
-              </p>
-            </div>
-            {currentDaun && (
-              <>
-                <div className="w-px h-10 bg-violet-400/30" />
-                <div className="text-center">
-                  <p className="text-violet-300/60 text-xs mb-1">현재 대운</p>
-                  <p className="text-2xl font-bold text-amber-300" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                    {pillarName(currentDaun.pillar)}
-                  </p>
-                </div>
-              </>
-            )}
-          </div>
 
-          <p className="text-violet-300/60 text-xs leading-relaxed">
-            대운은 {daunStartAge}세를 시작으로 10년마다 바뀌는 큰 운의 흐름입니다.{' '}
-            {isForward ? '월주 천간의 다음 간지 순서로 순행합니다.' : '월주 천간의 이전 간지 순서로 역행합니다.'}
-          </p>
-        </div>
-
-        {/* DaunChart */}
-        <DaunChart result={result} birthYear={savedBirth.year} currentYear={currentYear} />
-
-        {/* Current daun deep reading */}
-        {currentDaun && (() => {
-          const stem   = STEMS[currentDaun.pillar.stemIndex]
-          const branch = BRANCHES[currentDaun.pillar.branchIndex]
-          const sipsin = getSipsin(dayStemIdx, currentDaun.pillar.stemIndex)
-          const reading = DAUN_READING[sipsin]
-          const desc    = SIPSIN_DESC[sipsin]
-          const ageYear = savedBirth.year + currentDaun.age
-          const stemC   = ELEMENT_COLORS[stem.element]
-
-          return (
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="w-1 h-5 bg-amber-400 rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                  현재 대운 심층 해석
-                </h2>
-                <span className="ml-auto text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-bold">
-                  현재
-                </span>
+              <div className="flex items-center gap-2 mb-5">
+                <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+                <h2 className="text-base font-bold text-[#F5EDD4]">생년월일 입력</h2>
               </div>
-              <p className="text-xs text-[#7B6F9A] mb-5 ml-3">
-                {currentDaun.age}세 대운 ({ageYear}년 ~ {ageYear + 9}년)
-              </p>
-
-              {/* Pillar display */}
-              <div className="flex items-center gap-4 mb-5 p-4 rounded-2xl" style={{ backgroundColor: stemC + '0D', borderColor: stemC + '20' }}>
-                <div
-                  className="w-14 h-14 rounded-2xl flex flex-col items-center justify-center border-2"
-                  style={{ borderColor: stemC + '50', backgroundColor: stemC + '12' }}
-                >
-                  <span className="text-2xl font-bold" style={{ color: stemC }}>{stem.hanja}</span>
-                  <span className="text-xs" style={{ color: stemC + 'cc' }}>{stem.ko}</span>
-                </div>
-                <div
-                  className="w-14 h-16 rounded-2xl flex flex-col items-center justify-center border-2"
-                  style={{ borderColor: ELEMENT_COLORS[branch.element] + '50', backgroundColor: ELEMENT_COLORS[branch.element] + '12' }}
-                >
-                  <span className="text-2xl font-bold" style={{ color: ELEMENT_COLORS[branch.element] }}>{branch.hanja}</span>
-                  <span className="text-xs" style={{ color: ELEMENT_COLORS[branch.element] + 'cc' }}>{branch.ko}</span>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[sipsin] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>
-                      {sipsin}
-                    </span>
-                    {desc && <span className="text-xs text-[#7B6F9A]">{desc.meaning}</span>}
-                  </div>
-                  <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                    {reading?.title ?? sipsin + '의 대운'}
-                  </p>
-                </div>
-              </div>
-
-              {reading && (
-                <div className="space-y-3">
-                  {/* 한 줄 요약 */}
-                  <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3">
-                    <span className="text-sm flex-shrink-0">💬</span>
-                    <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">{reading.plain}</p>
-                  </div>
-                  <p className="text-sm text-[#C4B8D8] leading-relaxed bg-[#1C1438] rounded-2xl p-4">
-                    {reading.summary}
-                  </p>
-
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-3 gap-3">
                   {[
-                    { label: '💰 재물운', text: reading.wealth },
-                    { label: '💼 직업운', text: reading.career },
-                    { label: '💕 애정운', text: reading.love },
-                  ].map(({ label, text }) => (
-                    <div key={label} className="rounded-2xl border border-[#2A1F4A] p-4">
-                      <p className="text-xs font-bold text-[#A89BC0] mb-1.5">{label}</p>
-                      <p className="text-sm text-[#C4B8D8] leading-relaxed">{text}</p>
+                    { label: '출생년도', name: 'year',  placeholder: '1990', min: 1900, max: 2010 },
+                    { label: '월',       name: 'month', placeholder: '1',    min: 1,    max: 12 },
+                    { label: '일',       name: 'day',   placeholder: '1',    min: 1,    max: 31 },
+                  ].map(f => (
+                    <div key={f.name}>
+                      <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">{f.label}</label>
+                      <input
+                        type="number" required placeholder={f.placeholder}
+                        min={f.min} max={f.max}
+                        value={birth[f.name as 'year' | 'month' | 'day']}
+                        onChange={e => setBirth(p => ({ ...p, [f.name]: e.target.value }))}
+                        className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                      />
                     </div>
                   ))}
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">출생 시간 <span className="text-[#4A4060] font-normal">(선택)</span></label>
+                    <input
+                      type="number" placeholder="0~23"
+                      min={0} max={23}
+                      value={birth.hour}
+                      onChange={e => setBirth(p => ({ ...p, hour: e.target.value }))}
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">성별</label>
+                    <div className="flex gap-2 h-[46px]">
+                      {(['male', 'female'] as const).map(g => (
+                        <button
+                          key={g}
+                          type="button"
+                          onClick={() => setBirth(p => ({ ...p, gender: g }))}
+                          className={`flex-1 text-sm font-semibold rounded-2xl border transition ${
+                            birth.gender === g
+                              ? 'bg-[#C9962A] border-[#C9962A] text-[#0D0A1A]'
+                              : 'bg-[#1C1438] border-[#2A1F4A] text-[#A89BC0]'
+                          }`}
+                        >
+                          {g === 'male' ? '남성' : '여성'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] hover:from-[#B8871F] hover:to-[#D4A030] transition-all text-sm active:scale-[0.98]"
+                >
+                  대운 분석하기 →
+                </button>
+              </form>
+            </div>
+          </>
+        )}
 
-                  <div className="rounded-2xl bg-amber-50 border border-amber-100 p-4">
-                    <p className="text-xs font-bold text-amber-700 mb-1.5">⚠ 주의사항</p>
-                    <p className="text-sm text-[#C4B8D8] leading-relaxed">{reading.caution}</p>
+        {step === 'loading' && (
+          <div className="flex flex-col items-center justify-center py-24 space-y-6">
+            <div className="relative w-20 h-20">
+              <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
+              <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
+              <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
+              <div className="absolute inset-0 flex items-center justify-center text-3xl">🔮</div>
+            </div>
+            <div className="text-center space-y-1">
+              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>대운 분석 중...</p>
+              <p className="text-sm text-[#7B6F9A]">10년 단위 운세 흐름을 계산하고 있습니다</p>
+            </div>
+          </div>
+        )}
+
+        {step === 'result' && submitted && result && dayStem && (
+          <>
+            {/* Dark hero */}
+            <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
+              <p className="text-violet-300/70 text-xs mb-3">
+                {submitted.year}년생 · {submitted.gender === 'male' ? '남성' : '여성'} · 일간{' '}
+                <span style={{ color: ELEMENT_COLORS[dayStem.element] }}>
+                  {dayStem.hanja}({dayStem.ko})
+                </span>
+              </p>
+
+              <div className="flex items-center gap-4 mb-4">
+                <div className="text-center">
+                  <p className="text-violet-300/60 text-xs mb-1">대운 시작</p>
+                  <p className="text-2xl font-bold text-white" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                    {daunStartAge}세
+                  </p>
+                </div>
+                <div className="w-px h-10 bg-violet-400/30" />
+                <div className="text-center">
+                  <p className="text-violet-300/60 text-xs mb-1">진행 방향</p>
+                  <p className="text-lg font-bold text-white">
+                    {isForward ? '순행 ▶' : '역행 ◀'}
+                  </p>
+                </div>
+                {currentDaun && (
+                  <>
+                    <div className="w-px h-10 bg-violet-400/30" />
+                    <div className="text-center">
+                      <p className="text-violet-300/60 text-xs mb-1">현재 대운</p>
+                      <p className="text-2xl font-bold text-amber-300" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                        {pillarName(currentDaun.pillar)}
+                      </p>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <p className="text-violet-300/60 text-xs leading-relaxed">
+                대운은 {daunStartAge}세를 시작으로 10년마다 바뀌는 큰 운의 흐름입니다.{' '}
+                {isForward ? '월주 천간의 다음 간지 순서로 순행합니다.' : '월주 천간의 이전 간지 순서로 역행합니다.'}
+              </p>
+            </div>
+
+            {/* DaunChart */}
+            <DaunChart result={result} birthYear={submitted.year} currentYear={currentYear} />
+
+            {/* Current daun deep reading */}
+            {currentDaun && (() => {
+              const stem   = STEMS[currentDaun.pillar.stemIndex]
+              const branch = BRANCHES[currentDaun.pillar.branchIndex]
+              const sipsin = getSipsin(dayStemIdx, currentDaun.pillar.stemIndex)
+              const reading = DAUN_READING[sipsin]
+              const desc    = SIPSIN_DESC[sipsin]
+              const ageYear = submitted.year + currentDaun.age
+              const stemC   = ELEMENT_COLORS[stem.element]
+
+              return (
+                <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-1 h-5 bg-amber-400 rounded-full" />
+                    <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                      현재 대운 심층 해석
+                    </h2>
+                    <span className="ml-auto text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-bold">
+                      현재
+                    </span>
+                  </div>
+                  <p className="text-xs text-[#7B6F9A] mb-5 ml-3">
+                    {currentDaun.age}세 대운 ({ageYear}년 ~ {ageYear + 9}년)
+                  </p>
+
+                  <div className="flex items-center gap-4 mb-5 p-4 rounded-2xl" style={{ backgroundColor: stemC + '0D', borderColor: stemC + '20' }}>
+                    <div
+                      className="w-14 h-14 rounded-2xl flex flex-col items-center justify-center border-2"
+                      style={{ borderColor: stemC + '50', backgroundColor: stemC + '12' }}
+                    >
+                      <span className="text-2xl font-bold" style={{ color: stemC }}>{stem.hanja}</span>
+                      <span className="text-xs" style={{ color: stemC + 'cc' }}>{stem.ko}</span>
+                    </div>
+                    <div
+                      className="w-14 h-16 rounded-2xl flex flex-col items-center justify-center border-2"
+                      style={{ borderColor: ELEMENT_COLORS[branch.element] + '50', backgroundColor: ELEMENT_COLORS[branch.element] + '12' }}
+                    >
+                      <span className="text-2xl font-bold" style={{ color: ELEMENT_COLORS[branch.element] }}>{branch.hanja}</span>
+                      <span className="text-xs" style={{ color: ELEMENT_COLORS[branch.element] + 'cc' }}>{branch.ko}</span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[sipsin] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>
+                          {sipsin}
+                        </span>
+                        {desc && <span className="text-xs text-[#7B6F9A]">{desc.meaning}</span>}
+                      </div>
+                      <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                        {reading?.title ?? sipsin + '의 대운'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {reading && (
+                    <div className="space-y-3">
+                      <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3">
+                        <span className="text-sm flex-shrink-0">💬</span>
+                        <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">{reading.plain}</p>
+                      </div>
+                      <p className="text-sm text-[#C4B8D8] leading-relaxed bg-[#1C1438] rounded-2xl p-4">
+                        {reading.summary}
+                      </p>
+
+                      {[
+                        { label: '💰 재물운', text: reading.wealth },
+                        { label: '💼 직업운', text: reading.career },
+                        { label: '💕 애정운', text: reading.love },
+                      ].map(({ label, text }) => (
+                        <div key={label} className="rounded-2xl border border-[#2A1F4A] p-4">
+                          <p className="text-xs font-bold text-[#A89BC0] mb-1.5">{label}</p>
+                          <p className="text-sm text-[#C4B8D8] leading-relaxed">{text}</p>
+                        </div>
+                      ))}
+
+                      <div className="rounded-2xl bg-amber-50 border border-amber-100 p-4">
+                        <p className="text-xs font-bold text-amber-700 mb-1.5">⚠ 주의사항</p>
+                        <p className="text-sm text-[#C4B8D8] leading-relaxed">{reading.caution}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )
+            })()}
+
+            {/* 2026년 세운 분석 */}
+            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="w-1 h-5 bg-red-400 rounded-full" />
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                  2026년 세운 (歲運)
+                </h2>
+                <span className="ml-auto text-xs bg-red-50 text-red-600 border border-red-200 px-2.5 py-1 rounded-full font-medium">
+                  병오년 丙午
+                </span>
+              </div>
+              <p className="text-xs text-[#7B6F9A] mb-5 ml-3">올해의 연간 운세 분석</p>
+
+              <div className="flex items-center gap-3 mb-5 p-4 bg-[#1C1438] rounded-2xl border border-[#2A1F4A]">
+                <div
+                  className="w-12 h-12 rounded-xl flex flex-col items-center justify-center border-2"
+                  style={{ borderColor: ELEMENT_COLORS[seunStem.element] + '50', backgroundColor: ELEMENT_COLORS[seunStem.element] + '12' }}
+                >
+                  <span className="text-xl font-bold" style={{ color: ELEMENT_COLORS[seunStem.element] }}>{seunStem.hanja}</span>
+                  <span className="text-[10px]" style={{ color: ELEMENT_COLORS[seunStem.element] + 'cc' }}>{seunStem.ko}</span>
+                </div>
+                <div
+                  className="w-12 h-14 rounded-xl flex flex-col items-center justify-center border-2"
+                  style={{ borderColor: ELEMENT_COLORS[seunBranch.element] + '50', backgroundColor: ELEMENT_COLORS[seunBranch.element] + '12' }}
+                >
+                  <span className="text-xl font-bold" style={{ color: ELEMENT_COLORS[seunBranch.element] }}>{seunBranch.hanja}</span>
+                  <span className="text-[10px]" style={{ color: ELEMENT_COLORS[seunBranch.element] + 'cc' }}>{seunBranch.ko}</span>
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-[#E8DFC8] mb-1">
+                    {ELEMENT_KO[seunStem.element]} 양(陽)의 해
+                  </p>
+                  <p className="text-xs text-[#A89BC0]">
+                    {seunBranch.animal}띠 해 · 화기(火氣) 집중
+                  </p>
+                  <div className="flex items-center gap-2 mt-1.5">
+                    <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[seunSipsin] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>
+                      {seunSipsin}
+                    </span>
+                    <span className="text-xs text-[#7B6F9A]">일간 기준</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-2xl bg-red-900/15 border border-red-900/40 p-4 mb-3">
+                <p className="text-xs font-bold text-red-400 mb-2">병오년(丙午年) 특징</p>
+                <p className="text-sm text-[#C4B8D8] leading-relaxed">
+                  2026년은 병(丙)과 오(午) 모두 화(火) 기운으로 이루어진 강렬한 불의 해입니다.
+                  태양처럼 뜨겁고 밝은 에너지가 넘치며, 활동력·표현력·열정이 극대화됩니다.
+                  화기가 강한 해는 빠른 성과를 낼 수 있지만 과열되면 충돌과 소진도 옵니다.
+                </p>
+              </div>
+
+              {seunReading && (
+                <div className="space-y-3">
+                  <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3">
+                    <span className="text-sm flex-shrink-0">💬</span>
+                    <div>
+                      <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">올해를 한 줄로 요약하면</p>
+                      <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">{seunReading.summary.split('.')[0]}.</p>
+                    </div>
+                  </div>
+                  <div className="rounded-2xl bg-[#1C1438] border border-[#2A1F4A] p-4">
+                    <p className="text-xs font-bold text-[#A89BC0] mb-2">
+                      일간 {dayStem.hanja}({dayStem.ko}) 기준 — {seunSipsin} 해
+                    </p>
+                    <p className="text-sm text-[#C4B8D8] leading-relaxed">{seunReading.summary}</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="flex-1 rounded-2xl bg-[#C9962A15] border border-[#C9962A30] p-3">
+                      <p className="text-[10px] font-bold text-[#C9962A] mb-1">핵심 키워드</p>
+                      <p className="text-xs text-[#E8B84B] font-medium">{seunReading.keyword}</p>
+                    </div>
+                    <div className="flex-1 rounded-2xl bg-amber-50 border border-amber-100 p-3">
+                      <p className="text-[10px] font-bold text-amber-600 mb-1">조언</p>
+                      <p className="text-xs text-[#C4B8D8] leading-relaxed">{seunReading.advice}</p>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
-          )
-        })()}
 
-        {/* 2026년 세운 분석 */}
-        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-1 h-5 bg-red-400 rounded-full" />
-            <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-              2026년 세운 (歲運)
-            </h2>
-            <span className="ml-auto text-xs bg-red-50 text-red-600 border border-red-200 px-2.5 py-1 rounded-full font-medium">
-              병오년 丙午
-            </span>
-          </div>
-          <p className="text-xs text-[#7B6F9A] mb-5 ml-3">올해의 연간 운세 분석</p>
+            {/* Next daun preview */}
+            {nextDaun && (() => {
+              const stem     = STEMS[nextDaun.pillar.stemIndex]
+              const sipsin   = getSipsin(dayStemIdx, nextDaun.pillar.stemIndex)
+              const reading  = DAUN_READING[sipsin]
+              const ageYear  = submitted.year + nextDaun.age
+              const stemC    = ELEMENT_COLORS[stem.element]
 
-          {/* Year info */}
-          <div className="flex items-center gap-3 mb-5 p-4 bg-[#1C1438] rounded-2xl border border-[#2A1F4A]">
-            <div
-              className="w-12 h-12 rounded-xl flex flex-col items-center justify-center border-2"
-              style={{ borderColor: ELEMENT_COLORS[seunStem.element] + '50', backgroundColor: ELEMENT_COLORS[seunStem.element] + '12' }}
-            >
-              <span className="text-xl font-bold" style={{ color: ELEMENT_COLORS[seunStem.element] }}>{seunStem.hanja}</span>
-              <span className="text-[10px]" style={{ color: ELEMENT_COLORS[seunStem.element] + 'cc' }}>{seunStem.ko}</span>
-            </div>
-            <div
-              className="w-12 h-14 rounded-xl flex flex-col items-center justify-center border-2"
-              style={{ borderColor: ELEMENT_COLORS[seunBranch.element] + '50', backgroundColor: ELEMENT_COLORS[seunBranch.element] + '12' }}
-            >
-              <span className="text-xl font-bold" style={{ color: ELEMENT_COLORS[seunBranch.element] }}>{seunBranch.hanja}</span>
-              <span className="text-[10px]" style={{ color: ELEMENT_COLORS[seunBranch.element] + 'cc' }}>{seunBranch.ko}</span>
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-[#E8DFC8] mb-1">
-                {ELEMENT_KO[seunStem.element]} 양(陽)의 해
-              </p>
-              <p className="text-xs text-[#A89BC0]">
-                {seunBranch.animal}띠 해 · 화기(火氣) 집중
-              </p>
-              <div className="flex items-center gap-2 mt-1.5">
-                <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[seunSipsin] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>
-                  {seunSipsin}
-                </span>
-                <span className="text-xs text-[#7B6F9A]">일간 기준</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Seun general note */}
-          <div className="rounded-2xl bg-red-900/15 border border-red-900/40 p-4 mb-3">
-            <p className="text-xs font-bold text-red-400 mb-2">병오년(丙午年) 특징</p>
-            <p className="text-sm text-[#C4B8D8] leading-relaxed">
-              2026년은 병(丙)과 오(午) 모두 화(火) 기운으로 이루어진 강렬한 불의 해입니다.
-              태양처럼 뜨겁고 밝은 에너지가 넘치며, 활동력·표현력·열정이 극대화됩니다.
-              화기가 강한 해는 빠른 성과를 낼 수 있지만 과열되면 충돌과 소진도 옵니다.
-            </p>
-          </div>
-
-          {seunReading && (
-            <div className="space-y-3">
-              {/* 한 줄 요약 */}
-              <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3">
-                <span className="text-sm flex-shrink-0">💬</span>
-                <div>
-                  <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">올해를 한 줄로 요약하면</p>
-                  <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">{seunReading.summary.split('.')[0]}.</p>
-                </div>
-              </div>
-              <div className="rounded-2xl bg-[#1C1438] border border-[#2A1F4A] p-4">
-                <p className="text-xs font-bold text-[#A89BC0] mb-2">
-                  일간 {dayStem.hanja}({dayStem.ko}) 기준 — {seunSipsin} 해
-                </p>
-                <p className="text-sm text-[#C4B8D8] leading-relaxed">{seunReading.summary}</p>
-              </div>
-              <div className="flex gap-2">
-                <div className="flex-1 rounded-2xl bg-[#C9962A15] border border-[#C9962A30] p-3">
-                  <p className="text-[10px] font-bold text-[#C9962A] mb-1">핵심 키워드</p>
-                  <p className="text-xs text-[#E8B84B] font-medium">{seunReading.keyword}</p>
-                </div>
-                <div className="flex-1 rounded-2xl bg-amber-50 border border-amber-100 p-3">
-                  <p className="text-[10px] font-bold text-amber-600 mb-1">조언</p>
-                  <p className="text-xs text-[#C4B8D8] leading-relaxed">{seunReading.advice}</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Next daun preview */}
-        {nextDaun && (() => {
-          const stem     = STEMS[nextDaun.pillar.stemIndex]
-          const sipsin   = getSipsin(dayStemIdx, nextDaun.pillar.stemIndex)
-          const reading  = DAUN_READING[sipsin]
-          const ageYear  = savedBirth.year + nextDaun.age
-          const stemC    = ELEMENT_COLORS[stem.element]
-
-          return (
-            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="w-1 h-5 bg-[#3D3358] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                  다음 대운 예고
-                </h2>
-                <span className="ml-auto text-xs bg-[#1C1438] text-[#A89BC0] border border-[#2A1F4A] px-2.5 py-1 rounded-full">
-                  {nextDaun.age}세 ~ {ageYear}년 시작
-                </span>
-              </div>
-              <p className="text-xs text-[#7B6F9A] mb-4 ml-3">다음 10년 사이클 미리보기</p>
-
-              <div className="flex items-center gap-3 p-4 bg-[#1C1438] rounded-2xl border border-[#2A1F4A]">
-                <div
-                  className="w-12 h-12 rounded-xl flex flex-col items-center justify-center border-2"
-                  style={{ borderColor: stemC + '50', backgroundColor: stemC + '12' }}
-                >
-                  <span className="text-xl font-bold" style={{ color: stemC }}>{stem.hanja}</span>
-                  <span className="text-xs" style={{ color: stemC + 'cc' }}>{stem.ko}</span>
-                </div>
-                <div className="flex-1">
+              return (
+                <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[sipsin] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>
-                      {sipsin}
+                    <div className="w-1 h-5 bg-[#3D3358] rounded-full" />
+                    <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                      다음 대운 예고
+                    </h2>
+                    <span className="ml-auto text-xs bg-[#1C1438] text-[#A89BC0] border border-[#2A1F4A] px-2.5 py-1 rounded-full">
+                      {nextDaun.age}세 ~ {ageYear}년 시작
                     </span>
                   </div>
-                  <p className="text-sm font-semibold text-[#E8DFC8]">
-                    {reading?.title ?? sipsin + '의 대운'}
-                  </p>
-                  {reading && (
-                    <p className="text-xs text-[#A89BC0] mt-1 leading-relaxed">
-                      {reading.summary}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </div>
-          )
-        })()}
+                  <p className="text-xs text-[#7B6F9A] mb-4 ml-3">다음 10년 사이클 미리보기</p>
 
-        <p className="text-center text-xs text-[#4A4060] pb-6">
-          사주팔자 계산기 — 양력 기준 · 절기 근사값 적용
-        </p>
+                  <div className="flex items-center gap-3 p-4 bg-[#1C1438] rounded-2xl border border-[#2A1F4A]">
+                    <div
+                      className="w-12 h-12 rounded-xl flex flex-col items-center justify-center border-2"
+                      style={{ borderColor: stemC + '50', backgroundColor: stemC + '12' }}
+                    >
+                      <span className="text-xl font-bold" style={{ color: stemC }}>{stem.hanja}</span>
+                      <span className="text-xs" style={{ color: stemC + 'cc' }}>{stem.ko}</span>
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[sipsin] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>
+                          {sipsin}
+                        </span>
+                      </div>
+                      <p className="text-sm font-semibold text-[#E8DFC8]">
+                        {reading?.title ?? sipsin + '의 대운'}
+                      </p>
+                      {reading && (
+                        <p className="text-xs text-[#A89BC0] mt-1 leading-relaxed">
+                          {reading.summary}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )
+            })()}
+
+            <button
+              onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
+              className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
+            >
+              다시 조회하기
+            </button>
+
+            <p className="text-center text-xs text-[#4A4060] pb-6">
+              사주팔자 계산기 — 양력 기준 · 절기 근사값 적용
+            </p>
+          </>
+        )}
       </div>
     </div>
   )

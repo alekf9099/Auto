@@ -40,6 +40,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
     year:  savedBirth ? String(savedBirth.year)  : '',
     month: savedBirth ? String(savedBirth.month) : '',
     day:   savedBirth ? String(savedBirth.day)   : '',
+    hour:  savedBirth?.hour != null ? String(savedBirth.hour) : '',
   })
   const [gwe, setGwe]         = useState(init?.gwe     ?? { sang: 1, jung: 1, ha: 1, gwe: 0 })
   const [monthly, setMonthly] = useState(init?.monthly ?? [] as { month: number; score: number; text: string }[])
@@ -56,7 +57,9 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
     e.preventDefault()
     const inp: BirthInput = {
       year: Number(birth.year), month: Number(birth.month),
-      day: Number(birth.day), hour: 12, minute: null, gender: 'male',
+      day: Number(birth.day),
+      hour: birth.hour !== '' ? Number(birth.hour) : null,
+      minute: null, gender: 'male',
     }
     onSave?.(inp)
     const r = calcTojeong(inp)
@@ -125,6 +128,16 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
                     </div>
                   ))}
                 </div>
+                <div>
+                  <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">출생 시간 <span className="text-[#4A4060] font-normal">(선택, 0~23시)</span></label>
+                  <input
+                    type="number" placeholder="예: 14"
+                    min={0} max={23}
+                    value={birth.hour}
+                    onChange={e => setBirth(p => ({ ...p, hour: e.target.value }))}
+                    className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                  />
+                </div>
                 <button
                   type="submit"
                   className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] hover:from-[#B8871F] hover:to-[#D4A030] transition-all text-sm active:scale-[0.98]"
@@ -142,7 +155,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
               <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
               <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
               <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
-              <div className="absolute inset-0 flex items-center justify-center text-3xl">📖</div>
+              <div className="absolute inset-0 flex items-center justify-center text-3xl">🔮</div>
             </div>
             <div className="text-center space-y-1">
               <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>토정비결 풀이 중...</p>
