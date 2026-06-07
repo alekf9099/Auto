@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
