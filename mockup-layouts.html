@@ -3,378 +3,616 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>레이아웃 옵션 비교</title>
+<title>레이아웃 목업 A / B / C</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: #12102a;
-    font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
-    padding: 36px 20px 60px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 48px;
-  }
-  h1 { color: #F5EDD4; font-size: 17px; font-weight: 700; letter-spacing: -0.3px; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #0e0c1f;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  padding: 36px 16px 80px;
+  display: flex; flex-direction: column; align-items: center; gap: 60px;
+}
 
-  .section { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 920px; }
-  .section-title { color: #C9962A; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; }
-  .section-desc { color: #7B6F9A; font-size: 11px; text-align: center; max-width: 500px; line-height: 1.6; }
+/* ── 공통 타이포 ── */
+.page-title { color: #F5EDD4; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+.page-sub   { color: #7B6F9A; font-size: 12px; margin-top: 4px; text-align: center; }
 
-  .phones { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
+.opt-wrap   { width: 100%; max-width: 980px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.opt-header { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.opt-badge  { font-size: 11px; font-weight: 800; letter-spacing: 1px; padding: 4px 14px; border-radius: 999px; }
+.opt-title  { color: #F5EDD4; font-size: 16px; font-weight: 800; }
+.opt-desc   { color: #7B6F9A; font-size: 11px; text-align: center; max-width: 500px; line-height: 1.6; }
 
-  .phone {
-    width: 260px;
-    background: #0D0A1A;
-    border-radius: 34px;
-    border: 1.5px solid #2A1F4A;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    overflow: hidden;
-    flex-shrink: 0;
-  }
-  .phone-label { color: #A89BC0; font-size: 10px; text-align: center; margin-top: 8px; }
+.phones-row { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; align-items: flex-start; }
 
-  /* Top bar */
-  .topbar {
-    background: #130E24;
-    border-bottom: 1px solid #2A1F4A;
-    padding: 10px 14px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .tb-title { color: #F5EDD4; font-size: 14px; font-weight: 700; }
-  .tb-pts { background: rgba(201,150,42,0.12); border: 1px solid rgba(201,150,42,0.3); color: #C9962A; font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 999px; }
+/* ── 폰 프레임 ── */
+.phone {
+  width: 248px; background: #0D0A1A;
+  border-radius: 32px; border: 1.5px solid #2A1F4A;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.55);
+  overflow: hidden; flex-shrink: 0;
+  display: flex; flex-direction: column;
+}
+.screen-label {
+  color: #7B6F9A; font-size: 10px; text-align: center; margin-top: 8px; font-weight: 600;
+}
 
-  .body { padding: 12px; display: flex; flex-direction: column; gap: 10px; }
+/* ── 공통 UI 조각 ── */
+.topbar {
+  background: #130E24; border-bottom: 1px solid #2A1F4A;
+  padding: 10px 12px; display: flex; align-items: center; justify-content: space-between;
+}
+.tb-logo { color: #F5EDD4; font-size: 14px; font-weight: 700; }
+.tb-pts  { background: rgba(201,150,42,.12); border: 1px solid rgba(201,150,42,.3); color: #C9962A; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 999px; }
+.tb-back { color: #C4B8D8; font-size: 14px; padding: 0 4px; }
 
-  /* Banner */
-  .banner {
-    background: linear-gradient(135deg, #0D1A16, #0A1520);
-    border-radius: 16px;
-    padding: 12px 14px;
-    border: 1px solid rgba(201,150,42,0.15);
-  }
-  .b-tag { display: inline-block; background: rgba(201,150,42,0.15); border: 1px solid rgba(201,150,42,0.35); color: #C9962A; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 999px; margin-bottom: 5px; }
-  .b-title { color: #F5EDD4; font-size: 13px; font-weight: 700; line-height: 1.3; }
-  .b-sub { color: #A89BC0; font-size: 10px; margin-top: 3px; }
-  .dots { display: flex; gap: 3px; justify-content: center; margin-top: 6px; }
-  .dot { width: 5px; height: 5px; border-radius: 999px; background: #2A1F4A; }
-  .dot.on { width: 14px; background: #C9962A; }
+.body { padding: 10px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 
-  /* ───── OPTION A: Content-first ───── */
-  .today-card {
-    background: linear-gradient(135deg, #1A0E30, #100820);
-    border: 1px solid rgba(201,150,42,0.25);
-    border-radius: 16px;
-    padding: 14px;
-  }
-  .today-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .today-badge { background: rgba(201,150,42,0.15); border: 1px solid rgba(201,150,42,0.3); color: #C9962A; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 999px; }
-  .today-more { color: #C9962A; font-size: 10px; }
-  .today-text { color: #C4B8D8; font-size: 11px; line-height: 1.6; margin-bottom: 8px; }
-  .today-chips { display: flex; gap: 5px; flex-wrap: wrap; }
-  .chip { background: rgba(201,150,42,0.1); border: 1px solid rgba(201,150,42,0.25); color: #E8B84B; font-size: 9px; padding: 2px 7px; border-radius: 999px; }
+.banner {
+  background: linear-gradient(135deg,#0D1A16,#0A1520);
+  border-radius: 14px; padding: 12px; border: 1px solid rgba(201,150,42,.15);
+}
+.b-tag   { display:inline-block; background:rgba(201,150,42,.15); border:1px solid rgba(201,150,42,.3); color:#C9962A; font-size:9px; font-weight:700; padding:2px 7px; border-radius:999px; margin-bottom:5px; }
+.b-title { color:#F5EDD4; font-size:13px; font-weight:700; line-height:1.3; }
+.b-sub   { color:#A89BC0; font-size:10px; margin-top:3px; }
+.dots    { display:flex; gap:3px; justify-content:center; margin-top:6px; }
+.dot     { width:5px;height:5px;border-radius:999px;background:#2A1F4A; }
+.dot.on  { width:14px;background:#C9962A; }
 
-  .quick-title { color: #7B6F9A; font-size: 10px; font-weight: 600; }
-  .quick-row { display: flex; gap: 7px; }
-  .quick-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .qi-box { width: 44px; height: 44px; background: rgba(201,150,42,0.07); border: 1px solid rgba(201,150,42,0.2); border-radius: 13px; display: flex; align-items: center; justify-content: center; font-size: 17px; }
-  .qi-label { color: #C4B8D8; font-size: 9px; font-weight: 600; text-align: center; line-height: 1.2; }
+.sec-title { color:#F5EDD4; font-size:11px; font-weight:700; }
+.sec-sub   { color:#7B6F9A; font-size:9px; }
 
-  /* ───── OPTION B: Bottom Nav ───── */
-  .content-area { min-height: 200px; }
-  .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .sh-title { color: #F5EDD4; font-size: 12px; font-weight: 700; }
-  .sh-more { color: #C9962A; font-size: 10px; }
+/* ─── A 전용 ─── */
+.today-card {
+  background:linear-gradient(135deg,#1A0E30,#100820);
+  border:1px solid rgba(201,150,42,.25); border-radius:14px; padding:12px;
+}
+.tc-row  { display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; }
+.tc-badge{ background:rgba(201,150,42,.15);border:1px solid rgba(201,150,42,.3);color:#C9962A;font-size:9px;font-weight:700;padding:2px 7px;border-radius:999px; }
+.tc-more { color:#C9962A;font-size:10px; }
+.tc-text { color:#C4B8D8;font-size:10.5px;line-height:1.6;margin-bottom:7px; }
+.tc-chips{ display:flex;gap:5px;flex-wrap:wrap; }
+.chip    { background:rgba(201,150,42,.1);border:1px solid rgba(201,150,42,.25);color:#E8B84B;font-size:9px;padding:2px 6px;border-radius:999px; }
 
-  .saju-preview {
-    background: rgba(201,150,42,0.06);
-    border: 1px solid rgba(201,150,42,0.2);
-    border-radius: 12px;
-    padding: 10px 12px;
-    margin-bottom: 8px;
-  }
-  .sp-row { display: flex; align-items: center; gap: 8px; }
-  .sp-hanja { font-size: 22px; color: #F5EDD4; font-weight: 700; }
-  .sp-info { flex: 1; }
-  .sp-name { color: #E8B84B; font-size: 11px; font-weight: 700; }
-  .sp-desc { color: #A89BC0; font-size: 10px; margin-top: 1px; }
-  .sp-btn { background: rgba(201,150,42,0.15); border: 1px solid rgba(201,150,42,0.3); color: #C9962A; font-size: 10px; padding: 4px 8px; border-radius: 8px; }
+.quick-grid { display:grid;grid-template-columns:repeat(5,1fr);gap:5px; }
+.qi { display:flex;flex-direction:column;align-items:center;gap:3px; }
+.qi-box { width:38px;height:38px;background:rgba(201,150,42,.07);border:1px solid rgba(201,150,42,.18);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px; }
+.qi-lbl { color:#A89BC0;font-size:8.5px;font-weight:600;text-align:center;line-height:1.2; }
 
-  .feature-grid-small { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
-  .fgs-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .fgs-box { width: 38px; height: 38px; background: rgba(201,150,42,0.07); border: 1px solid rgba(201,150,42,0.18); border-radius: 11px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
-  .fgs-label { color: #A89BC0; font-size: 8.5px; font-weight: 600; text-align: center; }
+/* A - 기능 진입 상세 화면 */
+.detail-hero {
+  background:linear-gradient(135deg,#1A0E30,#060410);
+  border-radius:14px; padding:12px; border:1px solid rgba(201,150,42,.2);
+}
+.dh-date  { color:#7B6F9A;font-size:9px;margin-bottom:4px; }
+.dh-main  { color:#F5EDD4;font-size:13px;font-weight:700;margin-bottom:6px; }
+.dh-text  { color:#C4B8D8;font-size:10px;line-height:1.6; }
+.dh-chips { display:flex;gap:5px;margin-top:7px;flex-wrap:wrap; }
 
-  .bottom-nav {
-    background: #130E24;
-    border-top: 1px solid #2A1F4A;
-    display: flex;
-    padding: 8px 4px 10px;
-    margin: 0 -12px -12px;
-  }
-  .bn-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
-  .bn-icon { font-size: 18px; }
-  .bn-label { font-size: 9px; color: #6B5F8A; font-weight: 600; }
-  .bn-label.active { color: #C9962A; }
-  .bn-dot { width: 4px; height: 4px; border-radius: 999px; background: #C9962A; }
+.fortune-sec { background:#130E24;border:1px solid #2A1F4A;border-radius:12px;padding:10px; }
+.fs-label { color:#A89BC0;font-size:9px;font-weight:700;margin-bottom:4px; }
+.fs-text  { color:#C4B8D8;font-size:10px;line-height:1.5; }
 
-  /* ───── OPTION C: Feed + Quick Chips ───── */
-  .greeting-card {
-    background: linear-gradient(135deg, #1A0E30, #060410);
-    border-radius: 16px;
-    padding: 12px 14px;
-    border: 1px solid rgba(201,150,42,0.2);
-  }
-  .gc-hello { color: #7B6F9A; font-size: 10px; margin-bottom: 3px; }
-  .gc-name { color: #F5EDD4; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
-  .gc-fortune { color: #C4B8D8; font-size: 11px; line-height: 1.5; border-left: 2px solid #C9962A; padding-left: 8px; }
+/* ─── B 전용 ─── */
+.saju-card {
+  background:rgba(201,150,42,.06);border:1px solid rgba(201,150,42,.2);
+  border-radius:13px;padding:10px;
+}
+.sc-row { display:flex;align-items:center;gap:8px; }
+.sc-hanja{ color:#F5EDD4;font-size:22px;font-weight:700;line-height:1; }
+.sc-info { flex:1; }
+.sc-name { color:#E8B84B;font-size:10px;font-weight:700; }
+.sc-desc { color:#A89BC0;font-size:9px;margin-top:1px; }
+.sc-btn  { background:rgba(201,150,42,.15);border:1px solid rgba(201,150,42,.3);color:#C9962A;font-size:9px;padding:3px 7px;border-radius:7px; }
 
-  .chips-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
-  .chips-row::-webkit-scrollbar { display: none; }
-  .feature-chip {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    background: #130E24;
-    border: 1px solid #2A1F4A;
-    border-radius: 999px;
-    padding: 6px 11px;
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-  .feature-chip.active { border-color: rgba(201,150,42,0.5); background: rgba(201,150,42,0.08); }
-  .fc-icon { font-size: 13px; }
-  .fc-label { color: #C4B8D8; font-size: 10px; font-weight: 600; }
-  .feature-chip.active .fc-label { color: #E8B84B; }
+.feat-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:6px; }
+.fg-item  { display:flex;flex-direction:column;align-items:center;gap:3px; }
+.fg-box   { width:36px;height:36px;background:rgba(201,150,42,.07);border:1px solid rgba(201,150,42,.18);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px; }
+.fg-lbl   { color:#A89BC0;font-size:8.5px;text-align:center; }
 
-  .feed-card {
-    background: #130E24;
-    border: 1px solid #2A1F4A;
-    border-radius: 14px;
-    padding: 12px;
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-  }
-  .feed-icon { font-size: 24px; flex-shrink: 0; }
-  .feed-content { flex: 1; }
-  .feed-title { color: #F5EDD4; font-size: 11px; font-weight: 700; margin-bottom: 3px; }
-  .feed-text { color: #A89BC0; font-size: 10px; line-height: 1.5; }
-  .feed-tag { display: inline-block; background: rgba(201,150,42,0.1); border: 1px solid rgba(201,150,42,0.2); color: #C9962A; font-size: 9px; padding: 1px 6px; border-radius: 4px; margin-top: 5px; }
+.bot-nav  { background:#130E24;border-top:1px solid #2A1F4A;display:flex;padding:7px 4px 9px;margin:auto -10px -10px; }
+.bn-item  { flex:1;display:flex;flex-direction:column;align-items:center;gap:2px; }
+.bn-icon  { font-size:16px; }
+.bn-lbl   { font-size:8.5px;color:#6B5F8A;font-weight:600; }
+.bn-lbl.on{ color:#C9962A; }
+.bn-dot   { width:3px;height:3px;border-radius:999px;background:#C9962A; }
 
-  /* Divider */
-  .divider { width: 100%; max-width: 700px; height: 1px; background: linear-gradient(90deg, transparent, #2A1F4A, transparent); }
+/* B - 운세 탭 */
+.unse-tabs { display:flex;background:#1C1438;border-radius:12px;padding:4px;gap:4px;border:1px solid #2A1F4A; }
+.ut-btn { flex:1;padding:5px;border-radius:8px;font-size:10px;font-weight:700;text-align:center;color:#6B5F8A; }
+.ut-btn.on { background:#C9962A;color:#0D0A1A; }
 
-  /* Pros/cons */
-  .verdict {
-    background: rgba(201,150,42,0.06);
-    border: 1px solid rgba(201,150,42,0.18);
-    border-radius: 12px;
-    padding: 12px 16px;
-    max-width: 700px;
-    width: 100%;
-  }
-  .verdict-title { color: #C9962A; font-size: 11px; font-weight: 800; margin-bottom: 8px; }
-  .vrow { display: flex; gap: 10px; margin-bottom: 5px; align-items: flex-start; }
-  .vmark { font-size: 11px; flex-shrink: 0; margin-top: 1px; }
-  .vtext { color: #A89BC0; font-size: 10px; line-height: 1.5; }
-  .vtext b { color: #E8B84B; }
+.unse-card { background:#130E24;border:1px solid #2A1F4A;border-radius:12px;padding:10px; }
+.uc-date { color:#7B6F9A;font-size:9px;margin-bottom:4px; }
+.uc-text { color:#C4B8D8;font-size:10px;line-height:1.5; }
+.uc-lucks{ display:flex;gap:4px;flex-wrap:wrap;margin-top:6px; }
+.lc { background:rgba(201,150,42,.1);border:1px solid rgba(201,150,42,.25);color:#C9962A;font-size:8.5px;padding:2px 6px;border-radius:999px; }
+
+/* B - 궁합 탭 */
+.gunghab-form { background:#130E24;border:1px solid #2A1F4A;border-radius:12px;padding:10px; }
+.gf-label { color:#7B6F9A;font-size:9px;margin-bottom:6px; }
+.gf-input { background:#1C1438;border:1px solid #2A1F4A;border-radius:9px;padding:7px 10px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px; }
+.gf-val  { color:#C4B8D8;font-size:10px; }
+.gf-edit { color:#C9962A;font-size:9px; }
+.gf-btn  { width:100%;padding:8px;background:linear-gradient(90deg,#C9962A,#E8B84B);border-radius:10px;color:#0D0A1A;font-size:11px;font-weight:700;text-align:center;margin-top:4px; }
+
+/* ─── C 전용 ─── */
+.greet-card {
+  background:linear-gradient(135deg,#1A0E30,#060410);
+  border-radius:14px;padding:12px;border:1px solid rgba(201,150,42,.2);
+}
+.gc-hi   { color:#7B6F9A;font-size:9px;margin-bottom:2px; }
+.gc-name { color:#F5EDD4;font-size:13px;font-weight:700;margin-bottom:6px; }
+.gc-text { color:#C4B8D8;font-size:10px;line-height:1.6;border-left:2px solid #C9962A;padding-left:8px; }
+
+.chips-scroll { display:flex;gap:6px;overflow-x:auto;padding-bottom:2px; }
+.chips-scroll::-webkit-scrollbar{display:none;}
+.fchip { display:flex;align-items:center;gap:4px;background:#130E24;border:1px solid #2A1F4A;border-radius:999px;padding:5px 10px;white-space:nowrap;flex-shrink:0; }
+.fchip.on { border-color:rgba(201,150,42,.5);background:rgba(201,150,42,.08); }
+.fc-icon { font-size:12px; }
+.fc-lbl  { color:#C4B8D8;font-size:9.5px;font-weight:600; }
+.fchip.on .fc-lbl { color:#E8B84B; }
+
+.feed-card { background:#130E24;border:1px solid #2A1F4A;border-radius:13px;padding:10px;display:flex;gap:9px;align-items:flex-start; }
+.feed-icon { font-size:20px;flex-shrink:0;margin-top:1px; }
+.feed-body { flex:1; }
+.feed-ttl  { color:#F5EDD4;font-size:10.5px;font-weight:700;margin-bottom:3px; }
+.feed-txt  { color:#A89BC0;font-size:9.5px;line-height:1.5; }
+.feed-tag  { display:inline-block;background:rgba(201,150,42,.1);border:1px solid rgba(201,150,42,.2);color:#C9962A;font-size:8.5px;padding:1px 6px;border-radius:4px;margin-top:4px; }
+
+/* C - 꿈해몽 상세 */
+.dream-cats { display:grid;grid-template-columns:repeat(2,1fr);gap:6px; }
+.dc-item { background:#130E24;border:1px solid #2A1F4A;border-radius:12px;padding:9px; }
+.dc-emoji{ font-size:20px;margin-bottom:3px; }
+.dc-name { color:#F5EDD4;font-size:10px;font-weight:700; }
+.dc-desc { color:#7B6F9A;font-size:9px;margin-top:1px; }
+.dc-cnt  { color:#C9962A;font-size:9px;margin-top:4px;font-weight:600; }
+
+/* ── 구분선 ── */
+.divider { width:100%;max-width:980px;height:1px;background:linear-gradient(90deg,transparent,#2A1F4A,transparent); }
+
+/* ── 비교표 ── */
+.compare-table {
+  width:100%;max-width:700px;background:#130E24;border:1px solid #2A1F4A;
+  border-radius:16px;overflow:hidden;
+}
+.ct-head { display:grid;grid-template-columns:140px 1fr 1fr 1fr;background:#1C1438;border-bottom:1px solid #2A1F4A; }
+.ct-row  { display:grid;grid-template-columns:140px 1fr 1fr 1fr;border-bottom:1px solid #1C1438; }
+.ct-row:last-child{border-bottom:none;}
+.ct-cell { padding:10px 12px;font-size:10px;color:#A89BC0;border-right:1px solid #1C1438; }
+.ct-cell:last-child{border-right:none;}
+.ct-cell.hd { color:#7B6F9A;font-weight:700;font-size:10px; }
+.ct-cell.key{ color:#C4B8D8;font-weight:700; }
+.good { color:#4BBF7E; }
+.mid  { color:#E8B84B; }
+.bad  { color:#E05252; }
 </style>
 </head>
 <body>
 
-<h1>레이아웃 대안 비교</h1>
+<div style="text-align:center">
+  <div class="page-title">홈 레이아웃 A / B / C 목업</div>
+  <div class="page-sub">각 안마다 홈 화면 + 기능 진입 화면 2개씩 제작</div>
+</div>
 
-<!-- ═══════════════════════════════════════════
-     OPTION A: Content-first (컨텐츠 선노출)
-═══════════════════════════════════════════ -->
-<div class="section">
-  <div class="section-title">OPTION A — 컨텐츠 선노출형</div>
-  <div class="section-desc">홈에서 오늘 운세 미리보기를 바로 보여줌. 버튼 누르기 전에 가치를 느낄 수 있음.<br>점신, 네이버 운세 방식</div>
-  <div class="phones">
+<!-- ══════════════════════════════════
+     OPTION A — 컨텐츠 선노출
+══════════════════════════════════ -->
+<div class="opt-wrap">
+  <div class="opt-header">
+    <span class="opt-badge" style="background:rgba(75,191,126,.1);color:#4BBF7E;border:1px solid rgba(75,191,126,.3)">A안</span>
+    <div class="opt-title">컨텐츠 선노출형</div>
+    <div class="opt-desc">홈에서 오늘 운세를 바로 보여줌. 앱 켜자마자 가치 전달. 점신·네이버 운세 방식.</div>
+  </div>
+
+  <div class="phones-row">
+
+    <!-- A-1 홈 -->
     <div>
       <div class="phone">
-        <div class="topbar">
-          <span class="tb-title">운명봄</span>
-          <span class="tb-pts">💎 120P</span>
-        </div>
+        <div class="topbar"><span class="tb-logo">운명봄</span><span class="tb-pts">💎 120P</span></div>
         <div class="body">
           <div class="banner">
             <div class="b-tag">신년운세 ›</div>
             <div class="b-title">2026 병오년 운세</div>
-            <div class="b-sub">지금 확인해보세요</div>
+            <div class="b-sub">지금 확인하세요</div>
           </div>
           <div class="dots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
 
-          <!-- 오늘 운세 바로 노출 -->
           <div class="today-card">
-            <div class="today-row">
-              <span class="today-badge">오늘의 운세 · 6/7</span>
-              <span class="today-more">전체보기 →</span>
+            <div class="tc-row">
+              <span class="tc-badge">오늘의 운세 · 6/7</span>
+              <span class="tc-more">전체보기 →</span>
             </div>
-            <div class="today-text">오늘은 목(木) 기운이 강한 날입니다. 새로운 시작을 추진하기에 좋고, 오전에 결정을 내리면 유리합니다.</div>
-            <div class="today-chips">
+            <div class="tc-text">오늘은 목(木) 기운이 강한 날입니다. 새로운 시작을 추진하기에 좋고 오전 결정이 유리합니다.</div>
+            <div class="tc-chips">
               <span class="chip">행운색 금색</span>
               <span class="chip">행운수 7</span>
               <span class="chip">⚠ 오후 과음 주의</span>
             </div>
           </div>
 
-          <!-- 빠른 기능 접근 -->
-          <div class="quick-title">다른 기능</div>
-          <div class="quick-row">
-            <div class="quick-item"><div class="qi-box">☯</div><div class="qi-label">정통<br>사주</div></div>
-            <div class="quick-item"><div class="qi-box">📊</div><div class="qi-label">대운<br>분석</div></div>
-            <div class="quick-item"><div class="qi-box">💕</div><div class="qi-label">궁합<br>보기</div></div>
-            <div class="quick-item"><div class="qi-box">💭</div><div class="qi-label">꿈<br>해몽</div></div>
-            <div class="quick-item"><div class="qi-box">🔵</div><div class="qi-label">심층<br>해석</div></div>
+          <div class="sec-sub">다른 기능 바로가기</div>
+          <div class="quick-grid">
+            <div class="qi"><div class="qi-box">☯</div><div class="qi-lbl">정통<br>사주</div></div>
+            <div class="qi"><div class="qi-box">📊</div><div class="qi-lbl">대운<br>분석</div></div>
+            <div class="qi"><div class="qi-box">💕</div><div class="qi-lbl">궁합<br>보기</div></div>
+            <div class="qi"><div class="qi-box">🔵</div><div class="qi-lbl">심층<br>해석</div></div>
+            <div class="qi"><div class="qi-box">💭</div><div class="qi-lbl">꿈<br>해몽</div></div>
           </div>
         </div>
       </div>
-      <div class="phone-label">홈 화면</div>
+      <div class="screen-label">① 홈 화면</div>
     </div>
-  </div>
-  <div class="verdict">
-    <div class="verdict-title">특징</div>
-    <div class="vrow"><span class="vmark">✅</span><span class="vtext"><b>앱 켜자마자 오늘 운세 확인</b> — 가장 자주 쓰는 기능이 즉시 보임</span></div>
-    <div class="vrow"><span class="vmark">✅</span><span class="vtext">메뉴 안 눌러도 되니 <b>진입 장벽 없음</b></span></div>
-    <div class="vrow"><span class="vmark">⚠️</span><span class="vtext">오늘 운세 구현이 이미 돼있어야 해서 <b>개발 추가 작업 필요</b></span></div>
+
+    <!-- A-2 오늘 운세 상세 -->
+    <div>
+      <div class="phone">
+        <div class="topbar"><span class="tb-back">←</span><span class="tb-logo">오늘의 운세</span><span style="width:40px"></span></div>
+        <div class="body">
+          <div class="detail-hero">
+            <div class="dh-date">2026년 6월 7일 일요일 · 목(木)의 날</div>
+            <div class="dh-main">오늘 하루 흐름</div>
+            <div class="dh-text">오늘은 목(木) 기운이 주도하는 날입니다. 창의적인 시작과 새로운 도전에 에너지가 집중됩니다. 오전에 중요한 결정을 내리면 좋은 결과가 따릅니다.</div>
+            <div class="dh-chips">
+              <span class="chip">행운색 · 금색</span>
+              <span class="chip">행운수 · 7</span>
+            </div>
+          </div>
+          <div class="fortune-sec">
+            <div class="fs-label">💰 재물운</div>
+            <div class="fs-text">밀린 수금이 해결되거나 예상치 못한 작은 이득이 생길 수 있습니다.</div>
+          </div>
+          <div class="fortune-sec">
+            <div class="fs-label">❤️ 애정운</div>
+            <div class="fs-text">표현을 아끼지 마세요. 먼저 연락하는 것이 관계를 한 단계 발전시킵니다.</div>
+          </div>
+          <div class="fortune-sec">
+            <div class="fs-label">💼 직업운</div>
+            <div class="fs-text">아이디어가 빛나는 날. 회의나 발표에서 두각을 나타냅니다.</div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">② 오늘 운세 상세</div>
+    </div>
+
+    <!-- A-3 정통사주 -->
+    <div>
+      <div class="phone">
+        <div class="topbar"><span class="tb-back">←</span><span class="tb-logo">정통사주</span><span style="width:40px"></span></div>
+        <div class="body">
+          <div class="detail-hero">
+            <div class="dh-date">1990년 3월 15일생 · 남성</div>
+            <div class="dh-main" style="font-size:20px;letter-spacing:2px">庚午壬子甲辰</div>
+            <div class="dh-text" style="font-size:9px;color:#7B6F9A;margin-top:2px">(경오임자갑진)</div>
+          </div>
+          <div class="fortune-sec">
+            <div class="fs-label">일간 기질 · 甲木</div>
+            <div class="fs-text">💬 거대한 나무처럼 위로 뻗어나가는 확장의 힘을 가진 분입니다.</div>
+          </div>
+          <div class="fortune-sec">
+            <div class="fs-label">오행 분포</div>
+            <div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap">
+              <span class="chip" style="color:#4BBF7E;border-color:rgba(75,191,126,.3)">목 ██</span>
+              <span class="chip" style="color:#E05252;border-color:rgba(224,82,82,.3)">화 ██</span>
+              <span class="chip" style="color:#C9962A;border-color:rgba(201,150,42,.3)">토 █</span>
+              <span class="chip">금 ░</span>
+              <span class="chip">수 ░</span>
+            </div>
+          </div>
+          <div style="padding:8px;background:linear-gradient(90deg,#C9962A,#E8B84B);border-radius:10px;color:#0D0A1A;font-size:11px;font-weight:700;text-align:center">
+            심층 해석 열기 →
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">③ 정통사주 상세</div>
+    </div>
+
   </div>
 </div>
 
 <div class="divider"></div>
 
-<!-- ═══════════════════════════════════════════
-     OPTION B: Bottom Navigation
-═══════════════════════════════════════════ -->
-<div class="section">
-  <div class="section-title">OPTION B — 하단 탭 네비게이션</div>
-  <div class="section-desc">인스타그램·카카오 방식. 기능군을 탭으로 분리해 깔끔하게 정리.<br>콘텐츠가 많아질수록 유리한 구조</div>
-  <div class="phones">
+<!-- ══════════════════════════════════
+     OPTION B — 하단 탭 네비게이션
+══════════════════════════════════ -->
+<div class="opt-wrap">
+  <div class="opt-header">
+    <span class="opt-badge" style="background:rgba(82,180,224,.1);color:#52B4E0;border:1px solid rgba(82,180,224,.3)">B안</span>
+    <div class="opt-title">하단 탭 네비게이션</div>
+    <div class="opt-desc">인스타그램·카카오 방식. 기능군을 탭으로 분리. 확장성 가장 높음.</div>
+  </div>
+
+  <div class="phones-row">
+
+    <!-- B-1 홈탭 -->
     <div>
       <div class="phone">
-        <div class="topbar"><span class="tb-title">운명봄</span><span class="tb-pts">💎 120P</span></div>
+        <div class="topbar"><span class="tb-logo">운명봄</span><span class="tb-pts">💎 120P</span></div>
         <div class="body">
-          <!-- 내 사주 탭 내용 -->
-          <div class="section-header">
-            <span class="sh-title">내 사주 요약</span>
-            <span class="sh-more">자세히 →</span>
+          <div class="banner">
+            <div class="b-tag">신년운세 ›</div>
+            <div class="b-title">2026 병오년 운세</div>
           </div>
-          <div class="saju-preview">
-            <div class="sp-row">
-              <span class="sp-hanja">甲</span>
-              <div class="sp-info">
-                <div class="sp-name">甲木 일간 · 갑목</div>
-                <div class="sp-desc">거대한 나무처럼 뻗어나가는 확장의 힘</div>
+          <div class="dots"><div class="dot on"></div><div class="dot"></div></div>
+
+          <div class="sec-title">내 사주 요약</div>
+          <div class="saju-card">
+            <div class="sc-row">
+              <span class="sc-hanja">甲</span>
+              <div class="sc-info">
+                <div class="sc-name">甲木 일간 · 갑목</div>
+                <div class="sc-desc">거대한 나무처럼 뻗어나가는 확장의 힘</div>
               </div>
-              <span class="sp-btn">전체보기</span>
+              <span class="sc-btn">자세히</span>
             </div>
           </div>
-          <div class="section-header">
-            <span class="sh-title">빠른 기능</span>
-          </div>
-          <div class="feature-grid-small">
-            <div class="fgs-item"><div class="fgs-box">📊</div><div class="fgs-label">대운분석</div></div>
-            <div class="fgs-item"><div class="fgs-box">💕</div><div class="fgs-label">궁합</div></div>
-            <div class="fgs-item"><div class="fgs-box">💭</div><div class="fgs-label">꿈해몽</div></div>
-            <div class="fgs-item"><div class="fgs-box">🔵</div><div class="fgs-label">심층해석</div></div>
-          </div>
-          <div class="bottom-nav">
-            <div class="bn-item">
-              <div class="bn-icon">🏠</div>
-              <div class="bn-label active">홈</div>
-              <div class="bn-dot"></div>
-            </div>
-            <div class="bn-item">
-              <div class="bn-icon">☯</div>
-              <div class="bn-label">사주</div>
-            </div>
-            <div class="bn-item">
-              <div class="bn-icon">🔮</div>
-              <div class="bn-label">운세</div>
-            </div>
-            <div class="bn-item">
-              <div class="bn-icon">💕</div>
-              <div class="bn-label">궁합</div>
-            </div>
-            <div class="bn-item">
-              <div class="bn-icon">👤</div>
-              <div class="bn-label">프로필</div>
-            </div>
+
+          <div class="sec-title">빠른 기능</div>
+          <div class="feat-grid">
+            <div class="fg-item"><div class="fg-box">📊</div><div class="fg-lbl">대운분석</div></div>
+            <div class="fg-item"><div class="fg-box">💕</div><div class="fg-lbl">궁합</div></div>
+            <div class="fg-item"><div class="fg-box">💭</div><div class="fg-lbl">꿈해몽</div></div>
+            <div class="fg-item"><div class="fg-box">🔵</div><div class="fg-lbl">심층해석</div></div>
           </div>
         </div>
+        <div class="bot-nav">
+          <div class="bn-item"><div class="bn-icon">🏠</div><div class="bn-lbl on">홈</div><div class="bn-dot"></div></div>
+          <div class="bn-item"><div class="bn-icon">☯</div><div class="bn-lbl">사주</div></div>
+          <div class="bn-item"><div class="bn-icon">🔮</div><div class="bn-lbl">운세</div></div>
+          <div class="bn-item"><div class="bn-icon">💕</div><div class="bn-lbl">궁합</div></div>
+          <div class="bn-item"><div class="bn-icon">👤</div><div class="bn-lbl">내정보</div></div>
+        </div>
       </div>
-      <div class="phone-label">홈 탭</div>
+      <div class="screen-label">① 홈 탭</div>
     </div>
-  </div>
-  <div class="verdict">
-    <div class="verdict-title">특징</div>
-    <div class="vrow"><span class="vmark">✅</span><span class="vtext"><b>화면 전환이 탭 한 번</b>으로 가능 — 가장 직관적인 네비게이션</span></div>
-    <div class="vrow"><span class="vmark">✅</span><span class="vtext">기능이 더 늘어나도 <b>구조 흔들리지 않음</b>, 확장성 최고</span></div>
-    <div class="vrow"><span class="vmark">⚠️</span><span class="vtext">현재 앱 구조를 <b>전면 재설계</b>해야 해서 가장 큰 작업량</span></div>
+
+    <!-- B-2 운세 탭 -->
+    <div>
+      <div class="phone">
+        <div class="topbar"><span class="tb-logo">운세</span><span class="tb-pts">💎 120P</span></div>
+        <div class="body">
+          <div class="unse-tabs">
+            <div class="ut-btn on">오늘</div>
+            <div class="ut-btn">내일</div>
+            <div class="ut-btn">신년</div>
+            <div class="ut-btn">토정</div>
+          </div>
+          <div class="unse-card">
+            <div class="uc-date">2026년 6월 7일 일요일</div>
+            <div class="uc-text">오늘은 목(木) 기운이 강한 날입니다. 새로운 시작에 좋고 오전 결정이 유리합니다. 오후에는 과음을 조심하세요.</div>
+            <div class="uc-lucks">
+              <span class="lc">행운색 · 금색</span>
+              <span class="lc">행운수 · 7</span>
+              <span class="lc">방위 · 동쪽</span>
+            </div>
+          </div>
+          <div class="fortune-sec">
+            <div class="fs-label">💰 재물운</div>
+            <div class="fs-text">밀린 수금이 해결되거나 예상치 못한 이득이 생깁니다.</div>
+          </div>
+          <div class="fortune-sec">
+            <div class="fs-label">❤️ 애정운</div>
+            <div class="fs-text">먼저 연락하는 것이 관계를 발전시킵니다.</div>
+          </div>
+          <div class="fortune-sec">
+            <div class="fs-label">💼 직업운</div>
+            <div class="fs-text">아이디어가 빛나는 날. 발표에서 두각을 나타냅니다.</div>
+          </div>
+        </div>
+        <div class="bot-nav">
+          <div class="bn-item"><div class="bn-icon">🏠</div><div class="bn-lbl">홈</div></div>
+          <div class="bn-item"><div class="bn-icon">☯</div><div class="bn-lbl">사주</div></div>
+          <div class="bn-item"><div class="bn-icon">🔮</div><div class="bn-lbl on">운세</div><div class="bn-dot"></div></div>
+          <div class="bn-item"><div class="bn-icon">💕</div><div class="bn-lbl">궁합</div></div>
+          <div class="bn-item"><div class="bn-icon">👤</div><div class="bn-lbl">내정보</div></div>
+        </div>
+      </div>
+      <div class="screen-label">② 운세 탭 (오늘/내일/신년/토정)</div>
+    </div>
+
+    <!-- B-3 궁합 탭 -->
+    <div>
+      <div class="phone">
+        <div class="topbar"><span class="tb-logo">궁합</span><span class="tb-pts">💎 120P</span></div>
+        <div class="body">
+          <div class="detail-hero" style="margin-bottom:0">
+            <div class="dh-date">사주 기반 궁합 분석</div>
+            <div class="dh-main">두 사람의 운명은?</div>
+          </div>
+          <div class="gunghab-form">
+            <div class="gf-label">내 정보</div>
+            <div class="gf-input">
+              <span class="gf-val">1990.03.15 · 남성</span>
+              <span class="gf-edit">수정</span>
+            </div>
+            <div class="gf-label">상대방 정보</div>
+            <div class="gf-input">
+              <span class="gf-val" style="color:#4A4060">생년월일 입력</span>
+              <span class="gf-edit">입력 →</span>
+            </div>
+            <div class="gf-btn">궁합 분석 시작</div>
+          </div>
+          <div class="fortune-sec">
+            <div class="fs-label">최근 분석</div>
+            <div class="fs-text">김○○ (1992.07.20) · 궁합 점수 <span style="color:#C9962A;font-weight:700">78점</span></div>
+          </div>
+        </div>
+        <div class="bot-nav">
+          <div class="bn-item"><div class="bn-icon">🏠</div><div class="bn-lbl">홈</div></div>
+          <div class="bn-item"><div class="bn-icon">☯</div><div class="bn-lbl">사주</div></div>
+          <div class="bn-item"><div class="bn-icon">🔮</div><div class="bn-lbl">운세</div></div>
+          <div class="bn-item"><div class="bn-icon">💕</div><div class="bn-lbl on">궁합</div><div class="bn-dot"></div></div>
+          <div class="bn-item"><div class="bn-icon">👤</div><div class="bn-lbl">내정보</div></div>
+        </div>
+      </div>
+      <div class="screen-label">③ 궁합 탭</div>
+    </div>
+
   </div>
 </div>
 
 <div class="divider"></div>
 
-<!-- ═══════════════════════════════════════════
-     OPTION C: Feed + Chips (가장 현대적)
-═══════════════════════════════════════════ -->
-<div class="section">
-  <div class="section-title">OPTION C — 피드 + 칩 스크롤형 ⭐ 추천</div>
-  <div class="section-desc">인사말 카드 + 가로 스크롤 칩 + 피드 형식. 현재 구조 거의 유지하면서 가장 세련된 느낌.<br>Threads, 당근마켓 스타일</div>
-  <div class="phones">
+<!-- ══════════════════════════════════
+     OPTION C — 피드 + 칩 스크롤
+══════════════════════════════════ -->
+<div class="opt-wrap">
+  <div class="opt-header">
+    <span class="opt-badge" style="background:rgba(201,150,42,.12);color:#C9962A;border:1px solid rgba(201,150,42,.35)">C안 ⭐ 추천</span>
+    <div class="opt-title">피드 + 칩 스크롤형</div>
+    <div class="opt-desc">인사 카드 + 가로 칩 + 피드. 현재 구조를 최대한 유지하면서 가장 현대적인 느낌. 작업량 최소.</div>
+  </div>
+
+  <div class="phones-row">
+
+    <!-- C-1 홈 -->
     <div>
       <div class="phone">
-        <div class="topbar"><span class="tb-title">운명봄</span><span class="tb-pts">💎 120P</span></div>
+        <div class="topbar"><span class="tb-logo">운명봄</span><span class="tb-pts">💎 120P</span></div>
         <div class="body">
-          <!-- 인사 카드 -->
-          <div class="greeting-card">
-            <div class="gc-hello">안녕하세요, 홍길동님 👋</div>
+          <div class="greet-card">
+            <div class="gc-hi">안녕하세요, 홍길동님 👋</div>
             <div class="gc-name">오늘의 한 줄 운세</div>
-            <div class="gc-fortune">새로운 시작에 좋은 날. 오전 결정이 유리하고 목(木) 기운이 도움을 줍니다.</div>
+            <div class="gc-text">새로운 시작에 좋은 날. 오전 결정이 유리하고 목(木) 기운이 도움을 줍니다.</div>
           </div>
 
-          <!-- 가로 스크롤 칩 -->
-          <div class="chips-row">
-            <div class="feature-chip active"><span class="fc-icon">🔮</span><span class="fc-label">오늘운세</span></div>
-            <div class="feature-chip"><span class="fc-icon">☯</span><span class="fc-label">정통사주</span></div>
-            <div class="feature-chip"><span class="fc-icon">📊</span><span class="fc-label">대운분석</span></div>
-            <div class="feature-chip"><span class="fc-icon">💕</span><span class="fc-label">궁합</span></div>
-            <div class="feature-chip"><span class="fc-icon">💭</span><span class="fc-label">꿈해몽</span></div>
-            <div class="feature-chip"><span class="fc-icon">🔵</span><span class="fc-label">심층해석</span></div>
+          <div class="chips-scroll">
+            <div class="fchip on"><span class="fc-icon">🔮</span><span class="fc-lbl">오늘운세</span></div>
+            <div class="fchip"><span class="fc-icon">☯</span><span class="fc-lbl">정통사주</span></div>
+            <div class="fchip"><span class="fc-icon">📊</span><span class="fc-lbl">대운분석</span></div>
+            <div class="fchip"><span class="fc-icon">💕</span><span class="fc-lbl">궁합</span></div>
+            <div class="fchip"><span class="fc-icon">💭</span><span class="fc-lbl">꿈해몽</span></div>
+            <div class="fchip"><span class="fc-icon">🔵</span><span class="fc-lbl">심층해석</span></div>
           </div>
 
-          <!-- 피드 카드들 -->
           <div class="feed-card">
             <span class="feed-icon">📊</span>
-            <div class="feed-content">
-              <div class="feed-title">현재 대운 — 정관(正官) 운</div>
-              <div class="feed-text">조직에서 인정받고 명예가 따르는 시기. 승진·자격증에 좋습니다.</div>
+            <div class="feed-body">
+              <div class="feed-ttl">현재 대운 — 정관(正官) 운</div>
+              <div class="feed-txt">💬 조직에서 인정받고 명예가 따르는 시기입니다.</div>
               <span class="feed-tag">대운 분석 →</span>
             </div>
           </div>
           <div class="feed-card">
             <span class="feed-icon">✨</span>
-            <div class="feed-content">
-              <div class="feed-title">2026 신년운세 업데이트</div>
-              <div class="feed-text">병오년(丙午) 새해 운세가 준비됐습니다.</div>
+            <div class="feed-body">
+              <div class="feed-ttl">2026 신년운세 업데이트</div>
+              <div class="feed-txt">병오년(丙午) 나만의 운세가 준비됐습니다.</div>
               <span class="feed-tag">확인하기 →</span>
             </div>
           </div>
         </div>
       </div>
-      <div class="phone-label">홈 화면</div>
+      <div class="screen-label">① 홈 화면</div>
     </div>
+
+    <!-- C-2 칩 → 꿈해몽 카테고리 -->
+    <div>
+      <div class="phone">
+        <div class="topbar"><span class="tb-back">←</span><span class="tb-logo">꿈해몽</span><span style="width:40px"></span></div>
+        <div class="body">
+          <div class="greet-card" style="padding:10px">
+            <div class="gc-hi" style="margin-bottom:4px">오늘 꿈에 무엇이 나왔나요?</div>
+            <div class="gc-text">카테고리를 선택하면 상세 해몽을 알려드립니다.</div>
+          </div>
+          <div class="dream-cats">
+            <div class="dc-item"><div class="dc-emoji">🐉</div><div class="dc-name">동물 꿈</div><div class="dc-desc">동물이 나오는 꿈</div><div class="dc-cnt">12가지 →</div></div>
+            <div class="dc-item"><div class="dc-emoji">🌙</div><div class="dc-name">자연/날씨</div><div class="dc-desc">자연 현상</div><div class="dc-cnt">8가지 →</div></div>
+            <div class="dc-item"><div class="dc-emoji">👤</div><div class="dc-name">사람 꿈</div><div class="dc-desc">사람이 나오는 꿈</div><div class="dc-cnt">5가지 →</div></div>
+            <div class="dc-item"><div class="dc-emoji">💰</div><div class="dc-name">물건/재물</div><div class="dc-desc">물건이 나오는 꿈</div><div class="dc-cnt">6가지 →</div></div>
+            <div class="dc-item"><div class="dc-emoji">🏯</div><div class="dc-name">장소 꿈</div><div class="dc-desc">특별한 장소</div><div class="dc-cnt">4가지 →</div></div>
+            <div class="dc-item"><div class="dc-emoji">🍚</div><div class="dc-name">음식 꿈</div><div class="dc-desc">음식을 먹는 꿈</div><div class="dc-cnt">4가지 →</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">② 칩 탭 → 꿈해몽 진입</div>
+    </div>
+
+    <!-- C-3 오늘운세 상세 (칩 탭) -->
+    <div>
+      <div class="phone">
+        <div class="topbar"><span class="tb-back">←</span><span class="tb-logo">오늘의 운세</span><span style="width:40px"></span></div>
+        <div class="body">
+          <div class="chips-scroll" style="margin-bottom:0">
+            <div class="fchip on"><span class="fc-lbl">오늘</span></div>
+            <div class="fchip"><span class="fc-lbl">내일</span></div>
+          </div>
+          <div class="detail-hero">
+            <div class="dh-date">2026년 6월 7일 · 목(木)의 날</div>
+            <div class="dh-main">오늘 하루 흐름</div>
+            <div class="dh-text">목(木) 기운이 주도하는 날. 창의적 시작에 에너지가 집중됩니다. 오전 결정이 유리합니다.</div>
+            <div class="dh-chips">
+              <span class="chip">행운색 금색</span>
+              <span class="chip">행운수 7</span>
+            </div>
+          </div>
+          <div class="fortune-sec">
+            <div class="fs-label">💰 재물운</div>
+            <div class="fs-text">밀린 수금 해결 또는 예상치 못한 이득이 생깁니다.</div>
+          </div>
+          <div class="fortune-sec">
+            <div class="fs-label">❤️ 애정운</div>
+            <div class="fs-text">먼저 연락하는 것이 관계를 한 단계 발전시킵니다.</div>
+          </div>
+        </div>
+      </div>
+      <div class="screen-label">③ 오늘/내일 탭 전환</div>
+    </div>
+
   </div>
-  <div class="verdict">
-    <div class="verdict-title">특징</div>
-    <div class="vrow"><span class="vmark">✅</span><span class="vtext"><b>가로 스크롤 칩</b>으로 기능 수 제한 없이 깔끔하게 정리</span></div>
-    <div class="vrow"><span class="vmark">✅</span><span class="vtext">피드 카드로 <b>맞춤 정보를 자연스럽게</b> 노출 (시즌 콘텐츠 포함)</span></div>
-    <div class="vrow"><span class="vmark">✅</span><span class="vtext">현재 앱 구조에서 <b>비교적 작은 변경</b>으로 구현 가능</span></div>
-    <div class="vrow"><span class="vmark">⚠️</span><span class="vtext">피드 카드 콘텐츠를 사용자 데이터 기반으로 채워야 해서 <b>로직 추가 필요</b></span></div>
+</div>
+
+<div class="divider"></div>
+
+<!-- 비교표 -->
+<div class="opt-wrap">
+  <div class="opt-header">
+    <div class="opt-title">한눈에 비교</div>
+  </div>
+  <div class="compare-table">
+    <div class="ct-head">
+      <div class="ct-cell hd">항목</div>
+      <div class="ct-cell hd">A안 · 컨텐츠</div>
+      <div class="ct-cell hd">B안 · 하단탭</div>
+      <div class="ct-cell hd">C안 · 칩피드 ⭐</div>
+    </div>
+    <div class="ct-row">
+      <div class="ct-cell key">첫인상</div>
+      <div class="ct-cell good">운세 바로 노출</div>
+      <div class="ct-cell mid">정보 구조적</div>
+      <div class="ct-cell good">인사+운세+피드</div>
+    </div>
+    <div class="ct-row">
+      <div class="ct-cell key">기능 접근성</div>
+      <div class="ct-cell mid">아이콘 5개</div>
+      <div class="ct-cell good">탭 1번</div>
+      <div class="ct-cell good">칩 스크롤</div>
+    </div>
+    <div class="ct-row">
+      <div class="ct-cell key">시즌 콘텐츠</div>
+      <div class="ct-cell mid">배너만</div>
+      <div class="ct-cell good">탭 안에 포함</div>
+      <div class="ct-cell good">피드 카드로 노출</div>
+    </div>
+    <div class="ct-row">
+      <div class="ct-cell key">확장성</div>
+      <div class="ct-cell mid">중간</div>
+      <div class="ct-cell good">최고</div>
+      <div class="ct-cell good">높음</div>
+    </div>
+    <div class="ct-row">
+      <div class="ct-cell key">개발 작업량</div>
+      <div class="ct-cell mid">중간</div>
+      <div class="ct-cell bad">많음</div>
+      <div class="ct-cell good">적음</div>
+    </div>
+    <div class="ct-row">
+      <div class="ct-cell key">현재 코드 유지</div>
+      <div class="ct-cell mid">부분</div>
+      <div class="ct-cell bad">전면 재설계</div>
+      <div class="ct-cell good">대부분 유지</div>
+    </div>
   </div>
 </div>
 
