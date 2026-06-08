@@ -2,11 +2,11 @@
   "name": "운명봄",
   "short_name": "운명봄",
   "description": "당신의 운명을 봅니다 — 사주팔자 & 운세",
-  "start_url": "/Auto/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#F4F2FF",
   "theme_color": "#7C3AED",
   "icons": [
-    { "src": "/Auto/icon-v2.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "./icon-v2.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
   ]
 }
