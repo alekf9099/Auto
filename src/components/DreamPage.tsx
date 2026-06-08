@@ -45,7 +45,12 @@ export default function DreamPage({ onBack }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dream: dreamText }),
       })
-      const data = await resp.json() as DreamResult & { error?: string }
+      let data: DreamResult & { error?: string }
+      try {
+        data = await resp.json() as DreamResult & { error?: string }
+      } catch {
+        throw new Error('서버에 연결할 수 없습니다. 잠시 후 다시 시도해주세요.')
+      }
       if (!resp.ok) throw new Error(data.error ?? '오류가 발생했습니다')
       setResult(data)
       setStep('result')
