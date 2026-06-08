@@ -40,7 +40,8 @@ export default function DreamPage({ onBack }: Props) {
     setStep('loading')
     setError('')
     try {
-      const resp = await fetch('/api/dream', {
+      const apiUrl = import.meta.env.VITE_DREAM_API_URL ?? '/api/dream'
+      const resp = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ dream: dreamText }),
