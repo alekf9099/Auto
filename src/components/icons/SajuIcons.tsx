@@ -199,6 +199,24 @@ export function IcDream({ size = 24, className = '' }: P) {
   )
 }
 
+// 오늘의 코디 — 옷걸이 아이콘
+export function IcOutfit({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      {/* Hanger hook */}
+      <path d="M12 3 C12 3 14.5 3.5 14.5 6 C14.5 7.5 13 8 12 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
+      {/* Hanger bar */}
+      <path d="M2 14 L12 8 L22 14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" fill="none"/>
+      {/* Clothing body */}
+      <path d="M2 14 L4 14 L4 21 L20 21 L20 14 L22 14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="currentColor" fillOpacity="0.15"/>
+      <path d="M4 14 L4 21 L20 21 L20 14" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      {/* Shirt fold lines */}
+      <line x1="9" y1="15.5" x2="9" y2="20" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.5"/>
+      <line x1="15" y1="15.5" x2="15" y2="20" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity="0.5"/>
+    </svg>
+  )
+}
+
 // 사용자 프로필 — 전통 조각 문양
 export function IcProfile({ size = 24, className = '' }: P) {
   return (
