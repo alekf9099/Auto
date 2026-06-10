@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calculateSaju } from '../utils/saju'
 import { getElement, OUTFIT_DATA } from '../utils/outfitData'
-import type { OutfitRecommendation } from '../utils/outfitData'
+import type { ColorSwatch, OutfitRecommendation } from '../utils/outfitData'
 
 interface Props {
   savedBirth: BirthInput | null
@@ -44,6 +44,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
     gender: (savedBirth?.gender ?? 'male') as 'male' | 'female',
   })
   const [submitted, setSubmitted] = useState<BirthInput | null>(null)
+  const [selectedColor, setSelectedColor] = useState<ColorSwatch | null>(null)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -219,17 +220,39 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
               {/* Color palette */}
               <div className="mb-4">
                 <p className="text-[10px] text-[#E05282] font-bold mb-2">추천 컬러 팔레트</p>
-                <div className="flex gap-2 flex-wrap">
-                  {result.myData.mainColors.map(c => (
-                    <div key={c.hex} className="flex flex-col items-center gap-1">
-                      <div
-                        className={`rounded-xl shadow-md transition-transform hover:scale-110 ${c.main ? 'w-12 h-12 ring-2 ring-white/30' : 'w-9 h-9'}`}
-                        style={{ backgroundColor: c.hex }}
-                      />
-                      <p className="text-[9px] text-[#7B6F9A] text-center max-w-[48px] leading-tight">{c.name}</p>
-                    </div>
-                  ))}
+                <div className="flex gap-2 flex-wrap mb-3">
+                  {result.myData.mainColors.map(c => {
+                    const active = (selectedColor ?? result.myData.mainColors.find(m => m.main) ?? result.myData.mainColors[0]).hex === c.hex
+                    return (
+                      <button
+                        key={c.hex}
+                        type="button"
+                        onClick={() => setSelectedColor(c)}
+                        className="flex flex-col items-center gap-1"
+                      >
+                        <div
+                          className={`rounded-xl shadow-md transition-transform hover:scale-110 ${c.main ? 'w-12 h-12' : 'w-9 h-9'} ${active ? 'ring-2 ring-[#E05282] ring-offset-2 ring-offset-[#1A0E30] scale-110' : 'ring-1 ring-white/10'}`}
+                          style={{ backgroundColor: c.hex }}
+                        />
+                        <p className={`text-[9px] text-center max-w-[48px] leading-tight ${active ? 'text-[#F5EDD4] font-semibold' : 'text-[#7B6F9A]'}`}>{c.name}</p>
+                      </button>
+                    )
+                  })}
                 </div>
+
+                {/* Selected color preview */}
+                {(() => {
+                  const shown = selectedColor ?? result.myData.mainColors.find(m => m.main) ?? result.myData.mainColors[0]
+                  return (
+                    <div className="flex items-center gap-3 bg-[#0000002A] border border-[#FFFFFF14] rounded-2xl px-4 py-3">
+                      <div className="w-14 h-14 rounded-2xl shadow-lg flex-shrink-0 ring-1 ring-white/20" style={{ backgroundColor: shown.hex }}/>
+                      <div>
+                        <p className="text-sm font-bold text-[#F5EDD4]">{shown.name}</p>
+                        <p className="text-xs text-[#7B6F9A] uppercase">{shown.hex}</p>
+                      </div>
+                    </div>
+                  )
+                })()}
               </div>
 
               {/* Today's lucky element */}
@@ -258,11 +281,14 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                   <div key={key}>
                     <p className="text-[10px] text-[#7B6F9A] font-semibold mb-1.5">{emoji} {label}</p>
                     <div className="flex flex-wrap gap-1.5">
-                      {result.myData.items[key].map(item => (
+                      {result.myData.items[key].map((item, i) => (
                         <span
                           key={item}
-                          className="text-xs bg-[#1C1438] border border-[#2A1F4A] text-[#C4B8D8] px-3 py-1 rounded-full"
+                          className={i === 0
+                            ? "text-xs font-bold bg-[#E0528220] border border-[#E05282] text-[#F5EDD4] pl-2.5 pr-3 py-1 rounded-full inline-flex items-center gap-1"
+                            : "text-xs bg-[#1C1438] border border-[#2A1F4A] text-[#C4B8D8] px-3 py-1 rounded-full"}
                         >
+                          {i === 0 && <span className="text-[10px]">⭐</span>}
                           {item}
                         </span>
                       ))}
@@ -292,15 +318,15 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
               </div>
             </div>
 
-            {/* Avoid colors + Tip */}
-            <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
+            {/* Avoid colors */}
+            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-1 h-5 bg-[#E05252] rounded-full"/>
                 <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
                   피하면 좋은 색상
                 </h3>
               </div>
-              <div className="flex gap-3 mb-4">
+              <div className="flex gap-3">
                 {result.myData.avoidColors.map(c => (
                   <div key={c.hex} className="flex items-center gap-2">
                     <div className="relative w-8 h-8 rounded-lg flex-shrink-0" style={{ backgroundColor: c.hex }}>
@@ -310,6 +336,10 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Styling tip */}
+            <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
               <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3">
                 <span className="text-sm flex-shrink-0">💬</span>
                 <div>
@@ -321,7 +351,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
 
             {/* Restart CTA */}
             <button
-              onClick={() => { setStep('form'); setSubmitted(null); window.scrollTo(0, 0) }}
+              onClick={() => { setStep('form'); setSubmitted(null); setSelectedColor(null); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-gradient-to-r from-[#C9507A] to-[#E05282] text-white font-bold rounded-2xl shadow-lg hover:from-[#B8406A] hover:to-[#CE4272] transition-all active:scale-[0.99]"
             >
               다시 분석하기 →
