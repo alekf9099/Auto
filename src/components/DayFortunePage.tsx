@@ -5,6 +5,7 @@ import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
 import { DAY_FORTUNE, LUCKY_COLOR_MAP, LUCKY_COLOR_NAME, LUCKY_NUM, LUCKY_DIR, LUCKY_FOOD } from '../utils/fortuneData'
 import { loadPoints, tryFeatureBonus } from '../utils/points'
 import PointsToast from './PointsToast'
+import { IcTodayFortune } from './icons/SajuIcons'
 
 interface Props {
   dayOffset: 0 | 1   // 0 = 오늘, 1 = 내일
@@ -247,7 +248,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
               <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
               <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
               <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
-              <div className="absolute inset-0 flex items-center justify-center text-3xl">🔮</div>
+              <div className="absolute inset-0 flex items-center justify-center"><IcTodayFortune size={32} className="text-[#C9962A]"/></div>
             </div>
             <div className="text-center space-y-1">
               <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>운세 분석 중...</p>

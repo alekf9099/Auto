@@ -3,6 +3,7 @@ import type { BirthInput } from '../types'
 import { calculateSaju } from '../utils/saju'
 import { getElement, OUTFIT_DATA } from '../utils/outfitData'
 import type { ColorSwatch, OutfitRecommendation } from '../utils/outfitData'
+import { IcOutfit } from './icons/SajuIcons'
 
 interface Props {
   savedBirth: BirthInput | null
@@ -203,7 +204,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
               <div className="absolute inset-0 rounded-full border-2 border-[#E0528220] animate-ping"/>
               <div className="absolute inset-2 rounded-full border-2 border-[#E0528240] animate-ping" style={{ animationDelay: '0.3s' }}/>
               <div className="absolute inset-4 rounded-full border-2 border-[#E0528260] animate-ping" style={{ animationDelay: '0.6s' }}/>
-              <div className="absolute inset-0 flex items-center justify-center text-3xl">🔮</div>
+              <div className="absolute inset-0 flex items-center justify-center"><IcOutfit size={32} className="text-[#E05282]"/></div>
             </div>
             <div className="text-center">
               <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>

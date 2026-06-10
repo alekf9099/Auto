@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { IcDream } from './icons/SajuIcons'
 
 interface Props {
   onBack: () => void
@@ -148,7 +149,7 @@ export default function DreamPage({ onBack }: Props) {
               <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
               <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
               <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
-              <div className="absolute inset-0 flex items-center justify-center text-3xl">💭</div>
+              <div className="absolute inset-0 flex items-center justify-center"><IcDream size={32} className="text-[#C9962A]"/></div>
             </div>
             <div className="text-center">
               <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>

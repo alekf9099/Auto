@@ -6,6 +6,7 @@ import SajuChart from './SajuChart'
 import OhaengChart from './OhaengChart'
 import SipsinChart from './SipsinChart'
 import FortuneReading from './FortuneReading'
+import { IcSaju } from './icons/SajuIcons'
 
 interface Props {
   savedBirth: BirthInput | null
@@ -197,7 +198,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onSave }: Pro
               <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
               <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
               <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
-              <div className="absolute inset-0 flex items-center justify-center text-3xl">🔮</div>
+              <div className="absolute inset-0 flex items-center justify-center"><IcSaju size={32} className="text-[#C9962A]"/></div>
             </div>
             <div className="text-center space-y-1">
               <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>사주팔자 분석 중...</p>

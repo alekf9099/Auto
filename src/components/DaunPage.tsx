@@ -3,6 +3,7 @@ import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin, pillarName } from '../utils/saju'
 import { STEMS, BRANCHES, ELEMENT_COLORS, SIPSIN_DESC } from '../utils/constants'
 import DaunChart from './DaunChart'
+import { IcDaun } from './icons/SajuIcons'
 
 interface Props {
   savedBirth: BirthInput | null
@@ -352,7 +353,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
               <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
               <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
               <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
-              <div className="absolute inset-0 flex items-center justify-center text-3xl">🔮</div>
+              <div className="absolute inset-0 flex items-center justify-center"><IcDaun size={32} className="text-[#C9962A]"/></div>
             </div>
             <div className="text-center space-y-1">
               <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>대운 분석 중...</p>
