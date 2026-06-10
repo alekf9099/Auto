@@ -41,6 +41,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
     month:  savedBirth ? String(savedBirth.month) : '',
     day:    savedBirth ? String(savedBirth.day)   : '',
     hour:   savedBirth?.hour != null ? String(savedBirth.hour) : '',
+    minute: savedBirth?.minute != null ? String(savedBirth.minute) : '',
     gender: (savedBirth?.gender ?? 'male') as 'male' | 'female',
   })
   const [submitted, setSubmitted] = useState<BirthInput | null>(null)
@@ -52,7 +53,8 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
       year: Number(birth.year), month: Number(birth.month),
       day: Number(birth.day),
       hour: birth.hour !== '' ? Number(birth.hour) : null,
-      minute: null, gender: birth.gender,
+      minute: birth.hour !== '' && birth.minute !== '' ? Number(birth.minute) : null,
+      gender: birth.gender,
     }
     onSave?.(inp)
     setSubmitted(inp)
@@ -150,17 +152,31 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                 </div>
               </div>
 
-              {/* Hour */}
-              <div>
-                <p className="text-xs text-[#7B6F9A] mb-2 font-semibold">태어난 시간 <span className="text-[#4A4060] font-normal">(선택)</span></p>
-                <input
-                  type="number"
-                  value={birth.hour}
-                  onChange={e => setBirth(b => ({ ...b, hour: e.target.value }))}
-                  placeholder="0~23시 (모르면 비워두세요)"
-                  min={0} max={23}
-                  className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#E05282] transition"
-                />
+              {/* Hour & Minute */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="text-xs text-[#7B6F9A] mb-2 font-semibold">태어난 시간 <span className="text-[#4A4060] font-normal">(선택)</span></p>
+                  <input
+                    type="number"
+                    value={birth.hour}
+                    onChange={e => setBirth(b => ({ ...b, hour: e.target.value }))}
+                    placeholder="0~23시"
+                    min={0} max={23}
+                    className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#E05282] transition"
+                  />
+                </div>
+                <div>
+                  <p className="text-xs text-[#7B6F9A] mb-2 font-semibold">분 <span className="text-[#4A4060] font-normal">(선택)</span></p>
+                  <input
+                    type="number"
+                    value={birth.minute}
+                    onChange={e => setBirth(b => ({ ...b, minute: e.target.value }))}
+                    placeholder="0~59분"
+                    min={0} max={59}
+                    disabled={birth.hour === ''}
+                    className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#E05282] transition disabled:opacity-40"
+                  />
+                </div>
               </div>
             </div>
 
@@ -230,10 +246,15 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                         onClick={() => setSelectedColor(c)}
                         className="flex flex-col items-center gap-1"
                       >
-                        <div
-                          className={`rounded-xl shadow-md transition-transform hover:scale-110 ${c.main ? 'w-12 h-12' : 'w-9 h-9'} ${active ? 'ring-2 ring-[#E05282] ring-offset-2 ring-offset-[#1A0E30] scale-110' : 'ring-1 ring-white/10'}`}
-                          style={{ backgroundColor: c.hex }}
-                        />
+                        <div className="relative">
+                          <div
+                            className={`rounded-xl shadow-md transition-transform hover:scale-110 ${c.main ? 'w-12 h-12' : 'w-9 h-9'} ${active ? 'ring-2 ring-[#E05282] ring-offset-2 ring-offset-[#1A0E30] scale-110' : 'ring-1 ring-white/10'}`}
+                            style={{ backgroundColor: c.hex }}
+                          />
+                          {c.main && (
+                            <span className="absolute -top-1.5 -right-1.5 text-[10px] bg-[#E05282] text-white rounded-full w-4 h-4 flex items-center justify-center shadow">⭐</span>
+                          )}
+                        </div>
                         <p className={`text-[9px] text-center max-w-[48px] leading-tight ${active ? 'text-[#F5EDD4] font-semibold' : 'text-[#7B6F9A]'}`}>{c.name}</p>
                       </button>
                     )

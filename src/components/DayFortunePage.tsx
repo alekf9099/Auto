@@ -76,6 +76,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
     month: savedBirth ? String(savedBirth.month) : '',
     day:   savedBirth ? String(savedBirth.day)   : '',
     hour:  savedBirth?.hour != null ? String(savedBirth.hour) : '',
+    minute: savedBirth?.minute != null ? String(savedBirth.minute) : '',
   })
   const [sipsin,     setSipsin]     = useState(init?.sipsin       ?? '')
   const [dayStemIdx, setDayStemIdx] = useState(init?.dayStemIdx   ?? 0)
@@ -113,7 +114,8 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
       year: Number(birth.year), month: Number(birth.month),
       day: Number(birth.day),
       hour: birth.hour !== '' ? Number(birth.hour) : null,
-      minute: null, gender: 'male',
+      minute: birth.hour !== '' && birth.minute !== '' ? Number(birth.minute) : null,
+      gender: 'male',
     }
     applyResult(inp, offset)
     window.scrollTo(0, 0)
@@ -125,7 +127,8 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
       year: Number(birth.year), month: Number(birth.month),
       day: Number(birth.day),
       hour: birth.hour !== '' ? Number(birth.hour) : null,
-      minute: null, gender: 'male',
+      minute: birth.hour !== '' && birth.minute !== '' ? Number(birth.minute) : null,
+      gender: 'male',
     }
     onSave?.(inp)
     applyResult(inp, activeOffset)
@@ -204,15 +207,28 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
                     </div>
                   ))}
                 </div>
-                <div>
-                  <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">출생 시간 <span className="text-[#4A4060] font-normal">(선택, 0~23시)</span></label>
-                  <input
-                    type="number" placeholder="예: 14"
-                    min={0} max={23}
-                    value={birth.hour}
-                    onChange={e => setBirth(p => ({ ...p, hour: e.target.value }))}
-                    className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
-                  />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">출생 시간 <span className="text-[#4A4060] font-normal">(선택, 0~23시)</span></label>
+                    <input
+                      type="number" placeholder="예: 14"
+                      min={0} max={23}
+                      value={birth.hour}
+                      onChange={e => setBirth(p => ({ ...p, hour: e.target.value }))}
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">분 <span className="text-[#4A4060] font-normal">(선택, 0~59분)</span></label>
+                    <input
+                      type="number" placeholder="예: 30"
+                      min={0} max={59}
+                      disabled={birth.hour === ''}
+                      value={birth.minute}
+                      onChange={e => setBirth(p => ({ ...p, minute: e.target.value }))}
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center disabled:opacity-40"
+                    />
+                  </div>
                 </div>
                 <button
                   type="submit"

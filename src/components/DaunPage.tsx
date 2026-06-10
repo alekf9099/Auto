@@ -190,6 +190,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
     month:  savedBirth ? String(savedBirth.month)  : '',
     day:    savedBirth ? String(savedBirth.day)    : '',
     hour:   savedBirth?.hour != null ? String(savedBirth.hour) : '',
+    minute: savedBirth?.minute != null ? String(savedBirth.minute) : '',
     gender: (savedBirth?.gender ?? 'male') as 'male' | 'female',
   })
   const [submitted, setSubmitted] = useState<BirthInput | null>(null)
@@ -200,7 +201,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
       year: Number(birth.year), month: Number(birth.month),
       day: Number(birth.day),
       hour: birth.hour !== '' ? Number(birth.hour) : null,
-      minute: null,
+      minute: birth.hour !== '' && birth.minute !== '' ? Number(birth.minute) : null,
       gender: birth.gender,
     }
     onSave?.(inp)
@@ -292,7 +293,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
                     </div>
                   ))}
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-3 gap-3">
                   <div>
                     <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">출생 시간 <span className="text-[#4A4060] font-normal">(선택)</span></label>
                     <input
@@ -301,6 +302,17 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
                       value={birth.hour}
                       onChange={e => setBirth(p => ({ ...p, hour: e.target.value }))}
                       className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">분 <span className="text-[#4A4060] font-normal">(선택)</span></label>
+                    <input
+                      type="number" placeholder="0~59"
+                      min={0} max={59}
+                      disabled={birth.hour === ''}
+                      value={birth.minute}
+                      onChange={e => setBirth(p => ({ ...p, minute: e.target.value }))}
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center disabled:opacity-40"
                     />
                   </div>
                   <div>
