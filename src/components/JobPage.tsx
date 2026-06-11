@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin } from '../utils/saju'
 import { getElement, JOB_DATA, JOB_LUCK_BY_SIPSIN, LUCK_GRADE_CFG } from '../utils/jobData'
+import ShareCardModal from './ShareCardModal'
 import { IcJob } from './icons/SajuIcons'
 
 interface Props {
@@ -46,6 +47,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
     gender: (savedBirth?.gender ?? 'male') as 'male' | 'female',
   })
   const [submitted, setSubmitted] = useState<BirthInput | null>(null)
+  const [showShare, setShowShare] = useState(false)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -342,7 +344,13 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{result.myData.caution}</p>
             </div>
 
-            {/* Restart CTA */}
+            {/* 공유 + Restart CTA */}
+            <button
+              onClick={() => setShowShare(true)}
+              className="w-full py-3.5 bg-[#231844] text-[#E8DFC8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
+            >
+              📤 취업운 카드 공유하기
+            </button>
             <button
               onClick={() => { setStep('form'); setSubmitted(null); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-gradient-to-r from-[#3FA86A] to-[#4BBF7E] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#359A5E] hover:to-[#3FAE6E] transition-all active:scale-[0.99]"
@@ -356,6 +364,27 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
           취업운 — 사주팔자 십성(十星) 기반 분석 · 참고용으로 활용하세요
         </p>
       </div>
+
+      {showShare && result && (
+        <ShareCardModal
+          onClose={() => setShowShare(false)}
+          data={{
+            badge: '취업운',
+            emoji: LUCK_GRADE_CFG[result.overallLuck.grade].emoji,
+            title: result.overallLuck.title,
+            date: `${result.myData.elementChi}(${result.myData.element}) 일간 · ${result.daunSipsin} 대운 (${result.daunRange})`,
+            highlight: result.overallLuck.desc.split('.')[0] + '.',
+            items: [
+              { label: '오늘 면접운', value: result.todayLuck.label },
+              { label: '추천 산업', value: result.myData.industries[0] },
+              { label: '행운 요일', value: result.myData.luckyDays.join(', ') },
+              { label: '핵심 강점', value: result.myData.strengths[0] },
+            ],
+            accent: LUCK_GRADE_CFG[result.overallLuck.grade].color,
+            footer: '운명봄 · 십성 기반 취업운 분석',
+          }}
+        />
+      )}
     </div>
   )
 }

@@ -5,6 +5,7 @@ import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
 import { DAY_FORTUNE, LUCKY_COLOR_MAP, LUCKY_COLOR_NAME, LUCKY_NUM, LUCKY_DIR, LUCKY_FOOD } from '../utils/fortuneData'
 import { loadPoints, tryFeatureBonus } from '../utils/points'
 import PointsToast from './PointsToast'
+import ShareCardModal from './ShareCardModal'
 import { IcTodayFortune } from './icons/SajuIcons'
 
 interface Props {
@@ -90,6 +91,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
   const title    = isToday ? '오늘의 운세' : '내일의 운세'
   const featKey  = isToday ? 'today' : 'tomorrow'
 
+  const [showShare, setShowShare] = useState(false)
   const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
   function handlePointsClaim() {
     const { next, claimed } = tryFeatureBonus(loadPoints(), featKey, `${title} 확인 🔮`)
@@ -364,6 +366,12 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
               <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
             )}
             <button
+              onClick={() => setShowShare(true)}
+              className="w-full py-3.5 bg-[#231844] text-[#E8DFC8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98] flex items-center justify-center gap-1.5"
+            >
+              📤 운세 카드 공유하기
+            </button>
+            <button
               onClick={handlePointsClaim}
               className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl text-sm shadow-md shadow-[#C9962A30] active:scale-[0.98] transition-all"
             >
@@ -378,6 +386,27 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
           </>
         )}
       </div>
+
+      {showShare && (
+        <ShareCardModal
+          onClose={() => setShowShare(false)}
+          data={{
+            badge: title,
+            emoji: fortune.star >= 4 ? '✨' : fortune.star === 3 ? '🌟' : fortune.star === 2 ? '🍀' : '⚡',
+            title: `${tStem.ko}${tBranch.ko}일 · ${sipsin}`,
+            date: targetDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }),
+            highlight: fortune.총평.split('.')[0] + '.',
+            items: [
+              { label: '행운 색상', value: LUCKY_COLOR_NAME[luckyEl] },
+              { label: '행운 숫자', value: LUCKY_NUM[luckyEl] },
+              { label: '행운 방향', value: LUCKY_DIR[luckyEl] },
+              { label: '행운 음식', value: LUCKY_FOOD[luckyEl] },
+            ],
+            accent: fortune.color,
+            footer: '운명봄 · AI 사주 운세',
+          }}
+        />
+      )}
       <div className="text-center pb-8 text-xs text-[#4A4060]">운명봄 — 양력 기준 · 사주 기반 일운</div>
     </div>
   )
