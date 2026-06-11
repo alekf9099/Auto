@@ -16,11 +16,12 @@ import SajuPage         from './components/SajuPage'
 import DaunPage         from './components/DaunPage'
 import DreamPage        from './components/DreamPage'
 import OutfitPage       from './components/OutfitPage'
+import JobPage          from './components/JobPage'
 import LoadingScreen    from './components/LoadingScreen'
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'outfit'
+type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'outfit' | 'job'
 
 function loadBirthProfile(): BirthInput | null {
   try {
@@ -39,9 +40,9 @@ export default function App() {
     const BACK_MAP: Partial<Record<Page, Page>> = {
       profile: 'login', analyzing: 'home', attendance: 'home',
       sinnyeon: 'home', tojeong: 'home', today: 'home',
-      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home', dream: 'home', outfit: 'home',
+      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home', dream: 'home', outfit: 'home', job: 'home',
     }
-    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','gunghab','deepsaju','saju','daun','dream','outfit','profile','analyzing']
+    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','gunghab','deepsaju','saju','daun','dream','outfit','job','profile','analyzing']
     if (navigable.includes(page)) history.pushState({ page }, '')
 
     function onPop() {
@@ -76,7 +77,7 @@ export default function App() {
     window.scrollTo(0, 0)
   }
 
-  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'outfit') {
+  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'outfit' | 'job') {
     if (!birthProfile) { setPage('profile'); window.scrollTo(0, 0); return }
     const LABELS: Record<string, string> = {
       sinnyeon: '신년운세 확인 ✨', tojeong: '토정비결 확인 📖',
@@ -85,6 +86,7 @@ export default function App() {
       gunghab: '궁합 확인 💕', deepsaju: '심층 사주 해석 🔮',
       dream: '꿈해몽 확인 💭',
       outfit: '오늘의 코디 확인 👗',
+      job: '취업운 확인 💼',
     }
     const { next, claimed } = tryFeatureBonus(points, dest, LABELS[dest] ?? dest)
     if (claimed) setPoints(next)
@@ -129,6 +131,7 @@ export default function App() {
   if (page === 'daun')  return <DaunPage  savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   if (page === 'dream')  return <DreamPage onBack={goHome} />
   if (page === 'outfit') return <OutfitPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
+  if (page === 'job')    return <JobPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
 
   return <LoadingScreen onComplete={() => { setPage('home'); window.scrollTo(0, 0) }} />
 }

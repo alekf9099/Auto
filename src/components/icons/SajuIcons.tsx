@@ -217,6 +217,22 @@ export function IcOutfit({ size = 24, className = '' }: P) {
   )
 }
 
+// 취업운 — 서류가방 아이콘
+export function IcJob({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      {/* Handle */}
+      <path d="M9 7 V5.5 C9 4.7 9.7 4 10.5 4 H13.5 C14.3 4 15 4.7 15 5.5 V7" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      {/* Body */}
+      <rect x="3" y="7" width="18" height="13" rx="1.8" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeWidth="1.6"/>
+      {/* Center latch */}
+      <rect x="10" y="11" width="4" height="3" rx="0.8" fill="currentColor" opacity="0.6"/>
+      {/* Middle line */}
+      <line x1="3" y1="13" x2="21" y2="13" stroke="currentColor" strokeWidth="1.2" opacity="0.4"/>
+    </svg>
+  )
+}
+
 // 사용자 프로필 — 전통 조각 문양
 export function IcProfile({ size = 24, className = '' }: P) {
   return (

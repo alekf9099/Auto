@@ -7,7 +7,7 @@ import { SIPSIN_DESC } from '../utils/constants'
 import { DAY_FORTUNE } from '../utils/fortuneData'
 import PointsModal from './PointsModal'
 import {
-  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcOutfit, IcGem, IcStamp, IcSinnyeon,
+  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon,
 } from './icons/SajuIcons'
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
   birthProfile: BirthInput | null
   points: PointsState
   onPointsUpdate: (p: PointsState) => void
-  onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'outfit') => void
+  onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'outfit' | 'job') => void
   onAttendance: () => void
   onEditProfile: () => void
   onLogout: () => void
@@ -31,7 +31,7 @@ const DAILY_FALLBACK = [
   '주말의 여유로 내일을 위한 에너지를 충전하는 날입니다.',
 ]
 
-const CHIPS: { Icon: React.FC<{ size?: number; className?: string }>; label: string; dest: 'today' | 'saju' | 'daun' | 'gunghab' | 'dream' | 'deepsaju' | 'outfit'; sub: string }[] = [
+const CHIPS: { Icon: React.FC<{ size?: number; className?: string }>; label: string; dest: 'today' | 'saju' | 'daun' | 'gunghab' | 'dream' | 'deepsaju' | 'outfit' | 'job'; sub: string }[] = [
   { Icon: IcTodayFortune, label: '오늘운세',  dest: 'today',     sub: '오늘 · 내일' },
   { Icon: IcSaju,         label: '정통사주',  dest: 'saju',      sub: '사주팔자' },
   { Icon: IcDaun,         label: '대운분석',  dest: 'daun',      sub: '10년 흐름' },
@@ -39,6 +39,7 @@ const CHIPS: { Icon: React.FC<{ size?: number; className?: string }>; label: str
   { Icon: IcDream,        label: '꿈해몽',    dest: 'dream',     sub: '전통 풀이' },
   { Icon: IcDeepSaju,     label: '심층해석',  dest: 'deepsaju',  sub: '일간 분석' },
   { Icon: IcOutfit,       label: '오늘코디',  dest: 'outfit',    sub: '스타일 추천' },
+  { Icon: IcJob,          label: '취업운',    dest: 'job',       sub: '커리어 운세' },
 ]
 
 export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onEditProfile, onLogout }: Props) {
@@ -323,6 +324,26 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
               오늘 뭐 입을까?<br/>사주로 보는 내 스타일
             </p>
             <p className="text-sm text-[#A89BC0]">오행 기반 컬러 & 아이템 추천</p>
+          </div>
+        </button>
+
+        {/* 취업운 프로모 카드 */}
+        <button
+          onClick={() => onNavigate('job')}
+          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all"
+          style={{ background: 'linear-gradient(135deg, #0A1A12 0%, #0D2018 100%)' }}
+        >
+          <div className="relative p-5 border border-[rgba(75,191,126,0.25)] rounded-3xl">
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-[0.08] pointer-events-none">
+              <IcJob size={80} className="text-[#4BBF7E]"/>
+            </div>
+            <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#4BBF7E20] text-[#4BBF7E] border border-[#4BBF7E40] px-3 py-1 rounded-full mb-3">
+              취업운 ›
+            </span>
+            <p className="text-base font-bold text-[#F5EDD4] leading-snug mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              지금 지원하면 합격할까?<br/>사주로 보는 취업·이직운
+            </p>
+            <p className="text-sm text-[#A89BC0]">십성 기반 커리어 운세 & 적성 직무</p>
           </div>
         </button>
 
