@@ -54,6 +54,20 @@ export function claimLuckyTimer(p: PointsState, success: boolean): { next: Point
   return { next, attempts }
 }
 
+// 심층 사주 잠금 해제에 필요한 포인트
+export const DEEP_SAJU_UNLOCK_COST = 50
+
+export function spendPoints(p: PointsState, amount: number, label: string): { next: PointsState; success: boolean } {
+  if (p.balance < amount) return { next: p, success: false }
+  const next: PointsState = {
+    balance: p.balance - amount,
+    lastDaily: p.lastDaily,
+    history: [{ date: today(), amount: -amount, label }, ...p.history].slice(0, 60),
+  }
+  savePoints(next)
+  return { next, success: true }
+}
+
 // 기능별 하루 1회 보너스 — featureKey ex) 'today', 'sinnyeon'
 export function tryFeatureBonus(
   p: PointsState, featureKey: string, label: string

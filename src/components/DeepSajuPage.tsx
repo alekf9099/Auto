@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calcDeepSaju, isDeepFreeUsed, markDeepFreeUsed } from '../utils/deepSaju'
-import { loadPoints, tryFeatureBonus } from '../utils/points'
+import { loadPoints, tryFeatureBonus, spendPoints, DEEP_SAJU_UNLOCK_COST } from '../utils/points'
 import PointsToast from './PointsToast'
 import { IcDeepSaju } from './icons/SajuIcons'
 
@@ -47,11 +47,18 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
   })
   const [submitted, setSubmitted] = useState<BirthInput | null>(null)
   const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
+  const [unlockError, setUnlockError] = useState(false)
 
   function handlePointsClaim() {
     const { next, claimed } = tryFeatureBonus(loadPoints(), 'deepsaju', '심층 사주 해석 🔮')
     if (claimed) setToast({ amount: 5, total: next.balance })
     else setToast({ amount: 0, total: loadPoints().balance })
+  }
+
+  function handleUnlock() {
+    const { success } = spendPoints(loadPoints(), DEEP_SAJU_UNLOCK_COST, '심층 사주 전체 잠금 해제')
+    if (success) setUnlocked(true)
+    else setUnlockError(true)
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -321,13 +328,18 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                   </div>
 
                   <button
-                    onClick={() => setUnlocked(true)}
+                    onClick={handleUnlock}
                     className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] hover:from-[#B8871F] hover:to-[#D4A030] transition-all text-sm active:scale-[0.99] flex items-center justify-center gap-2"
                   >
                     <span className="text-base">✨</span>
-                    <span>1코인으로 전체 잠금 해제</span>
+                    <span>{DEEP_SAJU_UNLOCK_COST}P로 전체 잠금 해제</span>
                   </button>
-                  <p className="text-center text-[11px] text-[#4A4060] mt-2.5">1회 결제 · 동일 계정 영구 열람</p>
+                  {unlockError && (
+                    <p className="text-center text-[11px] text-[#F87171] mt-2.5">
+                      포인트가 부족합니다 (보유 {loadPoints().balance}P / 필요 {DEEP_SAJU_UNLOCK_COST}P)
+                    </p>
+                  )}
+                  <p className="text-center text-[11px] text-[#4A4060] mt-2.5">1회 사용 · 동일 계정 영구 열람</p>
                 </div>
               </div>
             ) : (
@@ -349,7 +361,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
             {wasFirstFree && unlocked && (
               <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl px-4 py-3 text-center">
                 <p className="text-xs text-[#C9962A] font-semibold">🎉 첫 심층 해석은 무료로 제공됩니다!</p>
-                <p className="text-[11px] text-[#A89BC0] mt-0.5">다음 방문부터는 1코인이 필요합니다</p>
+                <p className="text-[11px] text-[#A89BC0] mt-0.5">다음 방문부터는 {DEEP_SAJU_UNLOCK_COST}P가 필요합니다</p>
               </div>
             )}
 

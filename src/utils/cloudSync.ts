@@ -48,8 +48,10 @@ export function scheduleCloudPush(): void {
 }
 
 // 로그인 시 클라우드 데이터를 로컬로 동기화 (없으면 현재 로컬 데이터를 업로드)
-export async function pullCloudData(email: string): Promise<void> {
-  if (!supabase) return
+// 반환값 isNewUser: 클라우드에 기존 데이터가 전혀 없는 진짜 신규 가입자인 경우만 true
+// (동기화 실패 시에는 중복 지급 방지를 위해 false로 보수적으로 처리)
+export async function pullCloudData(email: string): Promise<{ isNewUser: boolean }> {
+  if (!supabase) return { isNewUser: true }
   try {
     const { data: row, error } = await supabase
       .from('user_data')
@@ -61,10 +63,13 @@ export async function pullCloudData(email: string): Promise<void> {
 
     if (row?.data) {
       applyLocalData(row.data as Record<string, unknown>)
+      return { isNewUser: false }
     } else {
       await pushNow(email)
+      return { isNewUser: true }
     }
   } catch (e) {
     console.error('클라우드 동기화 실패:', e)
+    return { isNewUser: false }
   }
 }
