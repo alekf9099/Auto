@@ -2,6 +2,7 @@ export interface UserInfo {
   name: string
   email: string
   picture?: string
+  idToken: string
 }
 
 export type Element = 'wood' | 'fire' | 'earth' | 'metal' | 'water'

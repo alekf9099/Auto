@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react'
 import type { BirthInput, UserInfo } from './types'
 import { loadPoints, awardPoints } from './utils/points'
 import type { PointsState } from './utils/points'
-import { setCurrentEmail, pullCloudData, scheduleCloudPush } from './utils/cloudSync'
+import { setCurrentEmail, setIdToken, pullCloudData, scheduleCloudPush } from './utils/cloudSync'
 import LoginPage        from './components/LoginPage'
 import SplashScreen     from './components/SplashScreen'
 import LoadingScreen    from './components/LoadingScreen'
@@ -80,7 +80,8 @@ export default function App() {
   async function handleLogin(u: UserInfo) {
     setUser(u)
     setCurrentEmail(u.email)
-    const { isNewUser } = await pullCloudData(u.email)
+    setIdToken(u.idToken)
+    const { isNewUser } = await pullCloudData()
     setIsNewCloudUser(isNewUser)
     setBirthProfile(loadBirthProfile())
     setPoints(loadPoints())
@@ -124,7 +125,7 @@ export default function App() {
         onAttendance={() => { setPage('attendance'); window.scrollTo(0, 0) }}
         onLuckyTimer={() => { setPage('lucky'); window.scrollTo(0, 0) }}
         onEditProfile={() => { setPage('profile'); window.scrollTo(0, 0) }}
-        onLogout={() => { setCurrentEmail(null); setUser(null); setPage('login'); window.scrollTo(0, 0) }}
+        onLogout={() => { setCurrentEmail(null); setIdToken(null); setUser(null); setPage('login'); window.scrollTo(0, 0) }}
       />
     )
   } else if (page === 'attendance') {

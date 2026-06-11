@@ -39,7 +39,7 @@ export default function LoginPage({ onLogin }: Props) {
             atob(b64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
           )
           const payload = JSON.parse(json)
-          onLogin({ name: payload.name, email: payload.email, picture: payload.picture })
+          onLogin({ name: payload.name, email: payload.email, picture: payload.picture, idToken: credential })
         },
       })
       const el = document.getElementById('g-signin')
