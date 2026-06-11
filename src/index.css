@@ -7,11 +7,16 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  html {
+    overscroll-behavior-y: none;
+  }
+
   body {
     font-family: 'Noto Sans KR', sans-serif;
     -webkit-font-smoothing: antialiased;
     background-color: #0D0A1A;
     color: #F5EDD4;
+    overscroll-behavior-y: none;
   }
 
   .font-korean {

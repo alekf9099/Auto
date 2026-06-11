@@ -58,7 +58,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
   return (
     <div className="min-h-screen bg-[#0D0A1A]">
       {/* 헤더 */}
-      <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
+      <div className="bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
