@@ -2,6 +2,8 @@ import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin } from '../utils/saju'
 import { getElement, JOB_DATA, JOB_LUCK_BY_SIPSIN, LUCK_GRADE_CFG } from '../utils/jobData'
+import { loadPoints, tryFeatureBonus } from '../utils/points'
+import PointsToast from './PointsToast'
 import ShareCardModal from './ShareCardModal'
 import { IcJob } from './icons/SajuIcons'
 
@@ -48,6 +50,13 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
   })
   const [submitted, setSubmitted] = useState<BirthInput | null>(null)
   const [showShare, setShowShare] = useState(false)
+  const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
+
+  function handlePointsClaim() {
+    const { next, claimed } = tryFeatureBonus(loadPoints(), 'job', '취업운 확인 💼')
+    if (claimed) setToast({ amount: 5, total: next.balance })
+    else setToast({ amount: 0, total: loadPoints().balance })
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -344,7 +353,16 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{result.myData.caution}</p>
             </div>
 
-            {/* 공유 + Restart CTA */}
+            {/* 포인트 받기 + 공유 + Restart CTA */}
+            {toast && toast.amount > 0 && (
+              <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
+            )}
+            <button
+              onClick={handlePointsClaim}
+              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl text-sm shadow-md shadow-[#C9962A30] active:scale-[0.98] transition-all"
+            >
+              {toast !== null && toast.amount === 0 ? '✓ 오늘 포인트 이미 받음' : '💎 포인트 받기 +5P'}
+            </button>
             <button
               onClick={() => setShowShare(true)}
               className="w-full py-3.5 bg-[#231844] text-[#E8DFC8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"

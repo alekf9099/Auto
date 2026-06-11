@@ -3,6 +3,8 @@ import type { BirthInput } from '../types'
 import { calculateSaju } from '../utils/saju'
 import { getElement, OUTFIT_DATA } from '../utils/outfitData'
 import type { ColorSwatch, OutfitRecommendation } from '../utils/outfitData'
+import { loadPoints, tryFeatureBonus } from '../utils/points'
+import PointsToast from './PointsToast'
 import { IcOutfit } from './icons/SajuIcons'
 
 interface Props {
@@ -47,6 +49,13 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
   })
   const [submitted, setSubmitted] = useState<BirthInput | null>(null)
   const [selectedColor, setSelectedColor] = useState<ColorSwatch | null>(null)
+  const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
+
+  function handlePointsClaim() {
+    const { next, claimed } = tryFeatureBonus(loadPoints(), 'outfit', '오늘의 코디 확인 👗')
+    if (claimed) setToast({ amount: 5, total: next.balance })
+    else setToast({ amount: 0, total: loadPoints().balance })
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -370,6 +379,17 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                 </div>
               </div>
             </div>
+
+            {/* 포인트 받기 */}
+            {toast && toast.amount > 0 && (
+              <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
+            )}
+            <button
+              onClick={handlePointsClaim}
+              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl text-sm shadow-md shadow-[#C9962A30] active:scale-[0.98] transition-all"
+            >
+              {toast !== null && toast.amount === 0 ? '✓ 오늘 포인트 이미 받음' : '💎 포인트 받기 +5P'}
+            </button>
 
             {/* Restart CTA */}
             <button

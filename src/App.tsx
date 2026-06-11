@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { BirthInput, UserInfo } from './types'
-import { loadPoints, awardPoints, tryFeatureBonus } from './utils/points'
+import { loadPoints, awardPoints } from './utils/points'
 import type { PointsState } from './utils/points'
 import LoginPage        from './components/LoginPage'
 import ProfileSetupPage from './components/ProfileSetupPage'
@@ -80,17 +80,6 @@ export default function App() {
 
   function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'outfit' | 'job') {
     if (!birthProfile) { setPage('profile'); window.scrollTo(0, 0); return }
-    const LABELS: Record<string, string> = {
-      sinnyeon: '신년운세 확인 ✨', tojeong: '토정비결 확인 📖',
-      today: '오늘의 운세 확인 🔮',
-      saju: '정통사주 확인 ☯', daun: '대운 분석 확인 📊',
-      gunghab: '궁합 확인 💕', deepsaju: '심층 사주 해석 🔮',
-      dream: '꿈해몽 확인 💭',
-      outfit: '오늘의 코디 확인 👗',
-      job: '취업운 확인 💼',
-    }
-    const { next, claimed } = tryFeatureBonus(points, dest, LABELS[dest] ?? dest)
-    if (claimed) setPoints(next)
     setPage(dest)
     window.scrollTo(0, 0)
   }

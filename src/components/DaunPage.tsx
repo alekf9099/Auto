@@ -2,6 +2,8 @@ import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin, pillarName } from '../utils/saju'
 import { STEMS, BRANCHES, ELEMENT_COLORS, SIPSIN_DESC } from '../utils/constants'
+import { loadPoints, tryFeatureBonus } from '../utils/points'
+import PointsToast from './PointsToast'
 import DaunChart from './DaunChart'
 import { IcDaun } from './icons/SajuIcons'
 
@@ -195,6 +197,12 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
     gender: (savedBirth?.gender ?? 'male') as 'male' | 'female',
   })
   const [submitted, setSubmitted] = useState<BirthInput | null>(null)
+  const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
+  function handlePointsClaim() {
+    const { next, claimed } = tryFeatureBonus(loadPoints(), 'daun', '대운 분석 확인 📊')
+    if (claimed) setToast({ amount: 5, total: next.balance })
+    else setToast({ amount: 0, total: loadPoints().balance })
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -624,6 +632,15 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
               )
             })()}
 
+            {toast && toast.amount > 0 && (
+              <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
+            )}
+            <button
+              onClick={handlePointsClaim}
+              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl text-sm shadow-md shadow-[#C9962A30] active:scale-[0.98] transition-all"
+            >
+              {toast !== null && toast.amount === 0 ? '✓ 오늘 포인트 이미 받음' : '💎 포인트 받기 +5P'}
+            </button>
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"

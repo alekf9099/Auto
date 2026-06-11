@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { loadPoints, tryFeatureBonus } from '../utils/points'
+import PointsToast from './PointsToast'
 import { IcDream } from './icons/SajuIcons'
 
 interface Props {
@@ -35,6 +37,13 @@ export default function DreamPage({ onBack }: Props) {
   const [dreamText, setDreamText] = useState('')
   const [result,    setResult]    = useState<DreamResult | null>(null)
   const [error,     setError]     = useState('')
+  const [toast,     setToast]     = useState<{ amount: number; total: number } | null>(null)
+
+  function handlePointsClaim() {
+    const { next, claimed } = tryFeatureBonus(loadPoints(), 'dream', '꿈해몽 확인 💭')
+    if (claimed) setToast({ amount: 5, total: next.balance })
+    else setToast({ amount: 0, total: loadPoints().balance })
+  }
 
   async function handleSubmit() {
     if (!dreamText.trim()) return
@@ -227,6 +236,17 @@ export default function DreamPage({ onBack }: Props) {
               </div>
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{result.advice}</p>
             </div>
+
+            {/* 포인트 받기 */}
+            {toast && toast.amount > 0 && (
+              <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
+            )}
+            <button
+              onClick={handlePointsClaim}
+              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl text-sm shadow-md shadow-[#C9962A30] active:scale-[0.98] transition-all"
+            >
+              {toast !== null && toast.amount === 0 ? '✓ 오늘 포인트 이미 받음' : '💎 포인트 받기 +5P'}
+            </button>
 
             {/* Restart CTA */}
             <button

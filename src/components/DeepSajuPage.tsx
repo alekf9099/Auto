@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calcDeepSaju, isDeepFreeUsed, markDeepFreeUsed } from '../utils/deepSaju'
+import { loadPoints, tryFeatureBonus } from '../utils/points'
+import PointsToast from './PointsToast'
 import { IcDeepSaju } from './icons/SajuIcons'
 
 interface Props {
@@ -44,6 +46,13 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
     gender: (savedBirth?.gender ?? 'male') as 'male' | 'female',
   })
   const [submitted, setSubmitted] = useState<BirthInput | null>(null)
+  const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
+
+  function handlePointsClaim() {
+    const { next, claimed } = tryFeatureBonus(loadPoints(), 'deepsaju', '심층 사주 해석 🔮')
+    if (claimed) setToast({ amount: 5, total: next.balance })
+    else setToast({ amount: 0, total: loadPoints().balance })
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -344,6 +353,15 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
               </div>
             )}
 
+            {toast && toast.amount > 0 && (
+              <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
+            )}
+            <button
+              onClick={handlePointsClaim}
+              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl text-sm shadow-md shadow-[#C9962A30] active:scale-[0.98] transition-all"
+            >
+              {toast !== null && toast.amount === 0 ? '✓ 오늘 포인트 이미 받음' : '💎 포인트 받기 +5P'}
+            </button>
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
