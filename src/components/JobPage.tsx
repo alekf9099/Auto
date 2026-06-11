@@ -173,7 +173,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
                     onChange={e => setBirth(b => ({ ...b, hour: e.target.value }))}
                     placeholder="0~23시"
                     min={0} max={23}
-                    className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#4BBF7E] transition"
+                    className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#4BBF7E] transition text-center"
                   />
                 </div>
                 <div>
@@ -185,7 +185,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
                     placeholder="0~59분"
                     min={0} max={59}
                     disabled={birth.hour === ''}
-                    className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#4BBF7E] transition disabled:opacity-40"
+                    className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#4BBF7E] transition text-center disabled:opacity-40"
                   />
                 </div>
               </div>
