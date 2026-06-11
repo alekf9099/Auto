@@ -36,6 +36,16 @@ export function tryClaimDaily(p: PointsState): { next: PointsState; claimed: boo
   return { next, claimed: true }
 }
 
+// 행운의 숫자 잡기 — 하루 1회
+export function hasPlayedLuckyTimer(): boolean {
+  return localStorage.getItem(`${KEY}_lucky_${today()}`) === '1'
+}
+
+export function claimLuckyTimer(p: PointsState, success: boolean): PointsState {
+  localStorage.setItem(`${KEY}_lucky_${today()}`, '1')
+  return awardPoints(p, success ? 20 : 5, success ? '행운의 숫자 적중! 🎯' : '행운의 숫자 도전 ⏱️')
+}
+
 // 기능별 하루 1회 보너스 — featureKey ex) 'today', 'sinnyeon'
 export function tryFeatureBonus(
   p: PointsState, featureKey: string, label: string

@@ -233,6 +233,23 @@ export function IcJob({ size = 24, className = '' }: P) {
   )
 }
 
+// 행운의 숫자 잡기 — 스톱워치 아이콘
+export function IcLucky({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      {/* Top button */}
+      <line x1="12" y1="2" x2="12" y2="4.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+      <line x1="9.5" y1="2" x2="14.5" y2="2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+      {/* Body */}
+      <circle cx="12" cy="13" r="9" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeWidth="1.6"/>
+      {/* Hands pointing to 7 */}
+      <line x1="12" y1="13" x2="12" y2="8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      <line x1="12" y1="13" x2="9.5" y2="16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      <circle cx="12" cy="13" r="1.2" fill="currentColor"/>
+    </svg>
+  )
+}
+
 // 사용자 프로필 — 전통 조각 문양
 export function IcProfile({ size = 24, className = '' }: P) {
   return (

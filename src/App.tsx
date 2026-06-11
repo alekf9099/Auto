@@ -17,11 +17,12 @@ import DaunPage         from './components/DaunPage'
 import DreamPage        from './components/DreamPage'
 import OutfitPage       from './components/OutfitPage'
 import JobPage          from './components/JobPage'
+import LuckyTimerPage   from './components/LuckyTimerPage'
 import LoadingScreen    from './components/LoadingScreen'
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'outfit' | 'job'
+type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'outfit' | 'job' | 'lucky'
 
 function loadBirthProfile(): BirthInput | null {
   try {
@@ -40,9 +41,9 @@ export default function App() {
     const BACK_MAP: Partial<Record<Page, Page>> = {
       profile: 'login', analyzing: 'home', attendance: 'home',
       sinnyeon: 'home', tojeong: 'home', today: 'home',
-      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home', dream: 'home', outfit: 'home', job: 'home',
+      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home', dream: 'home', outfit: 'home', job: 'home', lucky: 'home',
     }
-    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','gunghab','deepsaju','saju','daun','dream','outfit','job','profile','analyzing']
+    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','gunghab','deepsaju','saju','daun','dream','outfit','job','lucky','profile','analyzing']
     if (navigable.includes(page)) history.pushState({ page }, '')
 
     function onPop() {
@@ -108,6 +109,7 @@ export default function App() {
         onPointsUpdate={setPoints}
         onNavigate={handleHomeNavigate}
         onAttendance={() => { setPage('attendance'); window.scrollTo(0, 0) }}
+        onLuckyTimer={() => { setPage('lucky'); window.scrollTo(0, 0) }}
         onEditProfile={() => { setPage('profile'); window.scrollTo(0, 0) }}
         onLogout={() => { setUser(null); setPage('login'); window.scrollTo(0, 0) }}
       />
@@ -115,6 +117,7 @@ export default function App() {
   }
 
   if (page === 'attendance') return <AttendancePage onBack={goHome} onPointsUpdate={p => { setPoints(p) }} />
+  if (page === 'lucky')      return <LuckyTimerPage onBack={goHome} onPointsUpdate={p => { setPoints(p) }} />
   if (page === 'sinnyeon')   return <SinnyeonPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   if (page === 'tojeong')    return <TojeongPage  savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   if (page === 'today')      return <DayFortunePage dayOffset={0} savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />

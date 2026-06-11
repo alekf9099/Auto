@@ -11,6 +11,8 @@ interface Props {
 const POINT_GUIDE = [
   { icon: '🎁', label: '가입 보너스',       amount: 100, color: '#7C3AED', bg: '#F3F0FF' },
   { icon: '📅', label: '매일 출석 체크',     amount: 10,  color: '#059669', bg: '#ECFDF5' },
+  { icon: '🎯', label: '행운의 숫자 잡기 (성공)', amount: 20,  color: '#B45309', bg: '#FFF7ED' },
+  { icon: '⏱️', label: '행운의 숫자 잡기 (참가)', amount: 5,   color: '#92400E', bg: '#FFFBEB' },
   { icon: '🔮', label: '오늘의 운세',        amount: 5,   color: '#D97706', bg: '#FFFBEB' },
   { icon: '⏰', label: '내일의 운세',        amount: 5,   color: '#D97706', bg: '#FFFBEB' },
   { icon: '🗓️', label: '신년운세',          amount: 5,   color: '#2563EB', bg: '#EFF6FF' },
