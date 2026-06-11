@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import type { BirthInput, UserInfo } from './types'
 import { loadPoints, awardPoints } from './utils/points'
 import type { PointsState } from './utils/points'
+import { setCurrentEmail, pullCloudData, scheduleCloudPush } from './utils/cloudSync'
 import LoginPage        from './components/LoginPage'
 import ProfileSetupPage from './components/ProfileSetupPage'
 import SplashScreen     from './components/SplashScreen'
@@ -58,12 +59,17 @@ export default function App() {
   function saveBirthProfile(b: BirthInput) {
     setBirthProfile(b)
     localStorage.setItem(STORAGE_KEY, JSON.stringify(b))
+    scheduleCloudPush()
   }
 
   function goHome() { setPoints(loadPoints()); setPage('home'); window.scrollTo(0, 0) }
 
-  function handleLogin(u: UserInfo) {
+  async function handleLogin(u: UserInfo) {
     setUser(u)
+    setCurrentEmail(u.email)
+    await pullCloudData(u.email)
+    setBirthProfile(loadBirthProfile())
+    setPoints(loadPoints())
     setPage(loadBirthProfile() ? 'home' : 'profile')
     window.scrollTo(0, 0)
   }
@@ -100,7 +106,7 @@ export default function App() {
         onAttendance={() => { setPage('attendance'); window.scrollTo(0, 0) }}
         onLuckyTimer={() => { setPage('lucky'); window.scrollTo(0, 0) }}
         onEditProfile={() => { setPage('profile'); window.scrollTo(0, 0) }}
-        onLogout={() => { setUser(null); setPage('login'); window.scrollTo(0, 0) }}
+        onLogout={() => { setCurrentEmail(null); setUser(null); setPage('login'); window.scrollTo(0, 0) }}
       />
     )
   }

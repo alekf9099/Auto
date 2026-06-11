@@ -1,3 +1,5 @@
+import { scheduleCloudPush } from './cloudSync'
+
 export interface PointsState {
   balance: number
   lastDaily: string  // 'YYYY-MM-DD'
@@ -16,6 +18,7 @@ export function loadPoints(): PointsState {
 
 export function savePoints(p: PointsState): void {
   localStorage.setItem(KEY, JSON.stringify(p))
+  scheduleCloudPush()
 }
 
 export function awardPoints(p: PointsState, amount: number, label: string): PointsState {
@@ -46,6 +49,7 @@ export function getLuckyTimerAttempts(): number {
 export function claimLuckyTimer(p: PointsState, success: boolean): { next: PointsState; attempts: number } {
   const attempts = getLuckyTimerAttempts() + 1
   localStorage.setItem(`${KEY}_lucky_${today()}`, String(attempts))
+  scheduleCloudPush()
   const next = awardPoints(p, success ? 20 : 5, success ? '행운의 숫자 적중! 🎯' : '행운의 숫자 도전 ⏱️')
   return { next, attempts }
 }
@@ -57,6 +61,7 @@ export function tryFeatureBonus(
   const storageKey = `${KEY}_feat_${featureKey}_${today()}`
   if (localStorage.getItem(storageKey)) return { next: p, claimed: false }
   localStorage.setItem(storageKey, '1')
+  scheduleCloudPush()
   const next = awardPoints(p, 5, label)
   return { next, claimed: true }
 }

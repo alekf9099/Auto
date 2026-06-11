@@ -2,10 +2,11 @@ import type { BirthInput } from '../types'
 import { calculateSaju, getOhaengCount } from './saju'
 import { STEMS } from './constants'
 import type { OhaengCount } from '../types'
+import { scheduleCloudPush } from './cloudSync'
 
 const FREE_KEY = 'unmyeongbom_deep_free'
 export const isDeepFreeUsed   = () => localStorage.getItem(FREE_KEY) === '1'
-export const markDeepFreeUsed = () => localStorage.setItem(FREE_KEY, '1')
+export const markDeepFreeUsed = () => { localStorage.setItem(FREE_KEY, '1'); scheduleCloudPush() }
 
 export interface DeepContent {
   stemName: string
