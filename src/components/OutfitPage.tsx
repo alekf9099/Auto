@@ -233,22 +233,22 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
               style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)', borderColor: 'rgba(224,82,130,0.35)' }}
             >
               <div className="flex items-start justify-between mb-4">
-                <span className="text-5xl leading-none">{result.myData.elementEmoji}</span>
+                <span className="text-5xl leading-none">{result.todayData.elementEmoji}</span>
                 <span className="text-sm font-bold px-3 py-1.5 rounded-full bg-[#E0528218] border border-[#E0528240] text-[#E05282]">
-                  {result.myData.elementChi} · {result.myData.element}
+                  {result.todayData.elementChi} · {result.todayData.element}
                 </span>
               </div>
               <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
                 오늘의 코디 추천
               </h2>
-              <p className="text-xs text-[#7B6F9A] mb-4">{result.myData.mood}</p>
+              <p className="text-xs text-[#7B6F9A] mb-4">{result.todayData.mood}</p>
 
               {/* Color palette */}
               <div className="mb-4">
                 <p className="text-[10px] text-[#E05282] font-bold mb-2">추천 컬러 팔레트</p>
                 <div className="flex gap-2 flex-wrap mb-3">
-                  {result.myData.mainColors.map(c => {
-                    const active = (selectedColor ?? result.myData.mainColors.find(m => m.main) ?? result.myData.mainColors[0]).hex === c.hex
+                  {result.todayData.mainColors.map(c => {
+                    const active = (selectedColor ?? result.todayData.mainColors.find(m => m.main) ?? result.todayData.mainColors[0]).hex === c.hex
                     return (
                       <button
                         key={c.hex}
@@ -273,7 +273,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
 
                 {/* Selected color preview */}
                 {(() => {
-                  const shown = selectedColor ?? result.myData.mainColors.find(m => m.main) ?? result.myData.mainColors[0]
+                  const shown = selectedColor ?? result.todayData.mainColors.find(m => m.main) ?? result.todayData.mainColors[0]
                   return (
                     <div className="flex items-center gap-3 bg-[#0000002A] border border-[#FFFFFF14] rounded-2xl px-4 py-3">
                       <div className="w-14 h-14 rounded-2xl shadow-lg flex-shrink-0 ring-1 ring-white/20" style={{ backgroundColor: shown.hex }}/>
@@ -286,14 +286,14 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                 })()}
               </div>
 
-              {/* Today's lucky element */}
+              {/* My element */}
               <div className="flex gap-2 items-start bg-[#E052820D] border border-[#E0528230] rounded-2xl px-4 py-3">
                 <span className="text-sm flex-shrink-0">💡</span>
                 <div>
-                  <p className="text-[10px] text-[#E05282] font-bold mb-0.5">오늘의 일진 운기</p>
+                  <p className="text-[10px] text-[#E05282] font-bold mb-0.5">나의 사주 오행</p>
                   <p className="text-sm text-[#C4B8D8] leading-relaxed">
-                    오늘은 <span className="text-[#F5EDD4] font-bold">{result.todayData.elementChi}({result.todayData.element})</span> 기운의 날이에요.
-                    {' '}{result.todayData.mainColors[0].name} 계열을 포인트로 넣으면 더욱 좋아요.
+                    당신의 일간은 <span className="text-[#F5EDD4] font-bold">{result.myData.elementChi}({result.myData.element})</span> 기운이에요.
+                    {' '}{result.myData.mainColors[0].name} 계열의 아이템을 함께 코디하면 더욱 좋아요.
                   </p>
                 </div>
               </div>
@@ -312,7 +312,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                   <div key={key}>
                     <p className="text-[10px] text-[#7B6F9A] font-semibold mb-1.5">{emoji} {label}</p>
                     <div className="flex flex-wrap gap-1.5">
-                      {result.myData.items[key].map((item, i) => (
+                      {result.todayData.items[key].map((item, i) => (
                         <span
                           key={item}
                           className={i === 0
@@ -338,7 +338,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                 </h3>
               </div>
               <div className="flex flex-wrap gap-2">
-                {result.myData.keywords.map(kw => (
+                {result.todayData.keywords.map(kw => (
                   <span
                     key={kw}
                     className="text-xs font-semibold bg-[#4BBF7E15] border border-[#4BBF7E35] text-[#4BBF7E] px-3 py-1.5 rounded-full"
@@ -358,7 +358,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                 </h3>
               </div>
               <div className="flex gap-3">
-                {result.myData.avoidColors.map(c => (
+                {result.todayData.avoidColors.map(c => (
                   <div key={c.hex} className="flex items-center gap-2">
                     <div className="relative w-8 h-8 rounded-lg flex-shrink-0" style={{ backgroundColor: c.hex }}>
                       <span className="absolute inset-0 flex items-center justify-center text-white text-sm font-bold drop-shadow">✕</span>
@@ -375,7 +375,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                 <span className="text-sm flex-shrink-0">💬</span>
                 <div>
                   <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">스타일링 팁</p>
-                  <p className="text-sm text-[#C4B8D8] leading-relaxed">{result.myData.tip}</p>
+                  <p className="text-sm text-[#C4B8D8] leading-relaxed">{result.todayData.tip}</p>
                 </div>
               </div>
             </div>
