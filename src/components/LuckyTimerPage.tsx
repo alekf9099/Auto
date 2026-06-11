@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { loadPoints, hasPlayedLuckyTimer, claimLuckyTimer } from '../utils/points'
+import { loadPoints, getLuckyTimerAttempts, claimLuckyTimer, LUCKY_TIMER_MAX_ATTEMPTS } from '../utils/points'
 import type { PointsState } from '../utils/points'
 import { IcLucky } from './icons/SajuIcons'
 
@@ -12,9 +12,9 @@ const TARGET = 7.0
 const TOLERANCE = 0.1
 
 export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
-  const [points, setPoints] = useState<PointsState>(loadPoints)
-  const [played, setPlayed] = useState(hasPlayedLuckyTimer)
-  const [phase,  setPhase]  = useState<'idle' | 'running' | 'result'>('idle')
+  const [points,   setPoints]   = useState<PointsState>(loadPoints)
+  const [attempts, setAttempts] = useState(getLuckyTimerAttempts)
+  const [phase,    setPhase]    = useState<'idle' | 'running' | 'result'>('idle')
   const [elapsed, setElapsed] = useState(0)
   const [result, setResult] = useState<{ success: boolean; amount: number; diff: number } | null>(null)
   const startRef = useRef(0)
@@ -27,6 +27,8 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
     return () => clearInterval(id)
   }, [phase])
 
+  const played = attempts >= LUCKY_TIMER_MAX_ATTEMPTS
+
   function handleStart() {
     if (played) return
     startRef.current = performance.now()
@@ -38,13 +40,19 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
     const finalElapsed = (performance.now() - startRef.current) / 1000
     const diff = Math.abs(finalElapsed - TARGET)
     const success = diff <= TOLERANCE
-    const next = claimLuckyTimer(points, success)
+    const { next, attempts: nextAttempts } = claimLuckyTimer(points, success)
     setPoints(next)
     onPointsUpdate(next)
-    setPlayed(true)
+    setAttempts(nextAttempts)
     setElapsed(finalElapsed)
     setResult({ success, amount: success ? 20 : 5, diff })
     setPhase('result')
+  }
+
+  function handleRetry() {
+    setResult(null)
+    setElapsed(0)
+    setPhase('idle')
   }
 
   return (
@@ -80,6 +88,20 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
 
         {/* 게임 영역 */}
         <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
+          {/* 남은 기회 표시 */}
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <p className="text-xs text-[#7B6F9A]">남은 기회</p>
+            <div className="flex gap-1.5">
+              {Array.from({ length: LUCKY_TIMER_MAX_ATTEMPTS }).map((_, i) => (
+                <span
+                  key={i}
+                  className={`w-2.5 h-2.5 rounded-full ${i < LUCKY_TIMER_MAX_ATTEMPTS - attempts ? 'bg-[#C9962A]' : 'bg-[#2A1F4A]'}`}
+                />
+              ))}
+            </div>
+            <p className="text-xs font-bold text-[#C9962A]">{LUCKY_TIMER_MAX_ATTEMPTS - attempts}/{LUCKY_TIMER_MAX_ATTEMPTS}</p>
+          </div>
+
           {phase !== 'result' && (
             <div className="flex flex-col items-center py-6">
               <div className="relative w-44 h-44 mb-6">
@@ -94,7 +116,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
 
               {played ? (
                 <div className="text-center">
-                  <p className="text-sm font-semibold text-[#7B6F9A]">오늘은 이미 도전했어요</p>
+                  <p className="text-sm font-semibold text-[#7B6F9A]">오늘 기회를 모두 사용했어요</p>
                   <p className="text-xs text-[#4A4060] mt-1">내일 다시 도전해보세요!</p>
                 </div>
               ) : phase === 'idle' ? (
@@ -138,7 +160,17 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
                   +{result.amount}P
                 </p>
               </div>
-              <p className="text-xs text-[#4A4060]">현재 보유 {points.balance.toLocaleString()}P · 내일 다시 도전해보세요!</p>
+              <p className="text-xs text-[#4A4060] mb-4">현재 보유 {points.balance.toLocaleString()}P</p>
+              {played ? (
+                <p className="text-sm font-semibold text-[#7B6F9A]">오늘 기회를 모두 사용했어요. 내일 다시 도전해보세요!</p>
+              ) : (
+                <button
+                  onClick={handleRetry}
+                  className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] active:scale-[0.98] transition-all"
+                >
+                  ▶ 다시 도전하기 ({LUCKY_TIMER_MAX_ATTEMPTS - attempts}회 남음)
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -153,7 +185,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
             <li>1. '시작하기'를 누르면 타이머가 시작됩니다.</li>
             <li>2. 머릿속으로 7초를 세다가 '멈춰!'를 누르세요.</li>
             <li>3. 7.00초 ±0.10초 이내면 <span className="text-[#C9962A] font-semibold">+20P</span>, 아니면 <span className="text-[#4BBF7E] font-semibold">+5P</span> 지급됩니다.</li>
-            <li>4. 하루에 한 번만 참여할 수 있어요.</li>
+            <li>4. 하루에 최대 {LUCKY_TIMER_MAX_ATTEMPTS}번까지 참여할 수 있어요.</li>
           </ul>
         </div>
 

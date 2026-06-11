@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import type { UserInfo, BirthInput } from '../types'
 import type { PointsState } from '../utils/points'
-import { tryClaimDaily, hasPlayedLuckyTimer } from '../utils/points'
+import { tryClaimDaily, getLuckyTimerAttempts, LUCKY_TIMER_MAX_ATTEMPTS } from '../utils/points'
 import { calculateSaju, getSipsin, pillarName } from '../utils/saju'
 import { SIPSIN_DESC } from '../utils/constants'
 import { DAY_FORTUNE } from '../utils/fortuneData'
@@ -257,7 +257,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
 
         {/* 행운의 숫자 잡기 이벤트 배너 */}
         {(() => {
-          const played = hasPlayedLuckyTimer()
+          const remaining = LUCKY_TIMER_MAX_ATTEMPTS - getLuckyTimerAttempts()
           return (
             <button
               onClick={onLuckyTimer}
@@ -276,11 +276,11 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                     행운의 숫자 잡기 — 7초에 도전!
                   </p>
                   <p className="text-[11px] text-[#7B6F9A] mt-0.5">
-                    {played ? '오늘 참여 완료 · 내일 다시 도전' : '성공 시 +20P, 참가만 해도 +5P'}
+                    {remaining > 0 ? `성공 시 +20P, 참가만 해도 +5P · 남은 기회 ${remaining}/${LUCKY_TIMER_MAX_ATTEMPTS}` : '오늘 참여 완료 · 내일 다시 도전'}
                   </p>
                 </div>
                 <span className="text-[11px] text-[#C9962A] font-semibold shrink-0">
-                  {played ? '완료 ✓' : '도전 →'}
+                  {remaining > 0 ? '도전 →' : '완료 ✓'}
                 </span>
               </div>
             </button>
