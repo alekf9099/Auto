@@ -60,7 +60,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
       {/* 헤더 */}
       <div className="bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
+          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
             <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>행운의 숫자 잡기</h1>
             <p className="text-xs text-[#7B6F9A]">7초에 딱 맞춰 멈춰보세요</p>

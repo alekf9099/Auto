@@ -46,11 +46,15 @@ async function callSync(action: 'pull' | 'push', data?: Record<string, unknown>)
   const idToken = getIdToken()
   if (!idToken) return null
   try {
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), 10000)
     const res = await fetch('/api/sync', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ idToken, action, data }),
+      signal: controller.signal,
     })
+    clearTimeout(timer)
     if (!res.ok) throw new Error(`동기화 실패: ${res.status}`)
     return await res.json()
   } catch (e) {

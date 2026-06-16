@@ -51,6 +51,8 @@ function CategoryRow({ emoji, label, text, star }: { emoji: string; label: strin
       <button
         className="w-full flex items-center gap-2 p-3.5 text-left hover:bg-[#1C1438] transition"
         onClick={() => setOpen(o => !o)}
+        aria-expanded={open}
+        aria-label={`${label} ${open ? '접기' : '펼치기'}`}
       >
         <span>{emoji}</span>
         <span className="text-sm font-semibold text-[#E8DFC8]">{label}</span>
@@ -150,7 +152,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
       {/* 헤더 */}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg flex-shrink-0">←</button>
+          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg flex-shrink-0">←</button>
           <div className="flex-1 min-w-0">
             <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>{title}</h1>
             <p className="text-xs text-[#7B6F9A]">사주 기반 일일 운세 분석</p>

@@ -75,7 +75,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
       {/* 헤더 */}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
+          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
             <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>출석 체크</h1>
             <p className="text-xs text-[#7B6F9A]">매일 출석하고 포인트를 모으세요</p>

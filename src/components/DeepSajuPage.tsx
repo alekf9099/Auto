@@ -98,6 +98,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button
             onClick={onBack}
+            aria-label="뒤로 가기"
             className="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-[#231844] transition text-[#C4B8D8] text-lg"
           >
             ←

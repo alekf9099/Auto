@@ -51,11 +51,19 @@ export default function DreamPage({ onBack }: Props) {
     setError('')
     try {
       const apiUrl = import.meta.env.VITE_DREAM_API_URL ?? '/api/dream'
-      const resp = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dream: dreamText }),
-      })
+      const controller = new AbortController()
+      const timer = setTimeout(() => controller.abort(), 20000)
+      let resp: Response
+      try {
+        resp = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ dream: dreamText }),
+          signal: controller.signal,
+        })
+      } finally {
+        clearTimeout(timer)
+      }
       let data: DreamResult & { error?: string }
       try {
         data = await resp.json() as DreamResult & { error?: string }
@@ -87,6 +95,7 @@ export default function DreamPage({ onBack }: Props) {
         <div className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex items-center gap-3">
           <button
             onClick={handleBack}
+            aria-label="뒤로 가기"
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#231844] transition text-[#C4B8D8] text-lg flex-shrink-0"
           >
             ←
