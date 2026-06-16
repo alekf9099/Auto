@@ -394,7 +394,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
               신년운세 ›
             </span>
             <p className="text-base font-bold text-[#F5EDD4] leading-snug mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-              미리보고 준비!<br/>2026 신년운세
+              미리보고 준비!<br/>{new Date().getFullYear()} 신년운세
             </p>
             <p className="text-sm text-[#A89BC0]">얼른 복 잡아가세요!</p>
           </div>
@@ -411,7 +411,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
               토정비결 ›
             </span>
             <p className="text-base font-bold text-[#F5EDD4] leading-snug mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-              2026년 나의<br/>한 해 운세는?
+              {new Date().getFullYear()}년 나의<br/>한 해 운세는?
             </p>
             <p className="text-sm text-[#A89BC0]">이지함 선생의 전통 비결서</p>
           </div>

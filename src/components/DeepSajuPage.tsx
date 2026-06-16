@@ -24,7 +24,7 @@ const LOCKED_SECTIONS = [
   { icon: '💼', label: '직업/직장운',   sub: '적합 직군과 커리어 방향' },
   { icon: '💖', label: '애정운',       sub: '연애·결혼 성향과 파트너십' },
   { icon: '🌿', label: '건강운',       sub: '취약 부위와 건강 관리법' },
-  { icon: '📅', label: '2026년 운세',  sub: '병오년 개인 운세 흐름' },
+  { icon: '📅', label: `${new Date().getFullYear()}년 운세`,  sub: '올해 개인 운세 흐름' },
   { icon: '🌀', label: '용신(用神) 분석', sub: '나에게 필요한 오행과 에너지' },
   { icon: '🤝', label: '귀인(貴人) 분석', sub: '나를 도와주는 사람의 유형' },
   { icon: '🌐', label: '대인관계',     sub: '인간관계 패턴과 소통 방식' },
@@ -348,7 +348,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                 <SectionCard icon="💼" title="직업/직장운" content={content.career} accent={elemStyle} />
                 <SectionCard icon="💖" title="애정운" content={content.love} accent={elemStyle} />
                 <SectionCard icon="🌿" title="건강운" content={content.health} accent={elemStyle} />
-                <SectionCard icon="📅" title="2026년 운세" content={content.year2026} accent={elemStyle} highlight />
+                <SectionCard icon="📅" title={`${new Date().getFullYear()}년 운세`} content={content.yearFortune} accent={elemStyle} highlight />
                 <SectionCard icon="🌀" title="용신(用神) 분석" content={content.yongshin} accent={elemStyle} />
                 <SectionCard icon="🤝" title="귀인(貴人) 분석" content={content.guardian} accent={elemStyle} />
                 <SectionCard icon="🌐" title="대인관계" content={content.relationship} accent={elemStyle} />

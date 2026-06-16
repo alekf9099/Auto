@@ -3,6 +3,8 @@ import type { BirthInput } from '../types'
 import { calcTojeongGwe, getTojeongMonthly, getTojeongTotal } from '../utils/tojeong'
 import { loadPoints, tryFeatureBonus } from '../utils/points'
 import PointsToast from './PointsToast'
+
+const CURR_YEAR = new Date().getFullYear()
 import { IcTojeong } from './icons/SajuIcons'
 
 interface Props {
@@ -184,7 +186,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
           <>
             {/* 괘수 배너 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-              <p className="text-violet-300/70 text-xs mb-3">2026년 토정비결 괘수</p>
+              <p className="text-violet-300/70 text-xs mb-3">{CURR_YEAR}년 토정비결 괘수</p>
               <div className="flex items-end gap-4 mb-3">
                 {[
                   { label: '상괘', val: gwe.sang },
@@ -212,7 +214,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>2026년 총운</h2>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>{CURR_YEAR}년 총운</h2>
               </div>
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{total}</p>
             </div>

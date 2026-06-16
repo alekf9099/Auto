@@ -237,11 +237,13 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
     ? daun.find(e => e.age === currentDaun.age + 10)
     : null
 
-  const seun2026StemIdx   = 2
-  const seun2026BranchIdx = 6
-  const seunStem   = STEMS[seun2026StemIdx]
-  const seunBranch = BRANCHES[seun2026BranchIdx]
-  const seunSipsin = result ? getSipsin(dayStemIdx, seun2026StemIdx) : '비견'
+  const _seunYear = new Date().getFullYear()
+  const _seunPillar = calculateSaju({ year: _seunYear, month: 3, day: 1, hour: 12, minute: null, gender: 'male' }).yearPillar
+  const seunStemIdx   = _seunPillar.stemIndex
+  const seunBranchIdx = _seunPillar.branchIndex
+  const seunStem   = STEMS[seunStemIdx]
+  const seunBranch = BRANCHES[seunBranchIdx]
+  const seunSipsin = result ? getSipsin(dayStemIdx, seunStemIdx) : '비견'
   const seunReading = SEUN_READING[seunSipsin]
 
   return (
@@ -501,15 +503,15 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
               )
             })()}
 
-            {/* 2026년 세운 분석 */}
+            {/* 올해 세운 분석 */}
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
               <div className="flex items-center gap-2 mb-1">
                 <div className="w-1 h-5 bg-red-400 rounded-full" />
                 <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                  2026년 세운 (歲運)
+                  {_seunYear}년 세운 (歲運)
                 </h2>
                 <span className="ml-auto text-xs bg-red-50 text-red-600 border border-red-200 px-2.5 py-1 rounded-full font-medium">
-                  병오년 丙午
+                  {seunStem.ko}{seunBranch.ko}년 {seunStem.hanja}{seunBranch.hanja}
                 </span>
               </div>
               <p className="text-xs text-[#7B6F9A] mb-5 ml-3">올해의 연간 운세 분석</p>
@@ -531,10 +533,10 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
                 </div>
                 <div className="flex-1">
                   <p className="text-sm font-semibold text-[#E8DFC8] mb-1">
-                    {ELEMENT_KO[seunStem.element]} 양(陽)의 해
+                    {ELEMENT_KO[seunStem.element]} {seunStem.yinYang === 'yang' ? '양(陽)' : '음(陰)'}의 해
                   </p>
                   <p className="text-xs text-[#A89BC0]">
-                    {seunBranch.animal}띠 해 · 화기(火氣) 집중
+                    {seunBranch.animal}띠 해 · {ELEMENT_KO[seunBranch.element]}기 흐름
                   </p>
                   <div className="flex items-center gap-2 mt-1.5">
                     <span className={`px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[seunSipsin] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>
@@ -546,11 +548,11 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
               </div>
 
               <div className="rounded-2xl bg-red-900/15 border border-red-900/40 p-4 mb-3">
-                <p className="text-xs font-bold text-red-400 mb-2">병오년(丙午年) 특징</p>
+                <p className="text-xs font-bold text-red-400 mb-2">{seunStem.ko}{seunBranch.ko}년({seunStem.hanja}{seunBranch.hanja}年) 특징</p>
                 <p className="text-sm text-[#C4B8D8] leading-relaxed">
-                  2026년은 병(丙)과 오(午) 모두 화(火) 기운으로 이루어진 강렬한 불의 해입니다.
-                  태양처럼 뜨겁고 밝은 에너지가 넘치며, 활동력·표현력·열정이 극대화됩니다.
-                  화기가 강한 해는 빠른 성과를 낼 수 있지만 과열되면 충돌과 소진도 옵니다.
+                  {_seunYear}년은 {seunStem.ko}({seunStem.hanja})와 {seunBranch.ko}({seunBranch.hanja})로 이루어진 해입니다.
+                  천간({seunStem.hanja})은 {ELEMENT_KO[seunStem.element]} 기운, 지지({seunBranch.hanja})는 {ELEMENT_KO[seunBranch.element]} 기운을 담고 있으며
+                  {seunBranch.animal}띠의 에너지가 한 해 흐름에 영향을 줍니다.
                 </p>
               </div>
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin } from '../utils/saju'
-import { STEMS, ELEMENT_COLORS } from '../utils/constants'
+import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
 import { YEARLY_FORTUNE, MONTHLY_FORTUNE } from '../utils/fortuneData'
 import { loadPoints, tryFeatureBonus } from '../utils/points'
 import PointsToast from './PointsToast'
@@ -13,12 +13,14 @@ interface Props {
   onBack: () => void
 }
 
-// 2026 = 병오년 (丙午) — stemIndex 2
-const YEAR_2026_STEM = 2
+// 올해 연도를 동적으로 계산 (입춘 이후인 3월 1일 기준으로 사주 연도 확정)
+const CURR_YEAR = new Date().getFullYear()
+const _currYearPillar = calculateSaju({ year: CURR_YEAR, month: 3, day: 1, hour: 12, minute: null, gender: 'male' }).yearPillar
+const CURR_YEAR_STEM_IDX   = _currYearPillar.stemIndex
+const CURR_YEAR_BRANCH_IDX = _currYearPillar.branchIndex
 
-// 2026년 각 월의 월간(月干) — 해당 월 15일 기준 계산
-const MONTH_STEMS_2026 = Array.from({ length: 12 }, (_, i) =>
-  calculateSaju({ year: 2026, month: i + 1, day: 15, hour: 12, minute: null, gender: 'male' }).monthPillar.stemIndex
+const MONTH_STEMS_CURR = Array.from({ length: 12 }, (_, i) =>
+  calculateSaju({ year: CURR_YEAR, month: i + 1, day: 15, hour: 12, minute: null, gender: 'male' }).monthPillar.stemIndex
 )
 
 function Stars({ n }: { n: number }) {
@@ -35,10 +37,10 @@ function MonthlySection({ dayStemIdx }: { dayStemIdx: number }) {
       <div className="flex items-center gap-2 mb-4">
         <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
         <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>월별 운세 흐름</h2>
-        <span className="text-xs text-[#7B6F9A] ml-1">사주 기반 · 2026년</span>
+        <span className="text-xs text-[#7B6F9A] ml-1">사주 기반 · {CURR_YEAR}년</span>
       </div>
       <div className="space-y-2">
-        {MONTH_STEMS_2026.map((stemIdx, i) => {
+        {MONTH_STEMS_CURR.map((stemIdx, i) => {
           const sipsin  = getSipsin(dayStemIdx, stemIdx) ?? '비견'
           const data    = MONTHLY_FORTUNE[sipsin] ?? MONTHLY_FORTUNE['비견']
           const monthStem = STEMS[stemIdx]
@@ -79,7 +81,7 @@ function MonthlySection({ dayStemIdx }: { dayStemIdx: number }) {
 function calcSinnyeon(birth: BirthInput) {
   const res = calculateSaju(birth)
   const idx = res.dayPillar.stemIndex
-  return { dayStemIdx: idx, sipsin: getSipsin(idx, YEAR_2026_STEM) ?? '비견' }
+  return { dayStemIdx: idx, sipsin: getSipsin(idx, CURR_YEAR_STEM_IDX) ?? '비견' }
 }
 
 export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
@@ -96,7 +98,8 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
   const [sipsin, setSipsin]       = useState<string>(init?.sipsin ?? '')
   const [dayStemIdx, setDayStemIdx] = useState(init?.dayStemIdx ?? 0)
 
-  const yearStem = STEMS[YEAR_2026_STEM]
+  const yearStem   = STEMS[CURR_YEAR_STEM_IDX]
+  const yearBranch = BRANCHES[CURR_YEAR_BRANCH_IDX]
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -134,8 +137,8 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
-            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>2026 신년운세</h1>
-            <p className="text-xs text-[#7B6F9A]">병오년(丙午) 한 해 운세</p>
+            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>{CURR_YEAR} 신년운세</h1>
+            <p className="text-xs text-[#7B6F9A]">{yearStem.ko}{yearBranch.ko}년({yearStem.hanja}{yearBranch.hanja}) 한 해 운세</p>
           </div>
         </div>
       </div>
@@ -147,14 +150,14 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
             <div className="rounded-3xl overflow-hidden border border-[#C9962A25]" style={{ background: 'linear-gradient(135deg, #0D1A16 0%, #0A1520 100%)' }}>
               <div className="p-6">
                 <div className="flex items-center gap-2 mb-3">
-                  <span className="text-2xl font-bold" style={{ color: yc }}>丙</span>
-                  <span className="text-2xl font-bold" style={{ color: yc }}>午</span>
-                  <span className="text-sm text-[#A89BC0] ml-1">병오년 · 말띠의 해</span>
+                  <span className="text-2xl font-bold" style={{ color: yc }}>{yearStem.hanja}</span>
+                  <span className="text-2xl font-bold" style={{ color: yc }}>{yearBranch.hanja}</span>
+                  <span className="text-sm text-[#A89BC0] ml-1">{yearStem.ko}{yearBranch.ko}년 · {yearBranch.animal}띠의 해</span>
                 </div>
                 <p className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                  2026 신년운세
+                  {CURR_YEAR} 신년운세
                 </p>
-                <p className="text-sm text-[#A89BC0]">생년월일을 입력하면 나만의 2026 한 해 운세를 알려드립니다</p>
+                <p className="text-sm text-[#A89BC0]">생년월일을 입력하면 나만의 {CURR_YEAR} 한 해 운세를 알려드립니다</p>
               </div>
             </div>
 
@@ -210,7 +213,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
                   type="submit"
                   className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] hover:from-[#B8871F] hover:to-[#D4A030] transition-all text-sm active:scale-[0.98]"
                 >
-                  2026 신년운세 확인하기 →
+                  {CURR_YEAR} 신년운세 확인하기 →
                 </button>
               </form>
             </div>
@@ -227,7 +230,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
             </div>
             <div className="text-center space-y-1">
               <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>신년운세 분석 중...</p>
-              <p className="text-sm text-[#7B6F9A]">2026년 운세를 풀이하고 있습니다</p>
+              <p className="text-sm text-[#7B6F9A]">{CURR_YEAR}년 운세를 풀이하고 있습니다</p>
             </div>
           </div>
         )}
@@ -236,13 +239,13 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
           <>
             {/* 결과 배너 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-              <p className="text-violet-300/70 text-xs mb-2">2026 병오년(丙午) 운세</p>
+              <p className="text-violet-300/70 text-xs mb-2">{CURR_YEAR} {yearStem.ko}{yearBranch.ko}년({yearStem.hanja}{yearBranch.hanja}) 운세</p>
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-3xl font-bold text-white" style={{ fontFamily: "'Noto Serif KR', serif" }}>
                   {dayStem?.hanja}일간
                 </span>
                 <span className="text-violet-300">×</span>
-                <span className="text-3xl font-bold" style={{ color: yc }}>丙午</span>
+                <span className="text-3xl font-bold" style={{ color: yc }}>{yearStem.hanja}{yearBranch.hanja}</span>
               </div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-sm bg-violet-400/20 text-violet-200 border border-violet-400/30 px-2.5 py-1 rounded-full font-medium">
@@ -261,7 +264,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>2026년 총운</h2>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>{CURR_YEAR}년 총운</h2>
               </div>
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{fortune.총평}</p>
             </div>
@@ -292,7 +295,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
 
             {/* 올해의 조언 */}
             <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-3xl p-5">
-              <p className="text-xs font-semibold text-[#C9962A] mb-2">✨ 2026년 핵심 조언</p>
+              <p className="text-xs font-semibold text-[#C9962A] mb-2">✨ {CURR_YEAR}년 핵심 조언</p>
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{fortune.조언}</p>
             </div>
 
