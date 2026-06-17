@@ -43,7 +43,8 @@ export function tryClaimDaily(p: PointsState): { next: PointsState; claimed: boo
 export const LUCKY_TIMER_MAX_ATTEMPTS = 3
 
 export function getLuckyTimerAttempts(): number {
-  return Number(localStorage.getItem(`${KEY}_lucky_${today()}`) ?? '0')
+  const n = Number(localStorage.getItem(`${KEY}_lucky_${today()}`) ?? '0')
+  return Number.isFinite(n) ? n : 0
 }
 
 export function claimLuckyTimer(p: PointsState, success: boolean): { next: PointsState; attempts: number } {
