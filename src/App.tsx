@@ -54,9 +54,9 @@ export default function App() {
   const [points,       setPoints]       = useState<PointsState>(loadPoints)
   const [isNewCloudUser, setIsNewCloudUser] = useState(true)
   const [legalReturn,  setLegalReturn]  = useState<Page>('login')
-  const [syncError,    setSyncError]    = useState(false)
+  const [syncIssue,    setSyncIssue]    = useState<'error' | 'expired' | null>(null)
 
-  useEffect(() => onSyncStatusChange(status => setSyncError(status === 'error')), [])
+  useEffect(() => onSyncStatusChange(status => setSyncIssue(status === 'ok' ? null : status)), [])
 
   useEffect(() => {
     const BACK_MAP: Partial<Record<Page, Page>> = {
@@ -84,6 +84,15 @@ export default function App() {
   }
 
   function goHome() { setPoints(loadPoints()); setPage('home'); window.scrollTo(0, 0) }
+
+  function handleLogout() {
+    setCurrentEmail(null)
+    setIdToken(null)
+    setUser(null)
+    setSyncIssue(null)
+    setPage('login')
+    window.scrollTo(0, 0)
+  }
 
   async function handleLogin(u: UserInfo) {
     setUser(u)
@@ -150,7 +159,7 @@ export default function App() {
         onAttendance={() => { setPage('attendance'); window.scrollTo(0, 0) }}
         onLuckyTimer={() => { setPage('lucky'); window.scrollTo(0, 0) }}
         onEditProfile={() => { setPage('profile'); window.scrollTo(0, 0) }}
-        onLogout={() => { setCurrentEmail(null); setIdToken(null); setUser(null); setPage('login'); window.scrollTo(0, 0) }}
+        onLogout={handleLogout}
         onShowPrivacy={() => openLegal('privacy', 'home')}
         onShowTerms={() => openLegal('terms', 'home')}
       />
@@ -192,7 +201,13 @@ export default function App() {
 
   return (
     <>
-      {syncError && <SyncErrorBanner onDismiss={() => setSyncError(false)} />}
+      {syncIssue && (
+        <SyncErrorBanner
+          expired={syncIssue === 'expired'}
+          onDismiss={() => setSyncIssue(null)}
+          onRelogin={handleLogout}
+        />
+      )}
       <Suspense fallback={<PageFallback />}>{content}</Suspense>
     </>
   )

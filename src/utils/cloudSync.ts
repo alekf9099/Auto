@@ -42,7 +42,7 @@ function applyLocalData(data: Record<string, unknown>): void {
   }
 }
 
-type SyncStatus = 'ok' | 'error'
+type SyncStatus = 'ok' | 'error' | 'expired'
 type SyncListener = (status: SyncStatus) => void
 const syncListeners = new Set<SyncListener>()
 
@@ -69,6 +69,13 @@ async function callSync(action: 'pull' | 'push', data?: Record<string, unknown>)
       signal: controller.signal,
     })
     clearTimeout(timer)
+    // 구글 ID 토큰은 발급 후 약 1시간이면 만료된다. 갱신 로직이 없으므로
+    // 401을 받으면 더 이상 재시도하지 않도록 토큰을 비우고 재로그인을 유도한다.
+    if (res.status === 401) {
+      setIdToken(null)
+      notifySyncStatus('expired')
+      return null
+    }
     if (!res.ok) throw new Error(`동기화 실패: ${res.status}`)
     const json = await res.json()
     notifySyncStatus('ok')
