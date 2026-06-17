@@ -6,7 +6,7 @@ import { DAY_FORTUNE, LUCKY_COLOR_MAP, LUCKY_COLOR_NAME, LUCKY_NUM, LUCKY_DIR, L
 import { loadPoints, tryFeatureBonus } from '../utils/points'
 import PointsToast from './PointsToast'
 import ShareCardModal from './ShareCardModal'
-import { IcTodayFortune } from './icons/SajuIcons'
+import { IcTodayFortune, IcGem } from './icons/SajuIcons'
 
 interface Props {
   dayOffset: 0 | 1   // 0 = 오늘, 1 = 내일
@@ -375,9 +375,16 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             </button>
             <button
               onClick={handlePointsClaim}
-              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl text-sm shadow-md shadow-[#C9962A30] active:scale-[0.98] transition-all"
+              disabled={toast !== null && toast.amount === 0}
+              className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all ${
+                toast !== null && toast.amount === 0
+                  ? 'bg-[#1C1530] text-[#7B6F9A]'
+                  : 'bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] shadow-md shadow-[#C9962A30]'
+              }`}
             >
-              {toast !== null && toast.amount === 0 ? '✓ 오늘 포인트 이미 받음' : '💎 포인트 받기 +5P'}
+              {toast !== null && toast.amount === 0
+                ? '✓ 오늘 포인트 이미 받음'
+                : <><IcGem size={15} className="text-[#0D0A1A]" /> 포인트 받기 +5P</>}
             </button>
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
