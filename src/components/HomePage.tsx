@@ -20,6 +20,8 @@ interface Props {
   onLuckyTimer: () => void
   onEditProfile: () => void
   onLogout: () => void
+  onShowPrivacy: () => void
+  onShowTerms: () => void
 }
 
 const DAILY_FALLBACK = [
@@ -43,7 +45,7 @@ const CHIPS: { Icon: React.FC<{ size?: number; className?: string }>; label: str
   { Icon: IcJob,          label: '취업운',    dest: 'job',       sub: '커리어 운세' },
 ]
 
-export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout }: Props) {
+export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms }: Props) {
   const todayDate = new Date()
   const month = todayDate.getMonth() + 1
   const day   = todayDate.getDate()
@@ -419,7 +421,12 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
 
       </div>
 
-      <div className="text-center pb-8 text-xs text-[#4A4060]">사주팔자 — 양력 기준 · 절기 근사값 적용</div>
+      <div className="text-center pb-2 text-xs text-[#4A4060]">사주팔자 — 양력 기준 · 절기 근사값 적용</div>
+      <div className="text-center pb-8 text-xs text-[#4A4060]">
+        <button onClick={onShowPrivacy} className="underline hover:text-[#7B6F9A] transition">개인정보처리방침</button>
+        <span className="mx-2">·</span>
+        <button onClick={onShowTerms} className="underline hover:text-[#7B6F9A] transition">이용약관</button>
+      </div>
     </div>
   )
 }

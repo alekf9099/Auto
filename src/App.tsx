@@ -21,10 +21,12 @@ const DreamPage        = lazy(() => import('./components/DreamPage'))
 const OutfitPage       = lazy(() => import('./components/OutfitPage'))
 const JobPage          = lazy(() => import('./components/JobPage'))
 const LuckyTimerPage   = lazy(() => import('./components/LuckyTimerPage'))
+const PrivacyPolicyPage = lazy(() => import('./components/PrivacyPolicyPage'))
+const TermsPage         = lazy(() => import('./components/TermsPage'))
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'outfit' | 'job' | 'lucky'
+type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'outfit' | 'job' | 'lucky' | 'privacy' | 'terms'
 
 function loadBirthProfile(): BirthInput | null {
   try {
@@ -50,14 +52,16 @@ export default function App() {
   const [birthProfile, setBirthProfile] = useState<BirthInput | null>(loadBirthProfile)
   const [points,       setPoints]       = useState<PointsState>(loadPoints)
   const [isNewCloudUser, setIsNewCloudUser] = useState(true)
+  const [legalReturn,  setLegalReturn]  = useState<Page>('login')
 
   useEffect(() => {
     const BACK_MAP: Partial<Record<Page, Page>> = {
       profile: 'login', analyzing: 'home', attendance: 'home',
       sinnyeon: 'home', tojeong: 'home', today: 'home',
       gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home', dream: 'home', outfit: 'home', job: 'home', lucky: 'home',
+      privacy: legalReturn, terms: legalReturn,
     }
-    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','gunghab','deepsaju','saju','daun','dream','outfit','job','lucky','profile','analyzing']
+    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','gunghab','deepsaju','saju','daun','dream','outfit','job','lucky','profile','analyzing','privacy','terms']
     if (navigable.includes(page)) history.pushState({ page }, '')
 
     function onPop() {
@@ -105,12 +109,29 @@ export default function App() {
     window.scrollTo(0, 0)
   }
 
+  function openLegal(type: 'privacy' | 'terms', from: Page) {
+    setLegalReturn(from)
+    setPage(type)
+    window.scrollTo(0, 0)
+  }
+
   if (page === 'splash') return <SplashScreen onDone={() => setPage('login')} />
-  if (page === 'login')  return <LoginPage onLogin={handleLogin} />
+  if (page === 'login')
+    return (
+      <LoginPage
+        onLogin={handleLogin}
+        onShowPrivacy={() => openLegal('privacy', 'login')}
+        onShowTerms={() => openLegal('terms', 'login')}
+      />
+    )
 
   let content: JSX.Element
 
-  if (page === 'profile' && user) {
+  if (page === 'privacy') {
+    content = <PrivacyPolicyPage onBack={() => setPage(legalReturn)} />
+  } else if (page === 'terms') {
+    content = <TermsPage onBack={() => setPage(legalReturn)} />
+  } else if (page === 'profile' && user) {
     content = <ProfileSetupPage user={user} onSave={handleProfileSave} />
   } else if (page === 'analyzing') {
     content = <LoadingScreen onComplete={() => { setPage('home'); window.scrollTo(0, 0) }} />
@@ -126,6 +147,8 @@ export default function App() {
         onLuckyTimer={() => { setPage('lucky'); window.scrollTo(0, 0) }}
         onEditProfile={() => { setPage('profile'); window.scrollTo(0, 0) }}
         onLogout={() => { setCurrentEmail(null); setIdToken(null); setUser(null); setPage('login'); window.scrollTo(0, 0) }}
+        onShowPrivacy={() => openLegal('privacy', 'home')}
+        onShowTerms={() => openLegal('terms', 'home')}
       />
     )
   } else if (page === 'attendance') {

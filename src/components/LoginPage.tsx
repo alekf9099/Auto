@@ -3,6 +3,8 @@ import type { UserInfo } from '../types'
 
 interface Props {
   onLogin: (user: UserInfo) => void
+  onShowPrivacy: () => void
+  onShowTerms: () => void
 }
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined
@@ -24,7 +26,7 @@ declare global {
   }
 }
 
-export default function LoginPage({ onLogin }: Props) {
+export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props) {
   useEffect(() => {
     if (!CLIENT_ID) return
 
@@ -138,6 +140,11 @@ export default function LoginPage({ onLogin }: Props) {
       </div>
 
       <p className="mt-6 text-xs text-[#4A4060] text-center">본 서비스는 참고용이며 정확성을 보장하지 않습니다</p>
+      <p className="mt-2 text-xs text-[#4A4060] text-center">
+        <button onClick={onShowPrivacy} className="underline hover:text-[#7B6F9A] transition">개인정보처리방침</button>
+        <span className="mx-2">·</span>
+        <button onClick={onShowTerms} className="underline hover:text-[#7B6F9A] transition">이용약관</button>
+      </p>
     </div>
   )
 }
