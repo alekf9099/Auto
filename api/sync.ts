@@ -11,6 +11,89 @@ interface GoogleTokenInfo {
   exp: string
 }
 
+interface PointsHistoryEntry { date: string; amount: number; label: string }
+interface PointsState { balance: number; lastDaily: string; history: PointsHistoryEntry[] }
+
+const POINTS_KEY = 'unmyeongbom_points'
+const MAX_HISTORY = 60
+
+// 클라이언트(src/utils/points.ts)에서 실제로 지급/차감하는 (라벨, 금액) 조합과 동일하게 유지해야 한다.
+// 클라이언트는 모든 포인트 계산을 직접 수행해 localStorage에 저장하므로, 여기서 다시 검증하지 않으면
+// 누구나 devtools로 balance/history를 조작해 무제한 포인트를 만들 수 있다.
+// dailyCap: 같은 날짜에 이 라벨이 나타날 수 있는 최대 횟수 / totalCap: 전체 히스토리에서의 누적 최대 횟수.
+const POINT_RULES: Record<string, { amount: number; dailyCap?: number; totalCap?: number }> = {
+  '가입 보너스 🎉':           { amount: 100, totalCap: 1 },
+  '매일 출석 보너스':         { amount: 10,  dailyCap: 1 },
+  '행운의 숫자 적중! 🎯':     { amount: 20,  dailyCap: 3 },
+  '행운의 숫자 도전 ⏱️':      { amount: 5,   dailyCap: 3 },
+  '정통사주 확인 ☯':         { amount: 5,   dailyCap: 1 },
+  '심층 사주 해석 🔮':        { amount: 5,   dailyCap: 1 },
+  '신년운세 확인 🗓️':        { amount: 5,   dailyCap: 1 },
+  '오늘의 운세 확인 🔮':      { amount: 5,   dailyCap: 1 },
+  '내일의 운세 확인 🔮':      { amount: 5,   dailyCap: 1 },
+  '궁합 확인 💕':             { amount: 5,   dailyCap: 1 },
+  '오늘의 코디 확인 👗':      { amount: 5,   dailyCap: 1 },
+  '토정비결 확인 📖':         { amount: 5,   dailyCap: 1 },
+  '대운 분석 확인 📊':        { amount: 5,   dailyCap: 1 },
+  '취업운 확인 💼':           { amount: 5,   dailyCap: 1 },
+  '꿈해몽 확인 💭':           { amount: 5,   dailyCap: 1 },
+  '심층 사주 전체 잠금 해제':  { amount: -50 },
+}
+
+// 행운의 숫자 잡기는 적중/실패 라벨을 합쳐 하루 3회(LUCKY_TIMER_MAX_ATTEMPTS)까지만 허용된다.
+const LUCKY_TIMER_LABELS = new Set(['행운의 숫자 적중! 🎯', '행운의 숫자 도전 ⏱️'])
+
+function sanitizePointsHistory(rawHistory: unknown): PointsHistoryEntry[] {
+  if (!Array.isArray(rawHistory)) return []
+
+  const perDayLabelCount = new Map<string, number>()
+  const totalLabelCount  = new Map<string, number>()
+  const luckyTimerCount  = new Map<string, number>() // date -> count
+  const clean: PointsHistoryEntry[] = []
+
+  for (const raw of rawHistory) {
+    if (clean.length >= MAX_HISTORY) break
+    if (!raw || typeof raw !== 'object') continue
+    const { date, amount, label } = raw as Record<string, unknown>
+    if (typeof date !== 'string' || typeof amount !== 'number' || typeof label !== 'string') continue
+
+    const rule = POINT_RULES[label]
+    if (!rule || rule.amount !== amount) continue // 알려진 (라벨, 금액) 조합이 아니면 위조로 간주해 버린다
+
+    const dayKey = `${date}__${label}`
+    const dayCount = (perDayLabelCount.get(dayKey) ?? 0) + 1
+    if (rule.dailyCap && dayCount > rule.dailyCap) continue
+
+    const totalCount = (totalLabelCount.get(label) ?? 0) + 1
+    if (rule.totalCap && totalCount > rule.totalCap) continue
+
+    if (LUCKY_TIMER_LABELS.has(label)) {
+      const lc = (luckyTimerCount.get(date) ?? 0) + 1
+      if (lc > 3) continue
+      luckyTimerCount.set(date, lc)
+    }
+
+    perDayLabelCount.set(dayKey, dayCount)
+    totalLabelCount.set(label, totalCount)
+    clean.push({ date, amount, label })
+  }
+
+  return clean
+}
+
+// balance는 클라이언트가 보낸 값을 신뢰하지 않고 검증된 history의 합으로 다시 계산한다.
+function sanitizePointsData(raw: unknown): PointsState | null {
+  if (!raw || typeof raw !== 'object') return null
+  const p = raw as Partial<PointsState>
+  if (typeof p.lastDaily !== 'string') return null
+
+  const history = sanitizePointsHistory(p.history)
+  const balance = history.reduce((sum, h) => sum + h.amount, 0)
+  if (balance < 0) return null
+
+  return { balance, lastDaily: p.lastDaily, history }
+}
+
 async function verifyGoogleToken(idToken: string): Promise<string | null> {
   const clientId = process.env.VITE_GOOGLE_CLIENT_ID
   if (!clientId) return null
@@ -66,9 +149,20 @@ export default async function handler(req: any, res: any) {
   }
 
   // action === 'push'
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return res.status(400).json({ error: 'invalid data' })
+  }
+
+  const sanitized: Record<string, unknown> = { ...data }
+  if (POINTS_KEY in sanitized) {
+    const cleanPoints = sanitizePointsData(sanitized[POINTS_KEY])
+    if (!cleanPoints) return res.status(400).json({ error: 'invalid points data' })
+    sanitized[POINTS_KEY] = cleanPoints
+  }
+
   const { error } = await supabase
     .from('user_data')
-    .upsert({ email, data: data ?? {}, updated_at: new Date().toISOString() })
+    .upsert({ email, data: sanitized, updated_at: new Date().toISOString() })
 
   if (error) return res.status(500).json({ error: error.message })
   return res.status(200).json({ ok: true })
