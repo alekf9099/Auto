@@ -2,10 +2,9 @@ import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin } from '../utils/saju'
 import { getElement, JOB_DATA, JOB_LUCK_BY_SIPSIN, LUCK_GRADE_CFG } from '../utils/jobData'
-import { loadPoints, tryFeatureBonus } from '../utils/points'
-import PointsToast from './PointsToast'
+import PointsClaimButton from './PointsClaimButton'
 import ShareCardModal from './ShareCardModal'
-import { IcJob, IcGem } from './icons/SajuIcons'
+import { IcJob } from './icons/SajuIcons'
 
 interface Props {
   savedBirth: BirthInput | null
@@ -50,13 +49,6 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
   })
   const [submitted, setSubmitted] = useState<BirthInput | null>(null)
   const [showShare, setShowShare] = useState(false)
-  const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
-
-  function handlePointsClaim() {
-    const { next, claimed } = tryFeatureBonus(loadPoints(), 'job', '취업운 확인 💼')
-    if (claimed) setToast({ amount: 5, total: next.balance })
-    else setToast({ amount: 0, total: loadPoints().balance })
-  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -355,22 +347,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
             </div>
 
             {/* 포인트 받기 + 공유 + Restart CTA */}
-            {toast && toast.amount > 0 && (
-              <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
-            )}
-            <button
-              onClick={handlePointsClaim}
-              disabled={toast !== null && toast.amount === 0}
-              className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all ${
-                toast !== null && toast.amount === 0
-                  ? 'bg-[#1C1530] text-[#7B6F9A]'
-                  : 'bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] shadow-md shadow-[#C9962A30]'
-              }`}
-            >
-              {toast !== null && toast.amount === 0
-                ? '✓ 오늘 포인트 이미 받음'
-                : <><IcGem size={15} className="text-[#0D0A1A]" /> 포인트 받기 +5P</>}
-            </button>
+            <PointsClaimButton featureKey="job" label="취업운 확인 💼" />
             <button
               onClick={() => setShowShare(true)}
               className="w-full py-3.5 bg-[#231844] text-[#E8DFC8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"

@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calcDeepSaju, isDeepFreeUsed, markDeepFreeUsed } from '../utils/deepSaju'
-import { loadPoints, tryFeatureBonus, spendPoints, DEEP_SAJU_UNLOCK_COST } from '../utils/points'
-import PointsToast from './PointsToast'
-import { IcDeepSaju, IcGem } from './icons/SajuIcons'
+import { loadPoints, spendPoints, DEEP_SAJU_UNLOCK_COST } from '../utils/points'
+import PointsClaimButton from './PointsClaimButton'
+import { IcDeepSaju } from './icons/SajuIcons'
 
 interface Props {
   savedBirth: BirthInput | null
@@ -46,14 +46,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
     gender: (savedBirth?.gender ?? 'male') as 'male' | 'female',
   })
   const [submitted, setSubmitted] = useState<BirthInput | null>(null)
-  const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
   const [unlockError, setUnlockError] = useState(false)
-
-  function handlePointsClaim() {
-    const { next, claimed } = tryFeatureBonus(loadPoints(), 'deepsaju', '심층 사주 해석 🔮')
-    if (claimed) setToast({ amount: 5, total: next.balance })
-    else setToast({ amount: 0, total: loadPoints().balance })
-  }
 
   function handleUnlock() {
     const { success } = spendPoints(loadPoints(), DEEP_SAJU_UNLOCK_COST, '심층 사주 전체 잠금 해제')
@@ -366,22 +359,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
               </div>
             )}
 
-            {toast && toast.amount > 0 && (
-              <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
-            )}
-            <button
-              onClick={handlePointsClaim}
-              disabled={toast !== null && toast.amount === 0}
-              className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all ${
-                toast !== null && toast.amount === 0
-                  ? 'bg-[#1C1530] text-[#7B6F9A]'
-                  : 'bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] shadow-md shadow-[#C9962A30]'
-              }`}
-            >
-              {toast !== null && toast.amount === 0
-                ? '✓ 오늘 포인트 이미 받음'
-                : <><IcGem size={15} className="text-[#0D0A1A]" /> 포인트 받기 +5P</>}
-            </button>
+            <PointsClaimButton featureKey="deepsaju" label="심층 사주 해석 🔮" />
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"

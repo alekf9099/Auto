@@ -2,13 +2,12 @@ import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calculateSaju, getOhaengCount, pillarName, pillarNameKo } from '../utils/saju'
 import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
-import { loadPoints, tryFeatureBonus } from '../utils/points'
-import PointsToast from './PointsToast'
+import PointsClaimButton from './PointsClaimButton'
 import SajuChart from './SajuChart'
 import OhaengChart from './OhaengChart'
 import SipsinChart from './SipsinChart'
 import FortuneReading from './FortuneReading'
-import { IcSaju, IcGem } from './icons/SajuIcons'
+import { IcSaju } from './icons/SajuIcons'
 
 interface Props {
   savedBirth: BirthInput | null
@@ -52,12 +51,6 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onSave }: Pro
     gender: (savedBirth?.gender ?? 'male') as 'male' | 'female',
   })
   const [submitted, setSubmitted] = useState<BirthInput | null>(null)
-  const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
-  function handlePointsClaim() {
-    const { next, claimed } = tryFeatureBonus(loadPoints(), 'saju', '정통사주 확인 ☯')
-    if (claimed) setToast({ amount: 5, total: next.balance })
-    else setToast({ amount: 0, total: loadPoints().balance })
-  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -319,22 +312,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onSave }: Pro
               </button>
             </div>
 
-            {toast && toast.amount > 0 && (
-              <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
-            )}
-            <button
-              onClick={handlePointsClaim}
-              disabled={toast !== null && toast.amount === 0}
-              className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all ${
-                toast !== null && toast.amount === 0
-                  ? 'bg-[#1C1530] text-[#7B6F9A]'
-                  : 'bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] shadow-md shadow-[#C9962A30]'
-              }`}
-            >
-              {toast !== null && toast.amount === 0
-                ? '✓ 오늘 포인트 이미 받음'
-                : <><IcGem size={15} className="text-[#0D0A1A]" /> 포인트 받기 +5P</>}
-            </button>
+            <PointsClaimButton featureKey="saju" label="정통사주 확인 ☯" />
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"

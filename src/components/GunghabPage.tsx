@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import type { BirthInput } from '../types'
 import { calcGunghab, type GunghabRelation, type GunghabResult } from '../utils/gunghab'
-import { loadPoints, tryFeatureBonus } from '../utils/points'
-import PointsToast from './PointsToast'
-import { IcGem } from './icons/SajuIcons'
+import PointsClaimButton from './PointsClaimButton'
 
 interface Props {
   savedBirth?: BirthInput | null
@@ -150,7 +148,6 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
   const [them,     setThem]     = useState<BirthFields>(emptyFields)
   const [themName, setThemName] = useState('')
   const [result,   setResult]   = useState<GunghabResult | null>(null)
-  const [toast,    setToast]    = useState<{ amount: number; total: number } | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -167,12 +164,6 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
     setResult(calcGunghab(birthA, birthB, rel))
     setStep('loading')
     window.scrollTo(0, 0)
-  }
-
-  function handlePointsClaim() {
-    const { next, claimed } = tryFeatureBonus(loadPoints(), 'gunghab', '궁합 확인 💕')
-    if (claimed) setToast({ amount: 5, total: next.balance })
-    else setToast({ amount: 0, total: loadPoints().balance })
   }
 
   const relOpt    = REL_OPTIONS.find(r => r.key === rel)!
@@ -435,22 +426,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
             <p className="text-sm text-[#C4B8D8] leading-relaxed relative z-10">{result.summary}</p>
           </div>
 
-          {toast && toast.amount > 0 && (
-            <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
-          )}
-          <button
-            onClick={handlePointsClaim}
-            disabled={toast !== null && toast.amount === 0}
-            className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all ${
-              toast !== null && toast.amount === 0
-                ? 'bg-[#1C1530] text-[#7B6F9A]'
-                : 'bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] shadow-md shadow-[#C9962A30]'
-            }`}
-          >
-            {toast !== null && toast.amount === 0
-              ? '✓ 오늘 포인트 이미 받음'
-              : <><IcGem size={15} className="text-[#0D0A1A]" /> 포인트 받기 +5P</>}
-          </button>
+          <PointsClaimButton featureKey="gunghab" label="궁합 확인 💕" />
           <button
             onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
             className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"

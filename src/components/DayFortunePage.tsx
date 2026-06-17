@@ -3,10 +3,9 @@ import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin } from '../utils/saju'
 import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
 import { DAY_FORTUNE, LUCKY_COLOR_MAP, LUCKY_COLOR_NAME, LUCKY_NUM, LUCKY_DIR, LUCKY_FOOD } from '../utils/fortuneData'
-import { loadPoints, tryFeatureBonus } from '../utils/points'
-import PointsToast from './PointsToast'
+import PointsClaimButton from './PointsClaimButton'
 import ShareCardModal from './ShareCardModal'
-import { IcTodayFortune, IcGem } from './icons/SajuIcons'
+import { IcTodayFortune } from './icons/SajuIcons'
 
 interface Props {
   dayOffset: 0 | 1   // 0 = 오늘, 1 = 내일
@@ -94,12 +93,6 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
   const featKey  = isToday ? 'today' : 'tomorrow'
 
   const [showShare, setShowShare] = useState(false)
-  const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
-  function handlePointsClaim() {
-    const { next, claimed } = tryFeatureBonus(loadPoints(), featKey, `${title} 확인 🔮`)
-    if (claimed) setToast({ amount: 5, total: next.balance })
-    else setToast({ amount: 0, total: loadPoints().balance })
-  }
 
   function applyResult(inp: BirthInput, offset: 0|1) {
     const r = calcResult(inp, offset)
@@ -114,7 +107,6 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
   function handleTabChange(offset: 0|1) {
     if (step !== 'result') return
     setActiveOffset(offset)
-    setToast(null)
     const inp: BirthInput = {
       year: Number(birth.year), month: Number(birth.month),
       day: Number(birth.day),
@@ -364,28 +356,13 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
               </div>
             </div>
 
-            {toast && toast.amount > 0 && (
-              <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />
-            )}
             <button
               onClick={() => setShowShare(true)}
               className="w-full py-3.5 bg-[#231844] text-[#E8DFC8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98] flex items-center justify-center gap-1.5"
             >
               📤 운세 카드 공유하기
             </button>
-            <button
-              onClick={handlePointsClaim}
-              disabled={toast !== null && toast.amount === 0}
-              className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all ${
-                toast !== null && toast.amount === 0
-                  ? 'bg-[#1C1530] text-[#7B6F9A]'
-                  : 'bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] shadow-md shadow-[#C9962A30]'
-              }`}
-            >
-              {toast !== null && toast.amount === 0
-                ? '✓ 오늘 포인트 이미 받음'
-                : <><IcGem size={15} className="text-[#0D0A1A]" /> 포인트 받기 +5P</>}
-            </button>
+            <PointsClaimButton key={featKey} featureKey={featKey} label={`${title} 확인 🔮`} />
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
