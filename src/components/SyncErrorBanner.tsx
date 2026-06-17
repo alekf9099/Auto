@@ -1,0 +1,12 @@
+interface Props {
+  onDismiss: () => void
+}
+
+export default function SyncErrorBanner({ onDismiss }: Props) {
+  return (
+    <div className="fixed top-0 inset-x-0 z-[60] bg-[#3A1F1F] border-b border-[#C9962A40] px-4 py-2.5 flex items-center justify-between gap-3 text-xs text-[#F0D9C0] shadow-md shadow-black/30">
+      <span>⚠️ 클라우드 동기화에 실패했어요. 데이터가 백업되지 않을 수 있어요.</span>
+      <button onClick={onDismiss} className="shrink-0 text-[#C9962A] font-semibold">닫기</button>
+    </div>
+  )
+}

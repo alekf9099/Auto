@@ -42,6 +42,20 @@ function applyLocalData(data: Record<string, unknown>): void {
   }
 }
 
+type SyncStatus = 'ok' | 'error'
+type SyncListener = (status: SyncStatus) => void
+const syncListeners = new Set<SyncListener>()
+
+// App 등에서 동기화 성패를 구독해 사용자에게 알릴 수 있도록 한다.
+export function onSyncStatusChange(fn: SyncListener): () => void {
+  syncListeners.add(fn)
+  return () => syncListeners.delete(fn)
+}
+
+function notifySyncStatus(status: SyncStatus): void {
+  syncListeners.forEach(fn => fn(status))
+}
+
 async function callSync(action: 'pull' | 'push', data?: Record<string, unknown>): Promise<{ data: Record<string, unknown> | null } | null> {
   const idToken = getIdToken()
   if (!idToken) return null
@@ -56,9 +70,12 @@ async function callSync(action: 'pull' | 'push', data?: Record<string, unknown>)
     })
     clearTimeout(timer)
     if (!res.ok) throw new Error(`동기화 실패: ${res.status}`)
-    return await res.json()
+    const json = await res.json()
+    notifySyncStatus('ok')
+    return json
   } catch (e) {
     console.error('클라우드 동기화 실패:', e)
+    notifySyncStatus('error')
     return null
   }
 }

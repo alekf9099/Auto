@@ -2,10 +2,11 @@ import { useState, useEffect, lazy, Suspense } from 'react'
 import type { BirthInput, UserInfo } from './types'
 import { loadPoints, awardPoints } from './utils/points'
 import type { PointsState } from './utils/points'
-import { setCurrentEmail, setIdToken, pullCloudData, scheduleCloudPush } from './utils/cloudSync'
+import { setCurrentEmail, setIdToken, pullCloudData, scheduleCloudPush, onSyncStatusChange } from './utils/cloudSync'
 import LoginPage        from './components/LoginPage'
 import SplashScreen     from './components/SplashScreen'
 import LoadingScreen    from './components/LoadingScreen'
+import SyncErrorBanner  from './components/SyncErrorBanner'
 
 const ProfileSetupPage = lazy(() => import('./components/ProfileSetupPage'))
 const HomePage         = lazy(() => import('./components/HomePage'))
@@ -53,6 +54,9 @@ export default function App() {
   const [points,       setPoints]       = useState<PointsState>(loadPoints)
   const [isNewCloudUser, setIsNewCloudUser] = useState(true)
   const [legalReturn,  setLegalReturn]  = useState<Page>('login')
+  const [syncError,    setSyncError]    = useState(false)
+
+  useEffect(() => onSyncStatusChange(status => setSyncError(status === 'error')), [])
 
   useEffect(() => {
     const BACK_MAP: Partial<Record<Page, Page>> = {
@@ -186,5 +190,10 @@ export default function App() {
     content = <LoadingScreen onComplete={() => { setPage('home'); window.scrollTo(0, 0) }} />
   }
 
-  return <Suspense fallback={<PageFallback />}>{content}</Suspense>
+  return (
+    <>
+      {syncError && <SyncErrorBanner onDismiss={() => setSyncError(false)} />}
+      <Suspense fallback={<PageFallback />}>{content}</Suspense>
+    </>
+  )
 }
