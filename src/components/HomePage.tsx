@@ -45,6 +45,15 @@ const CHIPS: { Icon: React.FC<{ size?: number; className?: string }>; label: str
   { Icon: IcJob,          label: '취업운',    dest: 'job',       sub: '커리어 운세' },
 ]
 
+// 오늘의 오행에 따라 가장 어울리는 기능 하나를 추천 뱃지로 표시
+const ELEMENT_TO_CHIP: Record<string, typeof CHIPS[number]['dest']> = {
+  wood:  'daun',
+  fire:  'outfit',
+  earth: 'saju',
+  metal: 'job',
+  water: 'dream',
+}
+
 export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms }: Props) {
   const todayDate = new Date()
   const month = todayDate.getMonth() + 1
@@ -52,6 +61,12 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
 
   const [showPoints, setShowPoints] = useState(false)
   const [dailyToast, setDailyToast] = useState(false)
+  const [streakMounted, setStreakMounted] = useState(false)
+
+  useEffect(() => {
+    const t = setTimeout(() => setStreakMounted(true), 50)
+    return () => clearTimeout(t)
+  }, [])
 
   // 연속 출석 스트릭
   const streak = (() => {
@@ -98,6 +113,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
     }
   }, [birthProfile])
   const todayAccent = todayFortune.element ? ELEMENT_COLORS[todayFortune.element] : '#C9962A'
+  const recommendedChip = todayFortune.element ? ELEMENT_TO_CHIP[todayFortune.element] : null
 
   // 현재 대운 요약
   const daunInfo = useMemo(() => {
@@ -201,21 +217,37 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
         <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-4">
           <p className="text-xs text-[#7B6F9A] mb-3 px-1">기능 바로가기</p>
           <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1" style={{ scrollbarWidth: 'none' }}>
-            {CHIPS.map(chip => (
-              <button
-                key={chip.dest}
-                onClick={() => onNavigate(chip.dest)}
-                className="flex flex-col items-center gap-2 flex-shrink-0 active:scale-95 transition-transform"
-              >
-                <div className="w-14 h-14 rounded-2xl bg-[#C9962A10] border border-[#C9962A28] flex items-center justify-center shadow-sm hover:bg-[#C9962A18] transition">
-                  <chip.Icon size={26} className="text-[#C9962A]"/>
-                </div>
-                <div className="text-center">
-                  <p className="text-xs text-[#C4B8D8] font-semibold leading-tight">{chip.label}</p>
-                  <p className="text-[9px] text-[#7B6F9A] mt-0.5">{chip.sub}</p>
-                </div>
-              </button>
-            ))}
+            {CHIPS.map(chip => {
+              const recommended = chip.dest === recommendedChip
+              return (
+                <button
+                  key={chip.dest}
+                  onClick={() => onNavigate(chip.dest)}
+                  className="relative flex flex-col items-center gap-2 flex-shrink-0 active:scale-95 transition-transform"
+                >
+                  {recommended && (
+                    <span
+                      className="absolute -top-1 right-1 z-10 text-[8px] font-bold text-white px-1.5 py-0.5 rounded-full shadow-sm whitespace-nowrap"
+                      style={{ backgroundColor: todayAccent }}
+                    >
+                      추천
+                    </span>
+                  )}
+                  <div
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition"
+                    style={recommended
+                      ? { backgroundColor: todayAccent + '20', border: `1.5px solid ${todayAccent}80`, color: todayAccent }
+                      : { backgroundColor: '#C9962A10', border: '1px solid #C9962A28' }}
+                  >
+                    <chip.Icon size={26} className={recommended ? '' : 'text-[#C9962A]'}/>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-xs text-[#C4B8D8] font-semibold leading-tight">{chip.label}</p>
+                    <p className="text-[9px] mt-0.5" style={{ color: recommended ? todayAccent : '#7B6F9A' }}>{chip.sub}</p>
+                  </div>
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -223,12 +255,13 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
         {(() => {
           const checked = points.lastDaily === new Date().toISOString().slice(0, 10)
           const TOTAL_DAYS = 7
+          const completed = streak >= TOTAL_DAYS
           return (
             <button
               onClick={onAttendance}
-              className="w-full overflow-hidden rounded-3xl shadow-[0_2px_16px_rgba(180,30,30,0.10)] active:scale-[0.99] transition-all"
+              className={`w-full overflow-hidden rounded-3xl active:scale-[0.99] transition-all ${completed ? 'shadow-[0_2px_20px_rgba(201,150,42,0.25)]' : 'shadow-[0_2px_16px_rgba(180,30,30,0.10)]'}`}
             >
-              <div className="relative bg-[#130E24] border border-red-900/40 rounded-3xl px-5 pt-4 pb-3">
+              <div className={`relative bg-[#130E24] border rounded-3xl px-5 pt-4 pb-3 ${completed ? 'border-amber-500/50' : 'border-red-900/40'}`}>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-[0.06] select-none pointer-events-none text-red-800 rotate-12">
                   <IcStamp size={72}/>
                 </div>
@@ -265,16 +298,26 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                     const filled = i < streak
                     const isToday = checked && i === streak - 1
                     return (
-                      <div key={i} className={`flex-1 aspect-square rounded-full border-2 flex items-center justify-center transition-all ${filled ? (isToday ? 'border-red-500 bg-red-500 shadow-sm shadow-red-900/30' : 'border-red-900/50 bg-red-900/30') : 'border-[#2A1F4A] bg-[#1C1438]'}`}>
+                      <div
+                        key={i}
+                        className={`flex-1 aspect-square rounded-full border-2 flex items-center justify-center transition-all duration-300 ${filled ? (isToday ? 'border-red-500 bg-red-500 shadow-sm shadow-red-900/30' : 'border-red-900/50 bg-red-900/30') : 'border-[#2A1F4A] bg-[#1C1438]'}`}
+                        style={{
+                          transform: streakMounted ? 'scale(1)' : 'scale(0)',
+                          transitionDelay: streakMounted ? `${i * 60}ms` : '0ms',
+                        }}
+                      >
                         {filled && <span className={`text-[8px] font-bold ${isToday ? 'text-white' : 'text-red-400'}`}>{i + 1}일</span>}
                         {!filled && <span className="text-[8px] text-[#4A4060]">{i + 1}</span>}
                       </div>
                     )
                   })}
                 </div>
-                <div className="mt-2.5 pt-2 border-t border-red-900/30 flex items-center justify-between">
-                  <span className="text-[10px] text-[#4A4060]">7일 연속 출석 시 특별 보너스 지급</span>
-                  <span className="text-[10px] text-red-400 font-semibold">자세히 보기 →</span>
+                <div className={`mt-2.5 pt-2 border-t flex items-center justify-between ${completed ? 'border-amber-500/30' : 'border-red-900/30'}`}>
+                  {completed
+                    ? <span className="text-[10px] font-bold text-amber-400">🎉 7일 연속 달성! 특별 보너스 지급</span>
+                    : <span className="text-[10px] text-[#4A4060]">7일 연속 출석 시 특별 보너스 지급</span>
+                  }
+                  <span className={`text-[10px] font-semibold ${completed ? 'text-amber-400' : 'text-red-400'}`}>자세히 보기 →</span>
                 </div>
               </div>
             </button>
