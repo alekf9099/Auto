@@ -114,27 +114,27 @@ function gradeInfo(
   if (total >= 88) return {
     grade: '천생연분', gradeColor: '#7C3AED', gradeBg: '#F3F0FF',
     headline: stemHap ? '하늘이 맺어준 운명의 인연' : '타고난 완벽한 궁합',
-    summary: `${label}으로서 가장 이상적인 사주 조합입니다. ${stemHap ? '일간이 천간합을 이루어 본능적으로 강하게 끌리는 에너지가 형성되며, ' : samhap ? '사주의 지지가 삼합을 이루어 뜻이 잘 맞고, ' : ''}서로의 기운이 완벽하게 보완되어 함께할수록 더욱 빛나는 관계입니다.`,
+    summary: `${label}으로서 가장 이상적인 사주 조합입니다. ${stemHap ? '일간이 천간합을 이루어 본능적으로 강하게 끌리며, ' : samhap ? '사주의 지지가 삼합을 이루어 뜻이 정확히 맞아떨어지며, ' : ''}서로의 기운이 완벽하게 맞물립니다. 함께할수록 관계가 더 단단해지는, 흔치 않은 인연입니다.`,
   }
   if (total >= 75) return {
     grade: '찰떡궁합', gradeColor: '#059669', gradeBg: '#ECFDF5',
     headline: '서로를 성장시키는 최고의 파트너',
-    summary: `${generates ? '오행이 서로 상생하여 ' : ''}두 분의 사주가 조화롭게 어우러집니다. 함께 있을 때 자연스럽게 좋은 에너지가 흐르고, 서로의 장점을 끌어내주는 ${label} 관계입니다.`,
+    summary: `${generates ? '오행이 서로 상생하면서 ' : ''}두 분의 사주가 강하게 맞물립니다. 함께 있을 때 좋은 에너지가 분명히 흐르고, 서로의 장점을 그대로 끌어올려 주는 ${label} 관계입니다. 지금 이 인연을 적극적으로 키워가세요.`,
   }
   if (total >= 62) return {
     grade: '좋은 인연', gradeColor: '#2563EB', gradeBg: '#EFF6FF',
     headline: '편안하고 자연스러운 관계',
-    summary: `무리 없이 잘 맞는 ${label} 사이입니다. ${generates ? '오행이 상생하는 면이 있어 함께할 때 시너지가 생깁니다. ' : ''}서로를 이해하려는 노력이 더해지면 더욱 깊은 인연으로 발전합니다.`,
+    summary: `잘 맞는 ${label} 사이입니다. ${generates ? '오행이 상생하는 면이 있어 함께할 때 분명한 시너지가 생깁니다. ' : ''}서로를 이해하려는 노력을 조금만 더하면 훨씬 깊은 인연으로 발전합니다.`,
   }
   if (total >= 50) return {
     grade: '무난한 인연', gradeColor: '#6B7280', gradeBg: '#F9FAFB',
     headline: '노력으로 만들어가는 인연',
-    summary: `서로 다른 에너지를 가졌지만 ${controls ? '오행이 서로 제어하는 관계로 충돌이 생길 수 있습니다. 그러나 ' : ''}상대방의 다름을 인정하고 배려한다면 오히려 부족한 점을 채워주는 관계가 됩니다.`,
+    summary: `서로 다른 에너지를 가진 사이입니다. ${controls ? '오행이 서로 제어하는 관계라 충돌이 생기기 쉽습니다. ' : ''}상대의 다름을 인정하고 배려해야만 관계가 단단해집니다. 노력 없이는 자연스럽게 유지되지 않는 인연입니다.`,
   }
   return {
     grade: '주의 필요', gradeColor: '#DC2626', gradeBg: '#FFF1F2',
     headline: chung ? '충돌하는 에너지, 깊은 이해가 필요합니다' : '다소 어려운 인연입니다',
-    summary: `사주 에너지가 충돌하는 면이 있습니다. ${chung ? '지지가 충(衝)을 이루어 갑작스러운 마찰이 생길 수 있습니다. ' : ''}서로를 깊이 이해하고 배려하는 자세가 있다면 노력으로 극복할 수 있습니다.`,
+    summary: `사주 에너지가 분명하게 충돌합니다. ${chung ? '지지가 충(衝)을 이루어 갑작스러운 마찰이 반복될 수 있습니다. ' : ''}깊이 이해하고 배려하지 않으면 관계가 쉽게 흔들립니다. 의식적으로 노력해야만 지킬 수 있는 인연입니다.`,
   }
 }
 
@@ -144,13 +144,13 @@ function buildTips(
   yyComp: boolean, rel: GunghabRelation,
 ): { text: string; good: boolean }[] {
   const t: { text: string; good: boolean }[] = []
-  if (stemHap)   t.push({ text: '일간 천간합 — 본능적으로 강하게 끌리는 에너지', good: true })
-  if (samhap)    t.push({ text: '지지 삼합 — 같은 방향을 바라보며 함께 성장하는 사이', good: true })
-  if (yukhap)    t.push({ text: '지지 육합 — 자연스럽게 가까워지는 인연의 기운', good: true })
-  if (generates) t.push({ text: '오행 상생 — 서로의 기운을 끌어올려 주는 관계', good: true })
-  if (yyComp)    t.push({ text: '음양 조화 — 서로의 부족함을 자연스럽게 채워주는 사이', good: true })
-  if (chung)     t.push({ text: '지지 충(衝) — 에너지가 충돌해 갈등이 생길 수 있어요', good: false })
-  if (controls)  t.push({ text: '오행 상극 — 서로 제어하려는 기운이 충돌할 수 있어요', good: false })
-  if (!yyComp && rel === 'couple') t.push({ text: '같은 음양 — 비슷한 성향으로 서로 양보가 더 필요해요', good: false })
+  if (stemHap)   t.push({ text: '일간 천간합 — 설명할 수 없이 강하게 끌리는 본능적인 인연', good: true })
+  if (samhap)    t.push({ text: '지지 삼합 — 같은 방향을 보고 함께 성장하는 강한 인연', good: true })
+  if (yukhap)    t.push({ text: '지지 육합 — 애쓰지 않아도 자연스럽게 가까워지는 인연', good: true })
+  if (generates) t.push({ text: '오행 상생 — 함께 있을수록 서로의 기운을 끌어올리는 관계', good: true })
+  if (yyComp)    t.push({ text: '음양 조화 — 서로의 부족한 부분을 정확히 채워주는 사이', good: true })
+  if (chung)     t.push({ text: '지지 충(衝) — 에너지가 정면으로 충돌해 갈등이 반복될 수 있어요', good: false })
+  if (controls)  t.push({ text: '오행 상극 — 서로 제어하려는 기운이 자주 충돌해요', good: false })
+  if (!yyComp && rel === 'couple') t.push({ text: '같은 음양 — 비슷한 성향이라 양보 없이는 부딫혀요', good: false })
   return t.slice(0, 4)
 }

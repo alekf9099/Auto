@@ -43,14 +43,14 @@ export default function FortuneReading({ result, count }: Props) {
       <div className="rounded-2xl bg-[#C9962A15] border border-[#C9962A30] p-4 mb-3">
         <p className="text-xs font-semibold text-[#C9962A] mb-2">🔮 오행 균형 분석</p>
         {isBalanced ? (
-          <p className="text-sm text-[#C4B8D8]">오행이 전체적으로 균형 잡혀 있습니다. 다양한 분야에서 고루 능력을 발휘할 수 있습니다.</p>
+          <p className="text-sm text-[#C4B8D8]">오행이 고르게 분포되어 있습니다. 한쪽에 치우치지 않으니 다양한 분야에서 그대로 능력을 발휘하세요. 환경을 가리지 않고 적응하는 것이 당신의 가장 큰 무기입니다.</p>
         ) : (
           <p className="text-sm text-[#C4B8D8]">
             <strong style={{ color: ELEMENT_COLORS[strongest] }}>{KEYWORDS[strongest][0]}</strong>과{' '}
-            <strong style={{ color: ELEMENT_COLORS[strongest] }}>{KEYWORDS[strongest][1]}</strong>의 기운이 강합니다.{' '}
+            <strong style={{ color: ELEMENT_COLORS[strongest] }}>{KEYWORDS[strongest][1]}</strong>의 기운이 강하게 작용합니다.{' '}
             {count[weakest] === 0
-              ? <><strong className="text-[#F5EDD4]">{weakest === 'wood' ? '목(木)' : weakest === 'fire' ? '화(火)' : weakest === 'earth' ? '토(土)' : weakest === 'metal' ? '금(金)' : '수(水)'}</strong>의 기운이 없으니 관련 색상·방위를 보완하세요.</>
-              : <>약한 기운을 보완하면 더욱 균형 잡힌 삶을 이룰 수 있습니다.</>}
+              ? <><strong className="text-[#F5EDD4]">{weakest === 'wood' ? '목(木)' : weakest === 'fire' ? '화(火)' : weakest === 'earth' ? '토(土)' : weakest === 'metal' ? '금(金)' : '수(水)'}</strong>의 기운이 완전히 비어 있습니다. 지금 관련 색상과 방위를 의식적으로 채우세요.</>
+              : <>약한 기운을 그대로 두면 한쪽으로 치우친 삶이 굳어집니다. 지금 의식적으로 보완하세요.</>}
           </p>
         )}
       </div>

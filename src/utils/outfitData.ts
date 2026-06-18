@@ -55,7 +55,7 @@ export const OUTFIT_DATA: Record<Element5, OutfitRecommendation> = {
       accessories: ['우드 팔찌', '에코백', '그린 스카프', '레이어드 체인'],
     },
     keywords: ['내추럴', '에코', '보타닉', '캐주얼', '그린 무드', '오가닉'],
-    tip: '린넨·면·대나무 등 자연 소재를 활용하면 木 기운이 더욱 살아납니다.',
+    tip: '린넨, 면, 대나무 같은 자연 소재를 입으세요. 그래야 木 기운이 확실히 살아납니다. 합성섬유는 오늘 피하세요.',
   },
   화: {
     element: '화',
@@ -81,7 +81,7 @@ export const OUTFIT_DATA: Record<Element5, OutfitRecommendation> = {
       accessories: ['골드 귀걸이', '레이어드 목걸이', '레드 백', '컬러 스카프'],
     },
     keywords: ['비비드', '컬러풀', '볼드', '패셔너블', '포인트 룩', '글램'],
-    tip: '레드나 오렌지를 포인트 하나로 쓰고 나머지는 베이직하게 매치하세요.',
+    tip: '레드나 오렌지는 딱 하나만 포인트로 쓰세요. 나머지는 베이직하게 가야 火 기운이 과하지 않게 빛납니다.',
   },
   토: {
     element: '토',
@@ -107,7 +107,7 @@ export const OUTFIT_DATA: Record<Element5, OutfitRecommendation> = {
       accessories: ['토트백', '가죽 벨트', '골드 브로치', '갈색 시계'],
     },
     keywords: ['클래식', '미니멀', '어스 톤', '타임리스', '세련', '내추럴 클래식'],
-    tip: '베이지·카키·브라운 레이어드로 안정감 있는 룩을 완성하세요.',
+    tip: '베이지, 카키, 브라운을 레이어드로 겹쳐 입으세요. 안정감이 곧 당신의 무기입니다.',
   },
   금: {
     element: '금',
@@ -133,7 +133,7 @@ export const OUTFIT_DATA: Record<Element5, OutfitRecommendation> = {
       accessories: ['실버 귀걸이', '미니멀 백', '실버 체인', '시스루 선글라스'],
     },
     keywords: ['미니멀', '클린', '모노톤', '시크', '샤프', '현대적'],
-    tip: '화이트·그레이 모노톤 조합에 실버 액세서리로 金 기운 포인트를 주세요.',
+    tip: '화이트와 그레이 모노톤으로 맞추고 실버 액세서리를 더하세요. 그게 金 기운을 가장 정확하게 살리는 방법입니다.',
   },
   수: {
     element: '수',
@@ -159,6 +159,6 @@ export const OUTFIT_DATA: Record<Element5, OutfitRecommendation> = {
       accessories: ['실버·건메탈 주얼리', '다크 미니백', '블루 스카프', '선글라스'],
     },
     keywords: ['무드', '다크', '미스터리', '딥 컬러', '세련', '인텔리전트'],
-    tip: '다크 컬러 조합에 실버 액세서리를 더하면 水 기운이 극대화됩니다.',
+    tip: '다크 컬러로 전체를 맞추고 실버 액세서리를 더하세요. 그래야 水 기운이 극대화됩니다.',
   },
 }
