@@ -3,7 +3,7 @@ import type { UserInfo, BirthInput } from '../types'
 import type { PointsState } from '../utils/points'
 import { tryClaimDaily, getLuckyTimerAttempts, LUCKY_TIMER_MAX_ATTEMPTS } from '../utils/points'
 import { calculateSaju, getSipsin, pillarName } from '../utils/saju'
-import { SIPSIN_DESC } from '../utils/constants'
+import { SIPSIN_DESC, STEMS, ELEMENT_COLORS, ELEMENT_LABELS } from '../utils/constants'
 import { DAY_FORTUNE } from '../utils/fortuneData'
 import PointsModal from './PointsModal'
 import {
@@ -79,8 +79,9 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
   }, [])
 
   // 오늘 한 줄 운세
-  const todayOneliner = useMemo(() => {
-    if (!birthProfile) return DAILY_FALLBACK[todayDate.getDay()]
+  const todayFortune = useMemo(() => {
+    const fallback = { text: DAILY_FALLBACK[todayDate.getDay()], element: null as string | null }
+    if (!birthProfile) return fallback
     try {
       const userResult = calculateSaju(birthProfile)
       const todayResult = calculateSaju({
@@ -89,10 +90,14 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
       })
       const sipsin = getSipsin(userResult.dayPillar.stemIndex, todayResult.dayPillar.stemIndex) ?? '비견'
       const fortune = DAY_FORTUNE[sipsin]
-      if (fortune?.총평) return fortune.총평.split('.')[0] + '.'
-    } catch { /* */ }
-    return DAILY_FALLBACK[todayDate.getDay()]
+      const element = STEMS[todayResult.dayPillar.stemIndex].element
+      const text = fortune?.총평 ? fortune.총평.split('.')[0] + '.' : fallback.text
+      return { text, element }
+    } catch {
+      return fallback
+    }
   }, [birthProfile])
+  const todayAccent = todayFortune.element ? ELEMENT_COLORS[todayFortune.element] : '#C9962A'
 
   // 현재 대운 요약
   const daunInfo = useMemo(() => {
@@ -152,22 +157,41 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
 
         {/* 인사 + 오늘 운세 한 줄 */}
         <div
-          className="rounded-3xl p-5 border shadow-xl shadow-[#000]/40"
-          style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)', borderColor: 'rgba(201,150,42,0.25)' }}
+          className="rounded-3xl p-5 border shadow-xl shadow-[#000]/40 transition-colors duration-500"
+          style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)', borderColor: todayAccent + '40' }}
         >
-          <p className="text-violet-300/70 text-xs mb-1">
-            {todayDate.getFullYear()}년 {month}월 {day}일 · 안녕하세요, {user.name}님
-          </p>
+          <div className="flex items-center justify-between gap-2 mb-1">
+            <p className="text-violet-300/70 text-xs">
+              {todayDate.getFullYear()}년 {month}월 {day}일 · 안녕하세요, {user.name}님
+            </p>
+            {todayFortune.element && (
+              <span
+                className="text-[10px] font-bold px-2 py-0.5 rounded-full border whitespace-nowrap flex-shrink-0"
+                style={{ color: todayAccent, borderColor: todayAccent + '50', backgroundColor: todayAccent + '15' }}
+              >
+                오늘은 {ELEMENT_LABELS[todayFortune.element]} 기운
+              </span>
+            )}
+          </div>
           <p className="text-base font-bold text-[#F5EDD4] mb-3" style={{ fontFamily: "'Noto Serif KR', serif" }}>
             오늘의 한 줄 운세
           </p>
-          <div className="flex gap-2 items-start bg-[#C9962A0A] border border-[#C9962A25] rounded-2xl px-4 py-3">
-            <span className="text-sm flex-shrink-0">💬</span>
-            <p className="text-sm text-[#E8B84B] leading-relaxed font-medium">{todayOneliner}</p>
+          <div
+            className="flex gap-3 items-start rounded-2xl px-4 py-3.5 border transition-colors duration-500"
+            style={{ backgroundColor: todayAccent + '12', borderColor: todayAccent + '35' }}
+          >
+            <span
+              className="text-base flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: todayAccent + '20' }}
+            >
+              💬
+            </span>
+            <p className="text-sm leading-relaxed font-semibold" style={{ color: '#F5EDD4' }}>{todayFortune.text}</p>
           </div>
           <button
             onClick={() => onNavigate('today')}
-            className="mt-3 text-xs text-[#C9962A] font-semibold hover:text-[#E8B84B] transition"
+            className="mt-3 text-xs font-semibold transition"
+            style={{ color: todayAccent }}
           >
             오늘 전체 운세 보기 →
           </button>

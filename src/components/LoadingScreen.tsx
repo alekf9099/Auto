@@ -66,19 +66,22 @@ export default function LoadingScreen({ onComplete }: Props) {
       {/* 아이콘 */}
       <div className="relative mb-10 flex items-center justify-center">
         {/* 바깥 글로우 */}
-        <div className="absolute w-40 h-40 rounded-full bg-[#C9962A]/10 blur-2xl" />
+        <div
+          className="absolute w-40 h-40 rounded-full blur-2xl transition-colors duration-700"
+          style={{ backgroundColor: OHAENG_COLORS[msgIdx] + '1A' }}
+        />
         {/* 장식 링 */}
         <div className="absolute rounded-full border border-[#C9962A]/20" style={{ width: 160, height: 160 }} />
-        {/* 회전 링 */}
+        {/* 회전 링 — 오행 색상 순환 */}
         <div
-          className="absolute rounded-full border-[3px] border-[#2A1F4A] border-t-[#C9962A] animate-spin"
-          style={{ width: 124, height: 124, animationDuration: '1.4s' }}
+          className="absolute rounded-full border-[3px] border-[#2A1F4A] animate-spin transition-colors duration-700"
+          style={{ width: 124, height: 124, animationDuration: '1.4s', borderTopColor: OHAENG_COLORS[msgIdx] }}
         />
         {/* 아이콘 원 */}
         <div className="relative w-24 h-24 rounded-full bg-[#130E24] border border-[#2A1F4A] shadow-[0_4px_24px_rgba(201,150,42,0.18)] flex items-center justify-center">
           <span
-            className="text-5xl select-none animate-spin"
-            style={{ color: '#C9962A', animationDuration: '6s', fontFamily: 'serif' }}
+            className="text-5xl select-none animate-spin transition-colors duration-700"
+            style={{ color: OHAENG_COLORS[msgIdx], animationDuration: '6s', fontFamily: 'serif' }}
           >
             ☯
           </span>
@@ -104,15 +107,30 @@ export default function LoadingScreen({ onComplete }: Props) {
 
       {/* 오행 도트 */}
       <div className="flex items-end gap-4">
-        {OHAENG_COLORS.map((c, i) => (
-          <div key={i} className="flex flex-col items-center gap-1.5">
-            <div
-              className="w-3 h-3 rounded-full animate-bounce"
-              style={{ backgroundColor: c, animationDelay: `${i * 0.15}s`, animationDuration: '0.9s' }}
-            />
-            <span className="text-[10px] text-[#7B6F9A]">{OHAENG_LABELS[i]}</span>
-          </div>
-        ))}
+        {OHAENG_COLORS.map((c, i) => {
+          const active = i === msgIdx
+          return (
+            <div key={i} className="flex flex-col items-center gap-1.5">
+              <div
+                className="rounded-full animate-bounce transition-all duration-300"
+                style={{
+                  backgroundColor: c,
+                  width: active ? 14 : 12,
+                  height: active ? 14 : 12,
+                  animationDelay: `${i * 0.15}s`,
+                  animationDuration: '0.9s',
+                  boxShadow: active ? `0 0 10px 2px ${c}80` : 'none',
+                }}
+              />
+              <span
+                className="text-[10px] font-bold transition-colors duration-300"
+                style={{ color: active ? c : '#7B6F9A' }}
+              >
+                {OHAENG_LABELS[i]}
+              </span>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

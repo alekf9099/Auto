@@ -47,22 +47,25 @@ export default function SplashScreen({ onDone }: Props) {
       ))}
 
       {/* 로고 */}
-      <div className="relative flex items-center justify-center mb-7" style={{ width: 220, height: 220 }}>
+      <div
+        className="relative flex items-center justify-center mb-7 transition-all duration-700"
+        style={{ width: 220, height: 220, transform: visible ? 'scale(1)' : 'scale(0.85)', opacity: visible ? 1 : 0 }}
+      >
         {/* 동심원 링 */}
         <div className="absolute rounded-full border border-[#C9962A]/20" style={{ width: 216, height: 216 }} />
         <div className="absolute rounded-full border border-[#C9962A]/15" style={{ width: 168, height: 168 }} />
         {/* 글로우 */}
         <div className="absolute w-36 h-36 rounded-full bg-[#C9962A]/10 blur-2xl" />
 
-        {/* 오행 라벨 */}
-        <span className="absolute text-xs font-bold" style={{ color: '#86EFAC', top: 6,   left: '50%', transform: 'translateX(-50%)' }}>木</span>
-        <span className="absolute text-xs font-bold" style={{ color: '#FCA5A5', right: 6,  top: '50%',  transform: 'translateY(-50%)' }}>火</span>
-        <span className="absolute text-xs font-bold" style={{ color: '#FCD34D', bottom: 6, left: '50%', transform: 'translateX(-50%)' }}>土</span>
-        <span className="absolute text-xs font-bold" style={{ color: '#93C5FD', left: 6,   top: '50%',  transform: 'translateY(-50%)' }}>水</span>
+        {/* 오행 라벨 — 순차 점멸 */}
+        <span className="absolute text-xs font-bold animate-pulse" style={{ color: '#86EFAC', top: 6,   left: '50%', transform: 'translateX(-50%)', animationDelay: '0s' }}>木</span>
+        <span className="absolute text-xs font-bold animate-pulse" style={{ color: '#FCA5A5', right: 6,  top: '50%',  transform: 'translateY(-50%)', animationDelay: '0.3s' }}>火</span>
+        <span className="absolute text-xs font-bold animate-pulse" style={{ color: '#FCD34D', bottom: 6, left: '50%', transform: 'translateX(-50%)', animationDelay: '0.6s' }}>土</span>
+        <span className="absolute text-xs font-bold animate-pulse" style={{ color: '#93C5FD', left: 6,   top: '50%',  transform: 'translateY(-50%)', animationDelay: '0.9s' }}>水</span>
 
         {/* 메인 아이콘 */}
-        <div className="relative w-[110px] h-[110px] rounded-full p-[3px]"
-          style={{ background: 'linear-gradient(135deg, #C9962A, #E8B84B)' }}>
+        <div className="relative w-[110px] h-[110px] rounded-full p-[3px] animate-spin"
+          style={{ background: 'linear-gradient(135deg, #C9962A, #E8B84B)', animationDuration: '8s' }}>
           <div className="w-full h-full rounded-full bg-[#0D0A1A] flex items-center justify-center">
             <span className="text-[52px]" style={{ color: '#C9962A', fontFamily: 'serif' }}>☯</span>
           </div>
