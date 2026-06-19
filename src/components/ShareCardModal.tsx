@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { IcGem, IcSinnyeon } from './icons/SajuIcons'
 
 export interface ShareCardData {
   badge: string
@@ -85,16 +86,26 @@ export default function ShareCardModal({ data, onClose }: Props) {
         <div className="flex justify-center mb-4">
           <div
             ref={cardRef}
-            className="w-[300px] aspect-[9/16] rounded-3xl overflow-hidden relative flex flex-col p-6"
+            className="w-[300px] aspect-[9/16] rounded-[26px] p-[1.5px]"
+            style={{ background: `linear-gradient(160deg, ${data.accent}90, #2A1F4A 45%, ${data.accent}50)` }}
+          >
+          <div
+            className="w-full h-full rounded-[24.5px] overflow-hidden relative flex flex-col p-6"
             style={{ background: 'linear-gradient(160deg, #1A0E30 0%, #100820 55%, #060410 100%)' }}
           >
             {/* 장식 */}
             <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-20 blur-2xl" style={{ backgroundColor: data.accent }} />
             <div className="absolute -left-10 bottom-20 w-32 h-32 rounded-full opacity-10 blur-2xl" style={{ backgroundColor: data.accent }} />
+            <div className="absolute -right-6 bottom-4 opacity-[0.05] pointer-events-none select-none rotate-12" style={{ color: data.accent }}>
+              <IcSinnyeon size={110}/>
+            </div>
 
             {/* 헤더 */}
             <div className="relative flex items-center justify-between mb-6">
-              <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>운명봄</p>
+              <div className="flex items-center gap-1">
+                <span style={{ color: data.accent }}><IcGem size={13}/></span>
+                <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>운명봄</p>
+              </div>
               <span
                 className="text-[10px] font-bold px-2.5 py-1 rounded-full"
                 style={{ color: data.accent, backgroundColor: data.accent + '20', border: `1px solid ${data.accent}45` }}
@@ -105,10 +116,16 @@ export default function ShareCardModal({ data, onClose }: Props) {
 
             {/* 본문 */}
             <div className="relative flex-1 flex flex-col items-center justify-center text-center px-1">
-              <span className="text-6xl mb-4 leading-none">{data.emoji}</span>
+              <div
+                className="w-20 h-20 rounded-full flex items-center justify-center mb-4"
+                style={{ backgroundColor: data.accent + '18', border: `1.5px solid ${data.accent}45` }}
+              >
+                <span className="text-5xl leading-none">{data.emoji}</span>
+              </div>
               <h2 className="text-xl font-bold text-[#F5EDD4] mb-2 leading-snug" style={{ fontFamily: "'Noto Serif KR', serif" }}>
                 {data.title}
               </h2>
+              <div className="w-9 h-[2px] rounded-full mb-3" style={{ backgroundColor: data.accent }} />
               <p className="text-xs text-[#C4B8D8] leading-relaxed mb-5">{data.highlight}</p>
 
               {data.items.length > 0 && (
@@ -127,7 +144,12 @@ export default function ShareCardModal({ data, onClose }: Props) {
             <div className="relative text-center mt-4">
               <p className="text-[10px] text-[#7B6F9A]">{data.date}</p>
               <p className="text-[9px] text-[#4A4060] mt-1">{data.footer}</p>
+              <div className="flex items-center justify-center gap-1 mt-2">
+                <span style={{ color: data.accent }}><IcGem size={9}/></span>
+                <p className="text-[9px] font-bold" style={{ color: data.accent }}>매일 운세, 운명봄에서</p>
+              </div>
             </div>
+          </div>
           </div>
         </div>
 

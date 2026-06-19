@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import type { UserInfo, BirthInput } from '../types'
 import type { PointsState } from '../utils/points'
 import { tryClaimDaily, getLuckyTimerAttempts, LUCKY_TIMER_MAX_ATTEMPTS } from '../utils/points'
@@ -54,6 +54,31 @@ const ELEMENT_TO_CHIP: Record<string, typeof CHIPS[number]['dest']> = {
   water: 'dream',
 }
 
+// 값이 바뀔 때 숫자가 부드럽게 증가/감소하는 카운트업 애니메이션
+function useCountUp(value: number, duration = 700) {
+  const [display, setDisplay] = useState(value)
+  const prevRef = useRef(value)
+
+  useEffect(() => {
+    const from = prevRef.current
+    const to = value
+    if (from === to) return
+    let raf = 0
+    const start = performance.now()
+    const tick = (now: number) => {
+      const t = Math.min((now - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - t, 3)
+      setDisplay(Math.round(from + (to - from) * eased))
+      if (t < 1) raf = requestAnimationFrame(tick)
+      else prevRef.current = to
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [value, duration])
+
+  return display
+}
+
 export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms }: Props) {
   const todayDate = new Date()
   const month = todayDate.getMonth() + 1
@@ -61,12 +86,22 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
 
   const [showPoints, setShowPoints] = useState(false)
   const [dailyToast, setDailyToast] = useState(false)
-  const [streakMounted, setStreakMounted] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const streakMounted = mounted
+  const animatedBalance = useCountUp(points.balance)
 
   useEffect(() => {
-    const t = setTimeout(() => setStreakMounted(true), 50)
+    const t = setTimeout(() => setMounted(true), 50)
     return () => clearTimeout(t)
   }, [])
+
+  // 섹션이 순차적으로 페이드인 + 슬라이드업 되며 등장하는 효과
+  const reveal = (i: number): React.CSSProperties => ({
+    opacity: mounted ? 1 : 0,
+    transform: mounted ? 'translateY(0)' : 'translateY(14px)',
+    transition: 'opacity 0.5s ease, transform 0.5s ease',
+    transitionDelay: `${Math.min(i, 6) * 70}ms`,
+  })
 
   // 연속 출석 스트릭
   const streak = (() => {
@@ -158,7 +193,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
               className="flex items-center gap-1 bg-[#C9962A15] border border-[#C9962A30] px-3 py-1.5 rounded-full hover:bg-[#C9962A25] transition"
             >
               <IcGem size={14} className="text-[#C9962A]"/>
-              <span className="text-xs font-bold text-[#C9962A]">{points.balance.toLocaleString()}P</span>
+              <span className="text-xs font-bold text-[#C9962A]">{animatedBalance.toLocaleString()}P</span>
             </button>
             <button onClick={onLogout} className="text-xs text-[#A89BC0] hover:text-[#C4B8D8] transition px-2 py-1">로그아웃</button>
             {user.picture
@@ -172,6 +207,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
         {/* 인사 + 오늘 운세 한 줄 */}
+        <div style={reveal(0)}>
         <div
           className="rounded-3xl p-5 border shadow-xl shadow-[#000]/40 transition-colors duration-500"
           style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)', borderColor: todayAccent + '40' }}
@@ -212,9 +248,10 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
             오늘 전체 운세 보기 →
           </button>
         </div>
+        </div>
 
         {/* 가로 스크롤 칩 메뉴 */}
-        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-4">
+        <div style={reveal(1)} className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-4">
           <p className="text-xs text-[#7B6F9A] mb-3 px-1">기능 바로가기</p>
           <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1" style={{ scrollbarWidth: 'none' }}>
             {CHIPS.map(chip => {
@@ -257,6 +294,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
           const TOTAL_DAYS = 7
           const completed = streak >= TOTAL_DAYS
           return (
+            <div style={reveal(2)}>
             <button
               onClick={onAttendance}
               className={`w-full overflow-hidden rounded-3xl active:scale-[0.99] transition-all ${completed ? 'shadow-[0_2px_20px_rgba(201,150,42,0.25)]' : 'shadow-[0_2px_16px_rgba(180,30,30,0.10)]'}`}
@@ -284,7 +322,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                     </p>
                     <p className="text-[11px] text-[#7B6F9A] mt-0.5">
                       {checked
-                        ? `${streak}일 연속 출석 중 · 누적 ${points.balance.toLocaleString()}P`
+                        ? `${streak}일 연속 출석 중 · 누적 ${animatedBalance.toLocaleString()}P`
                         : `${streak > 0 ? `${streak}일 연속 출석 중 · ` : ''}매일 +10P 지급`}
                     </p>
                   </div>
@@ -321,6 +359,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                 </div>
               </div>
             </button>
+            </div>
           )
         })()}
 
@@ -328,6 +367,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
         {(() => {
           const remaining = LUCKY_TIMER_MAX_ATTEMPTS - getLuckyTimerAttempts()
           return (
+            <div style={reveal(3)}>
             <button
               onClick={onLuckyTimer}
               className="w-full overflow-hidden rounded-3xl shadow-[0_2px_16px_rgba(201,150,42,0.10)] active:scale-[0.99] transition-all"
@@ -353,12 +393,13 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                 </span>
               </div>
             </button>
+            </div>
           )
         })()}
 
         {/* 저장된 프로필 배지 */}
         {birthProfile && (
-          <div className="flex items-center justify-between bg-[#C9962A15] border border-[#C9962A30] rounded-2xl px-4 py-2.5">
+          <div style={reveal(4)} className="flex items-center justify-between bg-[#C9962A15] border border-[#C9962A30] rounded-2xl px-4 py-2.5">
             <div className="flex items-center gap-2">
               <span className="text-[#C9962A] text-sm">✓</span>
               <p className="text-xs text-[#C4B8D8]">
@@ -375,6 +416,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
 
         {/* 현재 대운 요약 */}
         {daunInfo && (
+          <div style={reveal(5)}>
           <button
             onClick={() => onNavigate('daun')}
             className="w-full bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 text-left hover:border-[#C9962A40] active:scale-[0.99] transition-all shadow-[0_2px_20px_rgba(0,0,0,0.3)]"
@@ -407,15 +449,17 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
               </div>
             </div>
           </button>
+          </div>
         )}
 
         {/* 오늘의 코디 프로모 카드 */}
+        <div style={reveal(6)}>
         <button
           onClick={() => onNavigate('outfit')}
           className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all"
           style={{ background: 'linear-gradient(135deg, #1A0818 0%, #200D22 100%)' }}
         >
-          <div className="relative p-5 border border-[rgba(224,82,130,0.25)] rounded-3xl">
+          <div className="relative p-5 border border-[rgba(224,82,130,0.25)] rounded-3xl transition-shadow duration-300 hover:border-[rgba(224,82,130,0.5)] hover:shadow-[0_0_24px_rgba(224,82,130,0.3)] active:shadow-[0_0_24px_rgba(224,82,130,0.35)]">
             <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-[0.08] pointer-events-none">
               <IcOutfit size={80} className="text-[#E05282]"/>
             </div>
@@ -428,14 +472,16 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
             <p className="text-sm text-[#A89BC0]">오행 기반 컬러 & 아이템 추천</p>
           </div>
         </button>
+        </div>
 
         {/* 취업운 프로모 카드 */}
+        <div style={reveal(6)}>
         <button
           onClick={() => onNavigate('job')}
           className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all"
           style={{ background: 'linear-gradient(135deg, #0A1A12 0%, #0D2018 100%)' }}
         >
-          <div className="relative p-5 border border-[rgba(75,191,126,0.25)] rounded-3xl">
+          <div className="relative p-5 border border-[rgba(75,191,126,0.25)] rounded-3xl transition-shadow duration-300 hover:border-[rgba(75,191,126,0.5)] hover:shadow-[0_0_24px_rgba(75,191,126,0.3)] active:shadow-[0_0_24px_rgba(75,191,126,0.35)]">
             <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-[0.08] pointer-events-none">
               <IcJob size={80} className="text-[#4BBF7E]"/>
             </div>
@@ -448,14 +494,16 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
             <p className="text-sm text-[#A89BC0]">십성 기반 커리어 운세 & 적성 직무</p>
           </div>
         </button>
+        </div>
 
         {/* 신년운세 프로모 카드 */}
+        <div style={reveal(6)}>
         <button
           onClick={() => onNavigate('sinnyeon')}
           className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all"
           style={{ background: 'linear-gradient(135deg, #0D1A16 0%, #0A1520 100%)' }}
         >
-          <div className="relative p-5 border border-[rgba(201,150,42,0.2)] rounded-3xl">
+          <div className="relative p-5 border border-[rgba(201,150,42,0.2)] rounded-3xl transition-shadow duration-300 hover:border-[rgba(201,150,42,0.5)] hover:shadow-[0_0_24px_rgba(201,150,42,0.3)] active:shadow-[0_0_24px_rgba(201,150,42,0.35)]">
             <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-[0.07] pointer-events-none text-[#C9962A]">
               <IcSinnyeon size={80}/>
             </div>
@@ -468,14 +516,16 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
             <p className="text-sm text-[#A89BC0]">얼른 복 잡아가세요!</p>
           </div>
         </button>
+        </div>
 
         {/* 토정비결 프로모 카드 */}
+        <div style={reveal(6)}>
         <button
           onClick={() => onNavigate('tojeong')}
           className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all"
           style={{ background: 'linear-gradient(135deg, #13081C 0%, #190D2E 100%)' }}
         >
-          <div className="relative p-5 border border-[rgba(201,150,42,0.2)] rounded-3xl">
+          <div className="relative p-5 border border-[rgba(201,150,42,0.2)] rounded-3xl transition-shadow duration-300 hover:border-[rgba(201,150,42,0.5)] hover:shadow-[0_0_24px_rgba(201,150,42,0.3)] active:shadow-[0_0_24px_rgba(201,150,42,0.35)]">
             <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40] px-3 py-1 rounded-full mb-3">
               토정비결 ›
             </span>
@@ -485,6 +535,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
             <p className="text-sm text-[#A89BC0]">이지함 선생의 전통 비결서</p>
           </div>
         </button>
+        </div>
 
       </div>
 
