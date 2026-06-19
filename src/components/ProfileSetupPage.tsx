@@ -6,6 +6,7 @@ import { loadProfilePhoto, saveProfilePhoto, clearProfilePhoto, resizeImageFile 
 interface Props {
   user: UserInfo
   savedNickname?: string
+  savedBirth?: BirthInput | null
   onSave: (b: BirthInput, nickname: string) => void
 }
 
@@ -15,18 +16,18 @@ const inputCls = `
   focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition
 `.trim()
 
-export default function ProfileSetupPage({ user, savedNickname, onSave }: Props) {
+export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSave }: Props) {
   const [photo,       setPhoto]       = useState<string | null>(loadProfilePhoto)
   const [photoError,  setPhotoError]  = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [nickname,    setNickname]    = useState(savedNickname ?? '')
-  const [year,        setYear]        = useState('')
-  const [month,       setMonth]       = useState('')
-  const [day,         setDay]         = useState('')
-  const [hour,        setHour]        = useState('')
-  const [minute,      setMinute]      = useState('')
-  const [gender,      setGender]      = useState<Gender>('male')
-  const [unknownHour, setUnknownHour] = useState(false)
+  const [year,        setYear]        = useState(savedBirth ? String(savedBirth.year) : '')
+  const [month,       setMonth]       = useState(savedBirth ? String(savedBirth.month) : '')
+  const [day,         setDay]         = useState(savedBirth ? String(savedBirth.day) : '')
+  const [hour,        setHour]        = useState(savedBirth?.hour != null ? String(savedBirth.hour) : '')
+  const [minute,      setMinute]      = useState(savedBirth?.minute != null ? String(savedBirth.minute) : '')
+  const [gender,      setGender]      = useState<Gender>(savedBirth?.gender ?? 'male')
+  const [unknownHour, setUnknownHour] = useState(!!savedBirth && savedBirth.hour == null)
   const [error,       setError]       = useState('')
   const [calendarType, setCalendarType] = useState<'solar' | 'lunar'>('solar')
   const [isLeapMonth,  setIsLeapMonth]  = useState(false)

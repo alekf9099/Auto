@@ -163,7 +163,7 @@ export default function App() {
   } else if (page === 'terms') {
     content = <TermsPage onBack={() => setPage(legalReturn)} />
   } else if (page === 'profile' && user) {
-    content = <ProfileSetupPage user={user} savedNickname={nickname} onSave={handleProfileSave} />
+    content = <ProfileSetupPage user={user} savedNickname={nickname} savedBirth={birthProfile} onSave={handleProfileSave} />
   } else if (page === 'analyzing') {
     content = <LoadingScreen onComplete={() => { setPage('home'); window.scrollTo(0, 0) }} />
   } else if (page === 'home' && user) {
