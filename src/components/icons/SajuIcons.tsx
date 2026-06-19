@@ -1,3 +1,5 @@
+import { useId } from 'react'
+
 interface P { size?: number; className?: string }
 
 // 정통사주 — 사주팔자 천간(위)/지지(아래) 4쌍 그리드
@@ -149,18 +151,24 @@ export function IcDeepSaju({ size = 24, className = '' }: P) {
   )
 }
 
-// 포인트 코인 — 팔각형 보석
+// 포인트 코인 — 전통 엽전(상평통보)
 export function IcGem({ size = 24, className = '' }: P) {
+  const maskId = useId()
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
-      {/* Diamond shape */}
-      <path d="M12 2 L20 8 L17 22 L7 22 L4 8 Z" opacity="0.9"/>
-      {/* Facet lines */}
-      <line x1="4" y1="8" x2="20" y2="8" stroke="white" strokeWidth="1" opacity="0.4"/>
-      <line x1="12" y1="2" x2="4" y2="8" stroke="white" strokeWidth="0.8" opacity="0.3"/>
-      <line x1="12" y1="2" x2="20" y2="8" stroke="white" strokeWidth="0.8" opacity="0.3"/>
-      <line x1="8" y1="8" x2="12" y2="22" stroke="white" strokeWidth="0.7" opacity="0.2"/>
-      <line x1="16" y1="8" x2="12" y2="22" stroke="white" strokeWidth="0.7" opacity="0.2"/>
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <defs>
+        <mask id={maskId}>
+          <rect width="24" height="24" fill="white"/>
+          <rect x="9.3" y="9.3" width="5.4" height="5.4" fill="black"/>
+        </mask>
+      </defs>
+      {/* 동전 몸체 (가운데 네모 구멍) */}
+      <circle cx="12" cy="12" r="10" fill="currentColor" mask={`url(#${maskId})`}/>
+      {/* 테두리 */}
+      <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="0.7" opacity="0.55"/>
+      <rect x="9.3" y="9.3" width="5.4" height="5.4" fill="none" stroke="currentColor" strokeWidth="0.7" opacity="0.6"/>
+      {/* 광택 하이라이트 */}
+      <path d="M5.5 7.2 C7 5 9.3 3.8 12 3.6" stroke="white" strokeWidth="1.2" strokeLinecap="round" fill="none" opacity="0.4"/>
     </svg>
   )
 }
