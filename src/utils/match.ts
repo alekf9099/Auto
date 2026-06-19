@@ -36,8 +36,12 @@ async function callMatch(action: 'join' | 'leave' | 'draw', extra?: Record<strin
       signal: controller.signal,
     })
     clearTimeout(timer)
-    if (!res.ok) return null
-    return await res.json()
+    const json = await res.json().catch(() => null)
+    if (!res.ok) {
+      console.error('매칭 요청 실패:', res.status, json)
+      return json
+    }
+    return json
   } catch (e) {
     console.error('매칭 요청 실패:', e)
     return null
@@ -53,18 +57,18 @@ function setOptedIn(v: boolean): void {
   scheduleCloudPush()
 }
 
-export async function joinMatchPool(nickname: string, birth: BirthInput): Promise<boolean> {
+export async function joinMatchPool(nickname: string, birth: BirthInput): Promise<{ ok: boolean; error?: string }> {
   const result = await callMatch('join', { nickname, birth, photo: loadProfilePhoto() })
   const ok = !!result?.ok
   if (ok) setOptedIn(true)
-  return ok
+  return { ok, error: typeof result?.error === 'string' ? result.error : undefined }
 }
 
-export async function leaveMatchPool(): Promise<boolean> {
+export async function leaveMatchPool(): Promise<{ ok: boolean; error?: string }> {
   const result = await callMatch('leave')
   const ok = !!result?.ok
   if (ok) setOptedIn(false)
-  return ok
+  return { ok, error: typeof result?.error === 'string' ? result.error : undefined }
 }
 
 export async function drawMatch(): Promise<MatchOpponent | null> {

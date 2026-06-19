@@ -38,23 +38,23 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
   async function handleJoin() {
     setBusy(true)
     setError(null)
-    const ok = await joinMatchPool(nickname, birthProfile)
+    const { ok, error: serverError } = await joinMatchPool(nickname, birthProfile)
     setBusy(false)
     if (ok) setOptedInState(true)
-    else setError('참여에 실패했어요. 잠시 후 다시 시도해주세요.')
+    else setError(`참여에 실패했어요. 잠시 후 다시 시도해주세요.${serverError ? ` (${serverError})` : ''}`)
   }
 
   async function handleLeave() {
     setBusy(true)
     setError(null)
-    const ok = await leaveMatchPool()
+    const { ok, error: serverError } = await leaveMatchPool()
     setBusy(false)
     if (ok) {
       setOptedInState(false)
       setOpponent(null)
       setResult(null)
     } else {
-      setError('나가기에 실패했어요. 잠시 후 다시 시도해주세요.')
+      setError(`나가기에 실패했어요. 잠시 후 다시 시도해주세요.${serverError ? ` (${serverError})` : ''}`)
     }
   }
 
