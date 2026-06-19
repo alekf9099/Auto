@@ -258,6 +258,15 @@ export function IcLucky({ size = 24, className = '' }: P) {
   )
 }
 
+// 홈 — 지붕과 문이 있는 집
+export function IcHome({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M12 2.5 L21 10 V20 a1 1 0 0 1-1 1 H15 V14 H9 V21 H4 a1 1 0 0 1-1-1 V10 Z"/>
+    </svg>
+  )
+}
+
 // 사용자 프로필 — 전통 조각 문양
 export function IcProfile({ size = 24, className = '' }: P) {
   return (

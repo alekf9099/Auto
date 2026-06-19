@@ -4,6 +4,7 @@ import { IcGem } from './icons/SajuIcons'
 interface Props {
   amount: number
   total: number
+  label?: string
   onClose: () => void
 }
 
@@ -14,11 +15,11 @@ const SPARKLES = [
   { x: '20%', y: '80%', s: 4,  delay: '0.45s' },
 ]
 
-export default function PointsToast({ amount, total, onClose }: Props) {
+export default function PointsToast({ amount, total, label, onClose }: Props) {
   useEffect(() => {
-    const t = setTimeout(onClose, 2200)
+    const t = setTimeout(onClose, label ? 3000 : 2200)
     return () => clearTimeout(t)
-  }, [onClose])
+  }, [onClose, label])
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none px-6">
@@ -42,6 +43,9 @@ export default function PointsToast({ amount, total, onClose }: Props) {
         ))}
 
         <div className="relative">
+          {label && (
+            <p className="text-xs font-bold text-amber-400 mb-2">{label}</p>
+          )}
           <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-gradient-to-br from-[#C9962A] to-[#E8B84B] flex items-center justify-center shadow-lg shadow-[#C9962A40]">
             <IcGem size={26} className="text-[#0D0A1A]" />
           </div>

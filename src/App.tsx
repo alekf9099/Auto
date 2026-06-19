@@ -7,6 +7,8 @@ import LoginPage        from './components/LoginPage'
 import SplashScreen     from './components/SplashScreen'
 import LoadingScreen    from './components/LoadingScreen'
 import SyncErrorBanner  from './components/SyncErrorBanner'
+import BottomNav from './components/BottomNav'
+import type { NavTab } from './components/BottomNav'
 
 const ProfileSetupPage = lazy(() => import('./components/ProfileSetupPage'))
 const HomePage         = lazy(() => import('./components/HomePage'))
@@ -28,6 +30,8 @@ const TermsPage         = lazy(() => import('./components/TermsPage'))
 const STORAGE_KEY = 'unmyeongbom_birth'
 
 type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'outfit' | 'job' | 'lucky' | 'privacy' | 'terms'
+
+const TAB_PAGES: Page[] = ['home', 'saju', 'attendance', 'lucky']
 
 function loadBirthProfile(): BirthInput | null {
   try {
@@ -122,6 +126,13 @@ export default function App() {
     window.scrollTo(0, 0)
   }
 
+  function handleTabNavigate(tab: NavTab) {
+    if (tab === 'home') { goHome(); return }
+    if (tab === 'saju') { handleHomeNavigate('saju'); return }
+    setPage(tab)
+    window.scrollTo(0, 0)
+  }
+
   function openLegal(type: 'privacy' | 'terms', from: Page) {
     setLegalReturn(from)
     setPage(type)
@@ -199,6 +210,8 @@ export default function App() {
     content = <LoadingScreen onComplete={() => { setPage('home'); window.scrollTo(0, 0) }} />
   }
 
+  const showNav = TAB_PAGES.includes(page)
+
   return (
     <>
       {syncIssue && (
@@ -208,7 +221,10 @@ export default function App() {
           onRelogin={handleLogout}
         />
       )}
-      <Suspense fallback={<PageFallback />}>{content}</Suspense>
+      <Suspense fallback={<PageFallback />}>
+        <div className={showNav ? 'pb-16 bg-[#0D0A1A]' : ''}>{content}</div>
+      </Suspense>
+      {showNav && <BottomNav current={page as NavTab} onNavigate={handleTabNavigate} />}
     </>
   )
 }

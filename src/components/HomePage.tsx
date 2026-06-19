@@ -85,7 +85,7 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
   const day   = todayDate.getDate()
 
   const [showPoints, setShowPoints] = useState(false)
-  const [dailyToast, setDailyToast] = useState(false)
+  const [dailyToast, setDailyToast] = useState<{ milestone: number; bonus: number } | true | false>(false)
   const [mounted, setMounted] = useState(false)
   const streakMounted = mounted
   const animatedBalance = useCountUp(points.balance)
@@ -120,11 +120,11 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
   })()
 
   useEffect(() => {
-    const { next, claimed } = tryClaimDaily(points)
+    const { next, claimed, milestone } = tryClaimDaily(points)
     if (claimed) {
       onPointsUpdate(next)
-      setDailyToast(true)
-      setTimeout(() => setDailyToast(false), 2800)
+      setDailyToast(milestone ? { milestone: milestone.days, bonus: milestone.bonus } : true)
+      setTimeout(() => setDailyToast(false), milestone ? 3600 : 2800)
     }
   }, [])
 
@@ -177,8 +177,10 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
     <div className="min-h-screen bg-[#0D0A1A]">
 
       {dailyToast && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-[#C9962A] text-[#0D0A1A] text-xs font-semibold px-5 py-2.5 rounded-full shadow-lg animate-bounce">
-          🎉 출석 보너스 +10P 지급!
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-[#C9962A] text-[#0D0A1A] text-xs font-semibold px-5 py-2.5 rounded-full shadow-lg animate-bounce text-center">
+          {dailyToast === true
+            ? '🎉 출석 보너스 +10P 지급!'
+            : `🎉 ${dailyToast.milestone}일 연속 출석 달성! +${10 + dailyToast.bonus}P 지급!`}
         </div>
       )}
       {showPoints && <PointsModal points={points} onClose={() => setShowPoints(false)} />}
@@ -352,8 +354,8 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
                 </div>
                 <div className={`mt-2.5 pt-2 border-t flex items-center justify-between ${completed ? 'border-amber-500/30' : 'border-red-900/30'}`}>
                   {completed
-                    ? <span className="text-[10px] font-bold text-amber-400">🎉 7일 연속 달성! 특별 보너스 지급</span>
-                    : <span className="text-[10px] text-[#4A4060]">7일 연속 출석 시 특별 보너스 지급</span>
+                    ? <span className="text-[10px] font-bold text-amber-400">🎉 7일 연속 보너스 +50P 받았어요!</span>
+                    : <span className="text-[10px] text-[#4A4060]">{TOTAL_DAYS - streak}일 더 출석하면 보너스 +50P</span>
                   }
                   <span className={`text-[10px] font-semibold ${completed ? 'text-amber-400' : 'text-red-400'}`}>자세히 보기 →</span>
                 </div>

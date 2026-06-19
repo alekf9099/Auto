@@ -42,7 +42,7 @@ function getWeekDays() {
 
 export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
   const [points,    setPoints]    = useState<PointsState>(loadPoints)
-  const [toast,     setToast]     = useState<{ amount: number; total: number } | null>(null)
+  const [toast,     setToast]     = useState<{ amount: number; total: number; label?: string } | null>(null)
 
   useEffect(() => { setPoints(loadPoints()) }, [])
 
@@ -61,17 +61,21 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
 
   function handleCheck() {
     if (checkedToday) return
-    const { next, claimed } = tryClaimDaily(points)
+    const { next, claimed, milestone } = tryClaimDaily(points)
     if (claimed) {
       setPoints(next)
       onPointsUpdate(next)
-      setToast({ amount: 10, total: next.balance })
+      if (milestone) {
+        setToast({ amount: 10 + milestone.bonus, total: next.balance, label: `🎉 ${milestone.days}일 연속 출석 달성!` })
+      } else {
+        setToast({ amount: 10, total: next.balance })
+      }
     }
   }
 
   return (
     <div className="min-h-screen bg-[#0D0A1A]">
-      {toast && <PointsToast amount={toast.amount} total={toast.total} onClose={() => setToast(null)} />}
+      {toast && <PointsToast amount={toast.amount} total={toast.total} label={toast.label} onClose={() => setToast(null)} />}
 
       {/* 헤더 */}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">

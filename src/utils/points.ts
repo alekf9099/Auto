@@ -31,12 +31,39 @@ export function awardPoints(p: PointsState, amount: number, label: string): Poin
   return next
 }
 
-export function tryClaimDaily(p: PointsState): { next: PointsState; claimed: boolean } {
-  if (p.lastDaily === today()) return { next: p, claimed: false }
-  const next = awardPoints(p, 10, '매일 출석 보너스')
+// 연속 출석 마일스톤 — 도달 시 1회성 추가 보너스 지급
+export const STREAK_MILESTONES = [
+  { days: 7,  bonus: 50  },
+  { days: 30, bonus: 200 },
+] as const
+
+function computeStreak(history: PointsState['history']): number {
+  const dates = new Set(history.filter(h => h.label === '매일 출석 보너스').map(h => h.date))
+  let count = 0
+  const d = new Date()
+  while (dates.has(d.toISOString().slice(0, 10))) {
+    count++
+    d.setDate(d.getDate() - 1)
+  }
+  return count
+}
+
+export function tryClaimDaily(
+  p: PointsState
+): { next: PointsState; claimed: boolean; milestone: { days: number; bonus: number } | null } {
+  if (p.lastDaily === today()) return { next: p, claimed: false, milestone: null }
+  let next = awardPoints(p, 10, '매일 출석 보너스')
   next.lastDaily = today()
   savePoints(next)
-  return { next, claimed: true }
+
+  const streak = computeStreak(next.history)
+  const milestone = STREAK_MILESTONES.find(m => m.days === streak) ?? null
+  if (milestone) {
+    next = awardPoints(next, milestone.bonus, `${milestone.days}일 연속 출석 보너스 🎉`)
+    next.lastDaily = today()
+    savePoints(next)
+  }
+  return { next, claimed: true, milestone }
 }
 
 // 행운의 숫자 잡기 — 하루 3회
