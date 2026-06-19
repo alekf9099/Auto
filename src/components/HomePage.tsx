@@ -7,7 +7,7 @@ import { SIPSIN_DESC, STEMS, ELEMENT_COLORS, ELEMENT_LABELS } from '../utils/con
 import { DAY_FORTUNE } from '../utils/fortuneData'
 import PointsModal from './PointsModal'
 import {
-  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon, IcLucky, IcBattle,
+  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon, IcLucky, IcBattle, IcMatch,
 } from './icons/SajuIcons'
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
   birthProfile: BirthInput | null
   points: PointsState
   onPointsUpdate: (p: PointsState) => void
-  onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'outfit' | 'job' | 'battle') => void
+  onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'outfit' | 'job' | 'battle' | 'match') => void
   onAttendance: () => void
   onLuckyTimer: () => void
   onEditProfile: () => void
@@ -35,10 +35,11 @@ const DAILY_FALLBACK = [
   '주말의 여유로 내일을 위한 에너지를 충전하는 날입니다.',
 ]
 
-const CHIPS: { Icon: React.FC<{ size?: number; className?: string }>; label: string; dest: 'today' | 'saju' | 'daun' | 'gunghab' | 'dream' | 'deepsaju' | 'outfit' | 'job' | 'battle'; sub: string }[] = [
+const CHIPS: { Icon: React.FC<{ size?: number; className?: string }>; label: string; dest: 'today' | 'saju' | 'daun' | 'gunghab' | 'dream' | 'deepsaju' | 'outfit' | 'job' | 'battle' | 'match'; sub: string }[] = [
   { Icon: IcTodayFortune, label: '오늘운세',  dest: 'today',     sub: '오늘 · 내일' },
   { Icon: IcSaju,         label: '정통사주',  dest: 'saju',      sub: '사주팔자' },
   { Icon: IcBattle,       label: '운세대결',  dest: 'battle',    sub: '친구와 대결' },
+  { Icon: IcMatch,        label: '사주매칭',  dest: 'match',     sub: '익명 인연 매칭' },
   { Icon: IcDaun,         label: '대운분석',  dest: 'daun',      sub: '10년 흐름' },
   { Icon: IcGunghab,      label: '궁합보기',  dest: 'gunghab',   sub: '사주 궁합' },
   { Icon: IcDream,        label: '꿈해몽',    dest: 'dream',     sub: '전통 풀이' },

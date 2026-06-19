@@ -19,7 +19,7 @@ export function setIdToken(token: string | null): void {
   else localStorage.removeItem(TOKEN_KEY)
 }
 
-function getIdToken(): string | null {
+export function getIdToken(): string | null {
   return localStorage.getItem(TOKEN_KEY)
 }
 

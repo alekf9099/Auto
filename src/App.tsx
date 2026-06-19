@@ -25,13 +25,14 @@ const DreamPage        = lazy(() => import('./components/DreamPage'))
 const OutfitPage       = lazy(() => import('./components/OutfitPage'))
 const JobPage          = lazy(() => import('./components/JobPage'))
 const FortuneBattlePage = lazy(() => import('./components/FortuneBattlePage'))
+const MatchPage         = lazy(() => import('./components/MatchPage'))
 const LuckyTimerPage   = lazy(() => import('./components/LuckyTimerPage'))
 const PrivacyPolicyPage = lazy(() => import('./components/PrivacyPolicyPage'))
 const TermsPage         = lazy(() => import('./components/TermsPage'))
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'outfit' | 'job' | 'battle' | 'lucky' | 'privacy' | 'terms'
+type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'outfit' | 'job' | 'battle' | 'match' | 'lucky' | 'privacy' | 'terms'
 
 const TAB_PAGES: Page[] = ['home', 'saju', 'attendance', 'lucky']
 
@@ -69,10 +70,10 @@ export default function App() {
     const BACK_MAP: Partial<Record<Page, Page>> = {
       profile: 'login', analyzing: 'home', attendance: 'home',
       sinnyeon: 'home', tojeong: 'home', today: 'home',
-      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home', dream: 'home', outfit: 'home', job: 'home', battle: 'home', lucky: 'home',
+      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home', dream: 'home', outfit: 'home', job: 'home', battle: 'home', match: 'home', lucky: 'home',
       privacy: legalReturn, terms: legalReturn,
     }
-    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','gunghab','deepsaju','saju','daun','dream','outfit','job','battle','lucky','profile','analyzing','privacy','terms']
+    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','gunghab','deepsaju','saju','daun','dream','outfit','job','battle','match','lucky','profile','analyzing','privacy','terms']
     if (navigable.includes(page)) history.pushState({ page }, '')
 
     function onPop() {
@@ -126,7 +127,7 @@ export default function App() {
     window.scrollTo(0, 0)
   }
 
-  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'outfit' | 'job' | 'battle') {
+  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'outfit' | 'job' | 'battle' | 'match') {
     if (!birthProfile) { setPage('profile'); window.scrollTo(0, 0); return }
     setPage(dest)
     window.scrollTo(0, 0)
@@ -217,6 +218,8 @@ export default function App() {
     content = <JobPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   } else if (page === 'battle') {
     content = <FortuneBattlePage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
+  } else if (page === 'match' && birthProfile) {
+    content = <MatchPage nickname={nickname} birthProfile={birthProfile} onBack={goHome} />
   } else {
     content = <LoadingScreen onComplete={() => { setPage('home'); window.scrollTo(0, 0) }} />
   }

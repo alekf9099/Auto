@@ -315,6 +315,24 @@ export function IcDraw({ size = 24, className = '' }: P) {
   )
 }
 
+// 사주매칭 — 점선으로 이어진 두 사용자 (무작위 인연)
+export function IcMatch({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      {/* Left profile */}
+      <circle cx="6" cy="7" r="3" fill="currentColor" opacity="0.85"/>
+      <path d="M1 19 C1 15.5 3.2 13 6 13 C8.8 13 11 15.5 11 19" fill="currentColor" opacity="0.85"/>
+      {/* Right profile */}
+      <circle cx="18" cy="7" r="3" fill="currentColor" opacity="0.55"/>
+      <path d="M13 19 C13 15.5 15.2 13 18 13 C20.8 13 23 15.5 23 19" fill="currentColor" opacity="0.55"/>
+      {/* Dashed connecting line */}
+      <line x1="10.5" y1="9.5" x2="13.5" y2="9.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeDasharray="1.8 2"/>
+      {/* Spark at connection point */}
+      <circle cx="12" cy="9.5" r="1.4" fill="currentColor"/>
+    </svg>
+  )
+}
+
 // 공유하기 — 박스에서 위로 나가는 화살표
 export function IcShare({ size = 24, className = '' }: P) {
   return (
