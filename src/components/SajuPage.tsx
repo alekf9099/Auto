@@ -7,12 +7,14 @@ import SajuChart from './SajuChart'
 import OhaengChart from './OhaengChart'
 import SipsinChart from './SipsinChart'
 import FortuneReading from './FortuneReading'
-import { IcSaju } from './icons/SajuIcons'
+import { IcSaju, IcDaun, IcGunghab } from './icons/SajuIcons'
 
 interface Props {
   savedBirth: BirthInput | null
   onBack: () => void
   onDeepSaju: () => void
+  onDaun: () => void
+  onGunghab: () => void
   onSave?: (b: BirthInput) => void
 }
 
@@ -40,8 +42,9 @@ const PILLAR_INSIGHTS: string[] = [
   '시주(時柱)는 자녀·노년·내 손으로 만든 것들을 봅니다.',
 ]
 
-export default function SajuPage({ savedBirth, onBack, onDeepSaju, onSave }: Props) {
-  const [step, setStep] = useState<'form' | 'loading' | 'result'>('form')
+export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGunghab, onSave }: Props) {
+  // 저장된 생년월일이 있으면 폼 입력 없이 곧바로 결과를 보여줍니다
+  const [step, setStep] = useState<'form' | 'loading' | 'result'>(savedBirth ? 'result' : 'form')
   const [birth, setBirth] = useState({
     year:   savedBirth ? String(savedBirth.year)   : '',
     month:  savedBirth ? String(savedBirth.month)  : '',
@@ -50,7 +53,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onSave }: Pro
     minute: savedBirth?.minute != null ? String(savedBirth.minute) : '',
     gender: (savedBirth?.gender ?? 'male') as 'male' | 'female',
   })
-  const [submitted, setSubmitted] = useState<BirthInput | null>(null)
+  const [submitted, setSubmitted] = useState<BirthInput | null>(savedBirth)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -289,6 +292,26 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onSave }: Pro
 
             {/* Ten gods */}
             <SipsinChart result={result} />
+
+            {/* 관련 분석 바로가기 */}
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={onDaun}
+                className="bg-[#130E24] border border-[#2A1F4A] rounded-3xl p-4 text-left hover:border-[#C9962A40] active:scale-[0.98] transition-all"
+              >
+                <IcDaun size={22} className="text-[#0891B2] mb-2" />
+                <p className="text-sm font-bold text-[#F5EDD4]">대운 분석</p>
+                <p className="text-[11px] text-[#7B6F9A] mt-0.5">10년 단위 인생의 흐름</p>
+              </button>
+              <button
+                onClick={onGunghab}
+                className="bg-[#130E24] border border-[#2A1F4A] rounded-3xl p-4 text-left hover:border-[#C9962A40] active:scale-[0.98] transition-all"
+              >
+                <IcGunghab size={22} className="text-[#E05282] mb-2" />
+                <p className="text-sm font-bold text-[#F5EDD4]">궁합 보기</p>
+                <p className="text-[11px] text-[#7B6F9A] mt-0.5">상대방과 사주 궁합 분석</p>
+              </button>
+            </div>
 
             {/* Deep saju CTA */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">

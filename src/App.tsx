@@ -196,6 +196,8 @@ export default function App() {
         onBack={goHome}
         onSave={saveBirthProfile}
         onDeepSaju={() => { setPage('deepsaju'); window.scrollTo(0, 0) }}
+        onDaun={() => { setPage('daun'); window.scrollTo(0, 0) }}
+        onGunghab={() => { setPage('gunghab'); window.scrollTo(0, 0) }}
       />
     )
   } else if (page === 'daun') {
