@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import type { UserInfo } from '../types'
+import { decodeIdToken } from '../utils/cloudSync'
 
 interface Props {
   onLogin: (user: UserInfo) => void
@@ -35,17 +36,9 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
       window.google.accounts.id.initialize({
         client_id: CLIENT_ID,
         callback: ({ credential }) => {
-          try {
-            // base64url → UTF-8 (한글 등 멀티바이트 문자 처리)
-            const b64 = credential.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
-            const json = decodeURIComponent(
-              atob(b64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
-            )
-            const payload = JSON.parse(json)
-            onLogin({ name: payload.name, email: payload.email, picture: payload.picture, idToken: credential })
-          } catch (e) {
-            console.error('구글 로그인 토큰 처리 실패:', e)
-          }
+          const payload = decodeIdToken(credential)
+          if (!payload) { console.error('구글 로그인 토큰 처리 실패'); return }
+          onLogin({ name: payload.name, email: payload.email, picture: payload.picture, idToken: credential })
         },
       })
       const el = document.getElementById('g-signin')

@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react'
 import type { BirthInput, UserInfo } from './types'
 import { loadPoints, awardPoints } from './utils/points'
 import type { PointsState } from './utils/points'
-import { setCurrentEmail, setIdToken, pullCloudData, scheduleCloudPush, onSyncStatusChange } from './utils/cloudSync'
+import { setCurrentEmail, setIdToken, getIdToken, getCurrentEmail, decodeIdToken, pullCloudData, scheduleCloudPush, onSyncStatusChange } from './utils/cloudSync'
 import { loadNickname, saveNickname } from './utils/nickname'
 import LoginPage        from './components/LoginPage'
 import SplashScreen     from './components/SplashScreen'
@@ -43,6 +43,17 @@ function loadBirthProfile(): BirthInput | null {
   } catch { return null }
 }
 
+// 새로고침/재방문 시 localStorage에 남은 구글 ID 토큰으로 로그인 화면 없이 세션을 복원한다.
+// 토큰이 실제로 만료됐다면 이후 클라우드 동기화 호출에서 401을 받아 SyncErrorBanner로 재로그인을 유도한다.
+function restoreUser(): UserInfo | null {
+  const token = getIdToken()
+  const email = getCurrentEmail()
+  if (!token || !email) return null
+  const payload = decodeIdToken(token)
+  if (!payload) return null
+  return { name: payload.name, email: payload.email, picture: payload.picture, idToken: token }
+}
+
 function PageFallback() {
   return (
     <div className="min-h-screen bg-[#0D0A1A] flex items-center justify-center">
@@ -56,7 +67,7 @@ function PageFallback() {
 
 export default function App() {
   const [page,         setPage]         = useState<Page>('splash')
-  const [user,         setUser]         = useState<UserInfo | null>(null)
+  const [user,         setUser]         = useState<UserInfo | null>(restoreUser)
   const [birthProfile, setBirthProfile] = useState<BirthInput | null>(loadBirthProfile)
   const [nickname,     setNickname]     = useState<string>(loadNickname)
   const [points,       setPoints]       = useState<PointsState>(loadPoints)
@@ -65,6 +76,16 @@ export default function App() {
   const [syncIssue,    setSyncIssue]    = useState<'error' | 'expired' | null>(null)
 
   useEffect(() => onSyncStatusChange(status => setSyncIssue(status === 'ok' ? null : status)), [])
+
+  // 세션이 복원된 경우, 백그라운드에서 클라우드 데이터를 한 번 받아온다 (토큰 만료 시 위 리스너가 안내 배너를 띄운다)
+  useEffect(() => {
+    if (!user) return
+    pullCloudData().then(() => {
+      setBirthProfile(loadBirthProfile())
+      setNickname(loadNickname())
+      setPoints(loadPoints())
+    })
+  }, [])
 
   useEffect(() => {
     const BACK_MAP: Partial<Record<Page, Page>> = {
@@ -146,7 +167,7 @@ export default function App() {
     window.scrollTo(0, 0)
   }
 
-  if (page === 'splash') return <SplashScreen onDone={() => setPage('login')} />
+  if (page === 'splash') return <SplashScreen onDone={() => setPage(user ? (birthProfile ? 'home' : 'profile') : 'login')} />
   if (page === 'login')
     return (
       <LoginPage

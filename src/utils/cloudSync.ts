@@ -23,6 +23,20 @@ export function getIdToken(): string | null {
   return localStorage.getItem(TOKEN_KEY)
 }
 
+// 구글 ID 토큰(JWT)의 payload만 디코딩한다 (서명 검증은 서버가 /api/sync, /api/match에서 수행).
+// 앱 재방문 시 로그인 화면 없이 세션을 복원하는 데 쓰인다.
+export function decodeIdToken(token: string): { name: string; email: string; picture?: string } | null {
+  try {
+    const b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
+    const json = decodeURIComponent(
+      atob(b64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')
+    )
+    const payload = JSON.parse(json)
+    if (typeof payload.name !== 'string' || typeof payload.email !== 'string') return null
+    return { name: payload.name, email: payload.email, picture: payload.picture }
+  } catch { return null }
+}
+
 function collectLocalData(): Record<string, unknown> {
   const data: Record<string, unknown> = {}
   for (let i = 0; i < localStorage.length; i++) {
