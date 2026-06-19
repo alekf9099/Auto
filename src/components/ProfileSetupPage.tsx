@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { BirthInput, Gender, UserInfo } from '../types'
+import { lunarToSolar } from '../utils/lunar'
 
 interface Props {
   user: UserInfo
@@ -21,13 +22,21 @@ export default function ProfileSetupPage({ user, onSave }: Props) {
   const [gender,      setGender]      = useState<Gender>('male')
   const [unknownHour, setUnknownHour] = useState(false)
   const [error,       setError]       = useState('')
+  const [calendarType, setCalendarType] = useState<'solar' | 'lunar'>('solar')
+  const [isLeapMonth,  setIsLeapMonth]  = useState(false)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    const y = parseInt(year), m = parseInt(month), d = parseInt(day)
+    let y = parseInt(year), m = parseInt(month), d = parseInt(day)
     if (!y || y < 1900 || y > 2100) { setError('연도를 확인해주세요 (1900~2100)'); return }
     if (!m || m < 1   || m > 12)   { setError('월을 확인해주세요 (1~12)');         return }
     if (!d || d < 1   || d > 31)   { setError('일을 확인해주세요 (1~31)');         return }
+
+    if (calendarType === 'lunar') {
+      const solar = lunarToSolar(y, m, d, isLeapMonth)
+      if (!solar) { setError('음력 날짜를 확인해주세요'); return }
+      y = solar.year; m = solar.month; d = solar.day
+    }
 
     let h: number | null = null
     let min: number | null = null
@@ -88,10 +97,25 @@ export default function ProfileSetupPage({ user, onSave }: Props) {
         >
           {/* 생년월일 */}
           <div>
-            <p className="text-xs font-semibold text-[#C9962A] mb-3 flex items-center gap-1.5">
-              <span className="w-1 h-4 bg-[#C9962A] rounded-full inline-block" />
-              생년월일
-            </p>
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-xs font-semibold text-[#C9962A] flex items-center gap-1.5">
+                <span className="w-1 h-4 bg-[#C9962A] rounded-full inline-block" />
+                생년월일
+              </p>
+              <div className="flex gap-1 bg-[#1C1438] border border-[#2A1F4A] rounded-full p-0.5">
+                {(['solar', 'lunar'] as const).map(c => (
+                  <button
+                    key={c} type="button"
+                    onClick={() => setCalendarType(c)}
+                    className={`px-3 py-1 rounded-full text-[11px] font-semibold transition ${
+                      calendarType === c ? 'bg-[#C9962A] text-[#0D0A1A]' : 'text-[#7B6F9A]'
+                    }`}
+                  >
+                    {c === 'solar' ? '양력' : '음력'}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="grid grid-cols-3 gap-2">
               {[
                 { label: '년 (年)', ph: '1990', val: year,  set: setYear,  min: 1900, max: 2100 },
@@ -109,6 +133,16 @@ export default function ProfileSetupPage({ user, onSave }: Props) {
                 </div>
               ))}
             </div>
+            {calendarType === 'lunar' && (
+              <label className="flex items-center gap-1.5 text-xs text-[#A89BC0] cursor-pointer select-none mt-2.5">
+                <input
+                  type="checkbox" checked={isLeapMonth}
+                  onChange={e => setIsLeapMonth(e.target.checked)}
+                  className="accent-[#C9962A] rounded w-3.5 h-3.5"
+                />
+                윤달이에요
+              </label>
+            )}
           </div>
 
           {/* 시·분 */}
