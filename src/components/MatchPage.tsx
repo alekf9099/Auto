@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import type { BirthInput } from '../types'
 import { calcGunghab, type GunghabResult } from '../utils/gunghab'
 import { isOptedIn, joinMatchPool, leaveMatchPool, drawMatch, loadMatchHistory, addMatchHistory, type MatchOpponent, type MatchHistoryEntry } from '../utils/match'
+import { loadProfilePhoto } from '../utils/profilePhoto'
 import PointsClaimButton from './PointsClaimButton'
 import { IcMatch } from './icons/SajuIcons'
 
@@ -17,7 +18,14 @@ function today(): string {
   return new Date().toISOString().slice(0, 10)
 }
 
+function MiniAvatar({ photo, label, bg }: { photo: string | null; label: string; bg: string }) {
+  return photo
+    ? <img src={photo} alt={label} className="w-5 h-5 rounded-full object-cover shrink-0" />
+    : <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] text-white font-bold shrink-0 ${bg}`}>{label[0] ?? '?'}</div>
+}
+
 export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
+  const [myPhoto] = useState<string | null>(loadProfilePhoto)
   const [optedIn, setOptedInState] = useState(isOptedIn)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -64,7 +72,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
     const r = calcGunghab(birthProfile, opp.birth, 'friend')
     setOpponent(opp)
     setResult(r)
-    setHistory(addMatchHistory({ nickname: opp.nickname, score: r.total, grade: r.grade, date: today() }))
+    setHistory(addMatchHistory({ nickname: opp.nickname, photo: opp.photo, score: r.total, grade: r.grade, date: today() }))
     window.scrollTo(0, 0)
   }
 
@@ -108,8 +116,9 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
             <div>
               <p className="text-sm font-bold text-[#F5EDD4] mb-2">매칭에 참여하면</p>
               <ul className="space-y-1.5 text-xs text-[#A89BC0] leading-relaxed">
-                <li>· 닉네임 <span className="font-semibold text-[#C9962A]">{nickname || '미설정'}</span>과 생년월일시만 매칭 풀에 등록돼요</li>
-                <li>· 이메일·이름·사진 등 신원 정보는 절대 공개되지 않아요</li>
+                <li>· 닉네임 <span className="font-semibold text-[#C9962A]">{nickname || '미설정'}</span>과 생년월일시가 매칭 풀에 등록돼요</li>
+                {myPhoto && <li>· 설정해둔 프로필 사진도 매칭 상대에게 보여요</li>}
+                <li>· 이메일·실명·구글 계정 사진 등 실제 신원 정보는 절대 공개되지 않아요</li>
                 <li>· 언제든 매칭 풀에서 나갈 수 있어요</li>
               </ul>
             </div>
@@ -156,12 +165,12 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
             <div className="relative z-10 p-6">
               <div className="flex items-center gap-3 mb-5">
                 <div className="flex items-center gap-1.5 bg-violet-400/20 border border-violet-400/30 rounded-full px-2.5 py-1.5">
-                  <div className="w-5 h-5 rounded-full bg-violet-500 flex items-center justify-center text-[10px] text-white font-bold">나</div>
+                  <MiniAvatar photo={myPhoto} label={nickname} bg="bg-violet-500" />
                   <span className="text-xs text-violet-200 font-medium">{nickname}</span>
                 </div>
                 <span className="text-violet-400/60 text-sm">✕</span>
                 <div className="flex items-center gap-1.5 bg-rose-400/20 border border-rose-400/30 rounded-full px-2.5 py-1.5">
-                  <div className="w-5 h-5 rounded-full bg-rose-400 flex items-center justify-center text-[10px] text-white font-bold">{opponent.nickname[0] ?? '?'}</div>
+                  <MiniAvatar photo={opponent.photo} label={opponent.nickname} bg="bg-rose-400" />
                   <span className="text-xs text-rose-200 font-medium">{opponent.nickname}</span>
                 </div>
               </div>
@@ -205,6 +214,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
                   >
                     {i + 1}
                   </span>
+                  <MiniAvatar photo={entry.photo} label={entry.nickname} bg="bg-violet-500" />
                   <p className="text-xs font-semibold text-[#C4B8D8] flex-1 truncate">{entry.nickname}</p>
                   <span className="text-[11px] text-[#7B6F9A]">{entry.grade}</span>
                   <span className="text-xs font-bold text-[#C9962A] tabular-nums">{entry.score}%</span>

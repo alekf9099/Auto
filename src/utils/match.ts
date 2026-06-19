@@ -1,8 +1,9 @@
 import type { BirthInput } from '../types'
 import { getIdToken, scheduleCloudPush } from './cloudSync'
+import { loadProfilePhoto } from './profilePhoto'
 
 // 사주매칭: 옵트인한 사용자끼리 무작위로 매칭해 닉네임 기반 궁합을 확인하는 기능.
-// 실제 궁합 점수는 클라이언트가 calcGunghab으로 직접 계산하며, 서버는 닉네임+생년월일시만 중개한다.
+// 실제 궁합 점수는 클라이언트가 calcGunghab으로 직접 계산하며, 서버는 닉네임+생년월일시+(선택)프로필 사진만 중개한다.
 
 const OPT_IN_KEY  = 'unmyeongbom_match_opted_in'
 const HISTORY_KEY = 'unmyeongbom_match_history'
@@ -10,11 +11,13 @@ const MAX_HISTORY = 30
 
 export interface MatchOpponent {
   nickname: string
+  photo: string | null
   birth: BirthInput
 }
 
 export interface MatchHistoryEntry {
   nickname: string
+  photo: string | null
   score: number
   grade: string
   date: string
@@ -51,7 +54,7 @@ function setOptedIn(v: boolean): void {
 }
 
 export async function joinMatchPool(nickname: string, birth: BirthInput): Promise<boolean> {
-  const result = await callMatch('join', { nickname, birth })
+  const result = await callMatch('join', { nickname, birth, photo: loadProfilePhoto() })
   const ok = !!result?.ok
   if (ok) setOptedIn(true)
   return ok

@@ -33,3 +33,7 @@ alter table public.match_pool enable row level security;
 
 -- user_data와 동일하게 anon/authenticated 키로는 전혀 접근할 수 없고,
 -- 서버(/api/match)가 구글 ID 토큰을 검증한 뒤 service_role 키로만 읽고/쓴다.
+
+-- 프로필 사진(선택): 사용자가 직접 올린 작은 썸네일(data URL)만 저장한다.
+-- 구글 계정 사진이 아니라 사용자가 매칭용으로 직접 선택/업로드한 사진이다.
+alter table public.match_pool add column if not exists photo text;

@@ -1,8 +1,9 @@
 /// <reference types="node" />
 import { createClient } from '@supabase/supabase-js'
 
-// 사주매칭: 옵트인한 사용자 풀에서 무작위로 한 명을 뽑아 닉네임 + 생년월일시만 돌려준다.
-// 이메일/이름/사진 등 신원 정보는 절대 클라이언트에 노출하지 않는다.
+// 사주매칭: 옵트인한 사용자 풀에서 무작위로 한 명을 뽑아 닉네임 + 생년월일시 + (선택)프로필 사진을 돌려준다.
+// 이메일/이름/구글 계정 사진 등 실제 신원 정보는 절대 클라이언트에 노출하지 않는다.
+// photo는 사용자가 매칭용으로 직접 업로드한 썸네일일 뿐, 구글 계정 사진이 아니다.
 // 궁합 점수 계산(calcGunghab)은 클라이언트가 받은 생년월일시로 직접 수행한다.
 
 interface GoogleTokenInfo {
@@ -37,6 +38,12 @@ function isValidNickname(n: unknown): n is string {
   return typeof n === 'string' && n.trim().length >= 2 && n.trim().length <= 10
 }
 
+// 사용자가 직접 업로드한 작은 썸네일(data URL)만 허용한다. 용량 제한으로 남용을 방지한다.
+function isValidPhoto(p: unknown): p is string | null {
+  if (p === null || p === undefined) return true
+  return typeof p === 'string' && p.startsWith('data:image/') && p.length <= 300000
+}
+
 async function verifyGoogleToken(idToken: string): Promise<string | null> {
   const clientId = process.env.VITE_GOOGLE_CLIENT_ID
   if (!clientId) return null
@@ -60,11 +67,12 @@ export default async function handler(req: any, res: any) {
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).end()
 
-  const { idToken, action, nickname, birth } = (req.body ?? {}) as {
+  const { idToken, action, nickname, birth, photo } = (req.body ?? {}) as {
     idToken?: string
     action?: 'join' | 'leave' | 'draw'
     nickname?: string
     birth?: unknown
+    photo?: string | null
   }
 
   if (!idToken || (action !== 'join' && action !== 'leave' && action !== 'draw')) {
@@ -90,12 +98,14 @@ export default async function handler(req: any, res: any) {
   if (action === 'join') {
     if (!isValidNickname(nickname)) return res.status(400).json({ error: 'invalid nickname' })
     if (!isValidBirth(birth)) return res.status(400).json({ error: 'invalid birth' })
+    if (!isValidPhoto(photo)) return res.status(400).json({ error: 'invalid photo' })
 
     const { error } = await supabase.from('match_pool').upsert({
       email,
       nickname: nickname.trim(),
       year: birth.year, month: birth.month, day: birth.day,
       hour: birth.hour, minute: birth.minute, gender: birth.gender,
+      photo: photo ?? null,
       updated_at: new Date().toISOString(),
     })
     if (error) return res.status(500).json({ error: error.message })
@@ -105,7 +115,7 @@ export default async function handler(req: any, res: any) {
   // action === 'draw'
   const { data: rows, error } = await supabase
     .from('match_pool')
-    .select('nickname, year, month, day, hour, minute, gender')
+    .select('nickname, year, month, day, hour, minute, gender, photo')
     .neq('email', email)
     .limit(50)
 
@@ -116,6 +126,7 @@ export default async function handler(req: any, res: any) {
   return res.status(200).json({
     opponent: {
       nickname: pick.nickname,
+      photo: pick.photo ?? null,
       birth: {
         year: pick.year, month: pick.month, day: pick.day,
         hour: pick.hour, minute: pick.minute, gender: pick.gender,

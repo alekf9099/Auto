@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import type { UserInfo, BirthInput } from '../types'
 import type { PointsState } from '../utils/points'
 import { tryClaimDaily, getLuckyTimerAttempts, LUCKY_TIMER_MAX_ATTEMPTS } from '../utils/points'
+import { loadProfilePhoto } from '../utils/profilePhoto'
 import { calculateSaju, getSipsin, pillarName } from '../utils/saju'
 import { SIPSIN_DESC, STEMS, ELEMENT_COLORS, ELEMENT_LABELS } from '../utils/constants'
 import { DAY_FORTUNE } from '../utils/fortuneData'
@@ -87,6 +88,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
   const month = todayDate.getMonth() + 1
   const day   = todayDate.getDate()
 
+  const [photo] = useState<string | null>(loadProfilePhoto)
   const [showPoints, setShowPoints] = useState(false)
   const [dailyToast, setDailyToast] = useState<{ milestone: number; bonus: number } | true | false>(false)
   const [mounted, setMounted] = useState(false)
@@ -201,8 +203,8 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
               <span className="text-xs font-bold text-[#C9962A]">{animatedBalance.toLocaleString()}P</span>
             </button>
             <button onClick={onLogout} className="text-xs text-[#A89BC0] hover:text-[#C4B8D8] transition px-2 py-1">로그아웃</button>
-            {user.picture
-              ? <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full object-cover"/>
+            {photo || user.picture
+              ? <img src={photo ?? user.picture} alt={user.name} className="w-8 h-8 rounded-full object-cover"/>
               : <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center"><span className="text-white text-xs font-bold">{user.name[0]}</span></div>
             }
           </div>

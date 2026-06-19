@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { BirthInput, Gender, UserInfo } from '../types'
 import { lunarToSolar } from '../utils/lunar'
+import { loadProfilePhoto, saveProfilePhoto, clearProfilePhoto, resizeImageFile } from '../utils/profilePhoto'
 
 interface Props {
   user: UserInfo
@@ -15,6 +16,9 @@ const inputCls = `
 `.trim()
 
 export default function ProfileSetupPage({ user, savedNickname, onSave }: Props) {
+  const [photo,       setPhoto]       = useState<string | null>(loadProfilePhoto)
+  const [photoError,  setPhotoError]  = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [nickname,    setNickname]    = useState(savedNickname ?? '')
   const [year,        setYear]        = useState('')
   const [month,       setMonth]       = useState('')
@@ -26,6 +30,26 @@ export default function ProfileSetupPage({ user, savedNickname, onSave }: Props)
   const [error,       setError]       = useState('')
   const [calendarType, setCalendarType] = useState<'solar' | 'lunar'>('solar')
   const [isLeapMonth,  setIsLeapMonth]  = useState(false)
+
+  async function handlePhotoSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    try {
+      const dataUrl = await resizeImageFile(file)
+      saveProfilePhoto(dataUrl)
+      setPhoto(dataUrl)
+      setPhotoError('')
+    } catch (err) {
+      setPhotoError(err instanceof Error ? err.message : '사진을 처리할 수 없어요')
+    }
+  }
+
+  function handlePhotoRemove() {
+    clearProfilePhoto()
+    setPhoto(null)
+    setPhotoError('')
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -100,6 +124,46 @@ export default function ProfileSetupPage({ user, savedNickname, onSave }: Props)
           onSubmit={handleSubmit}
           className="bg-[#130E24] rounded-3xl shadow-[0_4px_24px_rgba(201,150,42,0.10)] border border-[#2A1F4A] p-6 space-y-5"
         >
+          {/* 프로필 사진 */}
+          <div>
+            <p className="text-xs font-semibold text-[#C9962A] mb-2 flex items-center gap-1.5">
+              <span className="w-1 h-4 bg-[#C9962A] rounded-full inline-block" />
+              프로필 사진 <span className="text-[#7B6F9A] font-normal">(선택)</span>
+            </p>
+            <div className="flex items-center gap-3">
+              <div className="relative shrink-0">
+                {photo ? (
+                  <img src={photo} alt="프로필 사진" className="w-16 h-16 rounded-full object-cover border border-[#C9962A40]" />
+                ) : (
+                  <div className="w-16 h-16 rounded-full bg-[#1C1438] border border-[#2A1F4A] flex items-center justify-center text-2xl">🙂</div>
+                )}
+              </div>
+              <div className="flex-1 space-y-1.5">
+                <input ref={fileInputRef} type="file" accept="image/*" onChange={handlePhotoSelect} className="hidden" />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full py-2 rounded-xl text-xs font-semibold bg-[#1C1438] border border-[#2A1F4A] text-[#C4B8D8] hover:border-[#C9962A40] transition"
+                >
+                  {photo ? '사진 변경' : '사진 선택'}
+                </button>
+                {photo && (
+                  <button
+                    type="button"
+                    onClick={handlePhotoRemove}
+                    className="w-full py-1.5 rounded-xl text-[11px] font-semibold text-[#7B6F9A] hover:text-rose-400 transition"
+                  >
+                    삭제
+                  </button>
+                )}
+              </div>
+            </div>
+            {photoError && <p className="text-[11px] text-rose-400 mt-1.5">{photoError}</p>}
+            <p className="text-[11px] text-[#4A4060] mt-1.5 text-center">
+              사주매칭에서 매칭 상대에게도 보일 수 있어요. 얼굴 사진이 아니어도 괜찮아요
+            </p>
+          </div>
+
           {/* 닉네임 */}
           <div>
             <p className="text-xs font-semibold text-[#C9962A] mb-2 flex items-center gap-1.5">
