@@ -172,7 +172,7 @@ export default function DreamPage({ onBack }: Props) {
 
         {/* ── RESULT ── */}
         {step === 'result' && result && luck && (
-          <div className="space-y-4">
+          <div className="space-y-4 animate-fade-in-up">
 
             {/* Hero */}
             <div

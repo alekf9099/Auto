@@ -297,7 +297,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
 
       {/* ── RESULT ── */}
       {step === 'result' && result && (
-        <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
+        <div className="max-w-2xl mx-auto px-4 py-5 space-y-4 animate-fade-in-up">
 
           {/* 결과 배너 */}
           <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl overflow-hidden shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative">

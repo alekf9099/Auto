@@ -412,6 +412,24 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
           </div>
         )}
 
+        {/* 프로필 미설정 CTA */}
+        {!birthProfile && (
+          <button
+            onClick={onEditProfile}
+            style={reveal(4)}
+            className="w-full flex items-center justify-between gap-3 bg-gradient-to-r from-[#1A0E30] to-[#100820] border border-[#C9962A40] rounded-2xl px-4 py-3.5 text-left active:scale-[0.99] transition-transform"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-9 h-9 rounded-full bg-[#C9962A20] flex items-center justify-center text-base shrink-0">🎂</span>
+              <p className="text-xs text-[#E8DFC8]">
+                <span className="font-semibold">생년월일을 등록</span>하면<br/>
+                <span className="text-[#7B6F9A]">나만의 사주 풀이를 볼 수 있어요</span>
+              </p>
+            </div>
+            <span className="text-xs text-[#C9962A] font-semibold shrink-0">등록 →</span>
+          </button>
+        )}
+
         {/* ── 피드 카드 ── */}
 
         {/* 현재 대운 요약 */}

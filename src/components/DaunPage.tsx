@@ -367,7 +367,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
         )}
 
         {step === 'result' && submitted && result && dayStem && (
-          <>
+          <div className="animate-fade-in-up">
             {/* Dark hero */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
               <p className="text-violet-300/70 text-xs mb-3">
@@ -639,7 +639,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
             <p className="text-center text-xs text-[#4A4060] pb-6">
               사주팔자 계산기 — 양력 기준 · 절기 근사값 적용
             </p>
-          </>
+          </div>
         )}
       </div>
     </div>

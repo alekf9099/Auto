@@ -254,7 +254,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
         )}
 
         {step === 'result' && (
-          <>
+          <div className="animate-fade-in-up">
             {/* 일주 배지 */}
             <div
               className="rounded-3xl p-5 border"
@@ -369,7 +369,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             >
               다시 조회하기
             </button>
-          </>
+          </div>
         )}
       </div>
 

@@ -219,7 +219,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
 
         {/* ── RESULT ── */}
         {step === 'result' && result && (
-          <div className="space-y-4">
+          <div className="space-y-4 animate-fade-in-up">
 
             {/* Hero */}
             <div className="rounded-3xl p-6 border shadow-xl shadow-[#000]/40"

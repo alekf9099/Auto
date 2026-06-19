@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { loadPoints, tryClaimDaily } from '../utils/points'
 import type { PointsState } from '../utils/points'
 import PointsToast from './PointsToast'
+import { IcGem } from './icons/SajuIcons'
 
 interface Props {
   onBack: () => void
@@ -149,7 +150,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
                       : 'bg-[#1C1438] border border-[#2A1F4A]'
                   }`}>
                     {checked
-                      ? <span className={`text-base font-bold ${w.isToday ? 'text-[#0D0A1A]' : 'text-[#C9962A]'}`}>✓</span>
+                      ? <IcGem size={18} className={w.isToday ? 'text-[#0D0A1A]' : 'text-[#C9962A]'}/>
                       : <span className={`text-xs font-semibold ${w.isToday ? 'text-[#C9962A]' : 'text-[#4A4060]'}`}>{dayNum}</span>
                     }
                   </div>
@@ -200,7 +201,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
           </div>
           {points.history.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-3xl mb-2">💎</p>
+              <IcGem size={32} className="text-[#4A4060] mx-auto mb-2"/>
               <p className="text-sm text-[#7B6F9A]">아직 적립 내역이 없어요</p>
               <p className="text-xs text-[#4A4060] mt-1">출석 체크부터 시작해보세요!</p>
             </div>

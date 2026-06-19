@@ -220,7 +220,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
 
         {/* ── RESULT ── */}
         {step === 'result' && result && (
-          <div className="space-y-4">
+          <div className="space-y-4 animate-fade-in-up">
 
             {/* Hero — 종합 취업운 */}
             <div

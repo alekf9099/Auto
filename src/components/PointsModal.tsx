@@ -1,4 +1,5 @@
 import type { PointsState } from '../utils/points'
+import { IcGem } from './icons/SajuIcons'
 
 interface Props {
   points: PointsState
@@ -25,9 +26,14 @@ export default function PointsModal({ points, onClose }: Props) {
         {/* 잔액 헤더 */}
         <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 mb-5 border border-[#C9962A25]">
           <p className="text-violet-300/70 text-xs mb-1">보유 포인트</p>
-          <div className="flex items-end gap-2">
-            <span className="text-4xl font-bold text-white">{points.balance.toLocaleString()}</span>
-            <span className="text-violet-300 text-lg mb-0.5">P</span>
+          <div className="flex items-end gap-3">
+            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#E8B84B] to-[#C9962A] flex items-center justify-center shadow-[0_0_18px_rgba(201,150,42,0.45)] shrink-0">
+              <IcGem size={26} className="text-[#0D0A1A]"/>
+            </div>
+            <div className="flex items-end gap-2">
+              <span className="text-4xl font-bold text-white">{points.balance.toLocaleString()}</span>
+              <span className="text-violet-300 text-lg mb-0.5">P</span>
+            </div>
           </div>
           <div className="flex gap-3 mt-4">
             {[
