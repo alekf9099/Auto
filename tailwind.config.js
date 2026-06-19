@@ -18,9 +18,18 @@ export default {
           '0%':   { opacity: '0', transform: 'translateY(14px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
+        spinGlow: {
+          '0%':   { transform: 'rotate(0deg)',   backgroundColor: '#93C5FD' },
+          '20%':  { transform: 'rotate(72deg)',  backgroundColor: '#D1D5DB' },
+          '40%':  { transform: 'rotate(144deg)', backgroundColor: '#FCA5A5' },
+          '60%':  { transform: 'rotate(216deg)', backgroundColor: '#FCD34D' },
+          '80%':  { transform: 'rotate(288deg)', backgroundColor: '#86EFAC' },
+          '100%': { transform: 'rotate(360deg)', backgroundColor: '#93C5FD' },
+        },
       },
       animation: {
         'fade-in-up': 'fadeInUp 0.5s ease both',
+        'spin-glow': 'spinGlow 12s linear infinite',
       },
     },
   },

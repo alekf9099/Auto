@@ -110,9 +110,8 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
           <span className="absolute text-[11px] font-bold" style={{ color: '#FCD34D', bottom: 4, left: '50%', transform: 'translateX(-50%)' }}>土</span>
           <span className="absolute text-[11px] font-bold" style={{ color: '#93C5FD', left: 4,   top: '50%',  transform: 'translateY(-50%)' }}>水</span>
 
-          {/* 로고 */}
-          <div className="relative w-[100px] h-[100px] rounded-full p-[3px]"
-            style={{ background: 'linear-gradient(135deg, #C9962A, #E8B84B)' }}>
+          {/* 로고 — 스플래시처럼 회전 + 오행 색이 서서히 변함 */}
+          <div className="relative w-[100px] h-[100px] rounded-full p-[3px] animate-spin-glow">
             <div className="w-full h-full rounded-full bg-[#0D0A1A] flex items-center justify-center">
               <span className="text-5xl" style={{ color: '#C9962A', fontFamily: 'serif' }}>☯</span>
             </div>
