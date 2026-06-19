@@ -21,7 +21,7 @@ export default function LoadingScreen({ onComplete }: Props) {
   const doneRef = useRef(false)
 
   useEffect(() => {
-    const duration = 3000 + Math.random() * 5000
+    const duration = 7000
     const start    = Date.now()
 
     const tick = setInterval(() => {
