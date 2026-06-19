@@ -290,3 +290,38 @@ export function IcProfile({ size = 24, className = '' }: P) {
     </svg>
   )
 }
+
+// 승리 — 왕관 (대결 우승자 표시)
+export function IcCrown({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M4 9 L7.2 16 H16.8 L20 9 L15.2 12.2 L12 6 L8.8 12.2 Z"/>
+      <rect x="6.5" y="16" width="11" height="2.3" rx="1"/>
+      <circle cx="4" cy="7.7" r="1.4"/>
+      <circle cx="12" cy="4.8" r="1.4"/>
+      <circle cx="20" cy="7.7" r="1.4"/>
+    </svg>
+  )
+}
+
+// 무승부 — 동그라미 안의 等호(=)
+export function IcDraw({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <circle cx="12" cy="12" r="9.5" stroke="currentColor" strokeWidth="1.6" opacity="0.5"/>
+      <line x1="7" y1="10" x2="17" y2="10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <line x1="7" y1="14" x2="17" y2="14" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+// 공유하기 — 박스에서 위로 나가는 화살표
+export function IcShare({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 2.5 V14" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/>
+      <path d="M8 6.5 L12 2.5 L16 6.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      <path d="M5 12 V19 a1.5 1.5 0 0 0 1.5 1.5 H17.5 A1.5 1.5 0 0 0 19 19 V12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+    </svg>
+  )
+}

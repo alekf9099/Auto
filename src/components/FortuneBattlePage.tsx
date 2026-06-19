@@ -4,7 +4,7 @@ import { calculateSaju, getSipsin } from '../utils/saju'
 import { DAY_FORTUNE } from '../utils/fortuneData'
 import PointsClaimButton from './PointsClaimButton'
 import ShareCardModal from './ShareCardModal'
-import { IcBattle } from './icons/SajuIcons'
+import { IcBattle, IcCrown, IcDraw, IcShare, IcProfile } from './icons/SajuIcons'
 
 interface Props {
   savedBirth?: BirthInput | null
@@ -53,9 +53,9 @@ function calcSide(birth: BirthInput) {
 type SideResult = ReturnType<typeof calcSide>
 
 function PersonForm({
-  title, icon, fields, onChange, accent,
+  title, fields, onChange, accent,
 }: {
-  title: string; icon: string
+  title: string
   fields: BirthFields; onChange: (f: BirthFields) => void
   accent: 'violet' | 'rose'
 }) {
@@ -72,7 +72,7 @@ function PersonForm({
     <div>
       <div className="flex items-center gap-2 mb-3">
         <div className={`w-1 h-4 ${accentLine} rounded-full`} />
-        <span className="text-base">{icon}</span>
+        <IcProfile size={16} className={accent === 'rose' ? 'text-rose-400' : 'text-violet-400'} />
         <p className="text-sm font-bold text-[#F5EDD4]">{title}</p>
       </div>
       <div className="space-y-2.5">
@@ -146,7 +146,9 @@ function ResultCard({
       style={{ background: 'linear-gradient(160deg, #1A0E30 0%, #100820 60%, #060410 100%)' }}
     >
       {isWinner && !isTie && (
-        <span className="absolute -top-2.5 -right-1.5 text-xl rotate-12">👑</span>
+        <span className="absolute -top-2.5 -right-1.5 rotate-12 text-amber-400">
+          <IcCrown size={20} />
+        </span>
       )}
       <div className="flex items-center gap-1.5 mb-3">
         <div className={`w-5 h-5 rounded-full ${badgeBg} flex items-center justify-center text-[10px] text-white font-bold shrink-0`}>{initial}</div>
@@ -221,13 +223,15 @@ export default function FortuneBattlePage({ savedBirth, onSave, onBack }: Props)
                 </p>
                 <p className="text-sm text-violet-300/80 leading-relaxed">친구와 운세를 비교해서<br />오늘 누가 더 운이 좋은지 확인하세요</p>
               </div>
-              <div className="text-6xl opacity-80">⚔️</div>
+              <div className="w-16 h-16 rounded-full bg-[#C9962A20] border border-[#C9962A40] flex items-center justify-center shrink-0">
+                <IcBattle size={30} className="text-[#C9962A]" />
+              </div>
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="bg-[#130E24] rounded-3xl border border-[#C9962A30] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
-              <PersonForm title="나" icon="🧑" fields={me} onChange={setMe} accent="violet" />
+              <PersonForm title="나" fields={me} onChange={setMe} accent="violet" />
             </div>
 
             <div className="flex items-center gap-3 py-1">
@@ -254,14 +258,15 @@ export default function FortuneBattlePage({ savedBirth, onSave, onBack }: Props)
                   className="w-full bg-[#1C1438] border border-rose-900/40 rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-900/20 transition"
                 />
               </div>
-              <PersonForm title="상대방" icon="🙋" fields={them} onChange={setThem} accent="rose" />
+              <PersonForm title="상대방" fields={them} onChange={setThem} accent="rose" />
             </div>
 
             <button
               type="submit"
-              className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] transition-all text-sm active:scale-[0.98]"
+              className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] transition-all text-sm active:scale-[0.98] flex items-center justify-center gap-1.5"
             >
-              ⚔️ {nameLabel}과 운세대결 시작하기 →
+              <IcBattle size={16} />
+              {nameLabel}과 운세대결 시작하기 →
             </button>
           </form>
         </div>
@@ -296,12 +301,13 @@ export default function FortuneBattlePage({ savedBirth, onSave, onBack }: Props)
               winner === 'tie' ? 'bg-[#231844] border-[#2A1F4A]' : 'bg-[#C9962A15] border-[#C9962A30]'
             }`}
           >
-            <p className="text-base font-bold" style={{ fontFamily: "'Noto Serif KR', serif", color: winner === 'tie' ? '#F5EDD4' : '#C9962A' }}>
+            <p className="text-base font-bold flex items-center justify-center gap-1.5" style={{ fontFamily: "'Noto Serif KR', serif", color: winner === 'tie' ? '#F5EDD4' : '#C9962A' }}>
+              {winner === 'tie' ? <IcDraw size={18} /> : <IcCrown size={18} />}
               {winner === 'tie'
-                ? '🤝 오늘은 무승부예요!'
+                ? '오늘은 무승부예요!'
                 : winner === 'me'
-                  ? '🏆 오늘은 내 운세가 더 좋아요!'
-                  : `🏆 오늘은 ${nameLabel}의 운세가 더 좋아요!`}
+                  ? '오늘은 내 운세가 더 좋아요!'
+                  : `오늘은 ${nameLabel}의 운세가 더 좋아요!`}
             </p>
           </div>
 
@@ -314,9 +320,10 @@ export default function FortuneBattlePage({ savedBirth, onSave, onBack }: Props)
             onClick={() => setShowShare(true)}
             className="w-full py-3.5 bg-[#231844] text-[#E8DFC8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98] flex items-center justify-center gap-1.5"
           >
-            📤 대결 결과 공유하기
+            <IcShare size={16} />
+            대결 결과 공유하기
           </button>
-          <PointsClaimButton featureKey="battle" label="운세대결 확인 ⚔️" />
+          <PointsClaimButton featureKey="battle" label="운세대결 확인" />
           <button
             onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
             className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
