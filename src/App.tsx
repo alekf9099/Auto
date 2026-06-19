@@ -3,6 +3,7 @@ import type { BirthInput, UserInfo } from './types'
 import { loadPoints, awardPoints } from './utils/points'
 import type { PointsState } from './utils/points'
 import { setCurrentEmail, setIdToken, pullCloudData, scheduleCloudPush, onSyncStatusChange } from './utils/cloudSync'
+import { loadNickname, saveNickname } from './utils/nickname'
 import LoginPage        from './components/LoginPage'
 import SplashScreen     from './components/SplashScreen'
 import LoadingScreen    from './components/LoadingScreen'
@@ -56,6 +57,7 @@ export default function App() {
   const [page,         setPage]         = useState<Page>('splash')
   const [user,         setUser]         = useState<UserInfo | null>(null)
   const [birthProfile, setBirthProfile] = useState<BirthInput | null>(loadBirthProfile)
+  const [nickname,     setNickname]     = useState<string>(loadNickname)
   const [points,       setPoints]       = useState<PointsState>(loadPoints)
   const [isNewCloudUser, setIsNewCloudUser] = useState(true)
   const [legalReturn,  setLegalReturn]  = useState<Page>('login')
@@ -106,12 +108,15 @@ export default function App() {
     const { isNewUser } = await pullCloudData()
     setIsNewCloudUser(isNewUser)
     setBirthProfile(loadBirthProfile())
+    setNickname(loadNickname())
     setPoints(loadPoints())
     setPage(loadBirthProfile() ? 'home' : 'profile')
     window.scrollTo(0, 0)
   }
 
-  function handleProfileSave(b: BirthInput) {
+  function handleProfileSave(b: BirthInput, nick: string) {
+    saveNickname(nick)
+    setNickname(nick)
     saveBirthProfile(b)
     const cur = loadPoints()
     if (isNewCloudUser && cur.history.length === 0) {
@@ -157,13 +162,14 @@ export default function App() {
   } else if (page === 'terms') {
     content = <TermsPage onBack={() => setPage(legalReturn)} />
   } else if (page === 'profile' && user) {
-    content = <ProfileSetupPage user={user} onSave={handleProfileSave} />
+    content = <ProfileSetupPage user={user} savedNickname={nickname} onSave={handleProfileSave} />
   } else if (page === 'analyzing') {
     content = <LoadingScreen onComplete={() => { setPage('home'); window.scrollTo(0, 0) }} />
   } else if (page === 'home' && user) {
     content = (
       <HomePage
         user={user}
+        nickname={nickname}
         birthProfile={birthProfile}
         points={points}
         onPointsUpdate={setPoints}

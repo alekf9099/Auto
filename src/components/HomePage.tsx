@@ -12,6 +12,7 @@ import {
 
 interface Props {
   user: UserInfo
+  nickname: string
   birthProfile: BirthInput | null
   points: PointsState
   onPointsUpdate: (p: PointsState) => void
@@ -80,7 +81,7 @@ function useCountUp(value: number, duration = 700) {
   return display
 }
 
-export default function HomePage({ user, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms }: Props) {
+export default function HomePage({ user, nickname, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms }: Props) {
   const todayDate = new Date()
   const month = todayDate.getMonth() + 1
   const day   = todayDate.getDate()
@@ -406,6 +407,8 @@ export default function HomePage({ user, birthProfile, points, onPointsUpdate, o
             <div className="flex items-center gap-2">
               <span className="text-[#C9962A] text-sm">✓</span>
               <p className="text-xs text-[#C4B8D8]">
+                {nickname && <span className="font-semibold">{nickname}</span>}
+                {nickname && <span className="text-[#7B6F9A] mx-1">·</span>}
                 <span className="font-semibold">{birthProfile.year}.{String(birthProfile.month).padStart(2,'0')}.{String(birthProfile.day).padStart(2,'0')}</span>
                 <span className="text-[#7B6F9A] ml-1">· {birthProfile.gender === 'male' ? '남성' : '여성'}</span>
                 {birthProfile.hour !== null && <span className="text-[#7B6F9A] ml-1">· {birthProfile.hour}시</span>}

@@ -4,7 +4,8 @@ import { lunarToSolar } from '../utils/lunar'
 
 interface Props {
   user: UserInfo
-  onSave: (b: BirthInput) => void
+  savedNickname?: string
+  onSave: (b: BirthInput, nickname: string) => void
 }
 
 const inputCls = `
@@ -13,7 +14,8 @@ const inputCls = `
   focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition
 `.trim()
 
-export default function ProfileSetupPage({ user, onSave }: Props) {
+export default function ProfileSetupPage({ user, savedNickname, onSave }: Props) {
+  const [nickname,    setNickname]    = useState(savedNickname ?? '')
   const [year,        setYear]        = useState('')
   const [month,       setMonth]       = useState('')
   const [day,         setDay]         = useState('')
@@ -27,6 +29,9 @@ export default function ProfileSetupPage({ user, onSave }: Props) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    const nick = nickname.trim()
+    if (nick.length < 2 || nick.length > 10) { setError('닉네임을 2~10자로 입력해주세요'); return }
+
     let y = parseInt(year), m = parseInt(month), d = parseInt(day)
     if (!y || y < 1900 || y > 2100) { setError('연도를 확인해주세요 (1900~2100)'); return }
     if (!m || m < 1   || m > 12)   { setError('월을 확인해주세요 (1~12)');         return }
@@ -49,7 +54,7 @@ export default function ProfileSetupPage({ user, onSave }: Props) {
       }
     }
     setError('')
-    onSave({ year: y, month: m, day: d, hour: h, minute: min, gender })
+    onSave({ year: y, month: m, day: d, hour: h, minute: min, gender }, nick)
   }
 
   return (
@@ -95,6 +100,23 @@ export default function ProfileSetupPage({ user, onSave }: Props) {
           onSubmit={handleSubmit}
           className="bg-[#130E24] rounded-3xl shadow-[0_4px_24px_rgba(201,150,42,0.10)] border border-[#2A1F4A] p-6 space-y-5"
         >
+          {/* 닉네임 */}
+          <div>
+            <p className="text-xs font-semibold text-[#C9962A] mb-2 flex items-center gap-1.5">
+              <span className="w-1 h-4 bg-[#C9962A] rounded-full inline-block" />
+              닉네임
+            </p>
+            <input
+              type="text" required placeholder="2~10자로 입력해주세요" value={nickname}
+              maxLength={10}
+              onChange={e => setNickname(e.target.value)}
+              className={inputCls}
+            />
+            <p className="text-[11px] text-[#4A4060] mt-1.5 text-center">
+              다른 사용자와의 매칭 등에서 본명 대신 표시될 이름이에요
+            </p>
+          </div>
+
           {/* 생년월일 */}
           <div>
             <div className="flex items-center justify-between mb-3">
