@@ -267,6 +267,20 @@ export function IcHome({ size = 24, className = '' }: P) {
   )
 }
 
+// 운세대결 — 교차하는 칼 (대결/승부)
+export function IcBattle({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M3 3 L11 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M3 7 L3 3 L7 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M21 3 L13 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M21 7 L21 3 L17 3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx="12" cy="12.5" r="2" fill="currentColor"/>
+      <path d="M9 20 L12 14.5 L15 20" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" opacity="0.8"/>
+    </svg>
+  )
+}
+
 // 사용자 프로필 — 전통 조각 문양
 export function IcProfile({ size = 24, className = '' }: P) {
   return (
