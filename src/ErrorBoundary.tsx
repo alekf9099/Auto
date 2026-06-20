@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import type { ReactNode } from 'react'
+import { captureException } from './utils/sentry'
 
 interface Props {
   children: ReactNode
@@ -25,7 +26,9 @@ export default class ErrorBoundary extends Component<Props, State> {
     if (isChunkLoadError && !sessionStorage.getItem(RELOAD_FLAG)) {
       sessionStorage.setItem(RELOAD_FLAG, '1')
       window.location.reload()
+      return
     }
+    captureException(error)
   }
 
   componentDidMount() {

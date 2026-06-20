@@ -1,3 +1,5 @@
+import { captureException } from './sentry'
+
 const EMAIL_KEY = 'unmyeongbom_user_email'
 const TOKEN_KEY = 'unmyeongbom_id_token'
 const PREFIX    = 'unmyeongbom_'
@@ -96,6 +98,7 @@ async function callSync(action: 'pull' | 'push', data?: Record<string, unknown>)
     return json
   } catch (e) {
     console.error('클라우드 동기화 실패:', e)
+    captureException(e)
     notifySyncStatus('error')
     return null
   }
