@@ -10,10 +10,30 @@ interface Props {
 }
 
 const SLICE_DEG = 360 / ROULETTE_SEGMENTS.length
+const CENTER = 100
+const OUTER_R = 94
+const LABEL_R = 62
 
-const WHEEL_GRADIENT = ROULETTE_SEGMENTS
-  .map((seg, i) => `${seg.color} ${i * SLICE_DEG}deg ${(i + 1) * SLICE_DEG}deg`)
-  .join(', ')
+function shade(hex: string, amt: number): string {
+  const num = parseInt(hex.replace('#', ''), 16)
+  const channel = (shift: number) => {
+    const v = (num >> shift) & 0xff
+    return Math.max(0, Math.min(255, Math.round(amt > 0 ? v + (255 - v) * amt : v * (1 + amt))))
+  }
+  return `#${[channel(16), channel(8), channel(0)].map(v => v.toString(16).padStart(2, '0')).join('')}`
+}
+
+function polar(angleDeg: number, r: number) {
+  const rad = ((angleDeg - 90) * Math.PI) / 180
+  return { x: CENTER + r * Math.cos(rad), y: CENTER + r * Math.sin(rad) }
+}
+
+function slicePath(startDeg: number, endDeg: number, r: number) {
+  const p1 = polar(startDeg, r)
+  const p2 = polar(endDeg, r)
+  const largeArc = endDeg - startDeg > 180 ? 1 : 0
+  return `M ${CENTER},${CENTER} L ${p1.x.toFixed(2)},${p1.y.toFixed(2)} A ${r},${r} 0 ${largeArc} 1 ${p2.x.toFixed(2)},${p2.y.toFixed(2)} Z`
+}
 
 export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
   const [points,   setPoints]   = useState<PointsState>(loadPoints)
@@ -79,27 +99,95 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
 
         {/* 룰렛 영역 */}
         <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6 flex flex-col items-center">
-          <div className="relative w-64 h-64 mb-6">
-            <div className="absolute -top-1 left-1/2 -translate-x-1/2 z-10 w-0 h-0 border-l-[9px] border-r-[9px] border-t-[16px] border-l-transparent border-r-transparent border-t-[#F5EDD4]" />
+          <div className="relative w-64 h-64 mb-6 drop-shadow-[0_8px_20px_rgba(0,0,0,0.55)]">
+            {/* 포인터 */}
+            <div
+              className="absolute -top-1 left-1/2 -translate-x-1/2 z-20 w-5 h-5"
+              style={{
+                clipPath: 'polygon(50% 100%, 0 0, 100% 0)',
+                background: 'linear-gradient(180deg, #FCEAA6, #C9962A)',
+                filter: 'drop-shadow(0 2px 3px rgba(0,0,0,0.6))',
+              }}
+            />
+
             <div
               onTransitionEnd={handleTransitionEnd}
-              className="w-64 h-64 rounded-full border-4 border-[#2A1F4A] relative"
+              className="w-64 h-64 rounded-full relative"
               style={{
-                background: `conic-gradient(${WHEEL_GRADIENT})`,
                 transform: `rotate(${rotation}deg)`,
                 transition: spinning ? 'transform 3.2s cubic-bezier(0.17, 0.67, 0.12, 0.99)' : 'none',
               }}
             >
-              {ROULETTE_SEGMENTS.map((seg, i) => (
-                <div key={seg.key} className="absolute inset-0" style={{ transform: `rotate(${i * SLICE_DEG + SLICE_DEG / 2}deg)` }}>
-                  <span className="absolute left-1/2 top-4 -translate-x-1/2 text-[11px] font-bold text-[#0D0A1A] whitespace-nowrap">
-                    {seg.label}
-                  </span>
-                </div>
-              ))}
+              <svg viewBox="0 0 200 200" className="w-full h-full">
+                <defs>
+                  {ROULETTE_SEGMENTS.map(seg => (
+                    <linearGradient key={seg.key} id={`grad-${seg.key}`} x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor={shade(seg.color, 0.35)} />
+                      <stop offset="55%" stopColor={seg.color} />
+                      <stop offset="100%" stopColor={shade(seg.color, -0.3)} />
+                    </linearGradient>
+                  ))}
+                  <linearGradient id="rim-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#F5D78E" />
+                    <stop offset="50%" stopColor="#C9962A" />
+                    <stop offset="100%" stopColor="#8A6C1F" />
+                  </linearGradient>
+                </defs>
+
+                {ROULETTE_SEGMENTS.map((seg, i) => {
+                  const start = i * SLICE_DEG
+                  const end = (i + 1) * SLICE_DEG
+                  const mid = start + SLICE_DEG / 2
+                  const labelPos = polar(mid, LABEL_R)
+                  return (
+                    <g key={seg.key}>
+                      <path
+                        d={slicePath(start, end, OUTER_R)}
+                        fill={`url(#grad-${seg.key})`}
+                        stroke="#0D0A1A"
+                        strokeWidth={1.5}
+                        strokeOpacity={0.5}
+                      />
+                      <text
+                        x={labelPos.x}
+                        y={labelPos.y}
+                        transform={`rotate(${mid}, ${labelPos.x}, ${labelPos.y})`}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fontSize="11"
+                        fontWeight="bold"
+                        fill="#fff"
+                        stroke="#0D0A1A"
+                        strokeWidth={3}
+                        paintOrder="stroke"
+                      >
+                        {seg.label}
+                      </text>
+                    </g>
+                  )
+                })}
+
+                <circle cx={CENTER} cy={CENTER} r={OUTER_R} fill="none" stroke="url(#rim-gradient)" strokeWidth="4" />
+              </svg>
             </div>
+
+            {/* 유광 하이라이트 (회전하지 않음) */}
+            <div
+              className="absolute inset-0 rounded-full pointer-events-none"
+              style={{ background: 'radial-gradient(circle at 32% 28%, rgba(255,255,255,0.25), transparent 55%)' }}
+            />
+
+            {/* 중심 허브 */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-12 h-12 rounded-full bg-[#130E24] border-2 border-[#C9962A] flex items-center justify-center text-xl">🎡</div>
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
+                style={{
+                  background: 'radial-gradient(circle at 35% 30%, #FCEAA6, #C9962A 60%, #8A6C1F)',
+                  border: '2px solid #F5D78E',
+                }}
+              >
+                🎡
+              </div>
             </div>
           </div>
 
@@ -143,7 +231,10 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
             {ROULETTE_SEGMENTS.map(seg => (
               <li key={seg.key} className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
-                  <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: seg.color }} />
+                  <span
+                    className="w-3.5 h-3.5 rounded-full shrink-0 border border-white/20"
+                    style={{ background: `linear-gradient(135deg, ${shade(seg.color, 0.35)}, ${seg.color} 55%, ${shade(seg.color, -0.3)})` }}
+                  />
                   <span className="text-[#A89BC0]">{seg.label}</span>
                 </div>
                 <div className="flex items-center gap-3">
