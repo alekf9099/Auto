@@ -83,7 +83,7 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
   return (
     <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] overflow-hidden">
       {/* 서브탭 */}
-      <div className="flex border-b border-[#2A1F4A] px-2 pt-2">
+      <div className="flex gap-1 border-b border-[#2A1F4A] px-2 pt-2">
         {tabs.map(t => (
           <button
             key={t.id}

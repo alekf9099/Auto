@@ -17,7 +17,7 @@ const TABS: { key: NavTab; label: string; Icon: typeof IcHome }[] = [
 export default function BottomNav({ current, onNavigate }: Props) {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-30 bg-[#130E24]/95 backdrop-blur-md border-t border-[#2A1F4A]">
-      <div className="max-w-2xl mx-auto grid grid-cols-4">
+      <div className="max-w-2xl mx-auto grid grid-cols-4 gap-1 px-1">
         {TABS.map(tab => {
           const active = current === tab.key
           return (
