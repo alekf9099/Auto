@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { loadPoints, getLuckyTimerAttempts, claimLuckyTimer, LUCKY_TIMER_MAX_ATTEMPTS } from '../utils/points'
 import type { PointsState } from '../utils/points'
+import { trackEvent } from '../utils/analytics'
 import { IcLucky } from './icons/SajuIcons'
 
 interface Props {
@@ -44,6 +45,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
     setPoints(next)
     onPointsUpdate(next)
     setAttempts(nextAttempts)
+    trackEvent('lucky_timer_result', { success })
     setElapsed(finalElapsed)
     setResult({ success, amount: success ? 20 : 5, diff })
     setPhase('result')

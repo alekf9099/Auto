@@ -3,6 +3,7 @@ import {
   loadPoints, hasSpunRouletteToday, pickRouletteSegment, claimRoulette, ROULETTE_SEGMENTS,
 } from '../utils/points'
 import type { PointsState, RouletteSegment } from '../utils/points'
+import { trackEvent } from '../utils/analytics'
 
 interface Props {
   onBack: () => void
@@ -63,6 +64,7 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
     setPoints(next)
     onPointsUpdate(next)
     setSpunToday(true)
+    trackEvent('roulette_result', { segment: pending.key })
     setResult(pending)
     setPending(null)
   }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { BirthInput } from '../types'
 import { calcDeepSaju, isDeepFreeUsed, markDeepFreeUsed } from '../utils/deepSaju'
 import { loadPoints, spendPoints, DEEP_SAJU_UNLOCK_COST } from '../utils/points'
+import { trackEvent } from '../utils/analytics'
 import PointsClaimButton from './PointsClaimButton'
 import { IcDeepSaju } from './icons/SajuIcons'
 
@@ -50,8 +51,12 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
 
   function handleUnlock() {
     const { success } = spendPoints(loadPoints(), DEEP_SAJU_UNLOCK_COST, '심층 사주 전체 잠금 해제')
-    if (success) setUnlocked(true)
-    else setUnlockError(true)
+    if (success) {
+      setUnlocked(true)
+      trackEvent('deep_saju_unlock')
+    } else {
+      setUnlockError(true)
+    }
   }
 
   function handleSubmit(e: React.FormEvent) {

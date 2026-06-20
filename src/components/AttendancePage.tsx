@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { loadPoints, tryClaimDaily } from '../utils/points'
 import type { PointsState } from '../utils/points'
+import { trackEvent } from '../utils/analytics'
 import PointsToast from './PointsToast'
 import { IcGem } from './icons/SajuIcons'
 
@@ -65,6 +66,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
     if (claimed) {
       setPoints(next)
       onPointsUpdate(next)
+      trackEvent('daily_checkin')
       if (milestone) {
         setToast({ amount: 10 + milestone.bonus, total: next.balance, label: `🎉 ${milestone.days}일 연속 출석 달성!` })
       } else {

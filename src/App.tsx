@@ -4,6 +4,7 @@ import { loadPoints, awardPoints } from './utils/points'
 import type { PointsState } from './utils/points'
 import { setCurrentEmail, setIdToken, getIdToken, getCurrentEmail, decodeIdToken, pullCloudData, scheduleCloudPush, onSyncStatusChange } from './utils/cloudSync'
 import { loadNickname, saveNickname } from './utils/nickname'
+import { trackPageView, trackEvent } from './utils/analytics'
 import LoginPage        from './components/LoginPage'
 import SplashScreen     from './components/SplashScreen'
 import LoadingScreen    from './components/LoadingScreen'
@@ -108,6 +109,8 @@ export default function App() {
     return () => window.removeEventListener('popstate', onPop)
   }, [page])
 
+  useEffect(() => { trackPageView(`/${page}`) }, [page])
+
   function saveBirthProfile(b: BirthInput) {
     setBirthProfile(b)
     localStorage.setItem(STORAGE_KEY, JSON.stringify(b))
@@ -129,6 +132,7 @@ export default function App() {
     setUser(u)
     setCurrentEmail(u.email)
     setIdToken(u.idToken)
+    trackEvent('login')
     const { isNewUser } = await pullCloudData()
     setIsNewCloudUser(isNewUser)
     setBirthProfile(loadBirthProfile())
@@ -145,6 +149,7 @@ export default function App() {
     const cur = loadPoints()
     if (isNewCloudUser && cur.history.length === 0) {
       setPoints(awardPoints(cur, 100, '가입 보너스 🎉'))
+      trackEvent('sign_up')
     }
     setPage('analyzing')
     window.scrollTo(0, 0)
