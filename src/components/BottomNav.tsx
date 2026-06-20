@@ -1,6 +1,6 @@
 import { IcHome, IcSaju, IcStamp, IcLucky } from './icons/SajuIcons'
 
-export type NavTab = 'home' | 'saju' | 'attendance' | 'lucky'
+export type NavTab = 'home' | 'saju' | 'attendance' | 'event'
 
 interface Props {
   current: NavTab
@@ -8,10 +8,10 @@ interface Props {
 }
 
 const TABS: { key: NavTab; label: string; Icon: typeof IcHome }[] = [
-  { key: 'home',       label: '홈',   Icon: IcHome  },
-  { key: 'saju',       label: '사주', Icon: IcSaju  },
-  { key: 'attendance', label: '출석', Icon: IcStamp },
-  { key: 'lucky',      label: '행운', Icon: IcLucky },
+  { key: 'home',       label: '홈',     Icon: IcHome  },
+  { key: 'saju',       label: '사주',   Icon: IcSaju  },
+  { key: 'attendance', label: '출석',   Icon: IcStamp },
+  { key: 'event',      label: '이벤트', Icon: IcLucky },
 ]
 
 export default function BottomNav({ current, onNavigate }: Props) {
