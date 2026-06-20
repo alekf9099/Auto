@@ -1,14 +1,14 @@
 import { useState, useEffect, useMemo, useRef } from 'react'
 import type { UserInfo, BirthInput } from '../types'
 import type { PointsState } from '../utils/points'
-import { tryClaimDaily, getLuckyTimerAttempts, LUCKY_TIMER_MAX_ATTEMPTS } from '../utils/points'
+import { tryClaimDaily } from '../utils/points'
 import { loadProfilePhoto } from '../utils/profilePhoto'
 import { calculateSaju, getSipsin, pillarName } from '../utils/saju'
 import { SIPSIN_DESC, STEMS, ELEMENT_COLORS, ELEMENT_LABELS } from '../utils/constants'
 import { DAY_FORTUNE } from '../utils/fortuneData'
 import PointsModal from './PointsModal'
 import {
-  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon, IcLucky, IcBattle, IcMatch,
+  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon, IcBattle, IcMatch,
 } from './icons/SajuIcons'
 
 interface Props {
@@ -19,7 +19,6 @@ interface Props {
   onPointsUpdate: (p: PointsState) => void
   onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'outfit' | 'job' | 'battle' | 'match') => void
   onAttendance: () => void
-  onLuckyTimer: () => void
   onEditProfile: () => void
   onLogout: () => void
   onShowPrivacy: () => void
@@ -83,7 +82,7 @@ function useCountUp(value: number, duration = 700) {
   return display
 }
 
-export default function HomePage({ user, nickname, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms }: Props) {
+export default function HomePage({ user, nickname, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onEditProfile, onLogout, onShowPrivacy, onShowTerms }: Props) {
   const todayDate = new Date()
   const month = todayDate.getMonth() + 1
   const day   = todayDate.getDate()
@@ -364,40 +363,6 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                   }
                   <span className={`text-[10px] font-semibold ${completed ? 'text-amber-400' : 'text-red-400'}`}>자세히 보기 →</span>
                 </div>
-              </div>
-            </button>
-            </div>
-          )
-        })()}
-
-        {/* 행운의 숫자 잡기 이벤트 배너 */}
-        {(() => {
-          const remaining = LUCKY_TIMER_MAX_ATTEMPTS - getLuckyTimerAttempts()
-          return (
-            <div style={reveal(3)}>
-            <button
-              onClick={onLuckyTimer}
-              className="w-full overflow-hidden rounded-3xl shadow-[0_2px_16px_rgba(201,150,42,0.10)] active:scale-[0.99] transition-all"
-            >
-              <div className="relative bg-[#130E24] border border-[#C9962A40] rounded-3xl px-5 py-4 flex items-center gap-4">
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-[0.06] select-none pointer-events-none text-[#C9962A] rotate-12">
-                  <IcLucky size={64}/>
-                </div>
-                <div className="shrink-0 w-12 h-12 rounded-2xl bg-[#C9962A15] border border-[#C9962A35] flex items-center justify-center">
-                  <span className="text-xl font-bold text-[#C9962A]" style={{ fontFamily: "'Noto Serif KR', serif" }}>7</span>
-                </div>
-                <div className="flex-1 text-left">
-                  <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">오늘의 이벤트</p>
-                  <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                    행운의 숫자 잡기 — 7초에 도전!
-                  </p>
-                  <p className="text-[11px] text-[#7B6F9A] mt-0.5">
-                    {remaining > 0 ? `성공 시 +20P, 참가만 해도 +5P · 남은 기회 ${remaining}/${LUCKY_TIMER_MAX_ATTEMPTS}` : '오늘 참여 완료 · 내일 다시 도전'}
-                  </p>
-                </div>
-                <span className="text-[11px] text-[#C9962A] font-semibold shrink-0">
-                  {remaining > 0 ? '도전 →' : '완료 ✓'}
-                </span>
               </div>
             </button>
             </div>
