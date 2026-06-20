@@ -27,13 +27,14 @@ const JobPage          = lazy(() => import('./components/JobPage'))
 const FortuneBattlePage = lazy(() => import('./components/FortuneBattlePage'))
 const MatchPage         = lazy(() => import('./components/MatchPage'))
 const LuckyTimerPage   = lazy(() => import('./components/LuckyTimerPage'))
+const RoulettePage      = lazy(() => import('./components/RoulettePage'))
 const EventPage         = lazy(() => import('./components/EventPage'))
 const PrivacyPolicyPage = lazy(() => import('./components/PrivacyPolicyPage'))
 const TermsPage         = lazy(() => import('./components/TermsPage'))
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'outfit' | 'job' | 'battle' | 'match' | 'lucky' | 'event' | 'privacy' | 'terms'
+type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'outfit' | 'job' | 'battle' | 'match' | 'lucky' | 'roulette' | 'event' | 'privacy' | 'terms'
 
 const TAB_PAGES: Page[] = ['home', 'saju', 'attendance', 'event']
 
@@ -92,10 +93,10 @@ export default function App() {
     const BACK_MAP: Partial<Record<Page, Page>> = {
       profile: 'login', analyzing: 'home', attendance: 'home',
       sinnyeon: 'home', tojeong: 'home', today: 'home',
-      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home', dream: 'home', outfit: 'home', job: 'home', battle: 'home', match: 'home', lucky: 'home', event: 'home',
+      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home', dream: 'home', outfit: 'home', job: 'home', battle: 'home', match: 'home', lucky: 'home', roulette: 'home', event: 'home',
       privacy: legalReturn, terms: legalReturn,
     }
-    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','gunghab','deepsaju','saju','daun','dream','outfit','job','battle','match','lucky','event','profile','analyzing','privacy','terms']
+    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','gunghab','deepsaju','saju','daun','dream','outfit','job','battle','match','lucky','roulette','event','profile','analyzing','privacy','terms']
     if (navigable.includes(page)) history.pushState({ page }, '')
 
     function onPop() {
@@ -208,9 +209,17 @@ export default function App() {
   } else if (page === 'attendance') {
     content = <AttendancePage onBack={goHome} onPointsUpdate={p => { setPoints(p) }} />
   } else if (page === 'event') {
-    content = <EventPage onBack={goHome} onOpenLucky={() => { setPage('lucky'); window.scrollTo(0, 0) }} />
+    content = (
+      <EventPage
+        onBack={goHome}
+        onOpenLucky={() => { setPage('lucky'); window.scrollTo(0, 0) }}
+        onOpenRoulette={() => { setPage('roulette'); window.scrollTo(0, 0) }}
+      />
+    )
   } else if (page === 'lucky') {
     content = <LuckyTimerPage onBack={goHome} onPointsUpdate={p => { setPoints(p) }} />
+  } else if (page === 'roulette') {
+    content = <RoulettePage onBack={goHome} onPointsUpdate={p => { setPoints(p) }} />
   } else if (page === 'sinnyeon') {
     content = <SinnyeonPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   } else if (page === 'tojeong') {

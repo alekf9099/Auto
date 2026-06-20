@@ -96,6 +96,46 @@ export function spendPoints(p: PointsState, amount: number, label: string): { ne
   return { next, success: true }
 }
 
+// 오행 룰렛 — 하루 1회
+export interface RouletteSegment {
+  key: string
+  label: string
+  amount: number
+  weight: number  // 100분율 가중치, 합계 100
+  color: string
+}
+
+export const ROULETTE_SEGMENTS: RouletteSegment[] = [
+  { key: 'wood',    label: '목(木)',  amount: 10,  weight: 16, color: '#4ADE80' },
+  { key: 'fire',    label: '화(火)',  amount: 10,  weight: 16, color: '#F87171' },
+  { key: 'earth',   label: '토(土)',  amount: 10,  weight: 16, color: '#D9A552' },
+  { key: 'metal',   label: '금(金)',  amount: 15,  weight: 13, color: '#CBD5E1' },
+  { key: 'water',   label: '수(水)',  amount: 15,  weight: 13, color: '#60A5FA' },
+  { key: 'blank',   label: '꽝',      amount: 5,   weight: 15, color: '#6B6280' },
+  { key: 'great',   label: '대길',    amount: 30,  weight: 9,  color: '#A78BFA' },
+  { key: 'jackpot', label: '잭폿',    amount: 100, weight: 2,  color: '#C9962A' },
+]
+
+export function hasSpunRouletteToday(): boolean {
+  return localStorage.getItem(`${KEY}_roulette`) === today()
+}
+
+export function pickRouletteSegment(): RouletteSegment {
+  const total = ROULETTE_SEGMENTS.reduce((sum, seg) => sum + seg.weight, 0)
+  let r = Math.random() * total
+  for (const seg of ROULETTE_SEGMENTS) {
+    if (r < seg.weight) return seg
+    r -= seg.weight
+  }
+  return ROULETTE_SEGMENTS[0]
+}
+
+export function claimRoulette(p: PointsState, segment: RouletteSegment): PointsState {
+  localStorage.setItem(`${KEY}_roulette`, today())
+  scheduleCloudPush()
+  return awardPoints(p, segment.amount, `오행 룰렛 — ${segment.label} 적중! 🎡`)
+}
+
 // 기능별 하루 1회 보너스 — featureKey ex) 'today', 'sinnyeon'
 export function tryFeatureBonus(
   p: PointsState, featureKey: string, label: string
