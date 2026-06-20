@@ -108,9 +108,15 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
                 <div className={`absolute inset-0 rounded-full border-4 ${phase === 'running' ? 'border-[#C9962A60] animate-pulse' : 'border-[#2A1F4A]'}`}/>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <IcLucky size={36} className="text-[#C9962A] opacity-50 absolute -top-2"/>
-                  <p className="text-4xl font-bold text-[#F5EDD4] tabular-nums" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                    {elapsed.toFixed(2)}<span className="text-lg text-[#7B6F9A]">초</span>
-                  </p>
+                  {phase === 'running' ? (
+                    <p className="text-4xl font-bold text-[#F5EDD4] tabular-nums">
+                      ?<span className="text-lg text-[#7B6F9A]">초</span>
+                    </p>
+                  ) : (
+                    <p className="text-4xl font-bold text-[#F5EDD4] tabular-nums" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                      {elapsed.toFixed(2)}<span className="text-lg text-[#7B6F9A]">초</span>
+                    </p>
+                  )}
                 </div>
               </div>
 

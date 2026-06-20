@@ -197,6 +197,7 @@ export default function App() {
         onPointsUpdate={setPoints}
         onNavigate={handleHomeNavigate}
         onAttendance={() => { setPage('attendance'); window.scrollTo(0, 0) }}
+        onLuckyTimer={() => { setPage('lucky'); window.scrollTo(0, 0) }}
         onEditProfile={() => { setPage('profile'); window.scrollTo(0, 0) }}
         onLogout={handleLogout}
         onShowPrivacy={() => openLegal('privacy', 'home')}
