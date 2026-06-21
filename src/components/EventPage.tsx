@@ -13,6 +13,48 @@ function CornerFret({ className = '' }: { className?: string }) {
   )
 }
 
+// 코인 테두리의 톱니(쉐브론) 패턴 — Canva 시안의 음각 메달 테두리 재현
+function CoinRing({ className = '' }: { className?: string }) {
+  const teeth = Array.from({ length: 18 }, (_, i) => i * (360 / 18))
+  return (
+    <svg viewBox="0 0 56 56" className={className} fill="none">
+      <circle cx="28" cy="28" r="25.5" stroke="currentColor" strokeWidth="1" opacity="0.55" />
+      <circle cx="28" cy="28" r="18.5" stroke="currentColor" strokeWidth="1" opacity="0.55" />
+      <g opacity="0.85">
+        {teeth.map(d => (
+          <polygon key={d} points="28,20.5 29.6,24.8 26.4,24.8" fill="currentColor" transform={`rotate(${d} 28 28)`} />
+        ))}
+      </g>
+    </svg>
+  )
+}
+
+// 청동 코인 메달 배지 — Canva 시안의 음각 코인 아이콘 스타일 재현
+function CoinBadge({ children, ornaments = false }: { children: React.ReactNode; ornaments?: boolean }) {
+  return (
+    <div className="relative shrink-0 w-14 h-14 flex items-center justify-center">
+      {ornaments && (
+        <>
+          <div className="absolute -left-[5px] top-1/2 -translate-y-1/2 w-2 h-2 rotate-45 bg-[#C9962A]" />
+          <div className="absolute -right-[5px] top-1/2 -translate-y-1/2 w-2 h-2 rotate-45 bg-[#C9962A]" />
+        </>
+      )}
+      <div
+        className="relative w-14 h-14 rounded-full flex items-center justify-center"
+        style={{ background: 'radial-gradient(circle at 32% 26%, #E2BD78 0%, #B9863F 48%, #6B4520 100%)', boxShadow: '0 2px 10px rgba(0,0,0,0.45), 0 0 14px rgba(184,134,63,0.35)' }}
+      >
+        <div className="absolute inset-0 rounded-full border border-[#3A2410]/70" />
+        <CoinRing className="absolute inset-0 text-[#4A2F14]" />
+        <div
+          className="absolute inset-[11px] rounded-full"
+          style={{ background: 'radial-gradient(circle at 35% 28%, #C9A05A, #8A6230 65%, #5C3D1C 100%)', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.55), inset 0 -1px 2px rgba(255,224,170,0.25)' }}
+        />
+        <div className="relative text-[#2E1B0A]">{children}</div>
+      </div>
+    </div>
+  )
+}
+
 interface Props {
   onBack: () => void
   onOpenLucky: () => void
@@ -46,14 +88,9 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
             <CornerFret className="absolute bottom-2 right-2 text-[#C9962A] -scale-x-100 -scale-y-100" />
 
             <div className="flex items-center gap-3">
-              <div
-                className="relative shrink-0 w-14 h-14 rounded-full flex items-center justify-center"
-                style={{ background: 'radial-gradient(circle at 35% 30%, #FFD557, #E8A33D 55%, #8A5A14 100%)', boxShadow: '0 0 18px rgba(232,163,61,0.5)' }}
-              >
-                <div className="absolute inset-0 rounded-full border-2 border-[#FFE9A8]/70" />
-                <div className="absolute inset-[3px] rounded-full border border-[#8A5A14]/60" />
-                <IcLucky size={26} className="relative text-[#3A1F05]"/>
-              </div>
+              <CoinBadge>
+                <IcLucky size={24} className="text-[#2E1B0A]" />
+              </CoinBadge>
               <div className="flex-1">
                 <div className="flex items-baseline gap-2">
                   <span className="text-base font-bold text-[#C9962A]">1</span>
@@ -83,14 +120,9 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
             <CornerFret className="absolute bottom-2 right-2 text-[#C9962A] -scale-x-100 -scale-y-100" />
 
             <div className="flex items-center gap-3">
-              <div
-                className="relative shrink-0 w-14 h-14 rounded-full flex items-center justify-center"
-                style={{ background: 'radial-gradient(circle at 35% 30%, #FFD557, #E8A33D 55%, #8A5A14 100%)', boxShadow: '0 0 18px rgba(232,163,61,0.5)' }}
-              >
-                <div className="absolute inset-0 rounded-full border-2 border-[#FFE9A8]/70" />
-                <div className="absolute inset-[3px] rounded-full border border-[#8A5A14]/60" />
-                <IcRoulette size={26} className="relative text-[#3A1F05]"/>
-              </div>
+              <CoinBadge>
+                <IcRoulette size={24} className="text-[#2E1B0A]" />
+              </CoinBadge>
               <div className="flex-1">
                 <div className="flex items-baseline gap-2">
                   <span className="text-base font-bold text-[#C9962A]">2</span>
@@ -120,14 +152,9 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
             <CornerFret className="absolute bottom-2 right-2 text-[#C9962A] -scale-x-100 -scale-y-100" />
 
             <div className="flex items-center gap-3">
-              <div
-                className="relative shrink-0 w-14 h-14 rounded-full flex items-center justify-center"
-                style={{ background: 'radial-gradient(circle at 35% 30%, #FFD557, #E8A33D 55%, #8A5A14 100%)', boxShadow: '0 0 18px rgba(232,163,61,0.5)' }}
-              >
-                <div className="absolute inset-0 rounded-full border-2 border-[#FFE9A8]/70" />
-                <div className="absolute inset-[3px] rounded-full border border-[#8A5A14]/60" />
-                <IcGift size={26} className="relative text-[#3A1F05]"/>
-              </div>
+              <CoinBadge ornaments>
+                <IcGift size={24} className="text-[#2E1B0A]" />
+              </CoinBadge>
               <div className="flex-1">
                 <div className="flex items-baseline gap-2">
                   <span className="text-base font-bold text-[#C9962A]">3</span>

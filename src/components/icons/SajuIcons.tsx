@@ -251,31 +251,33 @@ export function IcLucky({ size = 24, className = '' }: P) {
   )
 }
 
-// 오행 룰렛 — 5등분 회전판
+// 오행 룰렛 — 8방위 컴퍼스 별 (캔바 코인 메달 시안 재현)
 export function IcRoulette({ size = 24, className = '' }: P) {
+  const leftHalf = 'M12 2.2 L10.6 12 L12 12 Z'
+  const rightHalf = 'M12 2.2 L13.4 12 L12 12 Z'
+  const angles = [0, 45, 90, 135, 180, 225, 270, 315]
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-      <path d="M12 1.2 L13.4 3.8 L10.6 3.8 Z" fill="currentColor"/>
-      <circle cx="12" cy="12" r="9" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeWidth="1.6"/>
-      <g stroke="currentColor" strokeWidth="1" opacity="0.7">
-        {[0, 72, 144, 216, 288].map(a => (
-          <line key={a} x1="12" y1="12" x2="12" y2="3.4" transform={`rotate(${a} 12 12)`} />
-        ))}
-      </g>
-      <circle cx="12" cy="12" r="2.1" fill="currentColor"/>
+      {angles.map(a => (
+        <g key={a} transform={`rotate(${a} 12 12)`}>
+          <path d={leftHalf} fill="currentColor" opacity="0.9" />
+          <path d={rightHalf} fill="currentColor" opacity="0.55" />
+        </g>
+      ))}
+      <circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" strokeWidth="0.6" opacity="0.5" />
+      <circle cx="12" cy="12" r="1.4" fill="currentColor" />
     </svg>
   )
 }
 
-// 친구 초대 선물 — 리본 상자
+// 친구 초대 선물 — 리본 상자 (캔바 코인 메달 시안 재현)
 export function IcGift({ size = 24, className = '' }: P) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
-      <path d="M12 7.2 C10.8 4.2 7.6 3.4 6.2 4.7 C5 5.8 5.9 7.7 8.5 7.7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="currentColor" fillOpacity="0.15"/>
-      <path d="M12 7.2 C13.2 4.2 16.4 3.4 17.8 4.7 C19 5.8 18.1 7.7 15.5 7.7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="currentColor" fillOpacity="0.15"/>
-      <rect x="3.3" y="7.4" width="17.4" height="3.6" rx="0.7" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="1.4"/>
-      <rect x="4.3" y="11" width="15.4" height="9" rx="0.8" fill="currentColor" fillOpacity="0.15" stroke="currentColor" strokeWidth="1.5"/>
-      <line x1="12" y1="7.4" x2="12" y2="20" stroke="currentColor" strokeWidth="1.3" opacity="0.65"/>
+      <path d="M12 8.6 C10.4 4.8 6.6 4 5.2 5.4 C4 6.6 4.9 8.8 8 8.8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="currentColor" fillOpacity="0.18"/>
+      <path d="M12 8.6 C13.6 4.8 17.4 4 18.8 5.4 C20 6.6 19.1 8.8 16 8.8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="currentColor" fillOpacity="0.18"/>
+      <rect x="4.6" y="9.4" width="14.8" height="10.4" rx="0.7" fill="currentColor" fillOpacity="0.18" stroke="currentColor" strokeWidth="1.5"/>
+      <line x1="12" y1="9.4" x2="12" y2="19.8" stroke="currentColor" strokeWidth="1.4" opacity="0.7"/>
     </svg>
   )
 }
