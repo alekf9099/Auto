@@ -27,6 +27,27 @@ interface Props {
   onShowTerms: () => void
 }
 
+// 배너 모서리를 장식하는 금색 이중선 브래킷 (전통 한지 액자 느낌)
+function CornerOrnament({ className = '' }: { className?: string }) {
+  return (
+    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" className={className}>
+      <path d="M2 22V6Q2 2 6 2H22" stroke="#C9962A" strokeWidth="1.3" opacity="0.65"/>
+      <path d="M7 26V10Q7 7 10 7H26" stroke="#C9962A" strokeWidth="1" opacity="0.4"/>
+      <circle cx="6" cy="2" r="1.4" fill="#E8C75C" opacity="0.8"/>
+    </svg>
+  )
+}
+
+// 카드 배경에 흩뿌려진 작은 별빛 — 은하수 같은 깊이감을 더함
+const BANNER_STARS = [
+  { top: '14%', left: '9%',  size: 2.5, opacity: 0.7 },
+  { top: '24%', left: '92%', size: 2,   opacity: 0.5 },
+  { top: '55%', left: '4%',  size: 1.8, opacity: 0.45 },
+  { top: '70%', left: '88%', size: 2.4, opacity: 0.6 },
+  { top: '8%',  left: '55%', size: 1.6, opacity: 0.4 },
+  { top: '85%', left: '40%', size: 2,   opacity: 0.5 },
+]
+
 const DAILY_FALLBACK = [
   '하늘의 기운이 오늘 당신 편입니다. 새로운 도전에 과감히 나서보세요.',
   '작은 실천이 큰 변화를 만드는 날입니다. 미루던 일을 시작하세요.',
@@ -226,10 +247,27 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         {/* 인사 + 오늘 운세 한 줄 */}
         <div style={reveal(0)}>
         <div
-          className="rounded-3xl p-5 border shadow-xl shadow-[#000]/40 transition-colors duration-500"
+          className="relative overflow-hidden rounded-3xl p-5 border shadow-xl shadow-[#000]/40 transition-colors duration-500"
           style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)', borderColor: todayAccent + '40' }}
         >
-          <div className="flex items-center justify-between gap-2 mb-1">
+          {/* 은하수 별빛 */}
+          <div className="absolute inset-0 pointer-events-none">
+            {BANNER_STARS.map((star, i) => (
+              <span
+                key={i}
+                className="absolute rounded-full bg-[#E8C75C]"
+                style={{ top: star.top, left: star.left, width: star.size, height: star.size, opacity: star.opacity }}
+              />
+            ))}
+          </div>
+
+          {/* 금색 액자 모서리 장식 */}
+          <CornerOrnament className="absolute top-2 left-2 pointer-events-none"/>
+          <CornerOrnament className="absolute top-2 right-2 -scale-x-100 pointer-events-none"/>
+          <CornerOrnament className="absolute bottom-2 left-2 -scale-y-100 pointer-events-none"/>
+          <CornerOrnament className="absolute bottom-2 right-2 -scale-x-100 -scale-y-100 pointer-events-none"/>
+
+          <div className="relative flex items-center justify-between gap-2 mb-1">
             <p className="text-violet-300/70 text-xs">
               {todayDate.getFullYear()}년 {month}월 {day}일 · 안녕하세요, {user.name}님
             </p>
@@ -242,11 +280,11 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
               </span>
             )}
           </div>
-          <p className="text-base font-bold text-[#F5EDD4] mb-3" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+          <p className="relative text-base font-bold text-[#F5EDD4] mb-3" style={{ fontFamily: "'Noto Serif KR', serif" }}>
             오늘의 한 줄 운세
           </p>
           <div
-            className="flex gap-3 items-start rounded-2xl px-4 py-3.5 border transition-colors duration-500"
+            className="relative flex gap-3 items-start rounded-2xl px-4 py-3.5 border transition-colors duration-500"
             style={{ backgroundColor: todayAccent + '12', borderColor: todayAccent + '35' }}
           >
             <span
@@ -259,7 +297,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           </div>
           <button
             onClick={() => onNavigate('today')}
-            className="mt-3 text-xs font-semibold transition"
+            className="relative mt-3 text-xs font-semibold transition"
             style={{ color: todayAccent }}
           >
             오늘 전체 운세 보기 →
