@@ -186,6 +186,24 @@ export default function TarotPage({ onBack }: Props) {
         {/* ── INTRO ── */}
         {step === 'intro' && (
           <div className="space-y-4">
+
+            {/* 양옆에 실제 타로 카드를 두고 가운데를 비추는 장식용 히어로 */}
+            <div className="relative h-44 flex items-center justify-center mb-1">
+              <div className="absolute inset-x-0 top-0 h-44 flex items-center justify-center pointer-events-none">
+                <div className="w-56 h-32 rounded-full blur-2xl opacity-40" style={{ background: 'radial-gradient(circle, rgba(232,199,92,0.4), transparent 70%)' }} />
+              </div>
+              <div className="absolute left-0 w-20 h-32 rounded-xl border border-[#d4af37]/60 overflow-hidden shadow-lg -rotate-[12deg] z-10">
+                <img src={cardImageSrc('strength')} alt="" className="w-full h-full object-cover" />
+              </div>
+              <div className="relative z-20 flex flex-col items-center gap-1.5">
+                <IcTarot size={30} className="text-[#E8C75C]" />
+                <p className="text-[11px] text-[#C9962A] font-semibold tracking-wide">22장의 메이저 아르카나</p>
+              </div>
+              <div className="absolute right-0 w-20 h-32 rounded-xl border border-[#d4af37]/60 overflow-hidden shadow-lg rotate-[12deg] z-10">
+                <img src={cardImageSrc('justice')} alt="" className="w-full h-full object-cover" />
+              </div>
+            </div>
+
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
               <p className="text-violet-300/70 text-xs mb-1">과거 · 현재 · 미래 3카드 스프레드</p>
               <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>
