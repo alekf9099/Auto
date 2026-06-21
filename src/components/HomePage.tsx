@@ -85,78 +85,13 @@ function useCountUp(value: number, duration = 700) {
   return display
 }
 
-const TAROT_GOLD = '#E8C75C'
-
-// 타로 배너 좌우의 수정구슬 / 손바닥 아이콘 (반짝임 장식 포함)
-function TarotCrystalBallIcon() {
-  return (
-    <svg className="w-9 h-9" fill="none" viewBox="0 0 40 40" stroke={TAROT_GOLD} strokeWidth="1.2">
-      <circle cx="17" cy="16" r="10" />
-      <path d="M6 28h22M9 31.5h16" />
-      <path d="M30 7l2.4 2.4M32.4 7l-2.4 2.4" strokeWidth="1" />
-      <path d="M33 17l1.8 1.8M34.8 17l-1.8 1.8" strokeWidth="1" />
-    </svg>
-  )
-}
-function TarotHandIcon() {
-  return (
-    <svg className="w-9 h-9" fill="none" viewBox="0 0 40 40" stroke={TAROT_GOLD} strokeWidth="1.2">
-      <path d="M15 36c-4 0-7-3-7-7V19a2 2 0 1 1 4 0v6h1V11a2 2 0 1 1 4 0v12h1V8a2 2 0 1 1 4 0v15h1V11a2 2 0 1 1 4 0v9c3 0 5 3 5 6v2c0 4-3 7-7 7z" />
-      <path d="M7 9l2.2 2.2M9.2 9l-2.2 2.2" strokeWidth="1" />
-      <path d="M5 21l1.8 1.8M6.8 21l-1.8 1.8" strokeWidth="1" />
-    </svg>
-  )
-}
-
-// 타로 배너 카드 3장 안에 들어가는 금빛 문양 (초승달 / 천리안 눈 / 태양)
-function TarotCardArt({ variant }: { variant: 'moon' | 'eye' | 'sun' }) {
-  const cx = 20, cy = 23
-  return (
-    <svg viewBox="0 0 40 60" className="w-full h-full" fill="none" stroke={TAROT_GOLD} strokeWidth="0.8">
-      {Array.from({ length: 14 }).map((_, i) => {
-        const a = (i * (360 / 14) * Math.PI) / 180
-        const x1 = cx + Math.cos(a) * 9, y1 = cy + Math.sin(a) * 9
-        const x2 = cx + Math.cos(a) * 16, y2 = cy + Math.sin(a) * 16
-        return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} opacity="0.5" />
-      })}
-      <circle cx={cx} cy={cy} r="9" opacity="0.65" />
-
-      {variant === 'moon' && (
-        <path d="M23 16a7.5 7.5 0 1 0 0 14 9 9 0 1 1 0-14z" fill={TAROT_GOLD} stroke="none" />
-      )}
-      {variant === 'eye' && (
-        <>
-          <path d="M11 23c3-4.5 6-6.5 9-6.5s6 2 9 6.5c-3 4.5-6 6.5-9 6.5s-6-2-9-6.5z" />
-          <circle cx={cx} cy={cy} r="3" />
-          <circle cx={cx} cy={cy} r="1.1" fill={TAROT_GOLD} stroke="none" />
-        </>
-      )}
-      {variant === 'sun' && (
-        <>
-          <circle cx={cx} cy={cy} r="4.2" fill={TAROT_GOLD} stroke="none" />
-          {Array.from({ length: 8 }).map((_, i) => {
-            const a = (i * 45 * Math.PI) / 180
-            const x1 = cx + Math.cos(a) * 5.5, y1 = cy + Math.sin(a) * 5.5
-            const x2 = cx + Math.cos(a) * 8, y2 = cy + Math.sin(a) * 8
-            return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} />
-          })}
-        </>
-      )}
-
-      <line x1="5" y1="44" x2="35" y2="44" opacity="0.4" />
-      {Array.from({ length: 6 }).map((_, i) => (
-        <circle
-          key={i}
-          cx={7 + i * 5.2}
-          cy={50}
-          r="1.1"
-          opacity={i === 2 || i === 3 ? 1 : 0.5}
-          fill={i === 2 || i === 3 ? TAROT_GOLD : 'none'}
-        />
-      ))}
-    </svg>
-  )
-}
+// 타로 배너 카드 4장에 사용하는 AI 생성 일러스트 (태양 / 천리안 눈 / 수정구슬 / 손바닥)
+const TAROT_CARD_IMAGES = [
+  { src: '/images/tarot/sun.webp',        rotate: '-rotate-[14deg]' },
+  { src: '/images/tarot/eye.webp',        rotate: '-rotate-[4deg] -translate-y-1' },
+  { src: '/images/tarot/crystalball.webp', rotate: 'rotate-[4deg] -translate-y-1' },
+  { src: '/images/tarot/hand.webp',       rotate: 'rotate-[14deg]' },
+]
 
 export default function HomePage({ user, nickname, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms }: Props) {
   const todayDate = new Date()
@@ -376,29 +311,20 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           onClick={() => onNavigate('tarot')}
           className="w-full text-left relative overflow-hidden rounded-2xl border border-[#d4af37]/30 bg-gradient-to-b from-[#1a1026] to-[#120a1c] p-6 shadow-[0_0_20px_rgba(212,175,55,0.1)] active:scale-[0.99] transition-transform"
         >
-          <div className="flex items-center justify-between mb-6 h-32 relative">
+          <div className="flex items-center justify-center mb-6 h-32 relative">
             <div className="absolute inset-x-0 top-0 h-32 flex items-center justify-center pointer-events-none">
               <div className="w-44 h-28 rounded-full blur-2xl opacity-40" style={{ background: 'radial-gradient(circle, rgba(232,199,92,0.35), transparent 70%)' }} />
             </div>
 
-            <div className="text-[#e8c75c] relative z-10">
-              <TarotCrystalBallIcon/>
-            </div>
-
-            <div className="flex justify-center items-center -space-x-4 relative z-10">
-              <div className="w-16 h-[104px] rounded-md border border-[#d4af37]/50 bg-[#1f1430] -rotate-12 shadow-lg p-1">
-                <TarotCardArt variant="moon"/>
-              </div>
-              <div className="w-[72px] h-28 rounded-md border border-[#d4af37] bg-[#25173a] -translate-y-1 z-20 shadow-[0_0_15px_rgba(212,175,55,0.2)] p-1">
-                <TarotCardArt variant="eye"/>
-              </div>
-              <div className="w-16 h-[104px] rounded-md border border-[#d4af37]/50 bg-[#1f1430] rotate-12 shadow-lg p-1">
-                <TarotCardArt variant="sun"/>
-              </div>
-            </div>
-
-            <div className="text-[#e8c75c] relative z-10">
-              <TarotHandIcon/>
+            <div className="flex justify-center items-center -space-x-5 relative z-10">
+              {TAROT_CARD_IMAGES.map((card, i) => (
+                <div
+                  key={card.src}
+                  className={`w-16 h-[104px] rounded-md border border-[#d4af37]/60 overflow-hidden shadow-lg ${card.rotate} ${i === 1 || i === 2 ? 'z-20 shadow-[0_0_15px_rgba(212,175,55,0.2)]' : 'z-10'}`}
+                >
+                  <img src={card.src} alt="" className="w-full h-full object-cover" />
+                </div>
+              ))}
             </div>
           </div>
 
