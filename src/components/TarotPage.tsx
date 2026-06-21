@@ -85,6 +85,7 @@ export default function TarotPage({ onBack }: Props) {
   const drawn = picked.map(i => spread[i])
 
   function handleStartDraw() {
+    if (!question.trim()) return
     setStep('shuffling')
     setTimeout(() => {
       setSpread(shuffleDeck())
@@ -210,7 +211,7 @@ export default function TarotPage({ onBack }: Props) {
                 무엇이 궁금하신가요?
               </h2>
               <p className="text-sm text-[#A89BC0] leading-relaxed">
-                궁금한 점을 적으면 더 정확한 해석을 받을 수 있어요. 비워두면 전반적인 흐름을 봐드려요.
+                궁금한 점을 적으면 더 정확한 해석을 받을 수 있어요.
               </p>
             </div>
 
@@ -223,12 +224,13 @@ export default function TarotPage({ onBack }: Props) {
                 rows={3}
                 className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-4 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition resize-none leading-relaxed"
               />
-              <p className="text-xs text-[#4A4060] mt-2 px-1">{question.length}/200자 · 선택 입력</p>
+              <p className="text-xs text-[#4A4060] mt-2 px-1">{question.length}/200자 · 필수 입력</p>
             </div>
 
             <button
               onClick={handleStartDraw}
-              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99] flex items-center justify-center gap-2"
+              disabled={!question.trim()}
+              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
             >
               <IcTarot size={20} className="text-[#0D0A1A]" />
               카드 뽑기
@@ -279,7 +281,7 @@ export default function TarotPage({ onBack }: Props) {
 
             <p className="text-center text-sm text-[#A89BC0]">22장 중 3장을 골라주세요 ({picked.length}/3)</p>
 
-            <div className="grid grid-cols-5 gap-2">
+            <div className="flex flex-wrap gap-2 justify-center">
               {spread.map((card, i) => {
                 const pickIndex = picked.indexOf(i)
                 const isPicked = pickIndex !== -1
@@ -289,7 +291,7 @@ export default function TarotPage({ onBack }: Props) {
                     key={card.id}
                     onClick={() => handlePick(i)}
                     disabled={isPicked || allPicked}
-                    className={`aspect-[2/3] transition-all duration-300 ${disabled ? 'opacity-30' : 'active:scale-95'}`}
+                    className={`w-[17.5%] aspect-[2/3] transition-all duration-300 ${isPicked ? 'opacity-20' : disabled ? 'opacity-30' : 'active:scale-95'}`}
                   >
                     {isPicked ? <TarotCardFace card={card}/> : <TarotCardBack/>}
                   </button>
