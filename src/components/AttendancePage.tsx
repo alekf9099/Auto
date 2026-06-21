@@ -11,16 +11,16 @@ interface Props {
 }
 
 const POINT_GUIDE = [
-  { icon: '🎁', label: '가입 보너스',       amount: 100, color: '#7C3AED', bg: '#F3F0FF' },
-  { icon: '📅', label: '매일 출석 체크',     amount: 10,  color: '#059669', bg: '#ECFDF5' },
-  { icon: '🎯', label: '행운의 숫자 잡기 (성공)', amount: 20,  color: '#B45309', bg: '#FFF7ED' },
-  { icon: '⏱️', label: '행운의 숫자 잡기 (참가)', amount: 5,   color: '#92400E', bg: '#FFFBEB' },
-  { icon: '🔮', label: '오늘의 운세',        amount: 5,   color: '#D97706', bg: '#FFFBEB' },
-  { icon: '⏰', label: '내일의 운세',        amount: 5,   color: '#D97706', bg: '#FFFBEB' },
-  { icon: '🗓️', label: '신년운세',          amount: 5,   color: '#2563EB', bg: '#EFF6FF' },
-  { icon: '📖', label: '토정비결',           amount: 5,   color: '#DC2626', bg: '#FFF1F2' },
-  { icon: '☯',  label: '정통사주',           amount: 5,   color: '#7C3AED', bg: '#F3F0FF' },
-  { icon: '📊', label: '대운 분석',          amount: 5,   color: '#0891B2', bg: '#ECFEFF' },
+  { icon: '🎁', label: '가입 보너스',       amount: 100, color: '#C9962A' },
+  { icon: '📅', label: '매일 출석 체크',     amount: 10,  color: '#4BBF7E' },
+  { icon: '🎯', label: '행운의 숫자 잡기 (성공)', amount: 20,  color: '#F0B429' },
+  { icon: '⏱️', label: '행운의 숫자 잡기 (참가)', amount: 5,   color: '#E8A33D' },
+  { icon: '🔮', label: '오늘의 운세',        amount: 5,   color: '#E8A33D' },
+  { icon: '⏰', label: '내일의 운세',        amount: 5,   color: '#FB923C' },
+  { icon: '🗓️', label: '신년운세',          amount: 5,   color: '#60A5FA' },
+  { icon: '📖', label: '토정비결',           amount: 5,   color: '#E05282' },
+  { icon: '☯',  label: '정통사주',           amount: 5,   color: '#A78BFA' },
+  { icon: '📊', label: '대운 분석',          amount: 5,   color: '#22D3EE' },
 ]
 
 const todayStr = () => new Date().toISOString().slice(0, 10)
@@ -188,9 +188,14 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
           </div>
           <div className="space-y-2">
             {POINT_GUIDE.map(g => (
-              <div key={g.label} className="flex items-center gap-3 px-4 py-3 rounded-2xl" style={{ backgroundColor: g.bg }}>
-                <span className="text-lg shrink-0">{g.icon}</span>
-                <p className="flex-1 text-sm font-semibold" style={{ color: g.color }}>{g.label}</p>
+              <div key={g.label} className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#1C1438] border border-[#2A1F4A]">
+                <div
+                  className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                  style={{ backgroundColor: g.color + '20', border: `1px solid ${g.color}40` }}
+                >
+                  <span className="text-sm">{g.icon}</span>
+                </div>
+                <p className="flex-1 text-sm font-semibold text-[#E8DFC8]">{g.label}</p>
                 <span className="text-sm font-bold shrink-0" style={{ color: g.color }}>+{g.amount}P</span>
               </div>
             ))}
