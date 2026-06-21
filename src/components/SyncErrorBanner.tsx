@@ -6,7 +6,7 @@ interface Props {
 
 export default function SyncErrorBanner({ expired, onDismiss, onRelogin }: Props) {
   return (
-    <div className="fixed top-0 inset-x-0 z-[60] bg-[#3A1F1F] border-b border-[#C9962A40] px-4 py-2.5 flex items-center justify-between gap-3 text-xs text-[#F0D9C0] shadow-md shadow-black/30">
+    <div className="bg-[#3A1F1F] border-b border-[#C9962A40] px-4 py-2.5 flex items-center justify-between gap-3 text-xs text-[#F0D9C0] shadow-md shadow-black/30">
       <span>
         {expired
           ? '⚠️ 로그인이 만료됐어요. 다시 로그인하면 동기화가 복구돼요.'

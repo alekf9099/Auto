@@ -3,12 +3,14 @@ import type { BirthInput, UserInfo } from './types'
 import { loadPoints, awardPoints } from './utils/points'
 import type { PointsState } from './utils/points'
 import { setCurrentEmail, setIdToken, getIdToken, getCurrentEmail, decodeIdToken, pullCloudData, scheduleCloudPush, onSyncStatusChange } from './utils/cloudSync'
+import { fetchRemoteConfig, isNoticeDismissed, dismissNotice } from './utils/remoteConfig'
 import { loadNickname, saveNickname } from './utils/nickname'
 import { trackPageView, trackEvent } from './utils/analytics'
 import LoginPage        from './components/LoginPage'
 import SplashScreen     from './components/SplashScreen'
 import LoadingScreen    from './components/LoadingScreen'
 import SyncErrorBanner  from './components/SyncErrorBanner'
+import NoticeBanner     from './components/NoticeBanner'
 import BottomNav from './components/BottomNav'
 import type { NavTab } from './components/BottomNav'
 
@@ -77,8 +79,16 @@ export default function App() {
   const [isNewCloudUser, setIsNewCloudUser] = useState(true)
   const [legalReturn,  setLegalReturn]  = useState<Page>('login')
   const [syncIssue,    setSyncIssue]    = useState<'error' | 'expired' | null>(null)
+  const [notice,       setNotice]       = useState<{ id: string; message: string } | null>(null)
 
   useEffect(() => onSyncStatusChange(status => setSyncIssue(status === 'ok' ? null : status)), [])
+
+  // 배포 없이 공지/점검 메시지를 띄울 수 있도록 원격 설정을 한 번 가져온다 (실패해도 무시).
+  useEffect(() => {
+    fetchRemoteConfig().then(cfg => {
+      if (cfg.notice && !isNoticeDismissed(cfg.notice.id)) setNotice(cfg.notice)
+    })
+  }, [])
 
   // 세션이 복원된 경우, 백그라운드에서 클라우드 데이터를 한 번 받아온다 (토큰 만료 시 위 리스너가 안내 배너를 띄운다)
   useEffect(() => {
@@ -266,12 +276,22 @@ export default function App() {
 
   return (
     <>
-      {syncIssue && (
-        <SyncErrorBanner
-          expired={syncIssue === 'expired'}
-          onDismiss={() => setSyncIssue(null)}
-          onRelogin={handleLogout}
-        />
+      {(syncIssue || notice) && (
+        <div className="fixed top-0 inset-x-0 z-[60] flex flex-col">
+          {syncIssue && (
+            <SyncErrorBanner
+              expired={syncIssue === 'expired'}
+              onDismiss={() => setSyncIssue(null)}
+              onRelogin={handleLogout}
+            />
+          )}
+          {notice && (
+            <NoticeBanner
+              message={notice.message}
+              onDismiss={() => { dismissNotice(notice.id); setNotice(null) }}
+            />
+          )}
+        </div>
       )}
       <Suspense fallback={<PageFallback />}>
         <div className={showNav ? 'pb-16 bg-[#0D0A1A]' : ''}>{content}</div>

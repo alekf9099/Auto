@@ -7,6 +7,7 @@ import { calculateSaju, getSipsin, pillarName } from '../utils/saju'
 import { SIPSIN_DESC, STEMS, ELEMENT_COLORS, ELEMENT_LABELS } from '../utils/constants'
 import { DAY_FORTUNE } from '../utils/fortuneData'
 import PointsModal from './PointsModal'
+import AdBanner from './AdBanner'
 import {
   IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon, IcLucky, IcBattle, IcMatch,
 } from './icons/SajuIcons'
@@ -565,6 +566,8 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         </div>
 
       </div>
+
+      <AdBanner />
 
       <div className="text-center pb-2 text-xs text-[#4A4060]">사주팔자 — 양력 기준 · 절기 근사값 적용</div>
       <div className="text-center pb-8 text-xs text-[#4A4060]">

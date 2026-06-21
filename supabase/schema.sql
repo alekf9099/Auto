@@ -37,3 +37,19 @@ alter table public.match_pool enable row level security;
 -- 프로필 사진(선택): 사용자가 직접 올린 작은 썸네일(data URL)만 저장한다.
 -- 구글 계정 사진이 아니라 사용자가 매칭용으로 직접 선택/업로드한 사진이다.
 alter table public.match_pool add column if not exists photo text;
+
+-- 원격 설정: 공지/점검 메시지 등 배포 없이 바꿀 수 있는 값을 저장한다.
+-- 민감하지 않은 공개 정보만 저장하므로 RLS 정책 없이 anon 접근을 막아두고,
+-- 서버(/api/config)가 service_role 키로만 읽는다 (다른 테이블과 동일한 패턴).
+create table if not exists public.app_config (
+  key        text primary key,
+  value      jsonb not null,
+  updated_at timestamptz not null default now()
+);
+
+alter table public.app_config enable row level security;
+
+-- 예시: 공지 배너를 켜려면 아래처럼 한 행을 넣으면 된다.
+-- insert into public.app_config (key, value) values
+--   ('notice', '{"id": "2026-06-21-maint", "message": "6/22 새벽 2~3시 서버 점검이 있어요."}')
+--   on conflict (key) do update set value = excluded.value, updated_at = now();
