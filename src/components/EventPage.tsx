@@ -1,6 +1,18 @@
 import { getLuckyTimerAttempts, LUCKY_TIMER_MAX_ATTEMPTS, hasSpunRouletteToday } from '../utils/points'
 import { IcLucky, IcRoulette, IcGift } from './icons/SajuIcons'
 
+// 카드 모서리 계단식 회문(回紋) 장식 — Canva 시안의 모서리 디테일 재현
+function CornerFret({ className = '' }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 22 22" width="20" height="20" fill="none" className={className}>
+      <path d="M2 18 L2 9 L5 9 L5 6 L9 6 L9 3 L18 3" stroke="currentColor" strokeWidth="1.4"/>
+      <rect x="3.3" y="7.3" width="2.6" height="2.6" fill="currentColor" opacity="0.85"/>
+      <rect x="7.3" y="3.3" width="2.6" height="2.6" fill="currentColor" opacity="0.6"/>
+      <circle cx="2" cy="20" r="1.1" fill="currentColor"/>
+    </svg>
+  )
+}
+
 interface Props {
   onBack: () => void
   onOpenLucky: () => void
@@ -27,11 +39,11 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
         <button onClick={onOpenLucky} className="w-full text-left active:scale-[0.99] transition-all">
-          <div className="relative bg-[#170820] rounded-2xl border border-[#C9962A]/35 px-5 py-4 shadow-[0_2px_16px_rgba(201,150,42,0.10)] overflow-hidden">
-            <span className="absolute top-2 left-2 w-3.5 h-3.5 border-t-2 border-l-2 border-[#C9962A]/55" />
-            <span className="absolute top-2 right-2 w-3.5 h-3.5 border-t-2 border-r-2 border-[#C9962A]/55" />
-            <span className="absolute bottom-2 left-2 w-3.5 h-3.5 border-b-2 border-l-2 border-[#C9962A]/55" />
-            <span className="absolute bottom-2 right-2 w-3.5 h-3.5 border-b-2 border-r-2 border-[#C9962A]/55" />
+          <div className="relative bg-[#170820] rounded-2xl border border-[#C9962A]/70 px-5 py-4 shadow-[0_2px_16px_rgba(201,150,42,0.10)] overflow-hidden">
+            <CornerFret className="absolute top-2 left-2 text-[#C9962A]" />
+            <CornerFret className="absolute top-2 right-2 text-[#C9962A] -scale-x-100" />
+            <CornerFret className="absolute bottom-2 left-2 text-[#C9962A] -scale-y-100" />
+            <CornerFret className="absolute bottom-2 right-2 text-[#C9962A] -scale-x-100 -scale-y-100" />
 
             <div className="flex items-center gap-3">
               <div
@@ -64,11 +76,11 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
         </button>
 
         <button onClick={onOpenRoulette} className="w-full text-left active:scale-[0.99] transition-all">
-          <div className="relative bg-[#170820] rounded-2xl border border-[#C9962A]/35 px-5 py-4 shadow-[0_2px_16px_rgba(201,150,42,0.10)] overflow-hidden">
-            <span className="absolute top-2 left-2 w-3.5 h-3.5 border-t-2 border-l-2 border-[#C9962A]/55" />
-            <span className="absolute top-2 right-2 w-3.5 h-3.5 border-t-2 border-r-2 border-[#C9962A]/55" />
-            <span className="absolute bottom-2 left-2 w-3.5 h-3.5 border-b-2 border-l-2 border-[#C9962A]/55" />
-            <span className="absolute bottom-2 right-2 w-3.5 h-3.5 border-b-2 border-r-2 border-[#C9962A]/55" />
+          <div className="relative bg-[#170820] rounded-2xl border border-[#C9962A]/70 px-5 py-4 shadow-[0_2px_16px_rgba(201,150,42,0.10)] overflow-hidden">
+            <CornerFret className="absolute top-2 left-2 text-[#C9962A]" />
+            <CornerFret className="absolute top-2 right-2 text-[#C9962A] -scale-x-100" />
+            <CornerFret className="absolute bottom-2 left-2 text-[#C9962A] -scale-y-100" />
+            <CornerFret className="absolute bottom-2 right-2 text-[#C9962A] -scale-x-100 -scale-y-100" />
 
             <div className="flex items-center gap-3">
               <div
@@ -101,11 +113,11 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
         </button>
 
         <button onClick={onOpenInvite} className="w-full text-left active:scale-[0.99] transition-all">
-          <div className="relative bg-[#170820] rounded-2xl border border-[#C9962A]/35 px-5 py-4 shadow-[0_2px_16px_rgba(201,150,42,0.10)] overflow-hidden">
-            <span className="absolute top-2 left-2 w-3.5 h-3.5 border-t-2 border-l-2 border-[#C9962A]/55" />
-            <span className="absolute top-2 right-2 w-3.5 h-3.5 border-t-2 border-r-2 border-[#C9962A]/55" />
-            <span className="absolute bottom-2 left-2 w-3.5 h-3.5 border-b-2 border-l-2 border-[#C9962A]/55" />
-            <span className="absolute bottom-2 right-2 w-3.5 h-3.5 border-b-2 border-r-2 border-[#C9962A]/55" />
+          <div className="relative bg-[#170820] rounded-2xl border border-[#C9962A]/70 px-5 py-4 shadow-[0_2px_16px_rgba(201,150,42,0.10)] overflow-hidden">
+            <CornerFret className="absolute top-2 left-2 text-[#C9962A]" />
+            <CornerFret className="absolute top-2 right-2 text-[#C9962A] -scale-x-100" />
+            <CornerFret className="absolute bottom-2 left-2 text-[#C9962A] -scale-y-100" />
+            <CornerFret className="absolute bottom-2 right-2 text-[#C9962A] -scale-x-100 -scale-y-100" />
 
             <div className="flex items-center gap-3">
               <div
