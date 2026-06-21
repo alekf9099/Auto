@@ -85,38 +85,20 @@ function useCountUp(value: number, duration = 700) {
   return display
 }
 
-// 타로 카드 한 장에 들어가는 금빛 만다라 문양
-function TarotMedallion({ size = 30 }: { size?: number }) {
+// 타로 배너 좌우의 수정구슬 / 손바닥 아이콘
+function TarotCrystalBallIcon() {
   return (
-    <svg viewBox="0 0 40 40" width={size} height={size}>
-      <circle cx="20" cy="20" r="17" fill="none" stroke="#C9962A" strokeWidth="1" opacity="0.5"/>
-      <circle cx="20" cy="20" r="12" fill="none" stroke="#E8B84B" strokeWidth="1" opacity="0.7"/>
-      <circle cx="20" cy="20" r="4" fill="#E8B84B"/>
-      {Array.from({ length: 8 }).map((_, i) => {
-        const angle = (i * 45 * Math.PI) / 180
-        const x1 = 20 + Math.cos(angle) * 12, y1 = 20 + Math.sin(angle) * 12
-        const x2 = 20 + Math.cos(angle) * 17, y2 = 20 + Math.sin(angle) * 17
-        return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#C9962A" strokeWidth="1" opacity="0.6"/>
-      })}
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.2}>
+      <circle cx="12" cy="10" r="6" />
+      <path d="M6 18h12M8 21h8M12 16v2" />
     </svg>
   )
 }
-
-// 부채꼴로 펼쳐진 타로 카드 3장 일러스트 (홈 배너용)
-function TarotSpreadArt() {
-  const cardCls = 'absolute rounded-xl border bg-gradient-to-br from-[#2A1A4A] to-[#150B2A] flex items-center justify-center shadow-lg'
+function TarotHandIcon() {
   return (
-    <div className="relative w-full h-[110px] flex items-center justify-center">
-      <div className={cardCls} style={{ width: 64, height: 92, borderColor: '#C9962A50', transform: 'rotate(-16deg) translateX(-44px)' }}>
-        <TarotMedallion size={26}/>
-      </div>
-      <div className={cardCls} style={{ width: 64, height: 92, borderColor: '#C9962A50', transform: 'rotate(16deg) translateX(44px)' }}>
-        <TarotMedallion size={26}/>
-      </div>
-      <div className={`${cardCls} z-10`} style={{ width: 74, height: 106, borderColor: '#E8B84B' }}>
-        <TarotMedallion size={32}/>
-      </div>
-    </div>
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.2}>
+      <path d="M12 2a2 2 0 00-2 2v6H9V6a1.5 1.5 0 00-3 0v5H5V8a1 1 0 00-2 0v8c0 4.4 3.6 8 8 8h2c4.4 0 8-3.6 8-8V9a2 2 0 00-4 0v2h-1V5a2 2 0 00-4 0v5h-1V2z" />
+    </svg>
   )
 }
 
@@ -334,28 +316,45 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
 
         {/* 나만의 타로 상담 배너 */}
         <div style={reveal(2)}>
-        <div
-          className="rounded-3xl border border-[#C9962A40] overflow-hidden shadow-[0_2px_20px_rgba(201,150,42,0.12)]"
-          style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)' }}
+        <button
+          onClick={() => onNavigate('tarot')}
+          className="w-full text-left relative overflow-hidden rounded-2xl border border-[#d4af37]/30 bg-gradient-to-b from-[#1a1026] to-[#120a1c] p-6 shadow-[0_0_20px_rgba(212,175,55,0.1)] active:scale-[0.99] transition-transform"
         >
-          <div className="flex items-center justify-between px-5 pt-4">
-            <h3 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-              나만의 타로 상담
-            </h3>
-            <button
-              onClick={() => onNavigate('tarot')}
-              className="shrink-0 text-xs font-bold text-[#C9962A] bg-[#C9962A15] border border-[#C9962A40] px-3 py-1.5 rounded-full active:scale-95 transition"
-            >
-              지금 시작하기 →
-            </button>
+          <div className="flex items-center justify-between mb-6 h-32 relative">
+            <div className="text-[#d4af37]/60 opacity-80">
+              <TarotCrystalBallIcon/>
+            </div>
+
+            <div className="flex justify-center items-center -space-x-4 relative z-10">
+              <div className="w-16 h-[104px] rounded-md border border-[#d4af37]/50 bg-[#1f1430] -rotate-12 shadow-lg flex items-center justify-center p-1">
+                <div className="w-full h-full border border-[#d4af37]/20 rounded flex items-center justify-center text-[#d4af37]/40 text-xs">🌙</div>
+              </div>
+              <div className="w-[72px] h-28 rounded-md border border-[#d4af37] bg-[#25173a] -translate-y-1 z-20 shadow-[0_0_15px_rgba(212,175,55,0.2)] flex items-center justify-center p-1">
+                <div className="w-full h-full border border-[#d4af37]/30 rounded flex items-center justify-center text-[#d4af37] text-sm">👁️</div>
+              </div>
+              <div className="w-16 h-[104px] rounded-md border border-[#d4af37]/50 bg-[#1f1430] rotate-12 shadow-lg flex items-center justify-center p-1">
+                <div className="w-full h-full border border-[#d4af37]/20 rounded flex items-center justify-center text-[#d4af37]/40 text-xs">☀️</div>
+              </div>
+            </div>
+
+            <div className="text-[#d4af37]/60 opacity-80">
+              <TarotHandIcon/>
+            </div>
           </div>
-          <button
-            onClick={() => onNavigate('tarot')}
-            className="w-full flex items-center justify-center py-4 active:scale-[0.99] transition-transform"
-          >
-            <TarotSpreadArt/>
-          </button>
-        </div>
+
+          <div className="flex items-center justify-between pt-2 border-t border-[#2d1b46]">
+            <div>
+              <h3 className="text-lg font-medium text-[#e5c158] tracking-wide" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                나만의 타로 상담
+              </h3>
+              <p className="text-xs text-gray-400 mt-0.5">오늘의 고민을 카드로 풀어보세요</p>
+            </div>
+            <span className="flex items-center space-x-1 px-4 py-1.5 rounded-full border border-[#d4af37] bg-transparent text-xs text-[#e5c158]">
+              <span>지금 시작하기</span>
+              <span>➔</span>
+            </span>
+          </div>
+        </button>
         </div>
 
         {/* 출석체크 배너 */}
