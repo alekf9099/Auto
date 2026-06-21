@@ -1,5 +1,5 @@
 import { getLuckyTimerAttempts, LUCKY_TIMER_MAX_ATTEMPTS, hasSpunRouletteToday } from '../utils/points'
-import { IcLucky } from './icons/SajuIcons'
+import { IcLucky, IcRoulette, IcGift } from './icons/SajuIcons'
 
 interface Props {
   onBack: () => void
@@ -72,12 +72,12 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
 
             <div className="flex items-center gap-3">
               <div
-                className="relative shrink-0 w-14 h-14 rounded-full flex items-center justify-center text-xl"
+                className="relative shrink-0 w-14 h-14 rounded-full flex items-center justify-center"
                 style={{ background: 'radial-gradient(circle at 35% 30%, #FFD557, #E8A33D 55%, #8A5A14 100%)', boxShadow: '0 0 18px rgba(232,163,61,0.5)' }}
               >
                 <div className="absolute inset-0 rounded-full border-2 border-[#FFE9A8]/70" />
                 <div className="absolute inset-[3px] rounded-full border border-[#8A5A14]/60" />
-                <span className="relative">🎡</span>
+                <IcRoulette size={26} className="relative text-[#3A1F05]"/>
               </div>
               <div className="flex-1">
                 <div className="flex items-baseline gap-2">
@@ -109,12 +109,12 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
 
             <div className="flex items-center gap-3">
               <div
-                className="relative shrink-0 w-14 h-14 rounded-full flex items-center justify-center text-xl"
+                className="relative shrink-0 w-14 h-14 rounded-full flex items-center justify-center"
                 style={{ background: 'radial-gradient(circle at 35% 30%, #FFD557, #E8A33D 55%, #8A5A14 100%)', boxShadow: '0 0 18px rgba(232,163,61,0.5)' }}
               >
                 <div className="absolute inset-0 rounded-full border-2 border-[#FFE9A8]/70" />
                 <div className="absolute inset-[3px] rounded-full border border-[#8A5A14]/60" />
-                <span className="relative">🎁</span>
+                <IcGift size={26} className="relative text-[#3A1F05]"/>
               </div>
               <div className="flex-1">
                 <div className="flex items-baseline gap-2">
