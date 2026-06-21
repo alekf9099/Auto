@@ -9,6 +9,8 @@ interface Props {
 }
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined
+const KAKAO_KEY  = import.meta.env.VITE_KAKAO_JS_KEY as string | undefined
+const KAKAO_SDK_SRC = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js'
 
 declare global {
   interface Window {
@@ -24,7 +26,31 @@ declare global {
         }
       }
     }
+    Kakao?: {
+      init(key: string): void
+      isInitialized(): boolean
+      Auth: {
+        login(opts: { success: (auth: { access_token: string }) => void; fail: (err: unknown) => void }): void
+      }
+      API: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        request(opts: { url: string; success: (res: any) => void; fail: (err: unknown) => void }): void
+      }
+    }
   }
+}
+
+let kakaoSdkLoading = false
+
+// 카카오 SDK는 키가 설정된 경우에만 동적으로 불러온다 (다른 외부 연동과 동일한 패턴).
+function loadKakaoSdk(onReady: () => void) {
+  if (window.Kakao) { onReady(); return }
+  if (kakaoSdkLoading) return
+  kakaoSdkLoading = true
+  const script = document.createElement('script')
+  script.src = KAKAO_SDK_SRC
+  script.onload = onReady
+  document.head.appendChild(script)
 }
 
 export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props) {
@@ -38,7 +64,7 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
         callback: ({ credential }) => {
           const payload = decodeIdToken(credential)
           if (!payload) { console.error('구글 로그인 토큰 처리 실패'); return }
-          onLogin({ name: payload.name, email: payload.email, picture: payload.picture, idToken: credential })
+          onLogin({ name: payload.name, email: payload.email, picture: payload.picture, idToken: credential, provider: 'google' })
         },
       })
       const el = document.getElementById('g-signin')
@@ -56,6 +82,39 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
       return () => clearInterval(t)
     }
   }, [])
+
+  useEffect(() => {
+    if (!KAKAO_KEY) return
+    loadKakaoSdk(() => {
+      if (window.Kakao && !window.Kakao.isInitialized()) window.Kakao.init(KAKAO_KEY)
+    })
+  }, [])
+
+  function handleKakaoLogin() {
+    if (!window.Kakao) return
+    window.Kakao.Auth.login({
+      success: auth => {
+        window.Kakao!.API.request({
+          url: '/v2/user/me',
+          success: res => {
+            const id = res.id as number
+            const account = res.kakao_account ?? {}
+            const profile = account.profile ?? {}
+            const email = account.email && account.is_email_verified ? account.email : `kakao_${id}@kakao.local`
+            onLogin({
+              name: profile.nickname ?? '카카오 사용자',
+              email,
+              picture: profile.profile_image_url,
+              idToken: auth.access_token,
+              provider: 'kakao',
+            })
+          },
+          fail: err => console.error('카카오 사용자 정보 조회 실패:', err),
+        })
+      },
+      fail: err => console.error('카카오 로그인 실패:', err),
+    })
+  }
 
   return (
     <div className="min-h-screen bg-[#0D0A1A] relative overflow-hidden flex flex-col items-center justify-center px-6">
@@ -119,17 +178,42 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
       {/* ── 로그인 카드 ── */}
       <div className="w-full max-w-sm bg-[#130E24] rounded-3xl shadow-[0_4px_24px_rgba(201,150,42,0.12)] border border-[#2A1F4A] p-7">
         <h2 className="text-base font-bold text-[#F5EDD4] mb-1 text-center">로그인</h2>
-        <p className="text-xs text-[#7B6F9A] mb-6 text-center">구글 계정으로 운세를 확인하세요</p>
+        <p className="text-xs text-[#7B6F9A] mb-6 text-center">간편하게 로그인하고 운세를 확인하세요</p>
 
-        {CLIENT_ID ? (
-          <div className="flex justify-center">
-            <div id="g-signin" />
+        {(CLIENT_ID || KAKAO_KEY) ? (
+          <div className="space-y-3">
+            {KAKAO_KEY && (
+              <button
+                onClick={handleKakaoLogin}
+                className="w-full flex items-center justify-center gap-2 bg-[#FEE500] text-[#191919] font-semibold text-sm py-3 rounded-xl active:scale-[0.98] transition-transform"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="4" width="18" height="13" rx="6.5" fill="#191919" />
+                  <path d="M8 17l-1 4 4.5-3.2z" fill="#191919" />
+                </svg>
+                카카오로 로그인
+              </button>
+            )}
+
+            {CLIENT_ID && KAKAO_KEY && (
+              <div className="flex items-center gap-2 text-[#4A4060] text-xs">
+                <div className="flex-1 h-px bg-[#2A1F4A]" />
+                <span>또는</span>
+                <div className="flex-1 h-px bg-[#2A1F4A]" />
+              </div>
+            )}
+
+            {CLIENT_ID && (
+              <div className="flex justify-center">
+                <div id="g-signin" />
+              </div>
+            )}
           </div>
         ) : (
           <div className="text-center space-y-3">
             <div className="text-xs text-amber-300 bg-amber-900/20 border border-amber-700/40 rounded-2xl p-3 leading-relaxed">
-              <p className="font-semibold mb-1">⚙️ Google 로그인 설정 필요</p>
-              <p>GitHub 저장소 Settings → Secrets에서<br /><code className="bg-amber-900/40 px-1 rounded">VITE_GOOGLE_CLIENT_ID</code> 를 추가하세요</p>
+              <p className="font-semibold mb-1">⚙️ 로그인 설정 필요</p>
+              <p>GitHub 저장소 Settings → Secrets에서<br /><code className="bg-amber-900/40 px-1 rounded">VITE_GOOGLE_CLIENT_ID</code> 또는 <code className="bg-amber-900/40 px-1 rounded">VITE_KAKAO_JS_KEY</code> 를 추가하세요</p>
             </div>
           </div>
         )}

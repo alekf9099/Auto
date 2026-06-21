@@ -1,9 +1,14 @@
 import { captureException } from './sentry'
 
-const EMAIL_KEY = 'unmyeongbom_user_email'
-const TOKEN_KEY = 'unmyeongbom_id_token'
-const PREFIX    = 'unmyeongbom_'
-const NON_SYNC_KEYS = new Set([EMAIL_KEY, TOKEN_KEY])
+const EMAIL_KEY    = 'unmyeongbom_user_email'
+const TOKEN_KEY    = 'unmyeongbom_id_token'
+const NAME_KEY     = 'unmyeongbom_user_name'
+const PICTURE_KEY  = 'unmyeongbom_user_picture'
+const PROVIDER_KEY = 'unmyeongbom_provider'
+const PREFIX       = 'unmyeongbom_'
+const NON_SYNC_KEYS = new Set([EMAIL_KEY, TOKEN_KEY, NAME_KEY, PICTURE_KEY, PROVIDER_KEY])
+
+export type AuthProvider = 'google' | 'kakao'
 
 export function getCurrentEmail(): string | null {
   return localStorage.getItem(EMAIL_KEY)
@@ -14,7 +19,35 @@ export function setCurrentEmail(email: string | null): void {
   else localStorage.removeItem(EMAIL_KEY)
 }
 
-// 구글 로그인 시 받은 ID 토큰. 서버(/api/sync)가 이 토큰을 검증해 본인 확인 후
+export function getCurrentName(): string | null {
+  return localStorage.getItem(NAME_KEY)
+}
+
+export function setCurrentName(name: string | null): void {
+  if (name) localStorage.setItem(NAME_KEY, name)
+  else localStorage.removeItem(NAME_KEY)
+}
+
+export function getCurrentPicture(): string | null {
+  return localStorage.getItem(PICTURE_KEY)
+}
+
+export function setCurrentPicture(picture: string | null): void {
+  if (picture) localStorage.setItem(PICTURE_KEY, picture)
+  else localStorage.removeItem(PICTURE_KEY)
+}
+
+export function getProvider(): AuthProvider | null {
+  const v = localStorage.getItem(PROVIDER_KEY)
+  return v === 'google' || v === 'kakao' ? v : null
+}
+
+export function setProvider(provider: AuthProvider | null): void {
+  if (provider) localStorage.setItem(PROVIDER_KEY, provider)
+  else localStorage.removeItem(PROVIDER_KEY)
+}
+
+// 구글/카카오 로그인 시 받은 인증 토큰. 서버(/api/sync)가 이 토큰을 검증해 본인 확인 후
 // 클라우드 데이터를 읽고/쓴다 — 클라이언트는 더 이상 DB에 직접 접근하지 않는다.
 export function setIdToken(token: string | null): void {
   if (token) localStorage.setItem(TOKEN_KEY, token)
@@ -26,7 +59,8 @@ export function getIdToken(): string | null {
 }
 
 // 구글 ID 토큰(JWT)의 payload만 디코딩한다 (서명 검증은 서버가 /api/sync, /api/match에서 수행).
-// 앱 재방문 시 로그인 화면 없이 세션을 복원하는 데 쓰인다.
+// 카카오는 액세스 토큰이 JWT가 아니라 디코딩할 수 없으므로, 로그인 시점에 받은 이름/사진을
+// 별도로(getCurrentName/getCurrentPicture) 저장해 세션 복원에 쓴다.
 export function decodeIdToken(token: string): { name: string; email: string; picture?: string } | null {
   try {
     const b64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
@@ -81,7 +115,7 @@ async function callSync(action: 'pull' | 'push', data?: Record<string, unknown>)
     const res = await fetch('/api/sync', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken, action, data }),
+      body: JSON.stringify({ idToken, provider: getProvider(), action, data }),
       signal: controller.signal,
     })
     clearTimeout(timer)

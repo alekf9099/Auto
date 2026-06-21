@@ -1,15 +1,9 @@
 /// <reference types="node" />
 import { createClient } from '@supabase/supabase-js'
+import { verifyAuthToken } from './_auth'
 
-// 구글 ID 토큰을 서버에서 검증한 뒤, service_role 키로만 사용자 데이터에 접근한다.
+// 구글/카카오 인증 토큰을 서버에서 검증한 뒤, service_role 키로만 사용자 데이터에 접근한다.
 // 클라이언트(anon 키)는 user_data 테이블에 직접 접근할 수 없다.
-
-interface GoogleTokenInfo {
-  aud: string
-  email: string
-  email_verified: string | boolean
-  exp: string
-}
 
 interface PointsHistoryEntry { date: string; amount: number; label: string }
 interface PointsState { balance: number; lastDaily: string; history: PointsHistoryEntry[] }
@@ -94,21 +88,6 @@ function sanitizePointsData(raw: unknown): PointsState | null {
   return { balance, lastDaily: p.lastDaily, history }
 }
 
-async function verifyGoogleToken(idToken: string): Promise<string | null> {
-  const clientId = process.env.VITE_GOOGLE_CLIENT_ID
-  if (!clientId) return null
-
-  const resp = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`)
-  if (!resp.ok) return null
-
-  const info = (await resp.json()) as GoogleTokenInfo
-  if (info.aud !== clientId) return null
-  if (info.email_verified !== 'true' && info.email_verified !== true) return null
-  if (!info.email) return null
-
-  return info.email
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function handler(req: any, res: any) {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -117,8 +96,9 @@ export default async function handler(req: any, res: any) {
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).end()
 
-  const { idToken, action, data } = (req.body ?? {}) as {
+  const { idToken, provider, action, data } = (req.body ?? {}) as {
     idToken?: string
+    provider?: string
     action?: 'pull' | 'push'
     data?: Record<string, unknown>
   }
@@ -127,7 +107,7 @@ export default async function handler(req: any, res: any) {
     return res.status(400).json({ error: 'invalid request' })
   }
 
-  const email = await verifyGoogleToken(idToken)
+  const email = await verifyAuthToken(idToken, provider)
   if (!email) return res.status(401).json({ error: 'invalid token' })
 
   const supabaseUrl  = process.env.VITE_SUPABASE_URL

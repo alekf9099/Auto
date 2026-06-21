@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react'
 import type { BirthInput, UserInfo } from './types'
 import { loadPoints, awardPoints } from './utils/points'
 import type { PointsState } from './utils/points'
-import { setCurrentEmail, setIdToken, getIdToken, getCurrentEmail, decodeIdToken, pullCloudData, scheduleCloudPush, onSyncStatusChange } from './utils/cloudSync'
+import { setCurrentEmail, setIdToken, getIdToken, getCurrentEmail, getCurrentName, setCurrentName, getCurrentPicture, setCurrentPicture, getProvider, setProvider, pullCloudData, scheduleCloudPush, onSyncStatusChange } from './utils/cloudSync'
 import { fetchRemoteConfig, isNoticeDismissed, dismissNotice } from './utils/remoteConfig'
 import { loadNickname, saveNickname } from './utils/nickname'
 import { trackPageView, trackEvent } from './utils/analytics'
@@ -48,15 +48,15 @@ function loadBirthProfile(): BirthInput | null {
   } catch { return null }
 }
 
-// 새로고침/재방문 시 localStorage에 남은 구글 ID 토큰으로 로그인 화면 없이 세션을 복원한다.
+// 새로고침/재방문 시 localStorage에 남은 인증 토큰으로 로그인 화면 없이 세션을 복원한다.
 // 토큰이 실제로 만료됐다면 이후 클라우드 동기화 호출에서 401을 받아 SyncErrorBanner로 재로그인을 유도한다.
 function restoreUser(): UserInfo | null {
   const token = getIdToken()
   const email = getCurrentEmail()
-  if (!token || !email) return null
-  const payload = decodeIdToken(token)
-  if (!payload) return null
-  return { name: payload.name, email: payload.email, picture: payload.picture, idToken: token }
+  const name = getCurrentName()
+  const provider = getProvider()
+  if (!token || !email || !name || !provider) return null
+  return { name, email, picture: getCurrentPicture() ?? undefined, idToken: token, provider }
 }
 
 function PageFallback() {
@@ -132,6 +132,9 @@ export default function App() {
   function handleLogout() {
     setCurrentEmail(null)
     setIdToken(null)
+    setCurrentName(null)
+    setCurrentPicture(null)
+    setProvider(null)
     setUser(null)
     setSyncIssue(null)
     setPage('login')
@@ -142,6 +145,9 @@ export default function App() {
     setUser(u)
     setCurrentEmail(u.email)
     setIdToken(u.idToken)
+    setCurrentName(u.name)
+    setCurrentPicture(u.picture ?? null)
+    setProvider(u.provider)
     trackEvent('login')
     const { isNewUser } = await pullCloudData()
     setIsNewCloudUser(isNewUser)

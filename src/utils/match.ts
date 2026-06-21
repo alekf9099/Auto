@@ -1,5 +1,5 @@
 import type { BirthInput } from '../types'
-import { getIdToken, scheduleCloudPush } from './cloudSync'
+import { getIdToken, getProvider, scheduleCloudPush } from './cloudSync'
 import { loadProfilePhoto } from './profilePhoto'
 
 // 사주매칭: 옵트인한 사용자끼리 무작위로 매칭해 닉네임 기반 궁합을 확인하는 기능.
@@ -32,7 +32,7 @@ async function callMatch(action: 'join' | 'leave' | 'draw', extra?: Record<strin
     const res = await fetch('/api/match', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ idToken, action, ...extra }),
+      body: JSON.stringify({ idToken, provider: getProvider(), action, ...extra }),
       signal: controller.signal,
     })
     clearTimeout(timer)

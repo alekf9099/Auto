@@ -1,17 +1,11 @@
 /// <reference types="node" />
 import { createClient } from '@supabase/supabase-js'
+import { verifyAuthToken } from './_auth'
 
 // 사주매칭: 옵트인한 사용자 풀에서 무작위로 한 명을 뽑아 닉네임 + 생년월일시 + (선택)프로필 사진을 돌려준다.
-// 이메일/이름/구글 계정 사진 등 실제 신원 정보는 절대 클라이언트에 노출하지 않는다.
-// photo는 사용자가 매칭용으로 직접 업로드한 썸네일일 뿐, 구글 계정 사진이 아니다.
+// 이메일/이름/계정 사진 등 실제 신원 정보는 절대 클라이언트에 노출하지 않는다.
+// photo는 사용자가 매칭용으로 직접 업로드한 썸네일일 뿐, 구글/카카오 계정 사진이 아니다.
 // 궁합 점수 계산(calcGunghab)은 클라이언트가 받은 생년월일시로 직접 수행한다.
-
-interface GoogleTokenInfo {
-  aud: string
-  email: string
-  email_verified: string | boolean
-  exp: string
-}
 
 interface MatchBirth {
   year: number
@@ -44,21 +38,6 @@ function isValidPhoto(p: unknown): p is string | null {
   return typeof p === 'string' && p.startsWith('data:image/') && p.length <= 300000
 }
 
-async function verifyGoogleToken(idToken: string): Promise<string | null> {
-  const clientId = process.env.VITE_GOOGLE_CLIENT_ID
-  if (!clientId) return null
-
-  const resp = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(idToken)}`)
-  if (!resp.ok) return null
-
-  const info = (await resp.json()) as GoogleTokenInfo
-  if (info.aud !== clientId) return null
-  if (info.email_verified !== 'true' && info.email_verified !== true) return null
-  if (!info.email) return null
-
-  return info.email
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default async function handler(req: any, res: any) {
   res.setHeader('Access-Control-Allow-Origin', '*')
@@ -67,8 +46,9 @@ export default async function handler(req: any, res: any) {
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).end()
 
-  const { idToken, action, nickname, birth, photo } = (req.body ?? {}) as {
+  const { idToken, provider, action, nickname, birth, photo } = (req.body ?? {}) as {
     idToken?: string
+    provider?: string
     action?: 'join' | 'leave' | 'draw'
     nickname?: string
     birth?: unknown
@@ -79,7 +59,7 @@ export default async function handler(req: any, res: any) {
     return res.status(400).json({ error: 'invalid request' })
   }
 
-  const email = await verifyGoogleToken(idToken)
+  const email = await verifyAuthToken(idToken, provider)
   if (!email) return res.status(401).json({ error: 'invalid token' })
 
   const supabaseUrl = process.env.VITE_SUPABASE_URL
