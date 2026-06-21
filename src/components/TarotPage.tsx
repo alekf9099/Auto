@@ -1,8 +1,52 @@
 import { useState } from 'react'
-import { drawTarotCards } from '../utils/tarotDeck'
+import { shuffleDeck, cardImageSrc } from '../utils/tarotDeck'
 import type { DrawnCard } from '../utils/tarotDeck'
 import PointsClaimButton from './PointsClaimButton'
 import { IcTarot } from './icons/SajuIcons'
+
+// 카드 뒷면 — 모든 카드에 공통으로 쓰는 금빛 패턴 디자인
+function TarotCardBack() {
+  return (
+    <div
+      className="w-full h-full rounded-xl border border-[#C9962A50] flex items-center justify-center relative overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #1C1438 100%)' }}
+    >
+      <div
+        className="absolute inset-1.5 rounded-lg border border-[#C9962A30]"
+        style={{
+          backgroundImage:
+            'repeating-linear-gradient(45deg, rgba(201,150,42,0.10) 0px, rgba(201,150,42,0.10) 1px, transparent 1px, transparent 7px), repeating-linear-gradient(-45deg, rgba(201,150,42,0.10) 0px, rgba(201,150,42,0.10) 1px, transparent 1px, transparent 7px)',
+        }}
+      />
+      <IcTarot size={18} className="text-[#C9962A80] relative z-10" />
+    </div>
+  )
+}
+
+// 카드 앞면 그림 — 생성된 이미지가 있으면 이미지를, 없으면 이모지로 대체
+function TarotCardFace({ card }: { card: DrawnCard }) {
+  const [imgFailed, setImgFailed] = useState(false)
+  return (
+    <div
+      className="w-full h-full rounded-xl border border-[#C9962A60] flex items-center justify-center overflow-hidden relative"
+      style={{
+        background: 'linear-gradient(135deg, #1A0E30 0%, #100820 100%)',
+        transform: card.reversed ? 'rotate(180deg)' : 'none',
+      }}
+    >
+      {!imgFailed ? (
+        <img
+          src={cardImageSrc(card.slug)}
+          alt={card.name}
+          className="absolute inset-0 w-full h-full object-cover"
+          onError={() => setImgFailed(true)}
+        />
+      ) : (
+        <span className="text-2xl">{card.symbol}</span>
+      )}
+    </div>
+  )
+}
 
 interface Props {
   onBack: () => void
@@ -33,23 +77,25 @@ const POSITIONS = [
 export default function TarotPage({ onBack }: Props) {
   const [step,     setStep]     = useState<'intro' | 'shuffling' | 'draw' | 'loading' | 'result'>('intro')
   const [question, setQuestion] = useState('')
-  const [drawn,    setDrawn]    = useState<DrawnCard[]>([])
-  const [revealed, setRevealed] = useState<boolean[]>([false, false, false])
+  const [spread,   setSpread]   = useState<DrawnCard[]>([])
+  const [picked,   setPicked]   = useState<number[]>([])
   const [result,   setResult]   = useState<TarotResult | null>(null)
   const [error,    setError]    = useState('')
+
+  const drawn = picked.map(i => spread[i])
 
   function handleStartDraw() {
     setStep('shuffling')
     setTimeout(() => {
-      setDrawn(drawTarotCards(3))
-      setRevealed([false, false, false])
+      setSpread(shuffleDeck())
+      setPicked([])
       setStep('draw')
     }, 1100)
   }
 
-  function handleFlip(i: number) {
-    if (revealed[i]) return
-    setRevealed(prev => prev.map((r, idx) => (idx === i ? true : r)))
+  function handlePick(i: number) {
+    if (picked.length >= 3 || picked.includes(i)) return
+    setPicked(prev => [...prev, i])
   }
 
   async function handleInterpret() {
@@ -92,8 +138,8 @@ export default function TarotPage({ onBack }: Props) {
   function handleRestart() {
     setStep('intro')
     setQuestion('')
-    setDrawn([])
-    setRevealed([false, false, false])
+    setSpread([])
+    setPicked([])
     setResult(null)
     setError('')
     window.scrollTo(0, 0)
@@ -105,7 +151,7 @@ export default function TarotPage({ onBack }: Props) {
     onBack()
   }
 
-  const allRevealed = revealed.every(Boolean)
+  const allPicked = picked.length === 3
   const luck = result ? LUCK_CFG[result.luck] : null
 
   return (
@@ -192,35 +238,41 @@ export default function TarotPage({ onBack }: Props) {
         {/* ── DRAW ── */}
         {step === 'draw' && (
           <div className="space-y-5">
-            <p className="text-center text-sm text-[#A89BC0]">카드를 한 장씩 눌러 뒤집어보세요</p>
+
+            {/* 선택한 카드 미리보기 (과거/현재/미래) */}
             <div className="grid grid-cols-3 gap-3">
               {POSITIONS.map((pos, i) => {
                 const card = drawn[i]
-                const isRevealed = revealed[i]
                 return (
-                  <button
-                    key={pos.key}
-                    onClick={() => handleFlip(i)}
-                    disabled={isRevealed}
-                    className="flex flex-col items-center gap-2"
-                  >
-                    <div
-                      className={`w-full aspect-[2/3] rounded-2xl border flex items-center justify-center transition-all duration-300 ${isRevealed ? 'active:scale-100' : 'active:scale-95'}`}
-                      style={isRevealed
-                        ? { background: 'linear-gradient(135deg, #1A0E30 0%, #100820 100%)', borderColor: '#C9962A60' }
-                        : { background: 'linear-gradient(135deg, #2A1F4A 0%, #1C1438 100%)', borderColor: '#C9962A30' }}
-                    >
-                      {isRevealed && card ? (
-                        <div className="flex flex-col items-center gap-1 px-1">
-                          <span className="text-2xl" style={{ transform: card.reversed ? 'rotate(180deg)' : 'none' }}>{card.symbol}</span>
-                          <p className="text-[10px] font-bold text-[#F5EDD4] text-center leading-tight">{card.name}</p>
-                          {card.reversed && <span className="text-[8px] text-[#E05252] font-semibold">역방향</span>}
+                  <div key={pos.key} className="flex flex-col items-center gap-2">
+                    <div className="w-full aspect-[2/3]">
+                      {card ? <TarotCardFace card={card}/> : (
+                        <div className="w-full h-full rounded-xl border border-dashed border-[#C9962A30] flex items-center justify-center">
+                          <span className="text-[#4A4060] text-xs">{i + 1}</span>
                         </div>
-                      ) : (
-                        <IcTarot size={22} className="text-[#C9962A50]"/>
                       )}
                     </div>
-                    <p className="text-[11px] text-[#7B6F9A] font-semibold">{pos.label}</p>
+                    <p className="text-[11px] text-[#7B6F9A] font-semibold">{pos.label}{card?.reversed ? ' · 역방향' : ''}</p>
+                  </div>
+                )
+              })}
+            </div>
+
+            <p className="text-center text-sm text-[#A89BC0]">22장 중 3장을 골라주세요 ({picked.length}/3)</p>
+
+            <div className="grid grid-cols-5 gap-2">
+              {spread.map((card, i) => {
+                const pickIndex = picked.indexOf(i)
+                const isPicked = pickIndex !== -1
+                const disabled = allPicked && !isPicked
+                return (
+                  <button
+                    key={card.id}
+                    onClick={() => handlePick(i)}
+                    disabled={isPicked || allPicked}
+                    className={`aspect-[2/3] transition-all duration-300 ${disabled ? 'opacity-30' : 'active:scale-95'}`}
+                  >
+                    {isPicked ? <TarotCardFace card={card}/> : <TarotCardBack/>}
                   </button>
                 )
               })}
@@ -230,10 +282,10 @@ export default function TarotPage({ onBack }: Props) {
 
             <button
               onClick={handleInterpret}
-              disabled={!allRevealed}
+              disabled={!allPicked}
               className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              {allRevealed ? '✨ 해석 보기' : `${revealed.filter(Boolean).length}/3장 뽑는 중...`}
+              {allPicked ? '✨ 해석 보기' : `${picked.length}/3장 뽑는 중...`}
             </button>
           </div>
         )}
@@ -284,8 +336,8 @@ export default function TarotPage({ onBack }: Props) {
                 const card = drawn[i]
                 if (!card) return null
                 return (
-                  <div key={pos.key} className="bg-[#130E24] border border-[#2A1F4A] rounded-2xl p-3 flex flex-col items-center gap-1">
-                    <span className="text-xl" style={{ transform: card.reversed ? 'rotate(180deg)' : 'none' }}>{card.symbol}</span>
+                  <div key={pos.key} className="bg-[#130E24] border border-[#2A1F4A] rounded-2xl p-2 flex flex-col items-center gap-1.5">
+                    <div className="w-full aspect-[2/3]"><TarotCardFace card={card}/></div>
                     <p className="text-[10px] font-bold text-[#F5EDD4] text-center leading-tight">{card.name}</p>
                     {card.reversed && <span className="text-[8px] text-[#E05252] font-semibold">역방향</span>}
                     <p className="text-[9px] text-[#7B6F9A] mt-0.5">{pos.label}</p>
