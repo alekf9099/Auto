@@ -74,10 +74,10 @@ function localFallback(cards: { name: string; reversed: boolean }[]): TarotResul
   return {
     luck: aggregateLuck([past.tone, present.tone, future.tone]),
     summary: `${presentCard.name}${presentCard.reversed ? ' (역방향)' : ''} 카드가 보여주는 지금의 흐름`,
-    past: `${POSITION_LABEL.past} — ${pastCard.name}${pastCard.reversed ? ' (역방향)' : ''}: ${past.text}`,
-    present: `${POSITION_LABEL.present} — ${presentCard.name}${presentCard.reversed ? ' (역방향)' : ''}: ${present.text}`,
-    future: `${POSITION_LABEL.future} — ${futureCard.name}${futureCard.reversed ? ' (역방향)' : ''}: ${future.text}`,
-    advice: `${futureCard.name} 카드가 가리키는 방향을 염두에 두고, 지금은 ${present.text.replace(/때입니다$/, '')}때이니 흐름에 맞춰 행동하세요.`,
+    past: `${POSITION_LABEL.past} — ${pastCard.name}${pastCard.reversed ? ' (역방향)' : ''}: ${past.text} 그 시기의 선택과 감정이 지금까지도 영향을 남기고 있으니, 그때 무엇을 느꼈는지 한번 돌이켜보면 지금의 흐름을 이해하는 데 도움이 됩니다.`,
+    present: `${POSITION_LABEL.present} — ${presentCard.name}${presentCard.reversed ? ' (역방향)' : ''}: ${present.text} 지금 마주한 상황을 너무 서둘러 판단하지 말고, 이 카드가 보여주는 기운을 있는 그대로 받아들이는 태도가 필요합니다.`,
+    future: `${POSITION_LABEL.future} — ${futureCard.name}${futureCard.reversed ? ' (역방향)' : ''}: ${future.text} 지금부터의 선택이 이 흐름을 더 좋게 만들 수도, 더 늦출 수도 있으니 마음의 준비를 해두는 것이 좋습니다.`,
+    advice: `${futureCard.name} 카드가 가리키는 방향을 염두에 두고, 지금은 ${present.text.replace(/때입니다$/, '')}때이니 흐름에 맞춰 행동하세요. 거창한 결심보다는 오늘 할 수 있는 작은 행동 하나를 정해 실천해보시고, 마음이 흔들릴 때는 ${pastCard.name} 카드가 일러준 경험을 다시 떠올려보세요. 결과보다 과정에 집중하면 마음이 한결 편해질 것입니다.`,
   }
 }
 
@@ -112,7 +112,18 @@ export default async function handler(req: any, res: any) {
   try {
     const [pastCard, presentCard, futureCard] = cleanCards
     const questionLine = question?.trim() ? `사용자의 질문: "${question.trim().slice(0, 200)}"` : '사용자가 특정 질문 없이 전반적인 운세를 물었습니다.'
-    const prompt = `당신은 타로 카드 전문 상담사입니다. 과거-현재-미래 3카드 스프레드 결과를 해석해주세요. ${questionLine} 뽑힌 카드: 과거=${pastCard.name}${pastCard.reversed ? '(역방향)' : '(정방향)'}, 현재=${presentCard.name}${presentCard.reversed ? '(역방향)' : '(정방향)'}, 미래=${futureCard.name}${futureCard.reversed ? '(역방향)' : '(정방향)'}. 반드시 아래 JSON 형식으로만 응답하세요. 설명 텍스트 없이 JSON만 출력하세요. {"luck": "great", "summary": "한 줄 요약", "past": "과거 카드 해석 (1~2문장)", "present": "현재 카드 해석 (1~2문장)", "future": "미래 카드 해석 (1~2문장)", "advice": "조언 (1~2문장)"} luck 값 기준: great=매우 좋음, good=좋음, neutral=보통, caution=주의 필요`
+    const prompt = `당신은 20년 경력의 타로 카드 전문 상담사입니다. 과거-현재-미래 3카드 스프레드 결과를 깊이 있고 구체적으로 해석해주세요. ${questionLine} 뽑힌 카드: 과거=${pastCard.name}${pastCard.reversed ? '(역방향)' : '(정방향)'}, 현재=${presentCard.name}${presentCard.reversed ? '(역방향)' : '(정방향)'}, 미래=${futureCard.name}${futureCard.reversed ? '(역방향)' : '(정방향)'}.
+
+각 항목을 작성할 때 다음을 지켜주세요:
+- 카드가 담고 있는 상징(인물, 사물, 분위기 등)을 구체적으로 풀어서 설명하되, 단순 카드 사전적 의미 나열이 아니라 사용자의 질문 맥락과 자연스럽게 연결해주세요.
+- past/present/future는 각각 4~5문장 분량으로, 그 시기에 실제로 일어났거나 일어나고 있거나 일어날 법한 상황을 구체적으로 묘사해주세요.
+- advice는 4~6문장 분량으로, 추상적인 격려가 아니라 지금 당장 시도해볼 수 있는 구체적인 행동이나 마음가짐을 제시해주세요.
+- summary는 전체 흐름을 압축한 한 문장입니다.
+- 모든 문장은 따뜻하고 신뢰감 있는 존댓말 어조로 작성해주세요.
+
+반드시 아래 JSON 형식으로만 응답하세요. 설명 텍스트나 마크다운 없이 JSON만 출력하세요.
+{"luck": "great", "summary": "전체 흐름을 압축한 한 문장", "past": "과거 카드 해석 (4~5문장)", "present": "현재 카드 해석 (4~5문장)", "future": "미래 카드 해석 (4~5문장)", "advice": "구체적인 조언 (4~6문장)"}
+luck 값 기준: great=매우 좋음, good=좋음, neutral=보통, caution=주의 필요`
 
     const resp = await fetch(`${GEMINI_URL}?key=${apiKey}`, {
       method: 'POST',

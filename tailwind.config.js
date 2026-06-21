@@ -26,10 +26,20 @@ export default {
           '80%':  { transform: 'rotate(288deg)', backgroundColor: '#86EFAC' },
           '100%': { transform: 'rotate(360deg)', backgroundColor: '#93C5FD' },
         },
+        floatLeft: {
+          '0%, 100%': { transform: 'translateY(0px) rotate(-12deg)' },
+          '50%':      { transform: 'translateY(-8px) rotate(-12deg)' },
+        },
+        floatRight: {
+          '0%, 100%': { transform: 'translateY(0px) rotate(12deg)' },
+          '50%':      { transform: 'translateY(-8px) rotate(12deg)' },
+        },
       },
       animation: {
         'fade-in-up': 'fadeInUp 0.5s ease both',
         'spin-glow': 'spinGlow 12s linear infinite',
+        'float-left': 'floatLeft 4s ease-in-out infinite',
+        'float-right': 'floatRight 4s ease-in-out infinite 0.3s',
       },
     },
   },

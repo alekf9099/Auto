@@ -193,14 +193,14 @@ export default function TarotPage({ onBack }: Props) {
               <div className="absolute inset-x-0 top-0 h-44 flex items-center justify-center pointer-events-none">
                 <div className="w-56 h-32 rounded-full blur-2xl opacity-40" style={{ background: 'radial-gradient(circle, rgba(232,199,92,0.4), transparent 70%)' }} />
               </div>
-              <div className="absolute left-0 w-20 h-32 rounded-xl border border-[#d4af37]/60 overflow-hidden shadow-lg -rotate-[12deg] z-10">
+              <div className="absolute left-0 w-20 h-32 rounded-xl border border-[#d4af37]/60 overflow-hidden shadow-lg z-10 animate-float-left">
                 <img src={cardImageSrc('strength')} alt="" className="w-full h-full object-cover" />
               </div>
               <div className="relative z-20 flex flex-col items-center gap-1.5">
                 <IcTarot size={30} className="text-[#E8C75C]" />
                 <p className="text-[11px] text-[#C9962A] font-semibold tracking-wide">22장의 메이저 아르카나</p>
               </div>
-              <div className="absolute right-0 w-20 h-32 rounded-xl border border-[#d4af37]/60 overflow-hidden shadow-lg rotate-[12deg] z-10">
+              <div className="absolute right-0 w-20 h-32 rounded-xl border border-[#d4af37]/60 overflow-hidden shadow-lg z-10 animate-float-right">
                 <img src={cardImageSrc('justice')} alt="" className="w-full h-full object-cover" />
               </div>
             </div>
