@@ -43,6 +43,75 @@ function Stars({ n }: { n: number }) {
   )
 }
 
+// 시계 모양 12시간 다이얼에서 중심 기준 각도(angleDeg, 0=12시 방향, 시계방향)의 좌표를 구한다
+function polar(cx: number, cy: number, r: number, angleDeg: number) {
+  const rad = ((angleDeg - 90) * Math.PI) / 180
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
+}
+
+function describeArc(cx: number, cy: number, r: number, startDeg: number, endDeg: number) {
+  const p1 = polar(cx, cy, r, startDeg)
+  const p2 = polar(cx, cy, r, endDeg)
+  const large = endDeg - startDeg > 180 ? 1 : 0
+  return `M ${p1.x} ${p1.y} A ${r} ${r} 0 ${large} 1 ${p2.x} ${p2.y}`
+}
+
+const GAUGE_SECTORS = [
+  { from: -30, to: 30,  label: '매우 좋음', color: '#E8B84B' },
+  { from: 30,  to: 90,  label: '좋음',      color: '#A89BC0' },
+  { from: 90,  to: 150, label: '보통',      color: '#7B6F9A' },
+  { from: 150, to: 210, label: '보통',      color: '#7B6F9A' },
+  { from: 210, to: 270, label: '보통',      color: '#7B6F9A' },
+  { from: 270, to: 330, label: '좋음',      color: '#A89BC0' },
+]
+
+// 24시간 다이얼 형태의 종합 행운 게이지 — 바늘이 종합 행운 지수(percent)가 가리키는 구간을 표시한다
+function DayLuckGauge({ percent }: { percent: number }) {
+  const cx = 110, cy = 110, r = 100
+  const needleAngle = Math.max(0, Math.min(180, (100 - percent) * 1.8))
+  const activeSector = GAUGE_SECTORS.find(s => needleAngle >= s.from && needleAngle < s.to) ?? GAUGE_SECTORS[0]
+  const needleTip = polar(cx, cy, 64, needleAngle)
+
+  return (
+    <div className="flex items-center justify-center py-2">
+      <svg viewBox="0 0 220 220" width={240} height={240}>
+        <circle cx={cx} cy={cy} r={r} fill="#150D28" stroke="#2A1F4A" strokeWidth="1.5" />
+        <path d={describeArc(cx, cy, r + 4, activeSector.from, activeSector.to)} fill="none" stroke="#E8584B" strokeWidth="5" strokeLinecap="round" />
+
+        {GAUGE_SECTORS.map((s, i) => {
+          const mid = (s.from + s.to) / 2
+          const p = polar(cx, cy, 55, mid)
+          const words = s.label.split(' ')
+          return (
+            <text key={i} x={p.x} y={p.y} fill={s.color} fontSize="11" fontWeight={600} textAnchor="middle">
+              {words.map((w, wi) => (
+                <tspan key={wi} x={p.x} dy={wi === 0 ? -(words.length - 1) * 6 : 12}>{w}</tspan>
+              ))}
+            </text>
+          )
+        })}
+
+        {Array.from({ length: 12 }).map((_, i) => {
+          const hour = i * 2
+          const angle = hour * 15
+          const tickOuter = polar(cx, cy, r - 2, angle)
+          const tickInner = polar(cx, cy, r - 10, angle)
+          const labelP = polar(cx, cy, r - 20, angle)
+          return (
+            <g key={hour}>
+              <line x1={tickInner.x} y1={tickInner.y} x2={tickOuter.x} y2={tickOuter.y} stroke="#4A4060" strokeWidth="1.5" />
+              <text x={labelP.x} y={labelP.y} fill="#6B5F8A" fontSize="9" textAnchor="middle" dominantBaseline="middle">{hour}</text>
+            </g>
+          )
+        })}
+
+        <line x1={cx} y1={cy} x2={needleTip.x} y2={needleTip.y} stroke="#E8B84B" strokeWidth="3" strokeLinecap="round" />
+        <circle cx={cx} cy={cy} r="6" fill="#E8B84B" />
+      </svg>
+    </div>
+  )
+}
+
 function CategoryRow({ emoji, label, text, star }: { emoji: string; label: string; text: string; star: number }) {
   const [open, setOpen] = useState(false)
   return (
@@ -138,6 +207,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
   const tStem      = STEMS[targetStem]
   const tBranch    = BRANCHES[targetBranch]
   const dateLabel  = `${targetDate.getMonth() + 1}/${targetDate.getDate()}`
+  const luckPercent = Math.min(99, 60 + fortune.star * 8)
 
   return (
     <div className="min-h-screen bg-[#0D0A1A]">
@@ -255,6 +325,18 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
 
         {step === 'result' && (
           <div className="animate-fade-in-up">
+            {/* 종합 행운 게이지 */}
+            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5 space-y-4">
+              <DayLuckGauge percent={luckPercent} />
+              <div className="bg-[#1C1438] border border-[#2A1F4A] rounded-2xl p-4 flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-[#E85B7A20] flex items-center justify-center text-lg shrink-0">💬</div>
+                <div>
+                  <p className="text-sm font-semibold text-[#F5EDD4]">{isToday ? '오늘' : '내일'}의 전체 운세</p>
+                  <p className="text-xs text-[#A89BC0] mt-0.5">⭐ 종합 행운 지수: {luckPercent}%</p>
+                </div>
+              </div>
+            </div>
+
             {/* 일주 배지 */}
             <div
               className="rounded-3xl p-5 border"
