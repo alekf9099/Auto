@@ -97,7 +97,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
           {/* 배경 장식 */}
           <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-violet-500/10 -translate-y-10 translate-x-10" />
           <div className="absolute bottom-0 left-0 w-28 h-28 rounded-full bg-purple-400/10 translate-y-8 -translate-x-6" />
-          <div className="absolute right-4 bottom-2 opacity-[0.07] select-none pointer-events-none text-red-700 rotate-6">
+          <div className="absolute right-4 bottom-2 opacity-[0.08] select-none pointer-events-none text-[#C8442E] rotate-6" style={{ filter: 'drop-shadow(0 0 14px rgba(200,68,46,0.6))' }}>
             <IcStamp size={88}/>
           </div>
 
@@ -112,9 +112,14 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
                 </p>
               </div>
               <div className="text-right">
-                <div className="inline-flex flex-col items-center bg-red-500/10 border-2 border-red-500/60 rounded-full w-16 h-16 justify-center">
-                  <span className="text-xl font-bold text-red-400">{streak}</span>
-                  <span className="text-[9px] text-red-300/80 -mt-0.5">연속 출석</span>
+                <div
+                  className="relative inline-flex flex-col items-center justify-center w-16 h-16 rounded-full"
+                  style={{ backgroundColor: 'rgba(200,68,46,0.12)', boxShadow: '0 0 16px rgba(200,68,46,0.45)' }}
+                >
+                  <div className="absolute inset-0 rounded-full border-2" style={{ borderColor: '#C8442E' }} />
+                  <div className="absolute inset-[3px] rounded-full border" style={{ borderColor: 'rgba(200,68,46,0.5)' }} />
+                  <span className="relative text-xl font-bold" style={{ color: '#E8694A' }}>{streak}</span>
+                  <span className="relative text-[9px] -mt-0.5" style={{ color: 'rgba(232,105,74,0.8)' }}>연속 출석</span>
                 </div>
               </div>
             </div>
@@ -149,18 +154,27 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
                   <p className={`text-[11px] font-bold ${
                     w.isSat ? 'text-blue-400' : w.isSun ? 'text-rose-400' : 'text-stone-400'
                   }`}>{w.label}</p>
-                  <div className={`relative w-10 h-10 rounded-full flex flex-col items-center justify-center transition-all ${
-                    checked && w.isToday
-                      ? 'bg-gradient-to-br from-[#E8B84B] to-[#9C6E1A] ring-2 ring-red-500/70 shadow-md shadow-[#C9962A40]'
-                      : checked
-                      ? 'bg-gradient-to-br from-[#C9962A] to-[#8A6418] ring-1 ring-[#F5DA8B]/50 shadow-sm shadow-[#C9962A30]'
-                      : w.isToday
-                      ? 'border-2 border-dashed border-[#C9962A] bg-[#C9962A10]'
-                      : 'bg-[#1C1438] border border-[#2A1F4A]'
-                  }`}>
-                    {checked && <div className="absolute inset-[3px] rounded-full border border-[#0D0A1A]/25"/>}
+                  <div
+                    className={`relative w-10 h-10 rounded-full flex flex-col items-center justify-center transition-all ${
+                      checked
+                        ? 'bg-gradient-to-br from-[#F0D27A] via-[#D9A93C] to-[#8A6418]'
+                        : w.isToday
+                        ? 'border-2 border-dashed border-[#C9962A] bg-[#C9962A10]'
+                        : 'bg-[#1C1438] border border-[#2A1F4A]'
+                    }`}
+                    style={checked ? { boxShadow: w.isToday ? '0 0 12px rgba(200,68,46,0.55)' : '0 0 8px rgba(201,150,42,0.4)' } : undefined}
+                  >
+                    {checked && (
+                      <>
+                        <div
+                          className="absolute inset-0 rounded-full border-2"
+                          style={{ borderColor: w.isToday ? '#C8442E' : '#8A6418' }}
+                        />
+                        <div className="absolute inset-[3px] rounded-full border border-[#F5DA8B]/70" />
+                      </>
+                    )}
                     {checked
-                      ? <IcGem size={17} className="text-[#2A1606] relative"/>
+                      ? <IcGem size={16} className="relative text-[#2A1606]"/>
                       : <span className={`text-xs font-semibold ${w.isToday ? 'text-[#C9962A]' : 'text-[#4A4060]'}`}>{dayNum}</span>
                     }
                   </div>
