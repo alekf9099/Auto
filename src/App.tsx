@@ -25,6 +25,7 @@ const DeepSajuPage     = lazy(() => import('./components/DeepSajuPage'))
 const SajuPage         = lazy(() => import('./components/SajuPage'))
 const DaunPage         = lazy(() => import('./components/DaunPage'))
 const DreamPage        = lazy(() => import('./components/DreamPage'))
+const TarotPage        = lazy(() => import('./components/TarotPage'))
 const OutfitPage       = lazy(() => import('./components/OutfitPage'))
 const JobPage          = lazy(() => import('./components/JobPage'))
 const FortuneBattlePage = lazy(() => import('./components/FortuneBattlePage'))
@@ -38,7 +39,7 @@ const TermsPage         = lazy(() => import('./components/TermsPage'))
 
 const STORAGE_KEY = 'unmyeongbom_birth'
 
-type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'outfit' | 'job' | 'battle' | 'match' | 'lucky' | 'roulette' | 'invite' | 'event' | 'privacy' | 'terms'
+type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'tarot' | 'outfit' | 'job' | 'battle' | 'match' | 'lucky' | 'roulette' | 'invite' | 'event' | 'privacy' | 'terms'
 
 const TAB_PAGES: Page[] = ['home', 'saju', 'attendance', 'event']
 
@@ -105,10 +106,10 @@ export default function App() {
     const BACK_MAP: Partial<Record<Page, Page>> = {
       profile: 'login', analyzing: 'home', attendance: 'home',
       sinnyeon: 'home', tojeong: 'home', today: 'home',
-      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home', dream: 'home', outfit: 'home', job: 'home', battle: 'home', match: 'home', lucky: 'home', roulette: 'home', invite: 'home', event: 'home',
+      gunghab: 'home', deepsaju: 'home', saju: 'home', daun: 'home', dream: 'home', tarot: 'home', outfit: 'home', job: 'home', battle: 'home', match: 'home', lucky: 'home', roulette: 'home', invite: 'home', event: 'home',
       privacy: legalReturn, terms: legalReturn,
     }
-    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','gunghab','deepsaju','saju','daun','dream','outfit','job','battle','match','lucky','roulette','invite','event','profile','analyzing','privacy','terms']
+    const navigable: Page[] = ['attendance','sinnyeon','tojeong','today','gunghab','deepsaju','saju','daun','dream','tarot','outfit','job','battle','match','lucky','roulette','invite','event','profile','analyzing','privacy','terms']
     if (navigable.includes(page)) history.pushState({ page }, '')
 
     function onPop() {
@@ -172,7 +173,7 @@ export default function App() {
     window.scrollTo(0, 0)
   }
 
-  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'outfit' | 'job' | 'battle' | 'match') {
+  function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'tarot' | 'outfit' | 'job' | 'battle' | 'match') {
     if (!birthProfile) { setPage('profile'); window.scrollTo(0, 0); return }
     setPage(dest)
     window.scrollTo(0, 0)
@@ -270,6 +271,8 @@ export default function App() {
     content = <DaunPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   } else if (page === 'dream') {
     content = <DreamPage onBack={goHome} />
+  } else if (page === 'tarot') {
+    content = <TarotPage onBack={goHome} />
   } else if (page === 'outfit') {
     content = <OutfitPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   } else if (page === 'job') {

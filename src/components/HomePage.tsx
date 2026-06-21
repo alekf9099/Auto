@@ -9,7 +9,7 @@ import { DAY_FORTUNE } from '../utils/fortuneData'
 import PointsModal from './PointsModal'
 import AdBanner from './AdBanner'
 import {
-  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon, IcLucky, IcBattle, IcMatch,
+  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcTarot, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon, IcLucky, IcBattle, IcMatch,
 } from './icons/SajuIcons'
 
 interface Props {
@@ -18,7 +18,7 @@ interface Props {
   birthProfile: BirthInput | null
   points: PointsState
   onPointsUpdate: (p: PointsState) => void
-  onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'outfit' | 'job' | 'battle' | 'match') => void
+  onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'tarot' | 'outfit' | 'job' | 'battle' | 'match') => void
   onAttendance: () => void
   onLuckyTimer: () => void
   onEditProfile: () => void
@@ -37,9 +37,10 @@ const DAILY_FALLBACK = [
   '주말의 여유로 내일을 위한 에너지를 충전하는 날입니다.',
 ]
 
-const CHIPS: { Icon: React.FC<{ size?: number; className?: string }>; label: string; dest: 'today' | 'saju' | 'daun' | 'gunghab' | 'dream' | 'deepsaju' | 'outfit' | 'job' | 'battle' | 'match'; sub: string }[] = [
+const CHIPS: { Icon: React.FC<{ size?: number; className?: string }>; label: string; dest: 'today' | 'saju' | 'daun' | 'gunghab' | 'dream' | 'tarot' | 'deepsaju' | 'outfit' | 'job' | 'battle' | 'match'; sub: string }[] = [
   { Icon: IcTodayFortune, label: '오늘운세',  dest: 'today',     sub: '오늘 · 내일' },
   { Icon: IcSaju,         label: '정통사주',  dest: 'saju',      sub: '사주팔자' },
+  { Icon: IcTarot,        label: '타로상담',  dest: 'tarot',     sub: 'AI 카드 해석' },
   { Icon: IcBattle,       label: '운세대결',  dest: 'battle',    sub: '친구와 대결' },
   { Icon: IcMatch,        label: '사주매칭',  dest: 'match',     sub: '익명 인연 매칭' },
   { Icon: IcDaun,         label: '대운분석',  dest: 'daun',      sub: '10년 흐름' },
@@ -294,6 +295,35 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
               )
             })}
           </div>
+        </div>
+
+        {/* 나만의 타로 상담 배너 */}
+        <div style={reveal(2)}>
+        <button
+          onClick={() => onNavigate('tarot')}
+          className="w-full overflow-hidden rounded-3xl shadow-[0_2px_16px_rgba(155,107,238,0.12)] active:scale-[0.99] transition-all"
+        >
+          <div className="relative bg-[#130E24] border border-[#9B6BEE40] rounded-3xl px-5 py-4 flex items-center gap-4">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-[0.08] select-none pointer-events-none text-[#9B6BEE] rotate-12">
+              <IcTarot size={64}/>
+            </div>
+            <div className="shrink-0 w-12 h-12 rounded-2xl bg-[#9B6BEE15] border border-[#9B6BEE35] flex items-center justify-center">
+              <IcTarot size={24} className="text-[#9B6BEE]"/>
+            </div>
+            <div className="flex-1 text-left">
+              <p className="text-[10px] text-[#9B6BEE] font-bold mb-0.5">나만의 타로 상담</p>
+              <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                오늘 어떤 카드가 나를 기다릴까?
+              </p>
+              <p className="text-[11px] text-[#7B6F9A] mt-0.5">
+                AI가 풀어주는 과거 · 현재 · 미래 3카드 해석
+              </p>
+            </div>
+            <span className="text-[11px] text-[#9B6BEE] font-semibold shrink-0">
+              지금 시작하기 →
+            </span>
+          </div>
+        </button>
         </div>
 
         {/* 출석체크 배너 */}

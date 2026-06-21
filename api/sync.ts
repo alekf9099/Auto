@@ -31,6 +31,7 @@ const POINT_RULES: Record<string, { amount: number; dailyCap?: number; totalCap?
   '대운 분석 확인 📊':        { amount: 5,   dailyCap: 1 },
   '취업운 확인 💼':           { amount: 5,   dailyCap: 1 },
   '꿈해몽 확인 💭':           { amount: 5,   dailyCap: 1 },
+  '타로 상담 확인 🔮':        { amount: 5,   dailyCap: 1 },
   '심층 사주 전체 잠금 해제':  { amount: -50 },
   // 친구 초대(api/referral.ts)가 직접 지급하는 보너스. 라벨/금액이 여기 등록돼 있지 않으면
   // 다음 동기화 때 위조로 간주돼 history에서 사라진다.

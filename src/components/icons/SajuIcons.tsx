@@ -343,3 +343,17 @@ export function IcShare({ size = 24, className = '' }: P) {
     </svg>
   )
 }
+
+// 타로 — 부채꼴로 펼쳐진 세 장의 카드
+export function IcTarot({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <g transform="translate(12 14)">
+        <rect x="-9" y="-8" width="7" height="11" rx="1.2" transform="rotate(-18)" fill="currentColor" fillOpacity="0.18" stroke="currentColor" strokeWidth="1.3"/>
+        <rect x="-3.5" y="-9.5" width="7" height="11" rx="1.2" fill="currentColor" fillOpacity="0.3" stroke="currentColor" strokeWidth="1.4"/>
+        <rect x="2" y="-8" width="7" height="11" rx="1.2" transform="rotate(18)" fill="currentColor" fillOpacity="0.18" stroke="currentColor" strokeWidth="1.3"/>
+        <circle cx="0" cy="-4.2" r="1.6" fill="currentColor"/>
+      </g>
+    </svg>
+  )
+}
