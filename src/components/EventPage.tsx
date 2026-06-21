@@ -5,9 +5,10 @@ interface Props {
   onBack: () => void
   onOpenLucky: () => void
   onOpenRoulette: () => void
+  onOpenInvite: () => void
 }
 
-export default function EventPage({ onBack, onOpenLucky, onOpenRoulette }: Props) {
+export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenInvite }: Props) {
   const remaining = LUCKY_TIMER_MAX_ATTEMPTS - getLuckyTimerAttempts()
   const spunToday = hasSpunRouletteToday()
 
@@ -71,6 +72,30 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette }: Props
             </div>
             <span className="text-[11px] text-[#C9962A] font-semibold shrink-0">
               {spunToday ? '완료 ✓' : '도전 →'}
+            </span>
+          </div>
+        </button>
+
+        <button
+          onClick={onOpenInvite}
+          className="w-full overflow-hidden rounded-3xl shadow-[0_2px_16px_rgba(201,150,42,0.10)] active:scale-[0.99] transition-all"
+        >
+          <div className="relative bg-[#130E24] border border-[#C9962A40] rounded-3xl px-5 py-4 flex items-center gap-4">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-[0.06] select-none pointer-events-none text-2xl rotate-12">🎁</div>
+            <div className="shrink-0 w-12 h-12 rounded-2xl bg-[#C9962A15] border border-[#C9962A35] flex items-center justify-center text-xl">
+              🎁
+            </div>
+            <div className="flex-1 text-left">
+              <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">상시 이벤트</p>
+              <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                친구 초대하고 포인트 받기
+              </p>
+              <p className="text-[11px] text-[#7B6F9A] mt-0.5">
+                친구는 +30P, 나는 +50P
+              </p>
+            </div>
+            <span className="text-[11px] text-[#C9962A] font-semibold shrink-0">
+              초대하기 →
             </span>
           </div>
         </button>

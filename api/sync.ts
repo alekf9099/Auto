@@ -32,6 +32,10 @@ const POINT_RULES: Record<string, { amount: number; dailyCap?: number; totalCap?
   '취업운 확인 💼':           { amount: 5,   dailyCap: 1 },
   '꿈해몽 확인 💭':           { amount: 5,   dailyCap: 1 },
   '심층 사주 전체 잠금 해제':  { amount: -50 },
+  // 친구 초대(api/referral.ts)가 직접 지급하는 보너스. 라벨/금액이 여기 등록돼 있지 않으면
+  // 다음 동기화 때 위조로 간주돼 history에서 사라진다.
+  '친구 초대 보너스 🎁':       { amount: 50,  totalCap: 10 },
+  '추천 코드 사용 보너스 🎁':   { amount: 30,  totalCap: 1 },
 }
 
 // 행운의 숫자 잡기는 적중/실패 라벨을 합쳐 하루 3회(LUCKY_TIMER_MAX_ATTEMPTS)까지만 허용된다.

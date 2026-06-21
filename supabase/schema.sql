@@ -53,3 +53,20 @@ alter table public.app_config enable row level security;
 -- insert into public.app_config (key, value) values
 --   ('notice', '{"id": "2026-06-21-maint", "message": "6/22 새벽 2~3시 서버 점검이 있어요."}')
 --   on conflict (key) do update set value = excluded.value, updated_at = now();
+
+-- 친구 초대: 사용자마다 고유한 추천 코드를 하나씩 부여해(/api/referral) 공유할 수 있게 한다.
+alter table public.user_data add column if not exists referral_code text unique;
+
+-- 누가 누구의 코드로 가입했는지 기록한다. referee_email이 기본키라 한 계정은
+-- 추천 코드를 단 한 번만 사용할 수 있다 (중복 지급/자기추천 방지는 서버에서도 한 번 더 확인한다).
+create table if not exists public.referrals (
+  referee_email  text primary key,
+  referrer_email text not null,
+  code           text not null,
+  created_at     timestamptz not null default now()
+);
+
+alter table public.referrals enable row level security;
+
+-- user_data와 동일하게 anon/authenticated 키로는 전혀 접근할 수 없고,
+-- 서버(/api/referral)가 구글/카카오 인증 토큰을 검증한 뒤 service_role 키로만 읽고/쓴다.
