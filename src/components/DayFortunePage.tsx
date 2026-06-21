@@ -364,7 +364,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             {/* 일주 배지 */}
             <div
               className="rounded-3xl p-5 border"
-              style={{ backgroundColor: fortune.color + '10', borderColor: fortune.color + '30' }}
+              style={{ background: `linear-gradient(135deg, ${fortune.color}1c 0%, ${fortune.color}08 100%)`, borderColor: fortune.color + '30' }}
             >
               <p className="text-xs text-stone-400 mb-2">{isToday ? '오늘' : '내일'} 일주 · {dateLabel}</p>
               <div className="flex items-center justify-between">
@@ -389,11 +389,11 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             </div>
 
             {/* 조언 + 주의 */}
-            <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-3xl p-4">
+            <div className="border border-[#C9962A30] rounded-3xl p-4" style={{ background: 'linear-gradient(135deg, #C9962A22 0%, #C9962A0A 100%)' }}>
               <p className="text-xs font-semibold text-[#C9962A] mb-1.5">✨ {isToday ? '오늘의' : '내일의'} 조언</p>
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{fortune.조언}</p>
             </div>
-            <div className="bg-red-900/20 border border-red-900/40 rounded-2xl px-4 py-3 flex items-start gap-2">
+            <div className="border border-red-900/40 rounded-2xl px-4 py-3 flex items-start gap-2" style={{ background: 'linear-gradient(135deg, rgba(127,29,29,0.28) 0%, rgba(127,29,29,0.10) 100%)' }}>
               <span className="shrink-0 mt-0.5">⚠️</span>
               <p className="text-xs text-[#A89BC0] leading-relaxed">
                 <span className="font-semibold text-red-400">주의 </span>{fortune.주의}
@@ -401,7 +401,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             </div>
 
             {/* 분야별 */}
-            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
+            <div className="rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
                 <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>분야별 운세</h2>
@@ -416,7 +416,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             </div>
 
             {/* 시간대별 */}
-            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
+            <div className="rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
                 <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>🕐 시간대별</h2>
@@ -427,7 +427,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
                   { icon: '☀️',  label: '오후 12~18시', text: fortune.시간오후 },
                   { icon: '🌙', label: '저녁 18~24시', text: fortune.시간저녁 },
                 ].map(t => (
-                  <div key={t.label} className="flex gap-3 bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-4 py-3">
+                  <div key={t.label} className="flex gap-3 border border-[#2A1F4A] rounded-2xl px-4 py-3" style={{ background: 'linear-gradient(135deg, #201A3A 0%, #160F2C 100%)' }}>
                     <span className="shrink-0">{t.icon}</span>
                     <div>
                       <p className="text-xs font-semibold text-[#7B6F9A] mb-0.5">{t.label}</p>
@@ -439,7 +439,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             </div>
 
             {/* 행운 아이템 */}
-            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
+            <div className="rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
                 <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>🍀 행운 아이템</h2>
@@ -451,7 +451,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
                   { label: '행운 방향', value: LUCKY_DIR[luckyEl],        dot: null },
                   { label: '행운 음식', value: LUCKY_FOOD[luckyEl],       dot: null },
                 ].map(item => (
-                  <div key={item.label} className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl p-3">
+                  <div key={item.label} className="border border-[#C9962A30] rounded-2xl p-3" style={{ background: 'linear-gradient(135deg, #C9962A22 0%, #C9962A0A 100%)' }}>
                     <p className="text-xs text-[#7B6F9A] mb-1">{item.label}</p>
                     <div className="flex items-center gap-1.5">
                       {item.dot && <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.dot }} />}
@@ -464,14 +464,16 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
 
             <button
               onClick={() => setShowShare(true)}
-              className="w-full py-3.5 bg-[#231844] text-[#E8DFC8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98] flex items-center justify-center gap-1.5"
+              className="w-full py-3.5 text-[#E8DFC8] font-semibold rounded-2xl text-sm transition active:scale-[0.98] flex items-center justify-center gap-1.5"
+              style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #231844 100%)' }}
             >
               📤 운세 카드 공유하기
             </button>
             <PointsClaimButton key={featKey} featureKey={featKey} label={`${title} 확인 🔮`} />
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
-              className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
+              className="w-full py-3.5 text-[#C4B8D8] font-semibold rounded-2xl text-sm transition active:scale-[0.98]"
+              style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #231844 100%)' }}
             >
               다시 조회하기
             </button>
