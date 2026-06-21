@@ -39,7 +39,7 @@ export default {
         'fade-in-up': 'fadeInUp 0.5s ease both',
         'spin-glow': 'spinGlow 12s linear infinite',
         'float-left': 'floatLeft 4s ease-in-out infinite',
-        'float-right': 'floatRight 4s ease-in-out infinite 0.3s',
+        'float-right': 'floatRight 4s ease-in-out infinite 0.3s backwards',
       },
     },
   },
