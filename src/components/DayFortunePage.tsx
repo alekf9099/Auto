@@ -75,8 +75,23 @@ function DayLuckGauge({ percent }: { percent: number }) {
   return (
     <div className="flex items-center justify-center py-2">
       <svg viewBox="0 0 220 220" width={240} height={240}>
-        <circle cx={cx} cy={cy} r={r} fill="#150D28" stroke="#2A1F4A" strokeWidth="1.5" />
-        <path d={describeArc(cx, cy, r + 4, activeSector.from, activeSector.to)} fill="none" stroke="#E8584B" strokeWidth="5" strokeLinecap="round" />
+        <defs>
+          <radialGradient id="dialGradient" cx="42%" cy="55%" r="75%">
+            <stop offset="0%" stopColor="#4A3520" />
+            <stop offset="45%" stopColor="#241A38" />
+            <stop offset="100%" stopColor="#0F0A1C" />
+          </radialGradient>
+          <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="60%">
+            <stop offset="0%" stopColor="#E3503A" />
+            <stop offset="100%" stopColor="#E8B84B" />
+          </linearGradient>
+          <linearGradient id="needleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#A9762B" />
+            <stop offset="100%" stopColor="#F5DA8B" />
+          </linearGradient>
+        </defs>
+        <circle cx={cx} cy={cy} r={r} fill="url(#dialGradient)" stroke="#2A1F4A" strokeWidth="1.5" />
+        <path d={describeArc(cx, cy, r + 4, activeSector.from, activeSector.to)} fill="none" stroke="url(#arcGradient)" strokeWidth="5" strokeLinecap="round" />
 
         {GAUGE_SECTORS.map((s, i) => {
           const mid = (s.from + s.to) / 2
@@ -105,8 +120,8 @@ function DayLuckGauge({ percent }: { percent: number }) {
           )
         })}
 
-        <line x1={cx} y1={cy} x2={needleTip.x} y2={needleTip.y} stroke="#E8B84B" strokeWidth="3" strokeLinecap="round" />
-        <circle cx={cx} cy={cy} r="6" fill="#E8B84B" />
+        <line x1={cx} y1={cy} x2={needleTip.x} y2={needleTip.y} stroke="url(#needleGradient)" strokeWidth="3" strokeLinecap="round" />
+        <circle cx={cx} cy={cy} r="7" fill="#1C1438" stroke="url(#needleGradient)" strokeWidth="1.5" />
       </svg>
     </div>
   )
@@ -326,10 +341,19 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
         {step === 'result' && (
           <div className="animate-fade-in-up">
             {/* 종합 행운 게이지 */}
-            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5 space-y-4">
+            <div
+              className="rounded-3xl border border-[#C9962A30] shadow-[0_2px_24px_rgba(201,150,42,0.14)] p-5 space-y-4"
+              style={{ background: 'linear-gradient(160deg, #1C1438 0%, #150D28 55%, #0D0A1A 100%)' }}
+            >
               <DayLuckGauge percent={luckPercent} />
-              <div className="bg-[#1C1438] border border-[#2A1F4A] rounded-2xl p-4 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-[#E85B7A20] flex items-center justify-center text-lg shrink-0">💬</div>
+              <div
+                className="border border-[#2A1F4A] rounded-2xl p-4 flex items-center gap-3"
+                style={{ background: 'linear-gradient(135deg, #201A3A 0%, #160F2C 100%)' }}
+              >
+                <div
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-lg shrink-0"
+                  style={{ background: 'radial-gradient(circle, rgba(232,91,122,0.35), rgba(232,91,122,0.05))' }}
+                >💬</div>
                 <div>
                   <p className="text-sm font-semibold text-[#F5EDD4]">{isToday ? '오늘' : '내일'}의 전체 운세</p>
                   <p className="text-xs text-[#A89BC0] mt-0.5">⭐ 종합 행운 지수: {luckPercent}%</p>
