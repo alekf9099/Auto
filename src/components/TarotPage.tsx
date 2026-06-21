@@ -228,9 +228,10 @@ export default function TarotPage({ onBack }: Props) {
 
             <button
               onClick={handleStartDraw}
-              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99]"
+              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99] flex items-center justify-center gap-2"
             >
-              🔮 카드 뽑기
+              <IcTarot size={20} className="text-[#0D0A1A]" />
+              카드 뽑기
             </button>
 
             <div className="flex items-center gap-2 justify-center">
