@@ -50,6 +50,10 @@ function loadKakaoSdk(onReady: () => void) {
   const script = document.createElement('script')
   script.src = KAKAO_SDK_SRC
   script.onload = onReady
+  script.onerror = () => {
+    kakaoSdkLoading = false
+    console.error('카카오 SDK 로드 실패')
+  }
   document.head.appendChild(script)
 }
 
@@ -91,7 +95,10 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
   }, [])
 
   function handleKakaoLogin() {
-    if (!window.Kakao) return
+    if (!window.Kakao || !window.Kakao.isInitialized()) {
+      console.error('카카오 SDK가 아직 준비되지 않았습니다')
+      return
+    }
     window.Kakao.Auth.login({
       success: auth => {
         window.Kakao!.API.request({
