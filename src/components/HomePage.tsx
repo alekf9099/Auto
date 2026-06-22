@@ -571,7 +571,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           onClick={() => onNavigate('outfit')}
           className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(224,82,130,0.25)] hover:border-[rgba(224,82,130,0.5)] hover:shadow-[0_0_24px_rgba(224,82,130,0.3)] active:shadow-[0_0_24px_rgba(224,82,130,0.35)]"
         >
-          <img src="/promo-outfit.png" alt="오늘의 코디 — 오늘 뭐 입을까? 사주로 보는 내 스타일" className="w-full h-auto block" />
+          <img src="/promo-outfit.png" alt="오늘의 코디 — 오행 기반 스타일링" className="w-full h-auto block" />
         </button>
         </div>
 
@@ -601,7 +601,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           onClick={() => onNavigate('tojeong')}
           className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(201,150,42,0.2)] hover:border-[rgba(201,150,42,0.5)] hover:shadow-[0_0_24px_rgba(201,150,42,0.3)] active:shadow-[0_0_24px_rgba(201,150,42,0.35)]"
         >
-          <img src="/promo-tojeong-2027.png" alt="토정비결 — 2027년 나의 한 해 운세는? 이지함 선생의 전통 비결서" className="w-full h-auto block" />
+          <img src="/promo-tojeong-2027.png" alt="토정비결 — 지혜로운 삶의 이정표, 나의 운세 흐름과 비결" className="w-full h-auto block" />
         </button>
         </div>
 
