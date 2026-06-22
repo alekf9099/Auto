@@ -9,8 +9,13 @@ interface Props {
 }
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined
-const KAKAO_KEY  = import.meta.env.VITE_KAKAO_JS_KEY as string | undefined
-const KAKAO_SDK_SRC = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js'
+const KAKAO_KEY  = import.meta.env.VITE_KAKAO_REST_KEY as string | undefined
+
+// 카카오 로그인은 인가 코드 받기(리다이렉트) → /api/kakao-token(서버) 에서 토큰 교환 방식을 쓴다.
+// (JS SDK의 Kakao.Auth.login은 v2에서 제거됨 — Kakao.Auth.authorize 리다이렉트 흐름으로 대체됨)
+function kakaoRedirectUri(): string {
+  return `${window.location.origin}/`
+}
 
 declare global {
   interface Window {
@@ -26,35 +31,7 @@ declare global {
         }
       }
     }
-    Kakao?: {
-      init(key: string): void
-      isInitialized(): boolean
-      Auth: {
-        login(opts: { success: (auth: { access_token: string }) => void; fail: (err: unknown) => void }): void
-      }
-      API: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        request(opts: { url: string; success: (res: any) => void; fail: (err: unknown) => void }): void
-      }
-    }
   }
-}
-
-let kakaoSdkLoading = false
-
-// 카카오 SDK는 키가 설정된 경우에만 동적으로 불러온다 (다른 외부 연동과 동일한 패턴).
-function loadKakaoSdk(onReady: () => void) {
-  if (window.Kakao) { onReady(); return }
-  if (kakaoSdkLoading) return
-  kakaoSdkLoading = true
-  const script = document.createElement('script')
-  script.src = KAKAO_SDK_SRC
-  script.onload = onReady
-  script.onerror = () => {
-    kakaoSdkLoading = false
-    console.error('카카오 SDK 로드 실패')
-  }
-  document.head.appendChild(script)
 }
 
 export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props) {
@@ -87,40 +64,36 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
     }
   }, [])
 
+  // 카카오 로그인 리다이렉트로 돌아왔을 때(?code=...) 인가 코드를 서버에서 토큰으로 교환한다.
   useEffect(() => {
     if (!KAKAO_KEY) return
-    loadKakaoSdk(() => {
-      if (window.Kakao && !window.Kakao.isInitialized()) window.Kakao.init(KAKAO_KEY)
+    const code = new URLSearchParams(window.location.search).get('code')
+    if (!code) return
+    window.history.replaceState({}, '', window.location.pathname)
+
+    fetch('/api/kakao-token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code, redirectUri: kakaoRedirectUri() }),
     })
+      .then(res => {
+        if (!res.ok) throw new Error(`카카오 토큰 교환 실패: ${res.status}`)
+        return res.json() as Promise<{ accessToken: string; name: string; email: string; picture: string | null }>
+      })
+      .then(data => {
+        onLogin({ name: data.name, email: data.email, picture: data.picture ?? undefined, idToken: data.accessToken, provider: 'kakao' })
+      })
+      .catch(err => console.error('카카오 로그인 처리 실패:', err))
   }, [])
 
   function handleKakaoLogin() {
-    if (!window.Kakao || !window.Kakao.isInitialized()) {
-      console.error('카카오 SDK가 아직 준비되지 않았습니다')
-      return
-    }
-    window.Kakao.Auth.login({
-      success: auth => {
-        window.Kakao!.API.request({
-          url: '/v2/user/me',
-          success: res => {
-            const id = res.id as number
-            const account = res.kakao_account ?? {}
-            const profile = account.profile ?? {}
-            const email = account.email && account.is_email_verified ? account.email : `kakao_${id}@kakao.local`
-            onLogin({
-              name: profile.nickname ?? '카카오 사용자',
-              email,
-              picture: profile.profile_image_url,
-              idToken: auth.access_token,
-              provider: 'kakao',
-            })
-          },
-          fail: err => console.error('카카오 사용자 정보 조회 실패:', err),
-        })
-      },
-      fail: err => console.error('카카오 로그인 실패:', err),
+    if (!KAKAO_KEY) return
+    const params = new URLSearchParams({
+      client_id: KAKAO_KEY,
+      redirect_uri: kakaoRedirectUri(),
+      response_type: 'code',
     })
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?${params.toString()}`
   }
 
   return (
