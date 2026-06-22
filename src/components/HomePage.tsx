@@ -631,22 +631,13 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         </button>
         </div>
 
-        {/* 토정비결 프로모 카드 */}
+        {/* 토정비결 프로모 카드 — 디자인 이미지를 그대로 사용 (연도가 바뀌면 이미지 교체 필요) */}
         <div style={reveal(6)}>
         <button
           onClick={() => onNavigate('tojeong')}
-          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all"
-          style={{ background: 'linear-gradient(135deg, #13081C 0%, #190D2E 100%)' }}
+          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(201,150,42,0.2)] hover:border-[rgba(201,150,42,0.5)] hover:shadow-[0_0_24px_rgba(201,150,42,0.3)] active:shadow-[0_0_24px_rgba(201,150,42,0.35)]"
         >
-          <div className="relative p-5 border border-[rgba(201,150,42,0.2)] rounded-3xl transition-shadow duration-300 hover:border-[rgba(201,150,42,0.5)] hover:shadow-[0_0_24px_rgba(201,150,42,0.3)] active:shadow-[0_0_24px_rgba(201,150,42,0.35)]">
-            <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40] px-3 py-1 rounded-full mb-3">
-              토정비결 ›
-            </span>
-            <p className="text-base font-bold text-[#F5EDD4] leading-snug mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-              {new Date().getFullYear()}년 나의<br/>한 해 운세는?
-            </p>
-            <p className="text-sm text-[#A89BC0]">이지함 선생의 전통 비결서</p>
-          </div>
+          <img src="/promo-tojeong-2027.png" alt="토정비결 — 2027년 나의 한 해 운세는? 이지함 선생의 전통 비결서" className="w-full h-auto block" />
         </button>
         </div>
 
