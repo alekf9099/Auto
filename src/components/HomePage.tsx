@@ -585,25 +585,13 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         </button>
         </div>
 
-        {/* 신년운세 프로모 카드 */}
+        {/* 신년운세 프로모 카드 — 디자인 이미지를 그대로 사용 */}
         <div style={reveal(6)}>
         <button
           onClick={() => onNavigate('sinnyeon')}
-          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all"
-          style={{ background: 'linear-gradient(135deg, #0D1A16 0%, #0A1520 100%)' }}
+          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(201,150,42,0.2)] hover:border-[rgba(201,150,42,0.5)] hover:shadow-[0_0_24px_rgba(201,150,42,0.3)] active:shadow-[0_0_24px_rgba(201,150,42,0.35)]"
         >
-          <div className="relative p-5 border border-[rgba(201,150,42,0.2)] rounded-3xl transition-shadow duration-300 hover:border-[rgba(201,150,42,0.5)] hover:shadow-[0_0_24px_rgba(201,150,42,0.3)] active:shadow-[0_0_24px_rgba(201,150,42,0.35)]">
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-[0.07] pointer-events-none text-[#C9962A]">
-              <IcSinnyeon size={80}/>
-            </div>
-            <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40] px-3 py-1 rounded-full mb-3">
-              신년운세 ›
-            </span>
-            <p className="text-base font-bold text-[#F5EDD4] leading-snug mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-              미리보고 준비!<br/>{new Date().getFullYear()} 신년운세
-            </p>
-            <p className="text-sm text-[#A89BC0]">얼른 복 잡아가세요!</p>
-          </div>
+          <img src="/promo-sinnyeon.png" alt="신년 대박 운세 — 새로운 기회·성취 대박, 사주로 보는 신년 로드맵" className="w-full h-auto block" />
         </button>
         </div>
 
