@@ -106,35 +106,53 @@ function notifySyncStatus(status: SyncStatus): void {
   syncListeners.forEach(fn => fn(status))
 }
 
-async function callSync(action: 'pull' | 'push', data?: Record<string, unknown>): Promise<{ data: Record<string, unknown> | null } | null> {
-  const idToken = getIdToken()
-  if (!idToken) return null
+function delay(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+async function attemptSync(idToken: string, action: 'pull' | 'push', data?: Record<string, unknown>): Promise<Response> {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), 10000)
   try {
-    const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), 10000)
-    const res = await fetch('/api/sync', {
+    return await fetch('/api/sync', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ idToken, provider: getProvider(), action, data }),
       signal: controller.signal,
     })
+  } finally {
     clearTimeout(timer)
-    // 구글 ID 토큰은 발급 후 약 1시간이면 만료된다. 갱신 로직이 없으므로
-    // 401을 받으면 더 이상 재시도하지 않도록 토큰을 비우고 재로그인을 유도한다.
-    if (res.status === 401) {
-      setIdToken(null)
-      notifySyncStatus('expired')
+  }
+}
+
+async function callSync(action: 'pull' | 'push', data?: Record<string, unknown>): Promise<{ data: Record<string, unknown> | null } | null> {
+  const idToken = getIdToken()
+  if (!idToken) return null
+
+  // 홈 화면에 추가된 PWA를 막 열었을 때는 네트워크 스택이 아직 준비되지 않아 첫 요청이
+  // 일시적으로 실패할 수 있다. 토큰 만료(401)가 아닌 실패는 한 번 더 재시도해, 이런
+  // 일시적인 오류 때문에 매번 동기화 실패 배너가 뜨는 것을 막는다.
+  for (let attempt = 0; ; attempt++) {
+    try {
+      const res = await attemptSync(idToken, action, data)
+      // 구글 ID 토큰은 발급 후 약 1시간이면 만료된다. 갱신 로직이 없으므로
+      // 401을 받으면 더 이상 재시도하지 않도록 토큰을 비우고 재로그인을 유도한다.
+      if (res.status === 401) {
+        setIdToken(null)
+        notifySyncStatus('expired')
+        return null
+      }
+      if (!res.ok) throw new Error(`동기화 실패: ${res.status}`)
+      const json = await res.json()
+      notifySyncStatus('ok')
+      return json
+    } catch (e) {
+      if (attempt === 0) { await delay(1500); continue }
+      console.error('클라우드 동기화 실패:', e)
+      captureException(e)
+      notifySyncStatus('error')
       return null
     }
-    if (!res.ok) throw new Error(`동기화 실패: ${res.status}`)
-    const json = await res.json()
-    notifySyncStatus('ok')
-    return json
-  } catch (e) {
-    console.error('클라우드 동기화 실패:', e)
-    captureException(e)
-    notifySyncStatus('error')
-    return null
   }
 }
 
