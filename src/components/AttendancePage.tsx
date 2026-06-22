@@ -3,7 +3,10 @@ import { loadPoints, tryClaimDaily } from '../utils/points'
 import type { PointsState } from '../utils/points'
 import { trackEvent } from '../utils/analytics'
 import PointsToast from './PointsToast'
-import { IcGem, IcStamp } from './icons/SajuIcons'
+import {
+  IcGem, IcStamp, IcGift, IcLucky,
+  IcTodayFortune, IcTomorrowFortune, IcSinnyeon, IcTojeong, IcSaju, IcDaun,
+} from './icons/SajuIcons'
 
 interface Props {
   onBack: () => void
@@ -11,16 +14,16 @@ interface Props {
 }
 
 const POINT_GUIDE = [
-  { icon: '🎁', label: '가입 보너스',       amount: 100, color: '#C9962A' },
-  { icon: '📅', label: '매일 출석 체크',     amount: 10,  color: '#4BBF7E' },
-  { icon: '🎯', label: '행운의 숫자 잡기 (성공)', amount: 20,  color: '#F0B429' },
-  { icon: '⏱️', label: '행운의 숫자 잡기 (참가)', amount: 5,   color: '#E8A33D' },
-  { icon: '🔮', label: '오늘의 운세',        amount: 5,   color: '#E8A33D' },
-  { icon: '⏰', label: '내일의 운세',        amount: 5,   color: '#FB923C' },
-  { icon: '🗓️', label: '신년운세',          amount: 5,   color: '#60A5FA' },
-  { icon: '📖', label: '토정비결',           amount: 5,   color: '#E05282' },
-  { icon: '☯',  label: '정통사주',           amount: 5,   color: '#A78BFA' },
-  { icon: '📊', label: '대운 분석',          amount: 5,   color: '#22D3EE' },
+  { icon: IcGift,           label: '가입 보너스',       amount: 100, color: '#C9962A' },
+  { icon: IcStamp,          label: '매일 출석 체크',     amount: 10,  color: '#4BBF7E' },
+  { icon: IcLucky,          label: '행운의 숫자 잡기 (성공)', amount: 20,  color: '#F0B429' },
+  { icon: IcLucky,          label: '행운의 숫자 잡기 (참가)', amount: 5,   color: '#E8A33D' },
+  { icon: IcTodayFortune,   label: '오늘의 운세',        amount: 5,   color: '#E8A33D' },
+  { icon: IcTomorrowFortune, label: '내일의 운세',       amount: 5,   color: '#FB923C' },
+  { icon: IcSinnyeon,       label: '신년운세',          amount: 5,   color: '#60A5FA' },
+  { icon: IcTojeong,        label: '토정비결',           amount: 5,   color: '#E05282' },
+  { icon: IcSaju,           label: '정통사주',           amount: 5,   color: '#A78BFA' },
+  { icon: IcDaun,           label: '대운 분석',          amount: 5,   color: '#22D3EE' },
 ]
 
 const todayStr = () => new Date().toISOString().slice(0, 10)
@@ -209,9 +212,9 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
               <div key={g.label} className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#1C1438] border border-[#2A1F4A]">
                 <div
                   className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
-                  style={{ backgroundColor: g.color + '20', border: `1px solid ${g.color}40` }}
+                  style={{ backgroundColor: g.color + '20', border: `1px solid ${g.color}40`, color: g.color }}
                 >
-                  <span className="text-sm">{g.icon}</span>
+                  <g.icon size={18} />
                 </div>
                 <p className="flex-1 text-sm font-semibold text-[#E8DFC8]">{g.label}</p>
                 <span className="text-sm font-bold shrink-0" style={{ color: g.color }}>+{g.amount}P</span>
