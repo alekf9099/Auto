@@ -565,47 +565,23 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           </div>
         )}
 
-        {/* 오늘의 코디 프로모 카드 */}
+        {/* 오늘의 코디 프로모 카드 — 디자인 이미지를 그대로 사용 */}
         <div style={reveal(6)}>
         <button
           onClick={() => onNavigate('outfit')}
-          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all"
-          style={{ background: 'linear-gradient(135deg, #1A0818 0%, #200D22 100%)' }}
+          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(224,82,130,0.25)] hover:border-[rgba(224,82,130,0.5)] hover:shadow-[0_0_24px_rgba(224,82,130,0.3)] active:shadow-[0_0_24px_rgba(224,82,130,0.35)]"
         >
-          <div className="relative p-5 border border-[rgba(224,82,130,0.25)] rounded-3xl transition-shadow duration-300 hover:border-[rgba(224,82,130,0.5)] hover:shadow-[0_0_24px_rgba(224,82,130,0.3)] active:shadow-[0_0_24px_rgba(224,82,130,0.35)]">
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-[0.08] pointer-events-none">
-              <IcOutfit size={80} className="text-[#E05282]"/>
-            </div>
-            <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#E0528220] text-[#E05282] border border-[#E0528240] px-3 py-1 rounded-full mb-3">
-              오늘의 코디 ›
-            </span>
-            <p className="text-base font-bold text-[#F5EDD4] leading-snug mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-              오늘 뭐 입을까?<br/>사주로 보는 내 스타일
-            </p>
-            <p className="text-sm text-[#A89BC0]">오행 기반 컬러 & 아이템 추천</p>
-          </div>
+          <img src="/promo-outfit.png" alt="오늘의 코디 — 오늘 뭐 입을까? 사주로 보는 내 스타일" className="w-full h-auto block" />
         </button>
         </div>
 
-        {/* 취업운 프로모 카드 */}
+        {/* 취업운 프로모 카드 — 디자인 이미지를 그대로 사용 */}
         <div style={reveal(6)}>
         <button
           onClick={() => onNavigate('job')}
-          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all"
-          style={{ background: 'linear-gradient(135deg, #0A1A12 0%, #0D2018 100%)' }}
+          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(75,191,126,0.25)] hover:border-[rgba(75,191,126,0.5)] hover:shadow-[0_0_24px_rgba(75,191,126,0.3)] active:shadow-[0_0_24px_rgba(75,191,126,0.35)]"
         >
-          <div className="relative p-5 border border-[rgba(75,191,126,0.25)] rounded-3xl transition-shadow duration-300 hover:border-[rgba(75,191,126,0.5)] hover:shadow-[0_0_24px_rgba(75,191,126,0.3)] active:shadow-[0_0_24px_rgba(75,191,126,0.35)]">
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 opacity-[0.08] pointer-events-none">
-              <IcJob size={80} className="text-[#4BBF7E]"/>
-            </div>
-            <span className="inline-flex items-center gap-1 text-xs font-bold bg-[#4BBF7E20] text-[#4BBF7E] border border-[#4BBF7E40] px-3 py-1 rounded-full mb-3">
-              취업운 ›
-            </span>
-            <p className="text-base font-bold text-[#F5EDD4] leading-snug mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-              지금 지원하면 합격할까?<br/>사주로 보는 취업·이직운
-            </p>
-            <p className="text-sm text-[#A89BC0]">십성 기반 커리어 운세 & 적성 직무</p>
-          </div>
+          <img src="/promo-job.png" alt="취업운 — 지금 지원하면 합격할까? 사주로 보는 취업·이직운" className="w-full h-auto block" />
         </button>
         </div>
 
