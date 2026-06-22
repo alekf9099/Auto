@@ -581,7 +581,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           onClick={() => onNavigate('job')}
           className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(75,191,126,0.25)] hover:border-[rgba(75,191,126,0.5)] hover:shadow-[0_0_24px_rgba(75,191,126,0.3)] active:shadow-[0_0_24px_rgba(75,191,126,0.35)]"
         >
-          <img src="/promo-job.png" alt="취업운 — 지금 지원하면 합격할까? 사주로 보는 취업·이직운" className="w-full h-auto block" />
+          <img src="/promo-job.png" alt="합격·승진운 — 성공을 위한 운세, 사주로 보는 취업·이직운" className="w-full h-auto block" />
         </button>
         </div>
 
