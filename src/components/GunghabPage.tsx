@@ -15,11 +15,8 @@ const REL_OPTIONS: { key: GunghabRelation; icon: string; label: string; desc: st
   { key: 'work',   icon: '💼', label: '직장동료', desc: '업무 궁합' },
 ]
 
-const BAR_COLORS = [
-  { from: '#F43F5E', to: '#FB7185' }, // 감정 — rose
-  { from: '#F59E0B', to: '#FCD34D' }, // 성격 — amber
-  { from: '#10B981', to: '#34D399' }, // 발전 — emerald
-]
+// 캔바 디자인의 점수 바 색상 — 빨강(낮음) → 골드(중간) → 초록(높음) 스펙트럼
+const SPECTRUM_BAR = 'linear-gradient(90deg, #B12629 0%, #C46D19 32%, #D2800D 50%, #6B8A3A 72%, #2F7A4A 100%)'
 
 type BirthFields = {
   year: string; month: string; day: string
@@ -46,20 +43,37 @@ function toBirth(f: BirthFields): BirthInput {
   }
 }
 
-function GaugeMeter({ value, color }: { value: number; color: string }) {
-  const r = 48, cx = 60, cy = 60
+function GaugeMeter({ value, color, size = 176, stroke = 9 }: { value: number; color: string; size?: number; stroke?: number }) {
+  const r = size / 2 - stroke - 3
+  const cx = size / 2, cy = size / 2
   const circ = 2 * Math.PI * r
   const filled = (value / 100) * circ
   return (
-    <svg viewBox="0 0 120 120" className="w-44 h-44">
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="9" />
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="14" />
+    <svg viewBox={`0 0 ${size} ${size}`} className="w-full h-full">
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={stroke} />
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth={stroke + 5} />
       <circle
         cx={cx} cy={cy} r={r} fill="none"
-        stroke={color} strokeWidth="9" strokeLinecap="round"
+        stroke={color} strokeWidth={stroke} strokeLinecap="round"
         strokeDasharray={`${filled} ${circ - filled}`}
         transform={`rotate(-90 ${cx} ${cy})`}
       />
+    </svg>
+  )
+}
+
+function CornerBracket({ corner }: { corner: 'tl' | 'tr' | 'bl' | 'br' }) {
+  const rotate = { tl: 0, tr: 90, bl: -90, br: 180 }[corner]
+  const pos = {
+    tl: 'top-3 left-3',
+    tr: 'top-3 right-3',
+    bl: 'bottom-3 left-3',
+    br: 'bottom-3 right-3',
+  }[corner]
+  return (
+    <svg viewBox="0 0 48 48" className={`absolute ${pos} w-9 h-9 pointer-events-none`} style={{ transform: `rotate(${rotate}deg)` }}>
+      <path d="M2 16 V2 H16" fill="none" stroke="#C9962A" strokeWidth="1.5" opacity="0.7" />
+      <path d="M8 22 V8 H22" fill="none" stroke="#C9962A" strokeWidth="1.5" opacity="0.45" />
     </svg>
   )
 }
@@ -299,125 +313,115 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
       {step === 'result' && result && (
         <div className="max-w-2xl mx-auto px-4 py-5 space-y-4 animate-fade-in-up">
 
-          {/* 결과 배너 */}
-          <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl overflow-hidden shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative">
-            <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-rose-500/10 blur-3xl" />
-            <div className="absolute -bottom-10 -left-10 w-40 h-40 rounded-full bg-violet-400/10 blur-3xl" />
+          {/* 메인 패널 — 아바타 + 거대 게이지 + 점수 바 */}
+          <div className="relative bg-gradient-to-br from-[#1A0E22] via-[#0F0712] to-[#000005] rounded-3xl border border-[#C9962A40] shadow-xl shadow-black/50 overflow-hidden">
+            <CornerBracket corner="tl" />
+            <CornerBracket corner="tr" />
+            <CornerBracket corner="bl" />
+            <CornerBracket corner="br" />
 
-            <div className="relative z-10 p-6">
-              {/* 나 vs 상대방 */}
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex items-center gap-1.5 bg-violet-400/20 border border-violet-400/30 rounded-full px-2.5 py-1.5">
-                  <div className="w-5 h-5 rounded-full bg-violet-500 flex items-center justify-center text-[10px] text-white font-bold">나</div>
-                  <span className="text-xs text-violet-200 font-medium">나</span>
+            <div className="relative z-10 px-5 pt-7 pb-5">
+              {/* 아바타 줄 */}
+              <div className="flex items-center justify-between px-2">
+                <div className="flex flex-col items-center gap-1.5">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-violet-500 to-violet-700 border-2 border-violet-300/40 flex items-center justify-center text-white text-base font-bold shadow-lg shadow-violet-900/50">나</div>
+                  <span className="text-[11px] text-violet-300/80 font-medium">나</span>
                 </div>
-                <span className="text-violet-400/60 text-sm">✕</span>
-                <div className="flex items-center gap-1.5 bg-rose-400/20 border border-rose-400/30 rounded-full px-2.5 py-1.5">
-                  <div className="w-5 h-5 rounded-full bg-rose-400 flex items-center justify-center text-[10px] text-white font-bold">{nameInit}</div>
-                  <span className="text-xs text-rose-200 font-medium">{nameLabel}</span>
+                <span className="text-[#C9962A] text-xs font-bold tracking-widest">VS</span>
+                <div className="flex flex-col items-center gap-1.5">
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-rose-400 to-rose-600 border-2 border-rose-200/40 flex items-center justify-center text-white text-base font-bold shadow-lg shadow-rose-900/50">{nameInit}</div>
+                  <span className="text-[11px] text-rose-300/80 font-medium">{nameLabel}</span>
                 </div>
-                <span className="ml-auto text-xs text-violet-300/60">{relOpt.icon} {relOpt.label}</span>
               </div>
 
-              {/* 게이지 + 텍스트 */}
-              <div className="flex items-center gap-4">
-                <div className="relative shrink-0" style={{ filter: `drop-shadow(0 0 16px ${result.gradeColor}55)` }}>
-                  <GaugeMeter value={result.total} color={result.gradeColor} />
+              {/* 거대 게이지 — 이클립스 글로우 */}
+              <div className="relative flex flex-col items-center justify-center -mt-1">
+                <div className="absolute w-56 h-56 rounded-full blur-3xl opacity-40" style={{ backgroundColor: result.gradeColor }} />
+                <div className="relative w-64 h-64" style={{ filter: `drop-shadow(0 0 24px ${result.gradeColor}66)` }}>
+                  <GaugeMeter value={result.total} color={result.gradeColor} size={256} stroke={14} />
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <p className="text-4xl font-bold text-white leading-none tabular-nums">{result.total}</p>
-                    <p className="text-base font-bold text-violet-300">%</p>
-                  </div>
-                </div>
-                <div className="flex-1 space-y-2">
-                  <span
-                    className="inline-block text-xs font-bold px-3 py-1.5 rounded-full"
-                    style={{ color: result.gradeColor, backgroundColor: result.gradeBg, boxShadow: `0 0 12px ${result.gradeColor}30` }}
-                  >
-                    {result.grade}
-                  </span>
-                  <p className="text-base font-bold text-white leading-snug" style={{ fontFamily: "'Noto Serif KR', serif" }}>
-                    {result.headline}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* 하단 점수 바 미니 */}
-            <div className="border-t border-white/10 px-6 py-3 flex gap-4">
-              {[
-                { label: '감정', score: result.emotion,     color: '#F43F5E' },
-                { label: '성격', score: result.personality, color: '#F59E0B' },
-                { label: '발전', score: result.future,      color: '#10B981' },
-              ].map(item => (
-                <div key={item.label} className="flex-1">
-                  <div className="flex justify-between mb-1">
-                    <span className="text-[10px] text-violet-300/60">{item.label}</span>
-                    <span className="text-[10px] font-bold" style={{ color: item.color }}>{item.score}%</span>
-                  </div>
-                  <div className="h-1 bg-white/10 rounded-full overflow-hidden">
-                    <div className="h-full rounded-full" style={{ width: `${item.score}%`, backgroundColor: item.color }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 분야별 궁합 */}
-          <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
-            <div className="flex items-center gap-2 mb-5">
-              <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-              <h2 className="text-sm font-bold text-[#F5EDD4]">분야별 궁합</h2>
-            </div>
-            <div className="space-y-5">
-              {[
-                { label: '감정 궁합', score: result.emotion,     icon: '💕', desc: rel === 'couple' ? '감정과 유대감' : '공감대와 감정' },
-                { label: '성격 궁합', score: result.personality, icon: '✨', desc: '가치관과 성격' },
-                { label: '발전 궁합', score: result.future,      icon: '🌱', desc: rel === 'work' ? '협업과 성과' : '미래와 성장' },
-              ].map((item, i) => (
-                <div key={item.label}>
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-2">
-                      <span className="text-base">{item.icon}</span>
-                      <div>
-                        <span className="text-xs font-bold text-[#C4B8D8]">{item.label}</span>
-                        <span className="text-[11px] text-[#7B6F9A] ml-1.5">{item.desc}</span>
-                      </div>
-                    </div>
-                    <span className="text-sm font-bold tabular-nums" style={{ color: BAR_COLORS[i].from }}>{item.score}%</span>
-                  </div>
-                  <div className="w-full h-3 bg-[#231844] rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full"
-                      style={{
-                        width: `${item.score}%`,
-                        background: `linear-gradient(to right, ${BAR_COLORS[i].from}, ${BAR_COLORS[i].to})`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* 궁합 포인트 */}
-          {result.tips.length > 0 && (
-            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-sm font-bold text-[#F5EDD4]">궁합 포인트</h2>
-              </div>
-              <div className="space-y-2">
-                {result.tips.map((tip, i) => (
-                  <div key={i} className={`flex items-start gap-3 px-4 py-3 rounded-2xl ${tip.good ? 'bg-[#C9962A15] border border-[#C9962A30]' : 'bg-rose-900/20 border border-rose-900/40'}`}>
-                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs shrink-0 mt-0.5 ${tip.good ? 'bg-[#C9962A] text-[#0D0A1A]' : 'bg-rose-500 text-white'}`}>
-                      {tip.good ? '✓' : '!'}
+                    <p className="text-6xl font-bold leading-none tabular-nums" style={{ color: '#F7DA9B' }}>{result.total}</p>
+                    <p className="text-sm font-bold text-[#C9962A] mt-1">%</p>
+                    <span
+                      className="mt-3 inline-block text-xs font-bold px-3 py-1.5 rounded-full"
+                      style={{ color: result.gradeColor, backgroundColor: result.gradeBg, boxShadow: `0 0 12px ${result.gradeColor}40` }}
+                    >
+                      {result.grade}
                     </span>
-                    <p className="text-xs text-[#A89BC0] leading-relaxed">{tip.text}</p>
+                  </div>
+                </div>
+                <p className="mt-3 text-base font-bold text-white text-center leading-snug px-4" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                  {result.headline}
+                </p>
+              </div>
+
+              {/* 스펙트럼 점수 바 */}
+              <div className="mt-6 space-y-3">
+                {[
+                  { label: '감정 궁합', score: result.emotion },
+                  { label: '성격 궁합', score: result.personality },
+                  { label: '발전 궁합', score: result.future },
+                ].map(item => (
+                  <div key={item.label}>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-[11px] text-[#C4B8D8] font-medium">{item.label}</span>
+                      <span className="text-[11px] font-bold text-[#F7DA9B] tabular-nums">{item.score}%</span>
+                    </div>
+                    <div className="h-2.5 rounded-full overflow-hidden bg-white/5">
+                      <div className="h-full rounded-full" style={{ width: `${item.score}%`, background: SPECTRUM_BAR }} />
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-          )}
+
+            {/* 골드 디바이더 */}
+            <div className="mx-5 mb-5 h-px bg-gradient-to-r from-transparent via-[#C9962A80] to-transparent" />
+          </div>
+
+          {/* 궁합 포인트 — 장점 / 유의점 */}
+          <div className="relative bg-gradient-to-br from-[#1A0E22] via-[#0F0712] to-[#000005] rounded-3xl border border-[#C9962A40] shadow-xl shadow-black/50 pt-9 pb-5 px-5">
+            <CornerBracket corner="tl" />
+            <CornerBracket corner="tr" />
+            <CornerBracket corner="bl" />
+            <CornerBracket corner="br" />
+
+            {/* 떠 있는 엠블럼 */}
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] text-xs font-bold px-4 py-2 rounded-full shadow-lg shadow-[#C9962A40] whitespace-nowrap">
+              💫 궁합 포인트
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 mt-1">
+              <div>
+                <p className="text-[11px] font-bold text-[#7CC98A] mb-2">✓ 장점</p>
+                <div className="space-y-2">
+                  {result.tips.filter(t => t.good).length > 0 ? (
+                    result.tips.filter(t => t.good).map((tip, i) => (
+                      <div key={i} className="bg-[#C9962A12] border border-[#C9962A30] rounded-xl px-3 py-2.5">
+                        <p className="text-[11px] text-[#C4B8D8] leading-relaxed">{tip.text}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-[11px] text-[#4A4060] px-1">눈에 띄는 강점은 없어요</p>
+                  )}
+                </div>
+              </div>
+              <div>
+                <p className="text-[11px] font-bold text-rose-300 mb-2">! 유의점</p>
+                <div className="space-y-2">
+                  {result.tips.filter(t => !t.good).length > 0 ? (
+                    result.tips.filter(t => !t.good).map((tip, i) => (
+                      <div key={i} className="bg-rose-900/15 border border-rose-900/40 rounded-xl px-3 py-2.5">
+                        <p className="text-[11px] text-[#A89BC0] leading-relaxed">{tip.text}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-[11px] text-[#4A4060] px-1">큰 우려는 없어요</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* 종합 설명 */}
           <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-3xl p-5 relative overflow-hidden">
