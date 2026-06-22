@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { createClient } from '@supabase/supabase-js'
-import { verifyAuthToken } from './_auth'
+import { verifyAuthToken, AuthProviderUnreachableError } from './_auth'
 
 // 사주매칭: 옵트인한 사용자 풀에서 무작위로 한 명을 뽑아 닉네임 + 생년월일시 + (선택)프로필 사진을 돌려준다.
 // 이메일/이름/계정 사진 등 실제 신원 정보는 절대 클라이언트에 노출하지 않는다.
@@ -59,7 +59,16 @@ export default async function handler(req: any, res: any) {
     return res.status(400).json({ error: 'invalid request' })
   }
 
-  const email = await verifyAuthToken(idToken, provider)
+  let email: string | null
+  try {
+    email = await verifyAuthToken(idToken, provider)
+  } catch (e) {
+    if (e instanceof AuthProviderUnreachableError) {
+      return res.status(503).json({ error: 'auth provider unreachable' })
+    }
+    console.error('인증 토큰 검증 중 오류:', e)
+    return res.status(500).json({ error: 'auth verification failed' })
+  }
   if (!email) return res.status(401).json({ error: 'invalid token' })
 
   const supabaseUrl = process.env.VITE_SUPABASE_URL

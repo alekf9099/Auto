@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { createClient } from '@supabase/supabase-js'
-import { verifyAuthToken } from './_auth'
+import { verifyAuthToken, AuthProviderUnreachableError } from './_auth'
 
 // 구글/카카오 인증 토큰을 서버에서 검증한 뒤, service_role 키로만 사용자 데이터에 접근한다.
 // 클라이언트(anon 키)는 user_data 테이블에 직접 접근할 수 없다.
@@ -112,7 +112,18 @@ export default async function handler(req: any, res: any) {
     return res.status(400).json({ error: 'invalid request' })
   }
 
-  const email = await verifyAuthToken(idToken, provider)
+  let email: string | null
+  try {
+    email = await verifyAuthToken(idToken, provider)
+  } catch (e) {
+    if (e instanceof AuthProviderUnreachableError) {
+      // 구글/카카오 인증 서버에 일시적으로 닿지 않은 경우다. 토큰이 무효라고 단정할 수 없으므로
+      // 401로 처리해 강제 로그아웃시키지 않고, 클라이언트가 재시도할 수 있는 503으로 응답한다.
+      return res.status(503).json({ error: 'auth provider unreachable' })
+    }
+    console.error('인증 토큰 검증 중 오류:', e)
+    return res.status(500).json({ error: 'auth verification failed' })
+  }
   if (!email) return res.status(401).json({ error: 'invalid token' })
 
   const supabaseUrl  = process.env.VITE_SUPABASE_URL
