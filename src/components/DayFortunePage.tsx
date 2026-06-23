@@ -49,80 +49,28 @@ function polar(cx: number, cy: number, r: number, angleDeg: number) {
   return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
 }
 
-function describeArc(cx: number, cy: number, r: number, startDeg: number, endDeg: number) {
-  const p1 = polar(cx, cy, r, startDeg)
-  const p2 = polar(cx, cy, r, endDeg)
-  const large = endDeg - startDeg > 180 ? 1 : 0
-  return `M ${p1.x} ${p1.y} A ${r} ${r} 0 ${large} 1 ${p2.x} ${p2.y}`
-}
-
-const GAUGE_SECTORS = [
-  { from: -30, to: 30,  label: '매우 좋음', color: '#E8B84B' },
-  { from: 30,  to: 90,  label: '좋음',      color: '#A89BC0' },
-  { from: 90,  to: 150, label: '보통',      color: '#7B6F9A' },
-  { from: 150, to: 210, label: '보통',      color: '#7B6F9A' },
-  { from: 210, to: 270, label: '보통',      color: '#7B6F9A' },
-  { from: 270, to: 330, label: '좋음',      color: '#A89BC0' },
-]
-
-// 24시간 다이얼 형태의 종합 행운 게이지 — 바늘이 종합 행운 지수(percent)가 가리키는 구간을 표시한다
+// 다이얼 그림(public/gauge-dial.png) 위에 종합 행운 지수(percent)가 가리키는 바늘만 겹쳐 그린다
 function DayLuckGauge({ percent }: { percent: number }) {
-  const cx = 110, cy = 110, r = 100
+  const size = 240
+  const cx = size / 2, cy = size / 2
   const needleAngle = Math.max(0, Math.min(180, (100 - percent) * 1.8))
-  const activeSector = GAUGE_SECTORS.find(s => needleAngle >= s.from && needleAngle < s.to) ?? GAUGE_SECTORS[0]
-  const needleTip = polar(cx, cy, 64, needleAngle)
+  const needleTip = polar(cx, cy, size * 0.34, needleAngle)
 
   return (
     <div className="flex items-center justify-center py-2">
-      <svg viewBox="0 0 220 220" width={240} height={240}>
-        <defs>
-          <radialGradient id="dialGradient" cx="42%" cy="55%" r="75%">
-            <stop offset="0%" stopColor="#4A3520" />
-            <stop offset="45%" stopColor="#241A38" />
-            <stop offset="100%" stopColor="#0F0A1C" />
-          </radialGradient>
-          <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="60%">
-            <stop offset="0%" stopColor="#E3503A" />
-            <stop offset="100%" stopColor="#E8B84B" />
-          </linearGradient>
-          <linearGradient id="needleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#A9762B" />
-            <stop offset="100%" stopColor="#F5DA8B" />
-          </linearGradient>
-        </defs>
-        <circle cx={cx} cy={cy} r={r} fill="url(#dialGradient)" stroke="#2A1F4A" strokeWidth="1.5" />
-        <path d={describeArc(cx, cy, r + 4, activeSector.from, activeSector.to)} fill="none" stroke="url(#arcGradient)" strokeWidth="5" strokeLinecap="round" />
-
-        {GAUGE_SECTORS.map((s, i) => {
-          const mid = (s.from + s.to) / 2
-          const p = polar(cx, cy, 55, mid)
-          const words = s.label.split(' ')
-          return (
-            <text key={i} x={p.x} y={p.y} fill={s.color} fontSize="11" fontWeight={600} textAnchor="middle">
-              {words.map((w, wi) => (
-                <tspan key={wi} x={p.x} dy={wi === 0 ? -(words.length - 1) * 6 : 12}>{w}</tspan>
-              ))}
-            </text>
-          )
-        })}
-
-        {Array.from({ length: 12 }).map((_, i) => {
-          const hour = i * 2
-          const angle = hour * 15
-          const tickOuter = polar(cx, cy, r - 2, angle)
-          const tickInner = polar(cx, cy, r - 10, angle)
-          const labelP = polar(cx, cy, r - 20, angle)
-          return (
-            <g key={hour}>
-              <line x1={tickInner.x} y1={tickInner.y} x2={tickOuter.x} y2={tickOuter.y} stroke="#4A4060" strokeWidth="1.5" />
-              <text x={labelP.x} y={labelP.y} fill="#6B5F8A" fontSize="9" textAnchor="middle" dominantBaseline="middle">{hour}</text>
-            </g>
-          )
-        })}
-
-        <line x1={cx} y1={cy} x2={needleTip.x} y2={needleTip.y} stroke="url(#needleGradient)" strokeWidth="3" strokeLinecap="round" />
-        <circle cx={cx} cy={cy} r="7" fill="#1C1438" stroke="url(#needleGradient)" strokeWidth="1.5" />
-      </svg>
+      <div className="relative" style={{ width: size, height: size, clipPath: 'circle(50%)' }}>
+        <img src="/gauge-dial.png" alt="" width={size} height={size} className="absolute inset-0 w-full h-full select-none pointer-events-none" draggable={false} />
+        <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} className="absolute inset-0">
+          <defs>
+            <linearGradient id="needleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#A9762B" />
+              <stop offset="100%" stopColor="#F5DA8B" />
+            </linearGradient>
+          </defs>
+          <line x1={cx} y1={cy} x2={needleTip.x} y2={needleTip.y} stroke="url(#needleGradient)" strokeWidth="3" strokeLinecap="round" />
+          <circle cx={cx} cy={cy} r="6" fill="#1C1438" stroke="url(#needleGradient)" strokeWidth="1.5" />
+        </svg>
+      </div>
     </div>
   )
 }
