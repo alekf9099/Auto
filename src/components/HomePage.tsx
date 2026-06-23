@@ -200,7 +200,31 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
   }, [birthProfile])
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A]">
+    <div className="min-h-screen bg-[#0D0A1A] relative">
+
+      {/* ── 배경 색감 장식 (블롭 + 오행 산점) ── */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#C9962A]/8 blur-3xl" />
+        <div className="absolute top-1/3 -left-24 w-72 h-72 rounded-full bg-violet-900/15 blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-64 h-64 rounded-full bg-[#C9962A]/5 blur-3xl" />
+        <div className="absolute bottom-1/4 -left-16 w-56 h-56 rounded-full bg-violet-900/10 blur-3xl" />
+        {[
+          { ch: '木', x: '6%',  y: '6%',  c: '#86EFAC', s: '12px' },
+          { ch: '火', x: '91%', y: '14%', c: '#FCA5A5', s: '11px' },
+          { ch: '水', x: '4%',  y: '46%', c: '#93C5FD', s: '12px' },
+          { ch: '金', x: '92%', y: '52%', c: '#D1D5DB', s: '11px' },
+          { ch: '土', x: '8%',  y: '86%', c: '#FCD34D', s: '11px' },
+          { ch: '✦',  x: '85%', y: '34%', c: '#C4B5FD', s: '10px' },
+          { ch: '✦',  x: '12%', y: '28%', c: '#C4B5FD', s: '8px'  },
+          { ch: '⋆',  x: '78%', y: '78%', c: '#DDD6FE', s: '15px' },
+          { ch: '⋆',  x: '90%', y: '92%', c: '#DDD6FE', s: '13px' },
+        ].map((d, i) => (
+          <span key={i} className="absolute select-none font-bold"
+            style={{ left: d.x, top: d.y, color: d.c, fontSize: d.s, opacity: 0.6 }}>
+            {d.ch}
+          </span>
+        ))}
+      </div>
 
       {dailyToast && (
         <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-[#C9962A] text-[#0D0A1A] text-xs font-semibold px-5 py-2.5 rounded-full shadow-lg animate-bounce text-center">
