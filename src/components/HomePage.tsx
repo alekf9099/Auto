@@ -38,16 +38,6 @@ function CornerOrnament({ className = '', size = 30 }: { className?: string; siz
   )
 }
 
-// 카드 배경에 흩뿌려진 작은 별빛 — 은하수 같은 깊이감을 더함
-const BANNER_STARS = [
-  { top: '14%', left: '9%',  size: 2.5, opacity: 0.7 },
-  { top: '24%', left: '92%', size: 2,   opacity: 0.5 },
-  { top: '55%', left: '4%',  size: 1.8, opacity: 0.45 },
-  { top: '70%', left: '88%', size: 2.4, opacity: 0.6 },
-  { top: '8%',  left: '55%', size: 1.6, opacity: 0.4 },
-  { top: '85%', left: '40%', size: 2,   opacity: 0.5 },
-]
-
 const DAILY_FALLBACK = [
   '하늘의 기운이 오늘 당신 편입니다. 새로운 도전에 과감히 나서보세요.',
   '작은 실천이 큰 변화를 만드는 날입니다. 미루던 일을 시작하세요.',
@@ -248,25 +238,13 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         <div style={reveal(0)}>
         <div
           className="relative overflow-hidden rounded-3xl p-5 border shadow-xl shadow-[#000]/40 transition-colors duration-500"
-          style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)', borderColor: todayAccent + '40' }}
+          style={{
+            backgroundImage: 'linear-gradient(180deg, rgba(6,4,16,0.15) 0%, rgba(6,4,16,0.55) 100%), url(/today-hero-bg.png)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            borderColor: todayAccent + '40',
+          }}
         >
-          {/* 은하수 별빛 */}
-          <div className="absolute inset-0 pointer-events-none">
-            {BANNER_STARS.map((star, i) => (
-              <span
-                key={i}
-                className="absolute rounded-full bg-[#E8C75C]"
-                style={{ top: star.top, left: star.left, width: star.size, height: star.size, opacity: star.opacity }}
-              />
-            ))}
-          </div>
-
-          {/* 금색 액자 모서리 장식 */}
-          <CornerOrnament className="absolute top-2 left-2 pointer-events-none"/>
-          <CornerOrnament className="absolute top-2 right-2 -scale-x-100 pointer-events-none"/>
-          <CornerOrnament className="absolute bottom-2 left-2 -scale-y-100 pointer-events-none"/>
-          <CornerOrnament className="absolute bottom-2 right-2 -scale-x-100 -scale-y-100 pointer-events-none"/>
-
           <div className="relative flex items-center justify-between gap-2 mb-1">
             <p className="text-violet-300/70 text-xs">
               {todayDate.getFullYear()}년 {month}월 {day}일 · 안녕하세요, {user.name}님
