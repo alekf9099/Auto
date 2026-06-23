@@ -7,7 +7,11 @@ import SajuChart from './SajuChart'
 import OhaengChart from './OhaengChart'
 import SipsinChart from './SipsinChart'
 import FortuneReading from './FortuneReading'
-import { IcSaju, IcDaun, IcGunghab } from './icons/SajuIcons'
+import {
+  IcSaju, IcDaun, IcGunghab,
+  IcGapMok, IcEulMok, IcByeongHwa, IcJeongHwa, IcMuTo,
+  IcGiTo, IcGyeongGeum, IcSinGeum, IcImSu, IcGyeSu, IcTalisman,
+} from './icons/SajuIcons'
 
 interface Props {
   savedBirth: BirthInput | null
@@ -22,17 +26,17 @@ const ELEMENT_KO: Record<string, string> = {
   wood: '목(木)', fire: '화(火)', earth: '토(土)', metal: '금(金)', water: '수(水)',
 }
 
-const STEM_NATURE: Record<number, { symbol: string; title: string; nature: string }> = {
-  0: { symbol: '🌲', title: '甲木 — 교목(喬木)', nature: '거대한 나무처럼 위로 뻗어나가는 확장의 힘. 한번 세운 방향은 절대 바꾸지 않습니다. 위로만 자라려는 본능이 강해서, 옆을 돌아보지 않으면 고립됩니다.' },
-  1: { symbol: '🌿', title: '乙木 — 초목(草木)', nature: '유연하게 환경에 적응하지만 뿌리는 단단합니다. 부드러움 속에 끈질긴 생명력이 있습니다. 꺾이는 것처럼 보여도 절대 부러지지 않습니다.' },
-  2: { symbol: '☀️', title: '丙火 — 태양(太陽)', nature: '모두에게 빛을 비추는 태양의 기운. 숨기는 것 없이 활짝 열려 있고 존재 자체가 에너지입니다. 그 빛이 너무 강해서 가까이 있는 사람을 태울 때도 있습니다.' },
-  3: { symbol: '🕯️', title: '丁火 — 등화(燈火)', nature: '어둠 속 촛불처럼 은은하게 지속되는 빛. 깊은 내면을 감추고 있는 신비로운 사람입니다. 겉으로 드러나지 않아도 누구보다 오래, 끝까지 타오릅니다.' },
-  4: { symbol: '🏔️', title: '戊土 — 산악(山岳)', nature: '큰 산처럼 포용력이 넓고 흔들리지 않습니다. 신뢰와 중후함이 대명사입니다. 위기 앞에서 가장 먼저 중심을 잡는 사람이 바로 당신입니다.' },
-  5: { symbol: '🌾', title: '己土 — 전토(田土)', nature: '비옥한 논밭처럼 실용적이고 꼼꼼합니다. 씨앗을 키우는 것처럼 사람을 길러냅니다. 화려하지 않아도 결국 결실을 만드는 사람입니다.' },
-  6: { symbol: '⚔️', title: '庚金 — 이검(利劍)', nature: '날카로운 검처럼 결단력이 강합니다. 한번 결정한 것은 흔들림 없이 실행합니다. 망설이는 사람들 사이에서 가장 먼저 칼을 빼는 쪽입니다.' },
-  7: { symbol: '💎', title: '辛金 — 주옥(珠玉)', nature: '정제된 보석처럼 완벽함을 추구합니다. 높은 미적 감각과 섬세함이 특징입니다. 대충 넘어가는 법이 없어서, 디테일에서 진짜 실력이 드러납니다.' },
-  8: { symbol: '🌊', title: '壬水 — 대해(大海)', nature: '깊고 넓은 바다처럼 포용하고 흐릅니다. 지혜롭고 유연하며 세상을 넓게 바라봅니다. 겉으로는 잠잠해도 속에는 누구보다 큰 흐름을 품고 있습니다.' },
-  9: { symbol: '💧', title: '癸水 — 우로(雨露)', nature: '이슬비처럼 섬세하고 깊습니다. 감수성과 직관이 뛰어나며 내면이 풍부합니다. 작은 신호도 먼저 알아채는, 가장 예민하고 정확한 감각을 가졌습니다.' },
+const STEM_NATURE: Record<number, { Icon: typeof IcGapMok; title: string; nature: string }> = {
+  0: { Icon: IcGapMok, title: '甲木 — 교목(喬木)', nature: '거대한 나무처럼 위로 뻗어나가는 확장의 힘. 한번 세운 방향은 절대 바꾸지 않습니다. 위로만 자라려는 본능이 강해서, 옆을 돌아보지 않으면 고립됩니다.' },
+  1: { Icon: IcEulMok, title: '乙木 — 초목(草木)', nature: '유연하게 환경에 적응하지만 뿌리는 단단합니다. 부드러움 속에 끈질긴 생명력이 있습니다. 꺾이는 것처럼 보여도 절대 부러지지 않습니다.' },
+  2: { Icon: IcByeongHwa, title: '丙火 — 태양(太陽)', nature: '모두에게 빛을 비추는 태양의 기운. 숨기는 것 없이 활짝 열려 있고 존재 자체가 에너지입니다. 그 빛이 너무 강해서 가까이 있는 사람을 태울 때도 있습니다.' },
+  3: { Icon: IcJeongHwa, title: '丁火 — 등화(燈火)', nature: '어둠 속 촛불처럼 은은하게 지속되는 빛. 깊은 내면을 감추고 있는 신비로운 사람입니다. 겉으로 드러나지 않아도 누구보다 오래, 끝까지 타오릅니다.' },
+  4: { Icon: IcMuTo, title: '戊土 — 산악(山岳)', nature: '큰 산처럼 포용력이 넓고 흔들리지 않습니다. 신뢰와 중후함이 대명사입니다. 위기 앞에서 가장 먼저 중심을 잡는 사람이 바로 당신입니다.' },
+  5: { Icon: IcGiTo, title: '己土 — 전토(田土)', nature: '비옥한 논밭처럼 실용적이고 꼼꼼합니다. 씨앗을 키우는 것처럼 사람을 길러냅니다. 화려하지 않아도 결국 결실을 만드는 사람입니다.' },
+  6: { Icon: IcGyeongGeum, title: '庚金 — 이검(利劍)', nature: '날카로운 검처럼 결단력이 강합니다. 한번 결정한 것은 흔들림 없이 실행합니다. 망설이는 사람들 사이에서 가장 먼저 칼을 빼는 쪽입니다.' },
+  7: { Icon: IcSinGeum, title: '辛金 — 주옥(珠玉)', nature: '정제된 보석처럼 완벽함을 추구합니다. 높은 미적 감각과 섬세함이 특징입니다. 대충 넘어가는 법이 없어서, 디테일에서 진짜 실력이 드러납니다.' },
+  8: { Icon: IcImSu, title: '壬水 — 대해(大海)', nature: '깊고 넓은 바다처럼 포용하고 흐릅니다. 지혜롭고 유연하며 세상을 넓게 바라봅니다. 겉으로는 잠잠해도 속에는 누구보다 큰 흐름을 품고 있습니다.' },
+  9: { Icon: IcGyeSu, title: '癸水 — 우로(雨露)', nature: '이슬비처럼 섬세하고 깊습니다. 감수성과 직관이 뛰어나며 내면이 풍부합니다. 작은 신호도 먼저 알아채는, 가장 예민하고 정확한 감각을 가졌습니다.' },
 }
 
 const PILLAR_INSIGHTS: string[] = [
@@ -255,7 +259,12 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
               </div>
               <div className="rounded-2xl p-4 border" style={{ backgroundColor: sc + '0D', borderColor: sc + '30' }}>
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="text-3xl">{nature.symbol}</span>
+                  <div
+                    className="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: sc + '1A', color: sc }}
+                  >
+                    <nature.Icon size={24} />
+                  </div>
                   <div>
                     <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                       {nature.title}
@@ -316,7 +325,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
             {/* Deep saju CTA */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-2xl">🪬</span>
+                <IcTalisman size={22} className="text-[#C9962A]" />
                 <h3
                   className="text-base font-bold text-white"
                   style={{ fontFamily: "'Gowun Batang', serif" }}
@@ -338,7 +347,8 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
             <PointsClaimButton featureKey="saju" label="정통사주 확인 ☯" />
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
-              className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
+              className="w-full py-3.5 text-[#C4B8D8] font-semibold rounded-2xl text-sm border border-[#C9962A20] transition active:scale-[0.98]"
+              style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #1C1438 100%)' }}
             >
               다시 조회하기
             </button>

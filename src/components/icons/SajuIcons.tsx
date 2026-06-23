@@ -499,3 +499,130 @@ export function IcCloverLucky({ size = 24, className = '' }: P) {
     </svg>
   )
 }
+
+// 갑목 — 교목(喬木), 위로 뻗는 거목
+export function IcGapMok({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 3 L18 12 H14.5 L18.5 17 H5.5 L9.5 12 H6 Z" fill="currentColor" fillOpacity="0.85" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <rect x="10.7" y="17" width="2.6" height="4" rx="0.5" fill="currentColor"/>
+    </svg>
+  )
+}
+
+// 을목 — 초목(草木), 유연하게 휘어지는 풀
+export function IcEulMok({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M7 21 C6 14 9 10 8 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none"/>
+      <path d="M8 4 C10 5.5 12 5 12.5 7.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="currentColor" fillOpacity="0.2"/>
+      <path d="M8.5 10 C11 10.5 12.5 9.3 13.5 11.3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="currentColor" fillOpacity="0.2"/>
+      <path d="M7.5 16 C5 16 3.3 14.7 3 12.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none" opacity="0.8"/>
+    </svg>
+  )
+}
+
+// 병화 — 태양(太陽), 만물을 비추는 뜨거운 불
+export function IcByeongHwa({ size = 24, className = '' }: P) {
+  const flame = 'M12 1.6 C13 3 13.4 4.3 12.7 5.6 C12.4 4.9 12 4.6 12 4.6 C12 4.6 11.6 5.3 11.6 6 C11.6 5 11.7 3.1 12 1.6 Z'
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      {[0, 60, 120, 180, 240, 300].map(a => (
+        <path key={a} d={flame} transform={`rotate(${a} 12 12)`} opacity="0.85" />
+      ))}
+      <circle cx="12" cy="12" r="4.6" />
+    </svg>
+  )
+}
+
+// 정화 — 등화(燈火), 어둠 속 은은한 촛불
+export function IcJeongHwa({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 4 C13.6 6.4 14.2 8 13.4 9.3 C13 8.6 12.5 8.3 12 8.3 C11.5 8.3 11 8.6 10.6 9.3 C9.8 8 10.4 6.4 12 4 Z" fill="currentColor" opacity="0.9"/>
+      <rect x="10" y="11" width="4" height="8" rx="0.6" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.3"/>
+      <line x1="9" y1="19.3" x2="15" y2="19.3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" opacity="0.6"/>
+    </svg>
+  )
+}
+
+// 무토 — 산악(山岳), 흔들리지 않는 큰 산
+export function IcMuTo({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M3 18 L8.5 8.5 L12 14 L14.5 10 L21 18 Z" fill="currentColor" fillOpacity="0.22" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <path d="M8.5 8.5 L10 11 L7.3 11 Z" fill="currentColor" opacity="0.6"/>
+      <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" strokeWidth="1.3" opacity="0.7"/>
+    </svg>
+  )
+}
+
+// 기토 — 전토(田土), 씨앗을 길러내는 비옥한 밭
+export function IcGiTo({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <g stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" opacity="0.85">
+        <path d="M3 9 Q7 7 11 9 T19 9"/>
+        <path d="M3 13 Q7 11 11 13 T19 13"/>
+        <path d="M3 17 Q7 15 11 17 T19 17"/>
+      </g>
+      <path d="M12 9 C12 7 10.7 5.8 10.7 5.8 C10.7 5.8 9.6 7.2 9.8 8.6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="currentColor" fillOpacity="0.3"/>
+    </svg>
+  )
+}
+
+// 경금 — 이검(利劍), 단호하게 내려치는 칼
+export function IcGyeongGeum({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 2 L13.1 14 H10.9 Z" fill="currentColor" opacity="0.9"/>
+      <rect x="8.5" y="14" width="7" height="1.8" rx="0.4" fill="currentColor"/>
+      <rect x="11" y="15.8" width="2" height="5.2" rx="0.6" fill="currentColor" opacity="0.85"/>
+    </svg>
+  )
+}
+
+// 신금 — 주옥(珠玉), 정제되어 빛나는 보석
+export function IcSinGeum({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M6 9 L12 3.5 L18 9 L12 20.5 Z" fill="currentColor" fillOpacity="0.22" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <path d="M6 9 H18 M9 9 L12 20.5 M15 9 L12 20.5 M9 9 L12 3.5 M15 9 L12 3.5" stroke="currentColor" strokeWidth="1" opacity="0.55"/>
+    </svg>
+  )
+}
+
+// 임수 — 대해(大海), 깊고 넓게 흐르는 바다
+export function IcImSu({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M2.5 9.5 C4.5 7.5 6.5 7.5 8 9 C9.5 10.5 11.5 10.5 13 9 C14.5 7.5 16.5 7.5 18 9 C19.5 10.5 21.5 10.5 21.5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.85"/>
+      <path d="M2.5 14.5 C4.5 12.5 6.5 12.5 8 14 C9.5 15.5 11.5 15.5 13 14 C14.5 12.5 16.5 12.5 18 14 C19.5 15.5 21.5 15.5 21.5 15.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" opacity="0.6"/>
+      <path d="M2.5 19 C4.5 17.5 6.5 17.5 8 18.5 C9.5 19.5 11.5 19.5 13 18.5 C14.5 17.5 16.5 17.5 18 18.5 C19.5 19.5 21.5 19.5 21.5 19.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none" opacity="0.4"/>
+    </svg>
+  )
+}
+
+// 계수 — 우로(雨露), 섬세하게 스며드는 이슬비
+export function IcGyeSu({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 4 C15 8.5 16.5 11.3 16.5 13.8 C16.5 17 14.5 19.3 12 19.3 C9.5 19.3 7.5 17 7.5 13.8 C7.5 11.3 9 8.5 12 4 Z" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <circle cx="6" cy="7" r="0.9" fill="currentColor" opacity="0.5"/>
+      <circle cx="18.2" cy="9.5" r="0.7" fill="currentColor" opacity="0.4"/>
+    </svg>
+  )
+}
+
+// 심층 해석 부적 — 손바닥 안의 눈 (보호와 통찰의 부적)
+export function IcTalisman({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 2.5 C13 4 13 5.5 12 6.5 C11 5.5 11 4 12 2.5 Z" fill="currentColor" opacity="0.85"/>
+      <path d="M7 7 L5.3 5 M17 7 L18.7 5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" opacity="0.7"/>
+      <path d="M6 9 C6 7.5 7.8 6.3 9.5 6.8 C10.3 5.6 11.1 5 12 5 C12.9 5 13.7 5.6 14.5 6.8 C16.2 6.3 18 7.5 18 9 C18 13 16.5 17.5 12 20.5 C7.5 17.5 6 13 6 9 Z" fill="currentColor" fillOpacity="0.18" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <circle cx="12" cy="11.5" r="3" stroke="currentColor" strokeWidth="1.3" fill="none"/>
+      <circle cx="12" cy="11.5" r="1.1" fill="currentColor"/>
+    </svg>
+  )
+}
