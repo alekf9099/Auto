@@ -75,17 +75,28 @@ function DayLuckGauge({ percent }: { percent: number }) {
   )
 }
 
+function GoldBadge({ children, size = 'w-7 h-7 text-sm' }: { children: React.ReactNode; size?: string }) {
+  return (
+    <span
+      className={`${size} rounded-full flex items-center justify-center shrink-0`}
+      style={{ background: 'radial-gradient(circle, rgba(201,150,42,0.30), rgba(201,150,42,0.06))' }}
+    >
+      {children}
+    </span>
+  )
+}
+
 function CategoryRow({ emoji, label, text, star }: { emoji: string; label: string; text: string; star: number }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="border border-[#2A1F4A] rounded-2xl overflow-hidden">
+    <div className="border border-[#C9962A20] rounded-2xl overflow-hidden">
       <button
-        className="w-full flex items-center gap-2 p-3.5 text-left hover:bg-[#1C1438] transition"
+        className="w-full flex items-center gap-2.5 p-3.5 text-left hover:bg-[#1C1438] transition"
         onClick={() => setOpen(o => !o)}
         aria-expanded={open}
         aria-label={`${label} ${open ? '접기' : '펼치기'}`}
       >
-        <span>{emoji}</span>
+        <GoldBadge>{emoji}</GoldBadge>
         <span className="text-sm font-semibold text-[#E8DFC8]">{label}</span>
         <span className="text-xs text-[#7B6F9A] flex-1 truncate">{text.slice(0, 18)}…</span>
         <Stars n={star} />
@@ -93,7 +104,7 @@ function CategoryRow({ emoji, label, text, star }: { emoji: string; label: strin
       </button>
       {open && (
         <div className="px-4 pb-4">
-          <div className="h-px bg-[#2A1F4A] mb-3" />
+          <div className="h-px bg-[#C9962A20] mb-3" />
           <p className="text-sm text-[#A89BC0] leading-relaxed">{text}</p>
         </div>
       )}
@@ -295,13 +306,10 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             >
               <DayLuckGauge percent={luckPercent} />
               <div
-                className="border border-[#2A1F4A] rounded-2xl p-4 flex items-center gap-3"
+                className="border border-[#C9962A20] rounded-2xl p-4 flex items-center gap-3"
                 style={{ background: 'linear-gradient(135deg, #201A3A 0%, #160F2C 100%)' }}
               >
-                <div
-                  className="w-9 h-9 rounded-full flex items-center justify-center text-lg shrink-0"
-                  style={{ background: 'radial-gradient(circle, rgba(232,91,122,0.35), rgba(232,91,122,0.05))' }}
-                >💬</div>
+                <GoldBadge size="w-9 h-9 text-lg">✨</GoldBadge>
                 <div>
                   <p className="text-sm font-semibold text-[#F5EDD4]">{isToday ? '오늘' : '내일'}의 전체 운세</p>
                   <p className="text-xs text-[#A89BC0] mt-0.5">⭐ 종합 행운 지수: {luckPercent}%</p>
@@ -349,7 +357,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             </div>
 
             {/* 분야별 */}
-            <div className="rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
+            <div className="rounded-3xl border border-[#C9962A20] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
                 <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>분야별 운세</h2>
@@ -364,7 +372,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             </div>
 
             {/* 시간대별 */}
-            <div className="rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
+            <div className="rounded-3xl border border-[#C9962A20] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
                 <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>🕐 시간대별</h2>
@@ -375,8 +383,8 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
                   { icon: '☀️',  label: '오후 12~18시', text: fortune.시간오후 },
                   { icon: '🌙', label: '저녁 18~24시', text: fortune.시간저녁 },
                 ].map(t => (
-                  <div key={t.label} className="flex gap-3 border border-[#2A1F4A] rounded-2xl px-4 py-3" style={{ background: 'linear-gradient(135deg, #201A3A 0%, #160F2C 100%)' }}>
-                    <span className="shrink-0">{t.icon}</span>
+                  <div key={t.label} className="flex gap-3 border border-[#C9962A20] rounded-2xl px-4 py-3" style={{ background: 'linear-gradient(135deg, #201A3A 0%, #160F2C 100%)' }}>
+                    <GoldBadge>{t.icon}</GoldBadge>
                     <div>
                       <p className="text-xs font-semibold text-[#7B6F9A] mb-0.5">{t.label}</p>
                       <p className="text-sm text-[#C4B8D8]">{t.text}</p>
@@ -387,7 +395,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             </div>
 
             {/* 행운 아이템 */}
-            <div className="rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
+            <div className="rounded-3xl border border-[#C9962A20] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
                 <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>🍀 행운 아이템</h2>
