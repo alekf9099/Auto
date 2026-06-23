@@ -63,7 +63,7 @@ function describeArc(cx: number, cy: number, r: number, startDeg: number, endDeg
 }
 
 // 다이얼 그림(public/gauge-dial.png) 위에 종합 행운 지수(percent)가 가리키는 바늘과 점수를 겹쳐 그린다
-function DayLuckGauge({ percent }: { percent: number }) {
+function DayLuckGauge({ percent, star }: { percent: number; star: number }) {
   const size = 240
   const cx = size / 2, cy = size / 2
   const needleAngle = Math.max(0, Math.min(180, (100 - percent) * 1.8))
@@ -93,6 +93,7 @@ function DayLuckGauge({ percent }: { percent: number }) {
         <div className="absolute inset-x-0 flex flex-col items-center" style={{ top: cy + 28 }}>
           <p className="text-2xl font-bold text-[#F5DA8B]" style={{ fontFamily: "'Gowun Batang', serif", textShadow: '0 1px 6px rgba(0,0,0,0.7)' }}>{percent}%</p>
           <p className="text-xs font-semibold text-[#E8DFC8]" style={{ textShadow: '0 1px 6px rgba(0,0,0,0.7)' }}>{luckLabel(percent)}</p>
+          <div className="mt-1 scale-75"><Stars n={star} /></div>
         </div>
       </div>
     </div>
@@ -328,7 +329,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
               className="rounded-3xl border border-[#C9962A30] shadow-[0_2px_24px_rgba(201,150,42,0.14)] p-5 space-y-4"
               style={{ background: 'linear-gradient(160deg, #1C1438 0%, #150D28 55%, #0D0A1A 100%)' }}
             >
-              <DayLuckGauge percent={luckPercent} />
+              <DayLuckGauge percent={luckPercent} star={fortune.star} />
               <div
                 className="border border-[#C9962A20] rounded-2xl p-4 flex items-center gap-3"
                 style={{ background: 'linear-gradient(135deg, #201A3A 0%, #160F2C 100%)' }}
