@@ -37,7 +37,7 @@ function Stars({ n }: { n: number }) {
   return (
     <div className="flex gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
-        <span key={i} className={`text-base ${i < n ? 'text-amber-400' : 'text-[#3D3358]'}`}>★</span>
+        <span key={i} className={`text-base ${i < n ? 'text-[#E8B84B]' : 'text-[#3D3358]'}`}>★</span>
       ))}
     </div>
   )
@@ -445,16 +445,16 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
 
             <button
               onClick={() => setShowShare(true)}
-              className="w-full py-3.5 text-[#E8DFC8] font-semibold rounded-2xl text-sm transition active:scale-[0.98] flex items-center justify-center gap-1.5"
-              style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #231844 100%)' }}
+              className="w-full py-3.5 text-[#F5EDD4] font-semibold rounded-2xl text-sm border border-[#C9962A40] shadow-[0_2px_20px_rgba(201,150,42,0.10)] transition active:scale-[0.98] flex items-center justify-center gap-1.5"
+              style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #1C1438 100%)' }}
             >
               📤 운세 카드 공유하기
             </button>
             <PointsClaimButton key={featKey} featureKey={featKey} label={`${title} 확인 🔮`} />
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
-              className="w-full py-3.5 text-[#C4B8D8] font-semibold rounded-2xl text-sm transition active:scale-[0.98]"
-              style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #231844 100%)' }}
+              className="w-full py-3.5 text-[#C4B8D8] font-semibold rounded-2xl text-sm border border-[#C9962A20] transition active:scale-[0.98]"
+              style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #1C1438 100%)' }}
             >
               다시 조회하기
             </button>
