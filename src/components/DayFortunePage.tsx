@@ -58,7 +58,7 @@ function DayLuckGauge({ percent }: { percent: number }) {
 
   return (
     <div className="flex items-center justify-center py-2">
-      <div className="relative" style={{ width: size, height: size }}>
+      <div className="relative" style={{ width: size, height: size, clipPath: 'circle(50%)' }}>
         <img src="/gauge-dial.png" alt="" width={size} height={size} className="absolute inset-0 w-full h-full select-none pointer-events-none" draggable={false} />
         <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} className="absolute inset-0">
           <defs>
