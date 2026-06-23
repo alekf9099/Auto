@@ -28,9 +28,9 @@ interface Props {
 }
 
 // 배너 모서리를 장식하는 금색 이중선 브래킷 (전통 한지 액자 느낌)
-function CornerOrnament({ className = '' }: { className?: string }) {
+function CornerOrnament({ className = '', size = 30 }: { className?: string; size?: number }) {
   return (
-    <svg width="30" height="30" viewBox="0 0 30 30" fill="none" className={className}>
+    <svg width={size} height={size} viewBox="0 0 30 30" fill="none" className={className}>
       <path d="M2 22V6Q2 2 6 2H22" stroke="#C9962A" strokeWidth="1.3" opacity="0.65"/>
       <path d="M7 26V10Q7 7 10 7H26" stroke="#C9962A" strokeWidth="1" opacity="0.4"/>
       <circle cx="6" cy="2" r="1.4" fill="#E8C75C" opacity="0.8"/>
@@ -392,13 +392,23 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
               onClick={onAttendance}
               className={`w-full overflow-hidden rounded-3xl active:scale-[0.99] transition-all ${completed ? 'shadow-[0_2px_20px_rgba(201,150,42,0.25)]' : 'shadow-[0_2px_16px_rgba(180,30,30,0.10)]'}`}
             >
-              <div className={`relative bg-[#130E24] border rounded-3xl px-5 pt-4 pb-3 ${completed ? 'border-amber-500/50' : 'border-red-900/40'}`}>
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-[0.06] select-none pointer-events-none text-red-800 rotate-12">
-                  <IcStamp size={72}/>
+              <div
+                className={`relative overflow-hidden border rounded-3xl px-5 pt-4 pb-3 ${completed ? 'border-amber-500/50' : 'border-red-900/40'}`}
+                style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)' }}
+              >
+                {/* 도장 뒤 은은한 빛 번짐 */}
+                <div
+                  className="absolute right-1 top-1/2 -translate-y-1/2 w-32 h-32 rounded-full blur-2xl pointer-events-none"
+                  style={{ background: `radial-gradient(circle, ${completed ? 'rgba(201,150,42,0.22)' : 'rgba(200,40,40,0.2)'}, transparent 70%)` }}
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-[0.09] select-none pointer-events-none text-red-700 rotate-12">
+                  <IcStamp size={76}/>
                 </div>
-                <div className="absolute right-16 bottom-3 opacity-[0.04] select-none pointer-events-none text-red-700 -rotate-6">
+                <div className="absolute right-16 bottom-3 opacity-[0.06] select-none pointer-events-none text-[#C9962A] -rotate-6">
                   <IcSinnyeon size={32}/>
                 </div>
+                <CornerOrnament size={20} className="absolute top-1.5 left-1.5 pointer-events-none opacity-70"/>
+                <CornerOrnament size={20} className="absolute top-1.5 right-1.5 -scale-x-100 pointer-events-none opacity-70"/>
                 <div className="flex items-center gap-4 mb-3">
                   <div className="relative shrink-0 w-[56px] h-[56px] flex items-center justify-center">
                     <div className={`absolute inset-0 rounded-full border-[3px] transition-all ${checked ? 'border-red-300' : 'border-red-500'}`}/>
@@ -465,10 +475,19 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
               onClick={onLuckyTimer}
               className="w-full overflow-hidden rounded-3xl shadow-[0_2px_16px_rgba(201,150,42,0.10)] active:scale-[0.99] transition-all"
             >
-              <div className="relative bg-[#130E24] border border-[#C9962A40] rounded-3xl px-5 py-4 flex items-center gap-4">
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-[0.06] select-none pointer-events-none text-[#C9962A] rotate-12">
-                  <IcLucky size={64}/>
+              <div
+                className="relative overflow-hidden border border-[#C9962A40] rounded-3xl px-5 py-4 flex items-center gap-4"
+                style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)' }}
+              >
+                <div
+                  className="absolute right-1 top-1/2 -translate-y-1/2 w-28 h-28 rounded-full blur-2xl pointer-events-none"
+                  style={{ background: 'radial-gradient(circle, rgba(201,150,42,0.22), transparent 70%)' }}
+                />
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-[0.09] select-none pointer-events-none text-[#C9962A] rotate-12">
+                  <IcLucky size={68}/>
                 </div>
+                <CornerOrnament size={20} className="absolute top-1.5 left-1.5 pointer-events-none opacity-70"/>
+                <CornerOrnament size={20} className="absolute top-1.5 right-1.5 -scale-x-100 pointer-events-none opacity-70"/>
                 <div className="shrink-0 w-12 h-12 rounded-2xl bg-[#C9962A15] border border-[#C9962A35] flex items-center justify-center">
                   <span className="text-xl font-bold text-[#C9962A]" style={{ fontFamily: "'Noto Serif KR', serif" }}>7</span>
                 </div>
