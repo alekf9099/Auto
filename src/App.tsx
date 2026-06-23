@@ -290,7 +290,7 @@ export default function App() {
   return (
     <>
       {(syncIssue || notice) && (
-        <div className="fixed top-0 inset-x-0 z-[60] flex flex-col">
+        <div className="relative z-[60] flex flex-col">
           {syncIssue && (
             <SyncErrorBanner
               expired={syncIssue === 'expired'}
