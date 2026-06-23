@@ -61,7 +61,7 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
         </div>
         <h1
           className="text-3xl font-bold text-[#F5EDD4] mb-1"
-          style={{ fontFamily: "'Noto Serif KR', serif" }}
+          style={{ fontFamily: "'Gowun Batang', serif" }}
         >
           사주팔자
         </h1>

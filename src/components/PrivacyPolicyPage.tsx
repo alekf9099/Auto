@@ -93,7 +93,7 @@ export default function PrivacyPolicyPage({ onBack }: Props) {
           >
             ←
           </button>
-          <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+          <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
             개인정보처리방침
           </h1>
         </div>

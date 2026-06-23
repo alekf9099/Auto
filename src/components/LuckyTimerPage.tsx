@@ -64,7 +64,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
-            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>행운의 숫자 잡기</h1>
+            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>행운의 숫자 잡기</h1>
             <p className="text-xs text-[#7B6F9A]">7초에 딱 맞춰 멈춰보세요</p>
           </div>
         </div>
@@ -77,8 +77,8 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
           <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-violet-500/10 -translate-y-10 translate-x-10" />
           <div className="relative z-10 text-center">
             <p className="text-violet-300/70 text-xs mb-2">오늘의 이벤트</p>
-            <p className="text-7xl font-bold text-[#C9962A] mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>7</p>
-            <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            <p className="text-7xl font-bold text-[#C9962A] mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>7</p>
+            <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
               행운의 숫자, 7초를 맞춰보세요!
             </p>
             <p className="text-sm text-[#A89BC0] leading-relaxed">
@@ -115,7 +115,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
                       ?<span className="text-lg text-[#7B6F9A]">초</span>
                     </p>
                   ) : (
-                    <p className="text-4xl font-bold text-[#F5EDD4] tabular-nums" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                    <p className="text-4xl font-bold text-[#F5EDD4] tabular-nums" style={{ fontFamily: "'Gowun Batang', serif" }}>
                       {elapsed.toFixed(2)}<span className="text-lg text-[#7B6F9A]">초</span>
                     </p>
                   )}
@@ -148,7 +148,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
           {phase === 'result' && result && (
             <div className="text-center py-4">
               <p className="text-6xl mb-3">{result.success ? '🎯' : '⏱️'}</p>
-              <p className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <p className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 {elapsed.toFixed(2)}초
               </p>
               <p className="text-sm text-[#A89BC0] mb-4">

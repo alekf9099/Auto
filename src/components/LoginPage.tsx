@@ -151,7 +151,7 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
         </div>
 
         <h1 className="text-3xl font-bold text-[#F5EDD4] mb-1"
-          style={{ fontFamily: "'Noto Serif KR', serif" }}>운명봄</h1>
+          style={{ fontFamily: "'Gowun Batang', serif" }}>운명봄</h1>
         <p className="text-sm text-[#7B6F9A]">당신의 운명을 봅니다</p>
       </div>
 

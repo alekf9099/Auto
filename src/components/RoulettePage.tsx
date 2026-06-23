@@ -76,7 +76,7 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
-            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>오행 룰렛</h1>
+            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>오행 룰렛</h1>
             <p className="text-xs text-[#7B6F9A]">하루 한 번, 오행의 기운을 뽑아보세요</p>
           </div>
         </div>
@@ -90,7 +90,7 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
           <div className="relative z-10 text-center">
             <p className="text-violet-300/70 text-xs mb-2">오늘의 이벤트</p>
             <p className="text-5xl mb-2">🎡</p>
-            <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
               오행 룰렛을 돌려보세요!
             </p>
             <p className="text-sm text-[#A89BC0] leading-relaxed">

@@ -90,7 +90,7 @@ export default function LoadingScreen({ onComplete }: Props) {
 
       <h2
         className="text-2xl font-bold text-[#F5EDD4] mb-2"
-        style={{ fontFamily: "'Noto Serif KR', serif" }}
+        style={{ fontFamily: "'Gowun Batang', serif" }}
       >
         사주 분석중
       </h2>

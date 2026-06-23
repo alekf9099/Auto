@@ -11,7 +11,7 @@ export default {
         water: { DEFAULT: '#2196F3', light: '#BBDEFB', dark: '#0D47A1' },
       },
       fontFamily: {
-        korean: ['"Noto Serif KR"', 'serif'],
+        korean: ['"Gowun Batang"', 'serif'],
       },
       keyframes: {
         fadeInUp: {

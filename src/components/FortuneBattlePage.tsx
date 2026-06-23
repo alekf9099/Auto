@@ -203,7 +203,7 @@ export default function FortuneBattlePage({ savedBirth, onSave, onBack }: Props)
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
-            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>운세대결</h1>
+            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>운세대결</h1>
             <p className="text-xs text-[#7B6F9A]">오늘 누구 운세가 더 좋을까?</p>
           </div>
         </div>
@@ -218,7 +218,7 @@ export default function FortuneBattlePage({ savedBirth, onSave, onBack }: Props)
             <div className="relative z-10 flex items-center gap-4">
               <div className="flex-1">
                 <p className="text-violet-300/70 text-xs mb-2">오늘의 사주 운세 점수 대결</p>
-                <p className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <p className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   운세대결
                 </p>
                 <p className="text-sm text-violet-300/80 leading-relaxed">친구와 운세를 비교해서<br />오늘 누가 더 운이 좋은지 확인하세요</p>
@@ -301,7 +301,7 @@ export default function FortuneBattlePage({ savedBirth, onSave, onBack }: Props)
               winner === 'tie' ? 'bg-[#231844] border-[#2A1F4A]' : 'bg-[#C9962A15] border-[#C9962A30]'
             }`}
           >
-            <p className="text-base font-bold flex items-center justify-center gap-1.5" style={{ fontFamily: "'Noto Serif KR', serif", color: winner === 'tie' ? '#F5EDD4' : '#C9962A' }}>
+            <p className="text-base font-bold flex items-center justify-center gap-1.5" style={{ fontFamily: "'Gowun Batang', serif", color: winner === 'tie' ? '#F5EDD4' : '#C9962A' }}>
               {winner === 'tie' ? <IcDraw size={18} /> : <IcCrown size={18} />}
               {winner === 'tie'
                 ? '오늘은 무승부예요!'

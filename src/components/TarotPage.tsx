@@ -169,7 +169,7 @@ export default function TarotPage({ onBack }: Props) {
             ←
           </button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Gowun Batang', serif" }}>
               나만의 타로 상담
             </h1>
             <p className="text-xs text-[#7B6F9A] truncate">
@@ -207,7 +207,7 @@ export default function TarotPage({ onBack }: Props) {
 
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
               <p className="text-violet-300/70 text-xs mb-1">과거 · 현재 · 미래 3카드 스프레드</p>
-              <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 무엇이 궁금하신가요?
               </h2>
               <p className="text-sm text-[#A89BC0] leading-relaxed">
@@ -252,7 +252,7 @@ export default function TarotPage({ onBack }: Props) {
               <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
               <div className="absolute inset-0 flex items-center justify-center"><IcTarot size={32} className="text-[#C9962A]"/></div>
             </div>
-            <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>카드를 섞고 있어요...</p>
+            <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>카드를 섞고 있어요...</p>
           </div>
         )}
 
@@ -321,7 +321,7 @@ export default function TarotPage({ onBack }: Props) {
               <div className="absolute inset-0 flex items-center justify-center"><IcTarot size={32} className="text-[#C9962A]"/></div>
             </div>
             <div className="text-center">
-              <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>해석 중...</p>
+              <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>해석 중...</p>
               <p className="text-sm text-[#7B6F9A]">AI가 카드의 의미를 풀어내고 있습니다</p>
             </div>
           </div>
@@ -345,7 +345,7 @@ export default function TarotPage({ onBack }: Props) {
                   {luck.label}
                 </span>
               </div>
-              <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 타로 상담 결과
               </h2>
               <p className="text-xs text-[#7B6F9A]">{result.summary}</p>
@@ -372,7 +372,7 @@ export default function TarotPage({ onBack }: Props) {
               <div key={key} className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-1 h-5 rounded-full" style={{ backgroundColor: luck.color }}/>
-                  <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                  <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                     {POSITIONS[i].label}
                   </h3>
                 </div>
@@ -384,7 +384,7 @@ export default function TarotPage({ onBack }: Props) {
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full"/>
-                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   오늘의 조언
                 </h3>
               </div>

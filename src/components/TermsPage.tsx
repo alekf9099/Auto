@@ -80,7 +80,7 @@ export default function TermsPage({ onBack }: Props) {
           >
             ←
           </button>
-          <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+          <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
             이용약관
           </h1>
         </div>

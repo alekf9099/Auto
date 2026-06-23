@@ -104,7 +104,7 @@ export default function ShareCardModal({ data, onClose }: Props) {
             <div className="relative flex items-center justify-between mb-6">
               <div className="flex items-center gap-1">
                 <span style={{ color: data.accent }}><IcGem size={13}/></span>
-                <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>운명봄</p>
+                <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>운명봄</p>
               </div>
               <span
                 className="text-[10px] font-bold px-2.5 py-1 rounded-full"
@@ -122,7 +122,7 @@ export default function ShareCardModal({ data, onClose }: Props) {
               >
                 <span className="text-5xl leading-none">{data.emoji}</span>
               </div>
-              <h2 className="text-xl font-bold text-[#F5EDD4] mb-2 leading-snug" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <h2 className="text-xl font-bold text-[#F5EDD4] mb-2 leading-snug" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 {data.title}
               </h2>
               <div className="w-9 h-[2px] rounded-full mb-3" style={{ backgroundColor: data.accent }} />
