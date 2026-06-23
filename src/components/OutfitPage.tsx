@@ -87,7 +87,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
             ←
           </button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Gowun Batang', serif" }}>
               오늘의 코디
             </h1>
             <p className="text-xs text-[#7B6F9A] truncate">
@@ -108,7 +108,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
 
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#E0528225] shadow-xl shadow-[#000]/40">
               <p className="text-pink-300/70 text-xs mb-1">사주 오행 기반</p>
-              <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 오늘 뭐 입을까요?
               </h2>
               <p className="text-sm text-[#A89BC0] leading-relaxed">
@@ -209,7 +209,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
               <div className="absolute inset-0 flex items-center justify-center"><IcOutfit size={32} className="text-[#E05282]"/></div>
             </div>
             <div className="text-center">
-              <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 코디 분석 중...
               </p>
               <p className="text-sm text-[#7B6F9A]">사주 오행을 분석해 스타일을 추천합니다</p>
@@ -231,7 +231,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                   {result.todayData.elementChi} · {result.todayData.element}
                 </span>
               </div>
-              <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 오늘의 코디 추천
               </h2>
               <p className="text-xs text-[#7B6F9A] mb-4">{result.todayData.mood}</p>
@@ -296,7 +296,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 rounded-full bg-[#E05282]"/>
-                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   추천 아이템
                 </h3>
               </div>
@@ -326,7 +326,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-1 h-5 rounded-full bg-[#4BBF7E]"/>
-                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   스타일 키워드
                 </h3>
               </div>
@@ -346,7 +346,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-1 h-5 bg-[#E05252] rounded-full"/>
-                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   피하면 좋은 색상
                 </h3>
               </div>

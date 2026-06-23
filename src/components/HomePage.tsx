@@ -238,7 +238,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
       {/* 상단 바 */}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-          <h1 className="text-lg font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>운명봄</h1>
+          <h1 className="text-lg font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>운명봄</h1>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowPoints(true)}
@@ -282,7 +282,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
               </span>
             )}
           </div>
-          <p className="relative text-base font-bold text-[#F5EDD4] mb-3" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+          <p className="relative text-base font-bold text-[#F5EDD4] mb-3" style={{ fontFamily: "'Gowun Batang', serif" }}>
             오늘의 한 줄 운세
           </p>
           <div
@@ -417,12 +417,12 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                     <div className="absolute inset-[5px] rounded-full border border-red-300 opacity-40"/>
                     {checked
                       ? <div className="flex flex-col items-center"><span className="text-red-500 text-xl font-bold leading-none">✓</span><span className="text-[9px] text-red-400 font-bold mt-0.5">완료</span></div>
-                      : <div className="flex flex-col items-center"><span className="text-[11px] font-bold text-red-600 leading-tight text-center" style={{ fontFamily: "'Noto Serif KR', serif" }}>출석<br/>도장</span></div>
+                      : <div className="flex flex-col items-center"><span className="text-[11px] font-bold text-red-600 leading-tight text-center" style={{ fontFamily: "'Gowun Batang', serif" }}>출석<br/>도장</span></div>
                     }
                   </div>
                   <div className="flex-1 text-left">
                     <p className="text-[10px] text-[#7B6F9A] mb-0.5 font-medium">출석체크하고</p>
-                    <p className="text-base font-bold leading-tight" style={{ fontFamily: "'Noto Serif KR', serif", color: checked ? '#A89BC0' : '#F5EDD4' }}>
+                    <p className="text-base font-bold leading-tight" style={{ fontFamily: "'Gowun Batang', serif", color: checked ? '#A89BC0' : '#F5EDD4' }}>
                       {checked ? '오늘 도장 찍었어요!' : '포인트 받아가세요!'}
                     </p>
                     <p className="text-[11px] text-[#7B6F9A] mt-0.5">
@@ -491,11 +491,11 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                 <CornerOrnament size={20} className="absolute top-1.5 left-1.5 pointer-events-none opacity-70"/>
                 <CornerOrnament size={20} className="absolute top-1.5 right-1.5 -scale-x-100 pointer-events-none opacity-70"/>
                 <div className="shrink-0 w-12 h-12 rounded-2xl bg-[#C9962A15] border border-[#C9962A35] flex items-center justify-center">
-                  <span className="text-xl font-bold text-[#C9962A]" style={{ fontFamily: "'Noto Serif KR', serif" }}>7</span>
+                  <span className="text-xl font-bold text-[#C9962A]" style={{ fontFamily: "'Gowun Batang', serif" }}>7</span>
                 </div>
                 <div className="flex-1 text-left">
                   <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">오늘의 이벤트</p>
-                  <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                  <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                     행운의 숫자 잡기 — 7초에 도전!
                   </p>
                   <p className="text-[11px] text-[#7B6F9A] mt-0.5">
@@ -566,7 +566,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                     {daunInfo.pillarStr} · {daunInfo.sipsin}
                   </span>
                 </div>
-                <p className="text-sm font-bold text-[#F5EDD4] mb-0.5" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <p className="text-sm font-bold text-[#F5EDD4] mb-0.5" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   💬 {daunInfo.sipsin === '정관' ? '조직에서 인정받고 명예가 따르는 시기입니다' :
                       daunInfo.sipsin === '편관' ? '강한 압박이 있지만 이겨내면 도약하는 시기입니다' :
                       daunInfo.sipsin === '식신' ? '재능을 펼치고 풍요를 누리는 여유로운 시기입니다' :

@@ -98,7 +98,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
             ←
           </button>
           <div>
-            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Gowun Batang', serif" }}>
               정통 사주 (正統四柱)
             </h1>
             <p className="text-xs text-[#7B6F9A]">사주팔자 명식 전체 분석</p>
@@ -112,7 +112,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
           <>
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
               <p className="text-violet-300/70 text-xs mb-2">동양 철학의 정수</p>
-              <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 正統四柱
               </p>
               <p className="text-sm text-violet-300/80 leading-relaxed">
@@ -206,7 +206,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
               <div className="absolute inset-0 flex items-center justify-center"><IcSaju size={32} className="text-[#C9962A]"/></div>
             </div>
             <div className="text-center space-y-1">
-              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>사주팔자 분석 중...</p>
+              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>사주팔자 분석 중...</p>
               <p className="text-sm text-[#7B6F9A]">천간지지를 풀이하고 있습니다</p>
             </div>
           </div>
@@ -221,7 +221,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
               </p>
               <div
                 className="text-4xl font-bold tracking-wide text-white mb-1"
-                style={{ fontFamily: "'Noto Serif KR', serif" }}
+                style={{ fontFamily: "'Gowun Batang', serif" }}
               >
                 {pillarName(result.yearPillar)}{pillarName(result.monthPillar)}{pillarName(result.dayPillar)}
                 {result.hourPillar   ? pillarName(result.hourPillar)   : ''}
@@ -249,7 +249,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   일간 기질 (日干 氣質)
                 </h2>
               </div>
@@ -257,7 +257,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
                 <div className="flex items-center gap-3 mb-3">
                   <span className="text-3xl">{nature.symbol}</span>
                   <div>
-                    <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                    <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                       {nature.title}
                     </p>
                     <p className="text-xs text-[#7B6F9A]">
@@ -319,7 +319,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
                 <span className="text-2xl">🪬</span>
                 <h3
                   className="text-base font-bold text-white"
-                  style={{ fontFamily: "'Noto Serif KR', serif" }}
+                  style={{ fontFamily: "'Gowun Batang', serif" }}
                 >
                   심층 사주 해석으로 더 알아보기
                 </h3>

@@ -35,7 +35,7 @@ function MonthlySection({ dayStemIdx }: { dayStemIdx: number }) {
     <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-        <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>월별 운세 흐름</h2>
+        <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>월별 운세 흐름</h2>
         <span className="text-xs text-[#7B6F9A] ml-1">사주 기반 · {CURR_YEAR}년</span>
       </div>
       <div className="space-y-2">
@@ -129,7 +129,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
-            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>{CURR_YEAR} 신년운세</h1>
+            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>{CURR_YEAR} 신년운세</h1>
             <p className="text-xs text-[#7B6F9A]">{yearStem.ko}{yearBranch.ko}년({yearStem.hanja}{yearBranch.hanja}) 한 해 운세</p>
           </div>
         </div>
@@ -146,7 +146,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
                   <span className="text-2xl font-bold" style={{ color: yc }}>{yearBranch.hanja}</span>
                   <span className="text-sm text-[#A89BC0] ml-1">{yearStem.ko}{yearBranch.ko}년 · {yearBranch.animal}띠의 해</span>
                 </div>
-                <p className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <p className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   {CURR_YEAR} 신년운세
                 </p>
                 <p className="text-sm text-[#A89BC0]">생년월일을 입력하면 나만의 {CURR_YEAR} 한 해 운세를 알려드립니다</p>
@@ -221,7 +221,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
               <div className="absolute inset-0 flex items-center justify-center"><IcSinnyeon size={32} className="text-[#C9962A]"/></div>
             </div>
             <div className="text-center space-y-1">
-              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>신년운세 분석 중...</p>
+              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>신년운세 분석 중...</p>
               <p className="text-sm text-[#7B6F9A]">{CURR_YEAR}년 운세를 풀이하고 있습니다</p>
             </div>
           </div>
@@ -233,7 +233,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
               <p className="text-violet-300/70 text-xs mb-2">{CURR_YEAR} {yearStem.ko}{yearBranch.ko}년({yearStem.hanja}{yearBranch.hanja}) 운세</p>
               <div className="flex items-center gap-3 mb-2">
-                <span className="text-3xl font-bold text-white" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <span className="text-3xl font-bold text-white" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   {dayStem?.hanja}일간
                 </span>
                 <span className="text-violet-300">×</span>
@@ -256,7 +256,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>{CURR_YEAR}년 총운</h2>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>{CURR_YEAR}년 총운</h2>
               </div>
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{fortune.총평}</p>
             </div>
@@ -265,7 +265,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>분야별 운세</h2>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>분야별 운세</h2>
               </div>
               <div className="space-y-4">
                 {[

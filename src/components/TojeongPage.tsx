@@ -79,7 +79,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
-            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>토정비결</h1>
+            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>토정비결</h1>
             <p className="text-xs text-[#7B6F9A]">이지함 선생의 한 해 예언서</p>
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
             {/* 소개 배너 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
               <p className="text-violet-300/70 text-xs mb-2">조선 시대의 지혜</p>
-              <p className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <p className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 土亭秘訣
               </p>
               <p className="text-sm text-violet-300/80 leading-relaxed">
@@ -169,7 +169,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
               <div className="absolute inset-0 flex items-center justify-center"><IcTojeong size={32} className="text-[#C9962A]"/></div>
             </div>
             <div className="text-center space-y-1">
-              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>토정비결 풀이 중...</p>
+              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>토정비결 풀이 중...</p>
               <p className="text-sm text-[#7B6F9A]">이지함 선생의 비결서를 펼치고 있습니다</p>
             </div>
           </div>
@@ -187,7 +187,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
                   { label: '하괘', val: gwe.ha   },
                 ].map(g => (
                   <div key={g.label} className="text-center">
-                    <p className="text-3xl font-bold text-white" style={{ fontFamily: "'Noto Serif KR', serif" }}>{g.val}</p>
+                    <p className="text-3xl font-bold text-white" style={{ fontFamily: "'Gowun Batang', serif" }}>{g.val}</p>
                     <p className="text-xs text-violet-300/60 mt-1">{g.label}</p>
                   </div>
                 ))}
@@ -207,7 +207,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>{CURR_YEAR}년 총운</h2>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>{CURR_YEAR}년 총운</h2>
               </div>
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{total}</p>
             </div>
@@ -216,7 +216,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>월별 운세</h2>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>월별 운세</h2>
               </div>
               <div className="space-y-2">
                 {monthly.map(m => {

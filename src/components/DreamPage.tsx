@@ -93,7 +93,7 @@ export default function DreamPage({ onBack }: Props) {
             ←
           </button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Gowun Batang', serif" }}>
               꿈해몽 (夢解夢)
             </h1>
             <p className="text-xs text-[#7B6F9A] truncate">
@@ -113,7 +113,7 @@ export default function DreamPage({ onBack }: Props) {
           <div className="space-y-4">
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
               <p className="text-violet-300/70 text-xs mb-1">AI 전통 해몽</p>
-              <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 어떤 꿈을 꾸셨나요?
               </h2>
               <p className="text-sm text-[#A89BC0] leading-relaxed">
@@ -162,7 +162,7 @@ export default function DreamPage({ onBack }: Props) {
               <div className="absolute inset-0 flex items-center justify-center"><IcDream size={32} className="text-[#C9962A]"/></div>
             </div>
             <div className="text-center">
-              <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 해몽 중...
               </p>
               <p className="text-sm text-[#7B6F9A]">AI가 전통 해몽을 분석하고 있습니다</p>
@@ -188,7 +188,7 @@ export default function DreamPage({ onBack }: Props) {
                   {luck.label}
                 </span>
               </div>
-              <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 꿈 해몽 결과
               </h2>
               <p className="text-xs text-[#7B6F9A] mb-3">{result.summary}</p>
@@ -219,7 +219,7 @@ export default function DreamPage({ onBack }: Props) {
               <div key={sec.key} className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-1 h-5 rounded-full" style={{ backgroundColor: sec.bar }}/>
-                  <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                  <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                     {sec.label}
                   </h3>
                 </div>
@@ -231,7 +231,7 @@ export default function DreamPage({ onBack }: Props) {
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full"/>
-                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   오늘의 행동 지침
                 </h3>
               </div>

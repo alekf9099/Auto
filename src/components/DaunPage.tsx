@@ -252,7 +252,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
             ←
           </button>
           <div>
-            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Gowun Batang', serif" }}>
               대운 분석 (大運 分析)
             </h1>
             <p className="text-xs text-[#7B6F9A]">10년 단위 운세 흐름</p>
@@ -266,7 +266,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
           <>
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
               <p className="text-violet-300/70 text-xs mb-2">10년 단위 운의 큰 흐름</p>
-              <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 大運 分析
               </p>
               <p className="text-sm text-violet-300/80 leading-relaxed">
@@ -360,7 +360,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
               <div className="absolute inset-0 flex items-center justify-center"><IcDaun size={32} className="text-[#C9962A]"/></div>
             </div>
             <div className="text-center space-y-1">
-              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>대운 분석 중...</p>
+              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>대운 분석 중...</p>
               <p className="text-sm text-[#7B6F9A]">10년 단위 운세 흐름을 계산하고 있습니다</p>
             </div>
           </div>
@@ -380,7 +380,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
               <div className="flex items-center gap-4 mb-4">
                 <div className="text-center">
                   <p className="text-violet-300/60 text-xs mb-1">대운 시작</p>
-                  <p className="text-2xl font-bold text-white" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                  <p className="text-2xl font-bold text-white" style={{ fontFamily: "'Gowun Batang', serif" }}>
                     {daunStartAge}세
                   </p>
                 </div>
@@ -396,7 +396,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
                     <div className="w-px h-10 bg-violet-400/30" />
                     <div className="text-center">
                       <p className="text-violet-300/60 text-xs mb-1">현재 대운</p>
-                      <p className="text-2xl font-bold text-amber-300" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                      <p className="text-2xl font-bold text-amber-300" style={{ fontFamily: "'Gowun Batang', serif" }}>
                         {pillarName(currentDaun.pillar)}
                       </p>
                     </div>
@@ -427,7 +427,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
                 <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
                   <div className="flex items-center gap-2 mb-1">
                     <div className="w-1 h-5 bg-amber-400 rounded-full" />
-                    <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                    <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                       현재 대운 심층 해석
                     </h2>
                     <span className="ml-auto text-xs bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-full font-bold">
@@ -460,7 +460,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
                         </span>
                         {desc && <span className="text-xs text-[#7B6F9A]">{desc.meaning}</span>}
                       </div>
-                      <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                      <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                         {reading?.title ?? sipsin + '의 대운'}
                       </p>
                     </div>
@@ -501,7 +501,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
               <div className="flex items-center gap-2 mb-1">
                 <div className="w-1 h-5 bg-red-400 rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   {_seunYear}년 세운 (歲運)
                 </h2>
                 <span className="ml-auto text-xs bg-red-50 text-red-600 border border-red-200 px-2.5 py-1 rounded-full font-medium">
@@ -591,7 +591,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
                 <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
                   <div className="flex items-center gap-2 mb-1">
                     <div className="w-1 h-5 bg-[#3D3358] rounded-full" />
-                    <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                    <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                       다음 대운 예고
                     </h2>
                     <span className="ml-auto text-xs bg-[#1C1438] text-[#A89BC0] border border-[#2A1F4A] px-2.5 py-1 rounded-full">

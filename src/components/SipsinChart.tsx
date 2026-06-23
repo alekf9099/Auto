@@ -58,7 +58,7 @@ export default function SipsinChart({ result }: Props) {
     <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
       <div className="flex items-center gap-2 mb-1">
         <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-        <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>십신 분석 (十神)</h2>
+        <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>십신 분석 (十神)</h2>
       </div>
       <p className="text-xs text-[#7B6F9A] mb-5 ml-3">
         일간 <span className="font-bold" style={{ color: ELEMENT_COLORS[dayStem.element] }}>{dayStem.hanja}({dayStem.ko})</span> 기준

@@ -88,7 +88,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
             ←
           </button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Gowun Batang', serif" }}>
               취업운
             </h1>
             <p className="text-xs text-[#7B6F9A] truncate">
@@ -109,7 +109,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
 
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#4BBF7E25] shadow-xl shadow-[#000]/40">
               <p className="text-emerald-300/70 text-xs mb-1">사주 십성 기반</p>
-              <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 취업·이직 운이 궁금하다면?
               </h2>
               <p className="text-sm text-[#A89BC0] leading-relaxed">
@@ -210,7 +210,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
               <div className="absolute inset-0 flex items-center justify-center"><IcJob size={32} className="text-[#4BBF7E]"/></div>
             </div>
             <div className="text-center">
-              <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 취업운 분석 중...
               </p>
               <p className="text-sm text-[#7B6F9A]">사주 십성을 분석해 커리어 운을 풀이합니다</p>
@@ -236,7 +236,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
                   {result.overallLuck.label} · {result.daunSipsin}
                 </span>
               </div>
-              <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 {result.overallLuck.title}
               </h2>
               <p className="text-xs text-[#7B6F9A] mb-3">현재 대운 ({result.daunRange}) 기준 분석</p>
@@ -257,7 +257,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-1 h-5 rounded-full" style={{ backgroundColor: LUCK_GRADE_CFG[result.todayLuck.grade].color }}/>
-                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   오늘의 면접 · 지원운
                 </h3>
                 <span
@@ -275,7 +275,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-2xl">{result.myData.emoji}</span>
-                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   {result.myData.elementChi}({result.myData.element}) 일간의 적성 직무
                 </h3>
               </div>
@@ -310,7 +310,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-1 h-5 rounded-full bg-[#C9962A]"/>
-                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   행운의 요일
                 </h3>
               </div>
@@ -339,7 +339,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-1 h-5 bg-[#E05252] rounded-full"/>
-                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   주의할 점
                 </h3>
               </div>

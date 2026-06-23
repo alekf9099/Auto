@@ -75,7 +75,7 @@ export default function SplashScreen({ onDone }: Props) {
       {/* 앱 이름 */}
       <h1
         className="text-4xl font-bold text-[#F5EDD4] mb-2 tracking-tight"
-        style={{ fontFamily: "'Noto Serif KR', serif" }}
+        style={{ fontFamily: "'Gowun Batang', serif" }}
       >
         운명봄
       </h1>

@@ -101,7 +101,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
           >
             ←
           </button>
-          <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>심층 사주 해석</h1>
+          <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>심층 사주 해석</h1>
           {step !== 'result' && (
             <span className="ml-auto text-[10px] bg-[#C9962A15] text-[#C9962A] border border-[#C9962A30] px-2.5 py-1 rounded-full font-semibold">11개 섹션</span>
           )}
@@ -114,7 +114,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
           <>
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
               <p className="text-violet-300/70 text-xs mb-2">사주팔자 심층 분석</p>
-              <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+              <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 深層 解釋
               </p>
               <p className="text-sm text-violet-300/80 leading-relaxed">
@@ -208,7 +208,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
               <div className="absolute inset-0 flex items-center justify-center"><IcDeepSaju size={32} className="text-[#C9962A]"/></div>
             </div>
             <div className="text-center space-y-1">
-              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>심층 분석 중...</p>
+              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>심층 분석 중...</p>
               <p className="text-sm text-[#7B6F9A]">사주팔자를 깊이 풀이하고 있습니다</p>
             </div>
           </div>
@@ -220,13 +220,13 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative overflow-hidden">
               <div
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-[120px] font-bold opacity-[0.06] select-none pointer-events-none leading-none"
-                style={{ fontFamily: "'Noto Serif KR', serif" }}
+                style={{ fontFamily: "'Gowun Batang', serif" }}
               >
                 {content.stemHanja}
               </div>
               <p className="text-violet-300/60 text-xs mb-3">일간(日干) · 타고난 본질의 기운</p>
               <div className="flex items-end gap-4 mb-4">
-                <span className="text-6xl font-bold text-white" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+                <span className="text-6xl font-bold text-white" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   {content.stemHanja}
                 </span>
                 <div>
@@ -452,7 +452,7 @@ function AdviceCard({ content }: { content: string }) {
         <span className="text-lg">✨</span>
         <p className="text-sm font-bold text-violet-200">당신을 위한 조언</p>
       </div>
-      <p className="text-sm text-violet-100/90 leading-relaxed font-medium" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+      <p className="text-sm text-violet-100/90 leading-relaxed font-medium" style={{ fontFamily: "'Gowun Batang', serif" }}>
         "{content}"
       </p>
     </div>

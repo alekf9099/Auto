@@ -49,7 +49,7 @@ export default function PointsToast({ amount, total, label, onClose }: Props) {
           <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-gradient-to-br from-[#C9962A] to-[#E8B84B] flex items-center justify-center shadow-lg shadow-[#C9962A40]">
             <IcGem size={26} className="text-[#0D0A1A]" />
           </div>
-          <p className="text-3xl font-bold text-[#F5EDD4] mb-1.5" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+          <p className="text-3xl font-bold text-[#F5EDD4] mb-1.5" style={{ fontFamily: "'Gowun Batang', serif" }}>
             +{amount}P
           </p>
           <p className="text-sm text-[#7B6F9A]">누적 <span className="font-semibold text-[#C9962A]">{total.toLocaleString()}P</span></p>

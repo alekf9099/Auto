@@ -63,7 +63,7 @@ export default function SajuChart({ result }: Props) {
     <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
       <div className="flex items-center gap-2 mb-5">
         <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-        <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+        <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
           {minutePillar ? '오주십자 (五柱十字)' : '사주팔자 (四柱八字)'}
         </h2>
       </div>

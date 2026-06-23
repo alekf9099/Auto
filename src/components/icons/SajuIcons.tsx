@@ -170,7 +170,7 @@ export function IcStamp({ size = 24, className = '' }: P) {
         fontSize="8"
         fontWeight="bold"
         fill="currentColor"
-        fontFamily="'Noto Serif KR', serif"
+        fontFamily="'Gowun Batang', serif"
       >印</text>
     </svg>
   )

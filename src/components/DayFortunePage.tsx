@@ -231,7 +231,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg flex-shrink-0">←</button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>{title}</h1>
+            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>{title}</h1>
             <p className="text-xs text-[#7B6F9A]">사주 기반 일일 운세 분석</p>
           </div>
           {step === 'result' && (
@@ -260,7 +260,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             {/* 배너 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
               <p className="text-violet-300/70 text-xs mb-2">{isToday ? '🔮 오늘' : '⏰ 내일'} · {new Date(Date.now() + activeOffset * 86400000).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })}</p>
-              <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>{title}</p>
+              <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>{title}</p>
               <p className="text-violet-300/60 text-sm">생년월일로 나만의 {isToday ? '오늘' : '내일'} 운세를 확인하세요</p>
             </div>
 
@@ -332,7 +332,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
               <div className="absolute inset-0 flex items-center justify-center"><IcTodayFortune size={32} className="text-[#C9962A]"/></div>
             </div>
             <div className="text-center space-y-1">
-              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>운세 분석 중...</p>
+              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>운세 분석 중...</p>
               <p className="text-sm text-[#7B6F9A]">사주를 풀이하고 있습니다</p>
             </div>
           </div>
@@ -404,7 +404,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             <div className="rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>분야별 운세</h2>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>분야별 운세</h2>
               </div>
               <div className="space-y-2">
                 <CategoryRow emoji="🔮" label="총운"  text={fortune.총평} star={fortune.star} />
@@ -419,7 +419,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             <div className="rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>🕐 시간대별</h2>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>🕐 시간대별</h2>
               </div>
               <div className="space-y-2">
                 {[
@@ -442,7 +442,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             <div className="rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Noto Serif KR', serif" }}>🍀 행운 아이템</h2>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>🍀 행운 아이템</h2>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {[

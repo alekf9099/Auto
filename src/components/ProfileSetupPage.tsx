@@ -111,7 +111,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
           )}
           <p className="text-[#C4B8D8] text-sm font-semibold">{user.name}님, 반가워요</p>
         </div>
-        <h1 className="text-xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Noto Serif KR', serif" }}>
+        <h1 className="text-xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
           내 정보 입력
         </h1>
         <p className="text-[#7B6F9A] text-xs leading-relaxed">
