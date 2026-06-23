@@ -49,7 +49,13 @@ function polar(cx: number, cy: number, r: number, angleDeg: number) {
   return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
 }
 
-// 다이얼 그림(public/gauge-dial.png) 위에 종합 행운 지수(percent)가 가리키는 바늘만 겹쳐 그린다
+function luckLabel(percent: number) {
+  if (percent >= 90) return '매우 좋음'
+  if (percent >= 75) return '좋음'
+  return '보통'
+}
+
+// 다이얼 그림(public/gauge-dial.png) 위에 종합 행운 지수(percent)가 가리키는 바늘과 점수를 겹쳐 그린다
 function DayLuckGauge({ percent }: { percent: number }) {
   const size = 240
   const cx = size / 2, cy = size / 2
@@ -70,6 +76,10 @@ function DayLuckGauge({ percent }: { percent: number }) {
           <line x1={cx} y1={cy} x2={needleTip.x} y2={needleTip.y} stroke="url(#needleGradient)" strokeWidth="3" strokeLinecap="round" />
           <circle cx={cx} cy={cy} r="6" fill="#1C1438" stroke="url(#needleGradient)" strokeWidth="1.5" />
         </svg>
+        <div className="absolute inset-x-0 flex flex-col items-center" style={{ top: cy + 28 }}>
+          <p className="text-2xl font-bold text-[#F5DA8B]" style={{ fontFamily: "'Gowun Batang', serif", textShadow: '0 1px 6px rgba(0,0,0,0.7)' }}>{percent}%</p>
+          <p className="text-xs font-semibold text-[#E8DFC8]" style={{ textShadow: '0 1px 6px rgba(0,0,0,0.7)' }}>{luckLabel(percent)}</p>
+        </div>
       </div>
     </div>
   )
