@@ -55,12 +55,20 @@ function luckLabel(percent: number) {
   return '보통'
 }
 
+function describeArc(cx: number, cy: number, r: number, startDeg: number, endDeg: number) {
+  const p1 = polar(cx, cy, r, startDeg)
+  const p2 = polar(cx, cy, r, endDeg)
+  const large = endDeg - startDeg > 180 ? 1 : 0
+  return `M ${p1.x} ${p1.y} A ${r} ${r} 0 ${large} 1 ${p2.x} ${p2.y}`
+}
+
 // 다이얼 그림(public/gauge-dial.png) 위에 종합 행운 지수(percent)가 가리키는 바늘과 점수를 겹쳐 그린다
 function DayLuckGauge({ percent }: { percent: number }) {
   const size = 240
   const cx = size / 2, cy = size / 2
   const needleAngle = Math.max(0, Math.min(180, (100 - percent) * 1.8))
   const needleTip = polar(cx, cy, size * 0.34, needleAngle)
+  const arcPath = describeArc(cx, cy, 70, 0, 180)
 
   return (
     <div className="flex items-center justify-center py-2">
@@ -72,7 +80,13 @@ function DayLuckGauge({ percent }: { percent: number }) {
               <stop offset="0%" stopColor="#A9762B" />
               <stop offset="100%" stopColor="#F5DA8B" />
             </linearGradient>
+            <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="60%">
+              <stop offset="0%" stopColor="#E3503A" />
+              <stop offset="100%" stopColor="#E8B84B" />
+            </linearGradient>
           </defs>
+          <path d={arcPath} fill="none" stroke="url(#arcGradient)" strokeWidth="14" strokeLinecap="round" opacity={0.4} style={{ filter: 'blur(6px)' }} />
+          <path d={arcPath} fill="none" stroke="url(#arcGradient)" strokeWidth="7" strokeLinecap="round" />
           <line x1={cx} y1={cy} x2={needleTip.x} y2={needleTip.y} stroke="url(#needleGradient)" strokeWidth="3" strokeLinecap="round" />
           <circle cx={cx} cy={cy} r="6" fill="#1C1438" stroke="url(#needleGradient)" strokeWidth="1.5" />
         </svg>
