@@ -80,9 +80,9 @@ function DayLuckGauge({ percent }: { percent: number }) {
               <stop offset="0%" stopColor="#A9762B" />
               <stop offset="100%" stopColor="#F5DA8B" />
             </linearGradient>
-            <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="60%">
-              <stop offset="0%" stopColor="#E3503A" />
-              <stop offset="100%" stopColor="#E8B84B" />
+            <linearGradient id="arcGradient" x1="50%" y1="0%" x2="50%" y2="100%">
+              <stop offset="0%" stopColor="#E8B84B" />
+              <stop offset="100%" stopColor="#E3503A" />
             </linearGradient>
           </defs>
           <path d={arcPath} fill="none" stroke="url(#arcGradient)" strokeWidth="14" strokeLinecap="round" opacity={0.4} style={{ filter: 'blur(6px)' }} />
