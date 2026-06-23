@@ -373,3 +373,129 @@ export function IcTarot({ size = 24, className = '' }: P) {
     </svg>
   )
 }
+
+// 총운 — 신비로운 천리안 (하루 전체를 꿰뚫어보는 혜안)
+export function IcGeneralLuck({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M2.5 12 C6.5 5.3 17.5 5.3 21.5 12 C17.5 18.7 6.5 18.7 2.5 12 Z" fill="currentColor" fillOpacity="0.12" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+      <circle cx="12" cy="12" r="3.6" stroke="currentColor" strokeWidth="1.4"/>
+      <circle cx="12" cy="12" r="1.3" fill="currentColor"/>
+      <g stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" opacity="0.75">
+        <line x1="12" y1="3.2" x2="12" y2="5.4"/>
+        <line x1="5.2" y1="6.2" x2="6.7" y2="7.7"/>
+        <line x1="18.8" y1="6.2" x2="17.3" y2="7.7"/>
+      </g>
+    </svg>
+  )
+}
+
+// 재물운 — 전통 금괴 (재물이 쌓이는 황금 덩이)
+export function IcWealthLuck({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M5.5 16.5 L7.5 9.5 a2 2 0 0 1 1.9-1.5 h5.2 a2 2 0 0 1 1.9 1.5 l2 7 a1.6 1.6 0 0 1-1.5 2 h-10.4 a1.6 1.6 0 0 1-1.5-2 Z" fill="currentColor" fillOpacity="0.22" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <path d="M9.2 9 L8 13.5 h8 l-1.2-4.5" stroke="currentColor" strokeWidth="1.1" opacity="0.6" fill="none"/>
+      <path d="M5.3 4.8 l0.5 1.2 l1.2 0.5 l-1.2 0.5 l-0.5 1.2 l-0.5-1.2 l-1.2-0.5 l1.2-0.5 Z" fill="currentColor" opacity="0.6"/>
+      <path d="M18.2 3.6 l0.4 0.9 l0.9 0.4 l-0.9 0.4 l-0.4 0.9 l-0.4-0.9 l-0.9-0.4 l0.9-0.4 Z" fill="currentColor" opacity="0.5"/>
+    </svg>
+  )
+}
+
+// 애정운 — 우아한 하트 (마음에 피어나는 사랑의 기운)
+export function IcLoveLuck({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 19.5 C7.5 16 3.5 12.8 3.5 8.8 C3.5 6.1 5.6 4 8.2 4 C9.9 4 11.2 4.9 12 6.2 C12.8 4.9 14.1 4 15.8 4 C18.4 4 20.5 6.1 20.5 8.8 C20.5 12.8 16.5 16 12 19.5 Z" fill="currentColor" fillOpacity="0.2" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+      <path d="M7 8.3 C7.3 7 8.4 6.1 9.7 6.1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.6" fill="none"/>
+    </svg>
+  )
+}
+
+// 건강운 — 연꽃 (정화와 활력이 피어나는 세 잎)
+export function IcHealthLuck({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 19 C12 19 6.5 16.4 6.5 11.5 C6.5 9.6 8 8 9.9 8 C10.7 8 11.4 8.3 12 8.8 C12.6 8.3 13.3 8 14.1 8 C16 8 17.5 9.6 17.5 11.5 C17.5 16.4 12 19 12 19 Z" fill="currentColor" fillOpacity="0.18" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <path d="M12 19 C12 19 9 13.6 9 9.3 C9 7.3 10.3 5.7 12 5.7 C13.7 5.7 15 7.3 15 9.3 C15 13.6 12 19 12 19 Z" fill="currentColor" fillOpacity="0.3" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <line x1="12" y1="19" x2="12" y2="21.3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" opacity="0.6"/>
+    </svg>
+  )
+}
+
+// 직장운 — 가죽 서류 가방 (커리어와 성취를 담는 가방)
+export function IcCareerLuck({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M9 7.5 V6 a2 2 0 0 1 2-2 h2 a2 2 0 0 1 2 2 v1.5" stroke="currentColor" strokeWidth="1.5" fill="none"/>
+      <rect x="3.5" y="7.5" width="17" height="12" rx="1.6" fill="currentColor" fillOpacity="0.16" stroke="currentColor" strokeWidth="1.5"/>
+      <line x1="3.5" y1="12.5" x2="20.5" y2="12.5" stroke="currentColor" strokeWidth="1.3" opacity="0.7"/>
+      <rect x="10.6" y="11.3" width="2.8" height="2.4" rx="0.5" fill="currentColor"/>
+    </svg>
+  )
+}
+
+// 오전 — 수평선 위로 떠오르는 아침 해
+export function IcMorning({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M5.5 16 a6.5 6.5 0 0 1 13 0 Z" fill="currentColor" fillOpacity="0.85" stroke="currentColor" strokeWidth="1.4"/>
+      <line x1="2" y1="16" x2="22" y2="16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      <g stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" opacity="0.8">
+        <line x1="12" y1="3.5" x2="12" y2="6"/>
+        <line x1="5.5" y1="6.5" x2="7.2" y2="8.2"/>
+        <line x1="18.5" y1="6.5" x2="16.8" y2="8.2"/>
+      </g>
+    </svg>
+  )
+}
+
+// 오후 — 하늘 높이 떠 있는 한낮의 해
+export function IcAfternoon({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <circle cx="12" cy="12" r="5" fill="currentColor" fillOpacity="0.85" stroke="currentColor" strokeWidth="1.3"/>
+      <g stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
+        {[0, 45, 90, 135, 180, 225, 270, 315].map(a => (
+          <line key={a} x1="12" y1="2.3" x2="12" y2="4.3" transform={`rotate(${a} 12 12)`} />
+        ))}
+      </g>
+    </svg>
+  )
+}
+
+// 저녁 — 수평선 너머로 저무는 노을
+export function IcEvening({ size = 24, className = '' }: P) {
+  const maskId = useId()
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" className={className}>
+      <defs>
+        <mask id={maskId}>
+          <rect width="24" height="24" fill="white"/>
+          <rect x="2" y="16" width="20" height="6" fill="black"/>
+        </mask>
+      </defs>
+      <circle cx="12" cy="16" r="6" fill="currentColor" opacity="0.85" mask={`url(#${maskId})`}/>
+      <line x1="2" y1="16" x2="22" y2="16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      <g stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" opacity="0.7">
+        <line x1="6" y1="11.5" x2="6" y2="13.3"/>
+        <line x1="18" y1="11.5" x2="18" y2="13.3"/>
+      </g>
+      <circle cx="19.5" cy="5.5" r="0.9" fill="currentColor" opacity="0.6"/>
+    </svg>
+  )
+}
+
+// 행운 아이템 — 네잎클로버 (작은 행운이 깃든 잎)
+export function IcCloverLucky({ size = 24, className = '' }: P) {
+  const lobe = 'M12 12 C12 8.5 9.5 6 6.7 6 C4.5 6 3 7.7 3 9.7 C3 11.8 5 12.6 6.8 12.6 C8.8 12.6 12 12 12 12 Z'
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      {[0, 90, 180, 270].map(a => (
+        <path key={a} d={lobe} transform={`rotate(${a} 12 12)`} opacity={a % 180 === 0 ? 0.95 : 0.75} />
+      ))}
+      <line x1="12" y1="12" x2="12" y2="20.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
+      <circle cx="12" cy="12" r="1" fill="currentColor"/>
+    </svg>
+  )
+}

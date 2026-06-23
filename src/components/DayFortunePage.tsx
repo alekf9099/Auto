@@ -5,7 +5,18 @@ import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
 import { DAY_FORTUNE, LUCKY_COLOR_MAP, LUCKY_COLOR_NAME, LUCKY_NUM, LUCKY_DIR, LUCKY_FOOD } from '../utils/fortuneData'
 import PointsClaimButton from './PointsClaimButton'
 import ShareCardModal from './ShareCardModal'
-import { IcTodayFortune } from './icons/SajuIcons'
+import {
+  IcTodayFortune,
+  IcGeneralLuck,
+  IcWealthLuck,
+  IcLoveLuck,
+  IcHealthLuck,
+  IcCareerLuck,
+  IcMorning,
+  IcAfternoon,
+  IcEvening,
+  IcCloverLucky,
+} from './icons/SajuIcons'
 
 interface Props {
   dayOffset: 0 | 1   // 0 = 오늘, 1 = 내일
@@ -111,7 +122,7 @@ function GoldBadge({ children, size = 'w-7 h-7 text-sm' }: { children: React.Rea
   )
 }
 
-function CategoryRow({ emoji, label, text, star }: { emoji: string; label: string; text: string; star: number }) {
+function CategoryRow({ icon, label, text, star }: { icon: React.ReactNode; label: string; text: string; star: number }) {
   const [open, setOpen] = useState(false)
   return (
     <div className="border border-[#C9962A20] rounded-2xl overflow-hidden">
@@ -121,7 +132,7 @@ function CategoryRow({ emoji, label, text, star }: { emoji: string; label: strin
         aria-expanded={open}
         aria-label={`${label} ${open ? '접기' : '펼치기'}`}
       >
-        <GoldBadge>{emoji}</GoldBadge>
+        <GoldBadge><span className="text-[#C9962A]">{icon}</span></GoldBadge>
         <span className="text-sm font-semibold text-[#E8DFC8]">{label}</span>
         <span className="text-xs text-[#7B6F9A] flex-1 truncate">{text.slice(0, 18)}…</span>
         <Stars n={star} />
@@ -388,11 +399,11 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
                 <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>분야별 운세</h2>
               </div>
               <div className="space-y-2">
-                <CategoryRow emoji="🔮" label="총운"  text={fortune.총평} star={fortune.star} />
-                <CategoryRow emoji="💰" label="재물운" text={fortune.재물} star={Math.max(1, fortune.star - 1)} />
-                <CategoryRow emoji="💕" label="애정운" text={fortune.애정} star={fortune.star} />
-                <CategoryRow emoji="💪" label="건강운" text={fortune.건강} star={fortune.star} />
-                <CategoryRow emoji="💼" label="직장운" text={fortune.직업} star={Math.min(5, fortune.star + 1)} />
+                <CategoryRow icon={<IcGeneralLuck size={18} />} label="총운"  text={fortune.총평} star={fortune.star} />
+                <CategoryRow icon={<IcWealthLuck size={18} />} label="재물운" text={fortune.재물} star={Math.max(1, fortune.star - 1)} />
+                <CategoryRow icon={<IcLoveLuck size={18} />} label="애정운" text={fortune.애정} star={fortune.star} />
+                <CategoryRow icon={<IcHealthLuck size={18} />} label="건강운" text={fortune.건강} star={fortune.star} />
+                <CategoryRow icon={<IcCareerLuck size={18} />} label="직장운" text={fortune.직업} star={Math.min(5, fortune.star + 1)} />
               </div>
             </div>
 
@@ -404,12 +415,12 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
               </div>
               <div className="space-y-2">
                 {[
-                  { icon: '🌅', label: '오전 06~12시', text: fortune.시간오전 },
-                  { icon: '☀️',  label: '오후 12~18시', text: fortune.시간오후 },
-                  { icon: '🌙', label: '저녁 18~24시', text: fortune.시간저녁 },
+                  { icon: <IcMorning size={18} />, label: '오전 06~12시', text: fortune.시간오전 },
+                  { icon: <IcAfternoon size={18} />,  label: '오후 12~18시', text: fortune.시간오후 },
+                  { icon: <IcEvening size={18} />, label: '저녁 18~24시', text: fortune.시간저녁 },
                 ].map(t => (
                   <div key={t.label} className="flex gap-3 border border-[#C9962A20] rounded-2xl px-4 py-3" style={{ background: 'linear-gradient(135deg, #201A3A 0%, #160F2C 100%)' }}>
-                    <GoldBadge>{t.icon}</GoldBadge>
+                    <GoldBadge><span className="text-[#C9962A]">{t.icon}</span></GoldBadge>
                     <div>
                       <p className="text-xs font-semibold text-[#7B6F9A] mb-0.5">{t.label}</p>
                       <p className="text-sm text-[#C4B8D8]">{t.text}</p>
@@ -423,7 +434,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             <div className="rounded-3xl border border-[#C9962A20] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>🍀 행운 아이템</h2>
+                <h2 className="flex items-center gap-1.5 text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}><IcCloverLucky size={18} className="text-[#C9962A]" /> 행운 아이템</h2>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {[
