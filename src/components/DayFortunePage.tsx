@@ -339,7 +339,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
         )}
 
         {step === 'result' && (
-          <div className="animate-fade-in-up">
+          <div className="space-y-4 animate-fade-in-up">
             {/* 종합 행운 게이지 */}
             <div
               className="rounded-3xl border border-[#C9962A30] shadow-[0_2px_24px_rgba(201,150,42,0.14)] p-5 space-y-4"

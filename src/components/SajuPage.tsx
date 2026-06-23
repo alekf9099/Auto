@@ -213,7 +213,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
         )}
 
         {step === 'result' && submitted && result && dayStem && dayBranch && nature && ohaeng && (
-          <div className="animate-fade-in-up">
+          <div className="space-y-4 animate-fade-in-up">
             {/* Dark hero */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
               <p className="text-violet-300/70 text-xs mb-2">

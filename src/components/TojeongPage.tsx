@@ -176,7 +176,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
         )}
 
         {step === 'result' && (
-          <div className="animate-fade-in-up">
+          <div className="space-y-4 animate-fade-in-up">
             {/* 괘수 배너 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
               <p className="text-violet-300/70 text-xs mb-3">{CURR_YEAR}년 토정비결 괘수</p>
