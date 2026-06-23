@@ -215,7 +215,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
         )}
 
         {step === 'result' && submitted && content && (
-          <div className="animate-fade-in-up">
+          <div className="space-y-4 animate-fade-in-up">
             {/* 일간 히어로 배너 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative overflow-hidden">
               <div

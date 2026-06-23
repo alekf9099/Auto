@@ -228,7 +228,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
         )}
 
         {step === 'result' && (
-          <div className="animate-fade-in-up">
+          <div className="space-y-4 animate-fade-in-up">
             {/* 결과 배너 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
               <p className="text-violet-300/70 text-xs mb-2">{CURR_YEAR} {yearStem.ko}{yearBranch.ko}년({yearStem.hanja}{yearBranch.hanja}) 운세</p>
