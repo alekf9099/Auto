@@ -244,11 +244,8 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         {/* 인사 + 오늘 운세 한 줄 */}
         <div style={reveal(0)}>
         <div
-          className="relative overflow-hidden rounded-3xl p-5 border shadow-md shadow-[#7A5A28]/15 transition-colors duration-500"
-          style={{
-            background: 'linear-gradient(160deg, #FCF6E6 0%, #F5E9CC 100%)',
-            borderColor: todayAccent + '55',
-          }}
+          className="relative overflow-hidden rounded-3xl p-5 border border-[#6B4A22]/40 shadow-md shadow-[#7A5A28]/20 bg-cover bg-center"
+          style={{ backgroundImage: "url('/today-hanok-bg.png')" }}
         >
           <div className="relative flex items-center justify-between gap-2 mb-1">
             <p className="text-[#9A8155] text-xs">
@@ -267,8 +264,8 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
             오늘의 한 줄 운세
           </p>
           <div
-            className="relative flex gap-3 items-start rounded-2xl px-4 py-3.5 border transition-colors duration-500"
-            style={{ backgroundColor: todayAccent + '12', borderColor: todayAccent + '35' }}
+            className="relative flex gap-3 items-start rounded-2xl px-4 py-3.5 border backdrop-blur-sm transition-colors duration-500"
+            style={{ backgroundColor: 'rgba(255,250,238,0.72)', borderColor: todayAccent + '45' }}
           >
             <span
               className="text-base flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
