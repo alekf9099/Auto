@@ -100,9 +100,9 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
     <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center px-6">
 
       {/* ── 배경 블롭 ── */}
-      <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-[#C9962A]/8 blur-3xl pointer-events-none" />
+      <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-[#9A6A12]/8 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-20 -left-16 w-72 h-72 rounded-full bg-violet-900/20 blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 -right-12 w-40 h-40 rounded-full bg-[#C9962A]/5 blur-2xl pointer-events-none" />
+      <div className="absolute top-1/2 -right-12 w-40 h-40 rounded-full bg-[#9A6A12]/5 blur-2xl pointer-events-none" />
 
       {/* ── 배경 산점 기호 ── */}
       {[
@@ -128,13 +128,13 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
         {/* 장식 링 */}
         <div className="relative flex items-center justify-center mb-5" style={{ width: 200, height: 200 }}>
           {/* 가장 바깥 링 */}
-          <div className="absolute rounded-full border border-[#C9962A]/20"
+          <div className="absolute rounded-full border border-[#9A6A12]/20"
             style={{ width: 196, height: 196 }} />
           {/* 중간 링 */}
-          <div className="absolute rounded-full border border-[#C9962A]/15"
+          <div className="absolute rounded-full border border-[#9A6A12]/15"
             style={{ width: 152, height: 152 }} />
           {/* 글로우 */}
-          <div className="absolute w-32 h-32 rounded-full bg-[#C9962A]/10 blur-2xl" />
+          <div className="absolute w-32 h-32 rounded-full bg-[#9A6A12]/10 blur-2xl" />
 
           {/* 링 위 오행 레이블 */}
           <span className="absolute text-[11px] font-bold" style={{ color: '#86EFAC', top: 4,   left: '50%', transform: 'translateX(-50%)' }}>木</span>
@@ -144,21 +144,21 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
 
           {/* 로고 — 스플래시처럼 회전 + 오행 색이 서서히 변함 */}
           <div className="relative w-[100px] h-[100px] rounded-full p-[3px] animate-spin-glow">
-            <div className="w-full h-full rounded-full bg-[#0D0A1A] flex items-center justify-center">
-              <span className="text-5xl" style={{ color: '#C9962A', fontFamily: 'serif' }}>☯</span>
+            <div className="w-full h-full rounded-full bg-[#FBF4E2] flex items-center justify-center">
+              <span className="text-5xl" style={{ color: '#9A6A12', fontFamily: 'serif' }}>☯</span>
             </div>
           </div>
         </div>
 
-        <h1 className="text-3xl font-bold text-[#F5EDD4] mb-1"
+        <h1 className="text-3xl font-bold text-[#3B2A16] mb-1"
           style={{ fontFamily: "'Gowun Batang', serif" }}>운명봄</h1>
-        <p className="text-sm text-[#7B6F9A]">당신의 운명을 봅니다</p>
+        <p className="text-sm text-[#9A8155]">당신의 운명을 봅니다</p>
       </div>
 
       {/* ── 로그인 카드 ── */}
-      <div className="w-full max-w-sm bg-[#130E24] rounded-3xl shadow-[0_4px_24px_rgba(201,150,42,0.12)] border border-[#2A1F4A] p-7">
-        <h2 className="text-base font-bold text-[#F5EDD4] mb-1 text-center">로그인</h2>
-        <p className="text-xs text-[#7B6F9A] mb-6 text-center">간편하게 로그인하고 운세를 확인하세요</p>
+      <div className="w-full max-w-sm bg-[#FBF4E2] rounded-3xl shadow-[0_4px_24px_rgba(201,150,42,0.12)] border border-[#D8C290] p-7">
+        <h2 className="text-base font-bold text-[#3B2A16] mb-1 text-center">로그인</h2>
+        <p className="text-xs text-[#9A8155] mb-6 text-center">간편하게 로그인하고 운세를 확인하세요</p>
 
         {(CLIENT_ID || KAKAO_KEY) ? (
           <div className="space-y-3">
@@ -176,10 +176,10 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
             )}
 
             {CLIENT_ID && KAKAO_KEY && (
-              <div className="flex items-center gap-2 text-[#4A4060] text-xs">
-                <div className="flex-1 h-px bg-[#2A1F4A]" />
+              <div className="flex items-center gap-2 text-[#A89167] text-xs">
+                <div className="flex-1 h-px bg-[#D8C290]" />
                 <span>또는</span>
-                <div className="flex-1 h-px bg-[#2A1F4A]" />
+                <div className="flex-1 h-px bg-[#D8C290]" />
               </div>
             )}
 
@@ -191,7 +191,7 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
           </div>
         ) : (
           <div className="text-center space-y-3">
-            <div className="text-xs text-amber-300 bg-amber-900/20 border border-amber-700/40 rounded-2xl p-3 leading-relaxed">
+            <div className="text-xs text-[#9A6A12] bg-amber-900/20 border border-amber-700/40 rounded-2xl p-3 leading-relaxed">
               <p className="font-semibold mb-1">⚙️ 로그인 설정 필요</p>
               <p>GitHub 저장소 Settings → Secrets에서<br /><code className="bg-amber-900/40 px-1 rounded">VITE_GOOGLE_CLIENT_ID</code> 또는 <code className="bg-amber-900/40 px-1 rounded">VITE_KAKAO_JS_KEY</code> 를 추가하세요</p>
             </div>
@@ -199,11 +199,11 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
         )}
       </div>
 
-      <p className="mt-6 text-xs text-[#4A4060] text-center">본 서비스는 참고용이며 정확성을 보장하지 않습니다</p>
-      <p className="mt-2 text-xs text-[#4A4060] text-center">
-        <button onClick={onShowPrivacy} className="underline hover:text-[#7B6F9A] transition">개인정보처리방침</button>
+      <p className="mt-6 text-xs text-[#A89167] text-center">본 서비스는 참고용이며 정확성을 보장하지 않습니다</p>
+      <p className="mt-2 text-xs text-[#A89167] text-center">
+        <button onClick={onShowPrivacy} className="underline hover:text-[#9A8155] transition">개인정보처리방침</button>
         <span className="mx-2">·</span>
-        <button onClick={onShowTerms} className="underline hover:text-[#7B6F9A] transition">이용약관</button>
+        <button onClick={onShowTerms} className="underline hover:text-[#9A8155] transition">이용약관</button>
       </p>
     </div>
   )

@@ -24,17 +24,17 @@ export default function PointsToast({ amount, total, label, onClose }: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none px-6">
       <div
-        className="relative bg-[#130E24] border border-[#C9962A40] rounded-3xl shadow-2xl shadow-black/60 px-9 py-7 text-center overflow-hidden"
+        className="relative bg-[#FBF4E2] border border-[#9A6A1240] rounded-3xl shadow-2xl shadow-black/60 px-9 py-7 text-center overflow-hidden"
         style={{ animation: 'pointsPop 0.4s cubic-bezier(.175,.885,.32,1.275)' }}
       >
         {/* 은은한 골드 글로우 */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#C9962A1A] to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#9A6A121A] to-transparent pointer-events-none" />
 
         {/* 산점 반짝임 */}
         {SPARKLES.map((sp, i) => (
           <span
             key={i}
-            className="absolute rounded-full bg-[#E8B84B]"
+            className="absolute rounded-full bg-[#B5841C]"
             style={{
               left: sp.x, top: sp.y, width: sp.s, height: sp.s,
               animation: `pointsSparkle 1.1s ease-in-out ${sp.delay} infinite`,
@@ -44,15 +44,15 @@ export default function PointsToast({ amount, total, label, onClose }: Props) {
 
         <div className="relative">
           {label && (
-            <p className="text-xs font-bold text-amber-400 mb-2">{label}</p>
+            <p className="text-xs font-bold text-[#9A6A12] mb-2">{label}</p>
           )}
-          <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-gradient-to-br from-[#C9962A] to-[#E8B84B] flex items-center justify-center shadow-lg shadow-[#C9962A40]">
+          <div className="w-14 h-14 mx-auto mb-3 rounded-full bg-gradient-to-br from-[#9A6A12] to-[#B5841C] flex items-center justify-center shadow-lg shadow-[#9A6A1240]">
             <IcGem size={26} className="text-[#0D0A1A]" />
           </div>
-          <p className="text-3xl font-bold text-[#F5EDD4] mb-1.5" style={{ fontFamily: "'Gowun Batang', serif" }}>
+          <p className="text-3xl font-bold text-[#3B2A16] mb-1.5" style={{ fontFamily: "'Gowun Batang', serif" }}>
             +{amount}P
           </p>
-          <p className="text-sm text-[#7B6F9A]">누적 <span className="font-semibold text-[#C9962A]">{total.toLocaleString()}P</span></p>
+          <p className="text-sm text-[#9A8155]">누적 <span className="font-semibold text-[#9A6A12]">{total.toLocaleString()}P</span></p>
         </div>
       </div>
       <style>{`

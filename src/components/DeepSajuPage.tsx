@@ -92,18 +92,18 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
   return (
     <div className="min-h-screen">
       {/* 상단 바 */}
-      <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-20">
+      <div className="bg-[#FBF4E2] border-b border-[#D8C290] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button
             onClick={onBack}
             aria-label="뒤로 가기"
-            className="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-[#231844] transition text-[#C4B8D8] text-lg"
+            className="w-8 h-8 flex items-center justify-center rounded-xl hover:bg-[#E3D0A4] transition text-[#5C4A2E] text-lg"
           >
             ←
           </button>
-          <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>심층 사주 해석</h1>
+          <h1 className="text-base font-bold text-[#3B2A16]" style={{ fontFamily: "'Gowun Batang', serif" }}>심층 사주 해석</h1>
           {step !== 'result' && (
-            <span className="ml-auto text-[10px] bg-[#C9962A15] text-[#C9962A] border border-[#C9962A30] px-2.5 py-1 rounded-full font-semibold">11개 섹션</span>
+            <span className="ml-auto text-[10px] bg-[#9A6A1215] text-[#9A6A12] border border-[#9A6A1230] px-2.5 py-1 rounded-full font-semibold">11개 섹션</span>
           )}
         </div>
       </div>
@@ -112,20 +112,20 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
 
         {step === 'form' && (
           <>
-            <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-              <p className="text-violet-300/70 text-xs mb-2">사주팔자 심층 분석</p>
+            <div className="bg-gradient-to-br from-[#FBF4E2] via-[#F3E7C8] to-[#EAD9B0] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#9A6A1225]">
+              <p className="text-[#9A8155] text-xs mb-2">사주팔자 심층 분석</p>
               <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 深層 解釋
               </p>
-              <p className="text-sm text-violet-300/80 leading-relaxed">
+              <p className="text-sm text-[#9A8155]/80 leading-relaxed">
                 재물·직업·애정·건강·용신·귀인 등<br />11가지 심층 항목을 분석합니다.
               </p>
             </div>
 
-            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
+            <div className="bg-[#FBF4E2] rounded-3xl border border-[#D8C290] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
               <div className="flex items-center gap-2 mb-5">
-                <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]">생년월일 입력</h2>
+                <div className="w-1 h-5 bg-[#9A6A12] rounded-full" />
+                <h2 className="text-base font-bold text-[#3B2A16]">생년월일 입력</h2>
               </div>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-3 gap-3">
@@ -135,41 +135,41 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                     { label: '일',       name: 'day',   placeholder: '1',    min: 1,    max: 31 },
                   ].map(f => (
                     <div key={f.name}>
-                      <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">{f.label}</label>
+                      <label className="block text-xs font-semibold text-[#6E5836] mb-1.5">{f.label}</label>
                       <input
                         type="number" required placeholder={f.placeholder}
                         min={f.min} max={f.max}
                         value={birth[f.name as 'year' | 'month' | 'day']}
                         onChange={e => setBirth(p => ({ ...p, [f.name]: e.target.value }))}
-                        className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                        className="w-full bg-[#E9DAB8] border border-[#D8C290] rounded-2xl px-3 py-3 text-sm text-[#3B2A16] placeholder:text-[#A89167] focus:outline-none focus:border-[#9A6A12] focus:ring-2 focus:ring-[#9A6A1220] transition text-center"
                       />
                     </div>
                   ))}
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">출생 시간 <span className="text-[#4A4060] font-normal">(선택)</span></label>
+                    <label className="block text-xs font-semibold text-[#6E5836] mb-1.5">출생 시간 <span className="text-[#A89167] font-normal">(선택)</span></label>
                     <input
                       type="number" placeholder="0~23"
                       min={0} max={23}
                       value={birth.hour}
                       onChange={e => setBirth(p => ({ ...p, hour: e.target.value }))}
-                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                      className="w-full bg-[#E9DAB8] border border-[#D8C290] rounded-2xl px-3 py-3 text-sm text-[#3B2A16] placeholder:text-[#A89167] focus:outline-none focus:border-[#9A6A12] focus:ring-2 focus:ring-[#9A6A1220] transition text-center"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">분 <span className="text-[#4A4060] font-normal">(선택)</span></label>
+                    <label className="block text-xs font-semibold text-[#6E5836] mb-1.5">분 <span className="text-[#A89167] font-normal">(선택)</span></label>
                     <input
                       type="number" placeholder="0~59"
                       min={0} max={59}
                       disabled={birth.hour === ''}
                       value={birth.minute}
                       onChange={e => setBirth(p => ({ ...p, minute: e.target.value }))}
-                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center disabled:opacity-40"
+                      className="w-full bg-[#E9DAB8] border border-[#D8C290] rounded-2xl px-3 py-3 text-sm text-[#3B2A16] placeholder:text-[#A89167] focus:outline-none focus:border-[#9A6A12] focus:ring-2 focus:ring-[#9A6A1220] transition text-center disabled:opacity-40"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">성별</label>
+                    <label className="block text-xs font-semibold text-[#6E5836] mb-1.5">성별</label>
                     <div className="flex gap-2 h-[46px]">
                       {(['male', 'female'] as const).map(g => (
                         <button
@@ -178,8 +178,8 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                           onClick={() => setBirth(p => ({ ...p, gender: g }))}
                           className={`flex-1 text-sm font-semibold rounded-2xl border transition ${
                             birth.gender === g
-                              ? 'bg-[#C9962A] border-[#C9962A] text-[#0D0A1A]'
-                              : 'bg-[#1C1438] border-[#2A1F4A] text-[#A89BC0]'
+                              ? 'bg-[#9A6A12] border-[#9A6A12] text-[#0D0A1A]'
+                              : 'bg-[#E9DAB8] border-[#D8C290] text-[#6E5836]'
                           }`}
                         >
                           {g === 'male' ? '남성' : '여성'}
@@ -190,7 +190,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] hover:from-[#B8871F] hover:to-[#D4A030] transition-all text-sm active:scale-[0.98]"
+                  className="w-full py-3.5 bg-gradient-to-r from-[#9A6A12] to-[#B5841C] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#9A6A1230] hover:from-[#9A6A12] hover:to-[#B5841C] transition-all text-sm active:scale-[0.98]"
                 >
                   심층 해석 열기 →
                 </button>
@@ -202,14 +202,14 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
         {step === 'loading' && (
           <div className="flex flex-col items-center justify-center py-24 space-y-6">
             <div className="relative w-20 h-20">
-              <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
-              <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
-              <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
-              <div className="absolute inset-0 flex items-center justify-center"><IcDeepSaju size={32} className="text-[#C9962A]"/></div>
+              <div className="absolute inset-0 rounded-full border-2 border-[#9A6A1220] animate-ping"/>
+              <div className="absolute inset-2 rounded-full border-2 border-[#9A6A1240] animate-ping" style={{ animationDelay: '0.3s' }}/>
+              <div className="absolute inset-4 rounded-full border-2 border-[#9A6A1260] animate-ping" style={{ animationDelay: '0.6s' }}/>
+              <div className="absolute inset-0 flex items-center justify-center"><IcDeepSaju size={32} className="text-[#9A6A12]"/></div>
             </div>
             <div className="text-center space-y-1">
-              <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>심층 분석 중...</p>
-              <p className="text-sm text-[#7B6F9A]">사주팔자를 깊이 풀이하고 있습니다</p>
+              <p className="text-base font-bold text-[#3B2A16]" style={{ fontFamily: "'Gowun Batang', serif" }}>심층 분석 중...</p>
+              <p className="text-sm text-[#9A8155]">사주팔자를 깊이 풀이하고 있습니다</p>
             </div>
           </div>
         )}
@@ -217,21 +217,21 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
         {step === 'result' && submitted && content && (
           <div className="space-y-4 animate-fade-in-up">
             {/* 일간 히어로 배너 */}
-            <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative overflow-hidden">
+            <div className="bg-gradient-to-br from-[#FBF4E2] via-[#F3E7C8] to-[#EAD9B0] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#9A6A1225] relative overflow-hidden">
               <div
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-[120px] font-bold opacity-[0.06] select-none pointer-events-none leading-none"
                 style={{ fontFamily: "'Gowun Batang', serif" }}
               >
                 {content.stemHanja}
               </div>
-              <p className="text-violet-300/60 text-xs mb-3">일간(日干) · 타고난 본질의 기운</p>
+              <p className="text-[#9A8155]/60 text-xs mb-3">일간(日干) · 타고난 본질의 기운</p>
               <div className="flex items-end gap-4 mb-4">
                 <span className="text-6xl font-bold text-white" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   {content.stemHanja}
                 </span>
                 <div>
                   <p className="text-2xl font-bold text-white leading-tight">{content.stemName}일간</p>
-                  <p className="text-violet-300/70 text-sm mt-0.5">{content.element} · {content.yinYang}</p>
+                  <p className="text-[#9A8155] text-sm mt-0.5">{content.element} · {content.yinYang}</p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -241,31 +241,31 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                 >
                   {content.element}
                 </span>
-                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#C9962A20] border border-[#C9962A40] text-[#E8B84B]">
+                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#9A6A1220] border border-[#9A6A1240] text-[#B5841C]">
                   {content.yinYang}
                 </span>
-                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#C9962A15] border border-[#C9962A30] text-[#C9962A]">
+                <span className="text-xs font-semibold px-3 py-1 rounded-full bg-[#9A6A1215] border border-[#9A6A1230] text-[#9A6A12]">
                   {submitted.year}.{String(submitted.month).padStart(2,'0')}.{String(submitted.day).padStart(2,'0')}
                 </span>
               </div>
             </div>
 
             {/* 무료 섹션 1: 성향 분석 */}
-            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
+            <div className="bg-[#FBF4E2] rounded-3xl border border-[#D8C290] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-lg">🧠</span>
-                <p className="text-sm font-bold text-[#F5EDD4]">성향 분석</p>
+                <p className="text-sm font-bold text-[#3B2A16]">성향 분석</p>
                 <span className="ml-auto text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">무료</span>
               </div>
-              <p className="text-sm font-semibold text-[#E8DFC8] mb-2">{content.personality}</p>
-              <p className="text-sm text-[#A89BC0] leading-relaxed">{content.personalityDetail}</p>
+              <p className="text-sm font-semibold text-[#4A3820] mb-2">{content.personality}</p>
+              <p className="text-sm text-[#6E5836] leading-relaxed">{content.personalityDetail}</p>
             </div>
 
             {/* 무료 섹션 2: 오행 분포 */}
-            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
+            <div className="bg-[#FBF4E2] rounded-3xl border border-[#D8C290] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-lg">⚖️</span>
-                <p className="text-sm font-bold text-[#F5EDD4]">오행 분포 분석</p>
+                <p className="text-sm font-bold text-[#3B2A16]">오행 분포 분석</p>
                 <span className="ml-auto text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">무료</span>
               </div>
               <div className="flex gap-2 mb-3">
@@ -278,57 +278,57 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                   return (
                     <div key={i} className="flex-1">
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-[10px] text-[#7B6F9A]">{name}</span>
+                        <span className="text-[10px] text-[#9A8155]">{name}</span>
                         <span className="text-[10px] font-bold" style={{ color: colors[i] }}>{pctStr}</span>
                       </div>
-                      <div className="h-1.5 bg-[#231844] rounded-full overflow-hidden">
+                      <div className="h-1.5 bg-[#E3D0A4] rounded-full overflow-hidden">
                         <div className="h-full rounded-full" style={{ width: `${val}%`, background: colors[i] }} />
                       </div>
                     </div>
                   )
                 })}
               </div>
-              <p className="text-sm text-[#A89BC0] leading-relaxed">{ohaengVerdict}</p>
+              <p className="text-sm text-[#6E5836] leading-relaxed">{ohaengVerdict}</p>
             </div>
 
             {/* 유료 잠금 구역 */}
             {!unlocked ? (
-              <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] overflow-hidden">
+              <div className="bg-[#FBF4E2] rounded-3xl border border-[#D8C290] shadow-[0_2px_20px_rgba(201,150,42,0.10)] overflow-hidden">
                 <div className="p-5 pb-0">
                   <div className="flex items-center gap-2 mb-3">
                     <span className="text-lg">💰</span>
-                    <p className="text-sm font-bold text-[#F5EDD4]">재물운</p>
+                    <p className="text-sm font-bold text-[#3B2A16]">재물운</p>
                     <span className="ml-auto text-[10px] bg-amber-50 text-amber-600 border border-amber-200 px-2 py-0.5 rounded-full font-semibold">미리보기</span>
                   </div>
                   <div className="relative mb-4">
-                    <p className="text-sm text-[#A89BC0] leading-relaxed line-clamp-2">{content.wealth}</p>
-                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#130E24] to-transparent" />
+                    <p className="text-sm text-[#6E5836] leading-relaxed line-clamp-2">{content.wealth}</p>
+                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#FBF4E2] to-transparent" />
                   </div>
                 </div>
 
-                <div className="bg-gradient-to-b from-[#1C1438] to-[#C9962A15] border-t border-[#2A1F4A] px-5 pt-5 pb-6">
+                <div className="bg-gradient-to-b from-[#E9DAB8] to-[#9A6A1215] border-t border-[#D8C290] px-5 pt-5 pb-6">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="text-base">🔒</span>
-                    <p className="text-sm font-bold text-[#F5EDD4]">아래 {LOCKED_SECTIONS.length}개 섹션이 잠겨 있습니다</p>
+                    <p className="text-sm font-bold text-[#3B2A16]">아래 {LOCKED_SECTIONS.length}개 섹션이 잠겨 있습니다</p>
                   </div>
-                  <p className="text-xs text-[#7B6F9A] mb-4 ml-6">잠금 해제 후 영구 열람 가능</p>
+                  <p className="text-xs text-[#9A8155] mb-4 ml-6">잠금 해제 후 영구 열람 가능</p>
 
                   <div className="space-y-2 mb-5">
                     {LOCKED_SECTIONS.map(sec => (
-                      <div key={sec.label} className="flex items-center gap-3 bg-[#130E24]/70 border border-[#2A1F4A] rounded-2xl px-3.5 py-2.5">
+                      <div key={sec.label} className="flex items-center gap-3 bg-[#FBF4E2]/70 border border-[#D8C290] rounded-2xl px-3.5 py-2.5">
                         <span className="text-base shrink-0">{sec.icon}</span>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-semibold text-[#E8DFC8]">{sec.label}</p>
-                          <p className="text-[10px] text-[#7B6F9A]">{sec.sub}</p>
+                          <p className="text-xs font-semibold text-[#4A3820]">{sec.label}</p>
+                          <p className="text-[10px] text-[#9A8155]">{sec.sub}</p>
                         </div>
-                        <span className="text-[#3D3358] text-sm shrink-0">🔒</span>
+                        <span className="text-[#D8C290] text-sm shrink-0">🔒</span>
                       </div>
                     ))}
                   </div>
 
                   <button
                     onClick={handleUnlock}
-                    className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] hover:from-[#B8871F] hover:to-[#D4A030] transition-all text-sm active:scale-[0.99] flex items-center justify-center gap-2"
+                    className="w-full py-4 bg-gradient-to-r from-[#9A6A12] to-[#B5841C] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#9A6A1230] hover:from-[#9A6A12] hover:to-[#B5841C] transition-all text-sm active:scale-[0.99] flex items-center justify-center gap-2"
                   >
                     <span className="text-base">✨</span>
                     <span>{DEEP_SAJU_UNLOCK_COST}P로 전체 잠금 해제</span>
@@ -338,7 +338,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                       포인트가 부족합니다 (보유 {loadPoints().balance}P / 필요 {DEEP_SAJU_UNLOCK_COST}P)
                     </p>
                   )}
-                  <p className="text-center text-[11px] text-[#4A4060] mt-2.5">1회 사용 · 동일 계정 영구 열람</p>
+                  <p className="text-center text-[11px] text-[#A89167] mt-2.5">1회 사용 · 동일 계정 영구 열람</p>
                 </div>
               </div>
             ) : (
@@ -358,16 +358,16 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
             )}
 
             {wasFirstFree && unlocked && (
-              <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl px-4 py-3 text-center">
-                <p className="text-xs text-[#C9962A] font-semibold">🎉 첫 심층 해석은 무료로 제공됩니다!</p>
-                <p className="text-[11px] text-[#A89BC0] mt-0.5">다음 방문부터는 {DEEP_SAJU_UNLOCK_COST}P가 필요합니다</p>
+              <div className="bg-[#9A6A1215] border border-[#9A6A1230] rounded-2xl px-4 py-3 text-center">
+                <p className="text-xs text-[#9A6A12] font-semibold">🎉 첫 심층 해석은 무료로 제공됩니다!</p>
+                <p className="text-[11px] text-[#6E5836] mt-0.5">다음 방문부터는 {DEEP_SAJU_UNLOCK_COST}P가 필요합니다</p>
               </div>
             )}
 
             <PointsClaimButton featureKey="deepsaju" label="심층 사주 해석 🔮" />
             <button
               onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
-              className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
+              className="w-full py-3.5 bg-[#E3D0A4] text-[#5C4A2E] font-semibold rounded-2xl text-sm hover:bg-[#D8C290] transition active:scale-[0.98]"
             >
               다시 조회하기
             </button>
@@ -375,7 +375,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
         )}
       </div>
 
-      <div className="text-center pb-8 text-xs text-[#4A4060]">사주팔자 — 양력 기준 · 절기 근사값 적용</div>
+      <div className="text-center pb-8 text-xs text-[#A89167]">사주팔자 — 양력 기준 · 절기 근사값 적용</div>
     </div>
   )
 }
@@ -390,17 +390,17 @@ function SectionCard({
   highlight?: boolean
 }) {
   return (
-    <div className={`bg-[#130E24] rounded-3xl border shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5 ${
-      highlight ? 'border-[#C9962A30]' : 'border-[#2A1F4A]'
+    <div className={`bg-[#FBF4E2] rounded-3xl border shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5 ${
+      highlight ? 'border-[#9A6A1230]' : 'border-[#D8C290]'
     }`}>
       <div className="flex items-center gap-2 mb-3">
         <span className="text-lg">{icon}</span>
-        <p className="text-sm font-bold text-[#F5EDD4]">{title}</p>
+        <p className="text-sm font-bold text-[#3B2A16]">{title}</p>
         {highlight && (
-          <span className="ml-auto text-[10px] bg-[#C9962A15] text-[#C9962A] border border-[#C9962A30] px-2 py-0.5 rounded-full font-semibold">핵심</span>
+          <span className="ml-auto text-[10px] bg-[#9A6A1215] text-[#9A6A12] border border-[#9A6A1230] px-2 py-0.5 rounded-full font-semibold">핵심</span>
         )}
       </div>
-      <p className="text-sm text-[#A89BC0] leading-relaxed">{content}</p>
+      <p className="text-sm text-[#6E5836] leading-relaxed">{content}</p>
     </div>
   )
 }
@@ -414,10 +414,10 @@ function LuckyCard({
 }) {
   const lines = content.split('\n').filter(Boolean)
   return (
-    <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
+    <div className="bg-[#FBF4E2] rounded-3xl border border-[#D8C290] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
       <div className="flex items-center gap-2 mb-4">
         <span className="text-lg">🍀</span>
-        <p className="text-sm font-bold text-[#F5EDD4]">행운 키워드</p>
+        <p className="text-sm font-bold text-[#3B2A16]">행운 키워드</p>
       </div>
       <div className="grid grid-cols-2 gap-2.5">
         {lines.map((line, i) => {
@@ -427,13 +427,13 @@ function LuckyCard({
           return (
             <div
               key={i}
-              className={`rounded-2xl px-3.5 py-3 border ${isPrimary ? '' : 'bg-[#1C1438] border-[#2A1F4A]'}`}
+              className={`rounded-2xl px-3.5 py-3 border ${isPrimary ? '' : 'bg-[#E9DAB8] border-[#D8C290]'}`}
               style={isPrimary ? { background: elemStyle.bg, borderColor: elemStyle.border } : {}}
             >
-              <p className="text-[10px] text-[#7B6F9A] mb-0.5">{label}</p>
+              <p className="text-[10px] text-[#9A8155] mb-0.5">{label}</p>
               <p
                 className="text-xs font-bold"
-                style={isPrimary ? { color: elemStyle.text } : { color: '#C4B8D8' }}
+                style={isPrimary ? { color: elemStyle.text } : { color: '#5C4A2E' }}
               >
                 {value}
               </p>
@@ -447,7 +447,7 @@ function LuckyCard({
 
 function AdviceCard({ content }: { content: string }) {
   return (
-    <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
+    <div className="bg-gradient-to-br from-[#FBF4E2] via-[#F3E7C8] to-[#EAD9B0] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#9A6A1225]">
       <div className="flex items-center gap-2 mb-3">
         <span className="text-lg">✨</span>
         <p className="text-sm font-bold text-violet-200">당신을 위한 조언</p>

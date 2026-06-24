@@ -55,27 +55,27 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
   const current  = chartPoints.find(p => p.isCurrent)
 
   return (
-    <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
+    <div className="bg-[#FBF4E2] rounded-3xl border border-[#D8C290] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
       <div className="flex items-center gap-2 mb-1">
-        <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-        <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
+        <div className="w-1 h-5 bg-[#9A6A12] rounded-full" />
+        <h2 className="text-base font-bold text-[#3B2A16]" style={{ fontFamily: "'Gowun Batang', serif" }}>
           대운 (大運)
         </h2>
         <div className="flex-1" />
-        <span className="text-xs bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40] px-2.5 py-1 rounded-full font-medium">
+        <span className="text-xs bg-[#9A6A1220] text-[#9A6A12] border border-[#9A6A1240] px-2.5 py-1 rounded-full font-medium">
           {isForward ? '순행 ▶' : '역행 ◀'} · {daunStartAge}세
         </span>
       </div>
-      <p className="text-xs text-[#7B6F9A] mb-5 ml-3">10년 단위 대운 흐름</p>
+      <p className="text-xs text-[#9A8155] mb-5 ml-3">10년 단위 대운 흐름</p>
 
       {/* 대운 기세 그래프 */}
       <div className="relative mb-6 mt-2">
         <svg viewBox={`0 0 ${W} ${H}`} className="w-full block">
           <defs>
             <linearGradient id="daunLineGrad" x1="0" y1="0" x2={W} y2="0" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#C9962A" />
-              <stop offset="50%" stopColor="#F5DA8B" />
-              <stop offset="100%" stopColor="#C9962A" />
+              <stop offset="0%" stopColor="#9A6A12" />
+              <stop offset="50%" stopColor="#B5841C" />
+              <stop offset="100%" stopColor="#9A6A12" />
             </linearGradient>
             <filter id="daunGlow" x="-50%" y="-50%" width="200%" height="200%">
               <feGaussianBlur stdDeviation="4" result="blur" />
@@ -85,28 +85,28 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
               </feMerge>
             </filter>
             <radialGradient id="daunOrbGrad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#FFF4C7" />
+              <stop offset="0%" stopColor="#F3E7C8" />
               <stop offset="55%" stopColor="#F0B429" />
               <stop offset="100%" stopColor="#C8442E" stopOpacity="0" />
             </radialGradient>
           </defs>
 
-          <line x1={padX} y1={baseY} x2={W - padX} y2={baseY} stroke="#2A1F4A" strokeWidth="1" />
+          <line x1={padX} y1={baseY} x2={W - padX} y2={baseY} stroke="#D8C290" strokeWidth="1" />
 
           {current && (
-            <line x1={current.x} y1={current.y} x2={current.x} y2={baseY} stroke="#C9962A" strokeWidth="1.5" strokeDasharray="3 4" opacity="0.7" />
+            <line x1={current.x} y1={current.y} x2={current.x} y2={baseY} stroke="#9A6A12" strokeWidth="1.5" strokeDasharray="3 4" opacity="0.7" />
           )}
 
           <path d={linePath} fill="none" stroke="url(#daunLineGrad)" strokeWidth="3" strokeLinecap="round" filter="url(#daunGlow)" />
 
           {chartPoints.filter(p => !p.isCurrent).map(p => (
-            <circle key={p.age} cx={p.x} cy={p.y} r="3" fill="#8A6418" />
+            <circle key={p.age} cx={p.x} cy={p.y} r="3" fill="#9A6A12" />
           ))}
 
           {current && (
             <>
               <circle cx={current.x} cy={current.y} r="14" fill="url(#daunOrbGrad)" />
-              <circle cx={current.x} cy={current.y} r="5" fill="#FFF4C7" />
+              <circle cx={current.x} cy={current.y} r="5" fill="#F3E7C8" />
             </>
           )}
 
@@ -117,7 +117,7 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
               y={labelY}
               textAnchor="middle"
               fontSize="13"
-              fill={p.isCurrent ? '#C9962A' : '#7B6F9A'}
+              fill={p.isCurrent ? '#9A6A12' : '#9A8155'}
               fontWeight={p.isCurrent ? 700 : 400}
             >
               {p.age}세
@@ -127,7 +127,7 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
 
         {current && (
           <div
-            className="absolute -translate-x-1/2 -translate-y-full px-2.5 py-1 rounded-full bg-[#1C1438] border border-[#C9962A] text-[10px] font-bold text-[#F5DA8B] whitespace-nowrap shadow-[0_0_10px_rgba(201,150,42,0.5)]"
+            className="absolute -translate-x-1/2 -translate-y-full px-2.5 py-1 rounded-full bg-[#E9DAB8] border border-[#9A6A12] text-[10px] font-bold text-[#B5841C] whitespace-nowrap shadow-[0_0_10px_rgba(201,150,42,0.5)]"
             style={{ left: `${(current.x / W) * 100}%`, top: `${(current.y / H) * 100}%`, marginTop: '-10px' }}
           >
             현재 · {current.sipsin} 대운
@@ -159,14 +159,14 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
                 className={`flex flex-col items-center rounded-2xl p-3 min-w-[76px] border transition-all ${
                   isCurrent
                     ? 'border-amber-400/60 bg-amber-50 shadow-md shadow-amber-100'
-                    : 'border-[#2A1F4A] bg-[#1C1438]'
+                    : 'border-[#D8C290] bg-[#E9DAB8]'
                 }`}
               >
                 {isCurrent && (
                   <span className="text-[10px] bg-amber-400 text-white px-1.5 py-0.5 rounded-full mb-1 font-bold">현재</span>
                 )}
-                <span className="text-xs text-[#7B6F9A] mb-0.5">{age}세</span>
-                <span className="text-[10px] text-[#4A4060]">{ageYear}~</span>
+                <span className="text-xs text-[#9A8155] mb-0.5">{age}세</span>
+                <span className="text-[10px] text-[#A89167]">{ageYear}~</span>
 
                 {/* 천간 */}
                 <div
@@ -176,7 +176,7 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
                   <span className="text-base font-bold leading-none" style={{ color: stemColor }}>{stem.hanja}</span>
                   <span className="text-[10px]" style={{ color: stemColor + 'cc' }}>{stem.ko}</span>
                 </div>
-                <span className="text-[10px] mt-1 text-[#7B6F9A]">{sipsinStem}</span>
+                <span className="text-[10px] mt-1 text-[#9A8155]">{sipsinStem}</span>
 
                 {/* 지지 */}
                 <div
@@ -186,15 +186,15 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
                   <span className="text-base font-bold leading-none" style={{ color: branchColor }}>{branch.hanja}</span>
                   <span className="text-[10px]" style={{ color: branchColor + 'cc' }}>{branch.ko}</span>
                 </div>
-                <span className="text-[10px] mt-1 text-[#7B6F9A]">{sipsinBranch}</span>
-                <span className="text-[10px] text-[#4A4060] mt-1">{pillarName(entry.pillar)}</span>
+                <span className="text-[10px] mt-1 text-[#9A8155]">{sipsinBranch}</span>
+                <span className="text-[10px] text-[#A89167] mt-1">{pillarName(entry.pillar)}</span>
               </div>
             )
           })}
         </div>
       </div>
 
-      <p className="text-xs text-[#4A4060] mt-3">
+      <p className="text-xs text-[#A89167] mt-3">
         * 절기 날짜는 근사값이므로 참고용으로 활용하세요.
       </p>
     </div>

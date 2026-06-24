@@ -8,17 +8,17 @@ import { IcTarot } from './icons/SajuIcons'
 function TarotCardBack() {
   return (
     <div
-      className="w-full h-full rounded-xl border border-[#C9962A50] flex items-center justify-center relative overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #1C1438 100%)' }}
+      className="w-full h-full rounded-xl border border-[#9A6A1250] flex items-center justify-center relative overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, #D8C290 0%, #E9DAB8 100%)' }}
     >
       <div
-        className="absolute inset-1.5 rounded-lg border border-[#C9962A30]"
+        className="absolute inset-1.5 rounded-lg border border-[#9A6A1230]"
         style={{
           backgroundImage:
             'repeating-linear-gradient(45deg, rgba(201,150,42,0.10) 0px, rgba(201,150,42,0.10) 1px, transparent 1px, transparent 7px), repeating-linear-gradient(-45deg, rgba(201,150,42,0.10) 0px, rgba(201,150,42,0.10) 1px, transparent 1px, transparent 7px)',
         }}
       />
-      <IcTarot size={18} className="text-[#C9962A80] relative z-10" />
+      <IcTarot size={18} className="text-[#9A6A1280] relative z-10" />
     </div>
   )
 }
@@ -28,9 +28,9 @@ function TarotCardFace({ card }: { card: DrawnCard }) {
   const [imgFailed, setImgFailed] = useState(false)
   return (
     <div
-      className="w-full h-full rounded-xl border border-[#C9962A60] flex items-center justify-center overflow-hidden relative"
+      className="w-full h-full rounded-xl border border-[#9A6A1260] flex items-center justify-center overflow-hidden relative"
       style={{
-        background: 'linear-gradient(135deg, #1A0E30 0%, #100820 100%)',
+        background: 'linear-gradient(135deg, #FBF4E2 0%, #F3E7C8 100%)',
         transform: card.reversed ? 'rotate(180deg)' : 'none',
       }}
     >
@@ -62,9 +62,9 @@ interface TarotResult {
 }
 
 const LUCK_CFG = {
-  great:   { label: '대길',   color: '#C9962A', bg: '#C9962A18', border: '#C9962A45', emoji: '✨' },
+  great:   { label: '대길',   color: '#9A6A12', bg: '#9A6A1218', border: '#9A6A1245', emoji: '✨' },
   good:    { label: '길',     color: '#4BBF7E', bg: '#4BBF7E18', border: '#4BBF7E45', emoji: '🌟' },
-  neutral: { label: '평',     color: '#8B8FA8', bg: '#8B8FA818', border: '#8B8FA845', emoji: '🌙' },
+  neutral: { label: '평',     color: '#8A7350', bg: '#8A735018', border: '#8A735045', emoji: '🌙' },
   caution: { label: '주의',   color: '#E05252', bg: '#E0525218', border: '#E0525245', emoji: '⚡' },
 }
 
@@ -159,20 +159,20 @@ export default function TarotPage({ onBack }: Props) {
     <div className="min-h-screen">
 
       {/* Sticky header */}
-      <div className="sticky top-0 z-10 bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#C9962A30]">
+      <div className="sticky top-0 z-10 bg-[#F3E7C8]/90 backdrop-blur-md border-b border-[#9A6A1230]">
         <div className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex items-center gap-3">
           <button
             onClick={handleBack}
             aria-label="뒤로 가기"
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#231844] transition text-[#C4B8D8] text-lg flex-shrink-0"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#E3D0A4] transition text-[#5C4A2E] text-lg flex-shrink-0"
           >
             ←
           </button>
           <div className="flex-1 min-w-0">
-            <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Gowun Batang', serif" }}>
+            <h1 className="text-base font-bold text-[#3B2A16] leading-tight" style={{ fontFamily: "'Gowun Batang', serif" }}>
               나만의 타로 상담
             </h1>
-            <p className="text-xs text-[#7B6F9A] truncate">
+            <p className="text-xs text-[#9A8155] truncate">
               {step === 'intro' ? 'AI 타로 카드 해석' : step === 'shuffling' ? '카드를 섞는 중...' : step === 'draw' ? '카드를 뽑아주세요' : step === 'loading' ? '해석 중...' : '상담 결과'}
             </p>
           </div>
@@ -193,53 +193,53 @@ export default function TarotPage({ onBack }: Props) {
               <div className="absolute inset-x-0 top-0 h-44 flex items-center justify-center pointer-events-none">
                 <div className="w-56 h-32 rounded-full blur-2xl opacity-40" style={{ background: 'radial-gradient(circle, rgba(232,199,92,0.4), transparent 70%)' }} />
               </div>
-              <div className="absolute left-0 w-20 h-32 rounded-xl border border-[#d4af37]/60 overflow-hidden shadow-lg z-10 animate-float-left">
+              <div className="absolute left-0 w-20 h-32 rounded-xl border border-[#9A6A12]/60 overflow-hidden shadow-lg z-10 animate-float-left">
                 <img src={cardImageSrc('strength')} alt="" className="w-full h-full object-cover" />
               </div>
               <div className="relative z-20 flex flex-col items-center gap-1.5">
-                <IcTarot size={30} className="text-[#E8C75C]" />
-                <p className="text-[11px] text-[#C9962A] font-semibold tracking-wide">22장의 메이저 아르카나</p>
+                <IcTarot size={30} className="text-[#B5841C]" />
+                <p className="text-[11px] text-[#9A6A12] font-semibold tracking-wide">22장의 메이저 아르카나</p>
               </div>
-              <div className="absolute right-0 w-20 h-32 rounded-xl border border-[#d4af37]/60 overflow-hidden shadow-lg z-10 animate-float-right">
+              <div className="absolute right-0 w-20 h-32 rounded-xl border border-[#9A6A12]/60 overflow-hidden shadow-lg z-10 animate-float-right">
                 <img src={cardImageSrc('justice')} alt="" className="w-full h-full object-cover" />
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
-              <p className="text-violet-300/70 text-xs mb-1">과거 · 현재 · 미래 3카드 스프레드</p>
-              <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>
+            <div className="bg-gradient-to-br from-[#FBF4E2] via-[#F3E7C8] to-[#EAD9B0] rounded-3xl p-5 border border-[#9A6A1225] shadow-xl shadow-[#000]/40">
+              <p className="text-[#9A8155] text-xs mb-1">과거 · 현재 · 미래 3카드 스프레드</p>
+              <h2 className="text-xl font-bold text-[#3B2A16] mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 무엇이 궁금하신가요?
               </h2>
-              <p className="text-sm text-[#A89BC0] leading-relaxed">
+              <p className="text-sm text-[#6E5836] leading-relaxed">
                 궁금한 점을 적으면 더 정확한 해석을 받을 수 있어요.
               </p>
             </div>
 
-            <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5">
+            <div className="bg-[#FBF4E2] rounded-3xl border border-[#D8C290] p-5">
               <textarea
                 value={question}
                 onChange={e => setQuestion(e.target.value)}
                 placeholder="예) 지금 하는 일이 잘 풀릴까요?"
                 maxLength={200}
                 rows={3}
-                className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-4 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition resize-none leading-relaxed"
+                className="w-full bg-[#E9DAB8] border border-[#D8C290] rounded-2xl px-4 py-3 text-sm text-[#3B2A16] placeholder:text-[#A89167] focus:outline-none focus:border-[#9A6A12] focus:ring-2 focus:ring-[#9A6A1220] transition resize-none leading-relaxed"
               />
-              <p className="text-xs text-[#4A4060] mt-2 px-1">{question.length}/200자 · 필수 입력</p>
+              <p className="text-xs text-[#A89167] mt-2 px-1">{question.length}/200자 · 필수 입력</p>
             </div>
 
             <button
               onClick={handleStartDraw}
               disabled={!question.trim()}
-              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
+              className="w-full py-3.5 bg-gradient-to-r from-[#9A6A12] to-[#B5841C] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#9A6A12] hover:to-[#B5841C] transition-all active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100"
             >
               <IcTarot size={20} className="text-[#0D0A1A]" />
               카드 뽑기
             </button>
 
             <div className="flex items-center gap-2 justify-center">
-              <div className="h-px flex-1 bg-[#2A1F4A]"/>
-              <p className="text-[10px] text-[#4A4060]">Google Gemini AI · 메이저 아르카나 22장</p>
-              <div className="h-px flex-1 bg-[#2A1F4A]"/>
+              <div className="h-px flex-1 bg-[#D8C290]"/>
+              <p className="text-[10px] text-[#A89167]">Google Gemini AI · 메이저 아르카나 22장</p>
+              <div className="h-px flex-1 bg-[#D8C290]"/>
             </div>
           </div>
         )}
@@ -248,11 +248,11 @@ export default function TarotPage({ onBack }: Props) {
         {step === 'shuffling' && (
           <div className="flex flex-col items-center justify-center py-24 space-y-6">
             <div className="relative w-20 h-20">
-              <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
-              <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
-              <div className="absolute inset-0 flex items-center justify-center"><IcTarot size={32} className="text-[#C9962A]"/></div>
+              <div className="absolute inset-0 rounded-full border-2 border-[#9A6A1220] animate-ping"/>
+              <div className="absolute inset-2 rounded-full border-2 border-[#9A6A1240] animate-ping" style={{ animationDelay: '0.3s' }}/>
+              <div className="absolute inset-0 flex items-center justify-center"><IcTarot size={32} className="text-[#9A6A12]"/></div>
             </div>
-            <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>카드를 섞고 있어요...</p>
+            <p className="text-base font-bold text-[#3B2A16]" style={{ fontFamily: "'Gowun Batang', serif" }}>카드를 섞고 있어요...</p>
           </div>
         )}
 
@@ -268,18 +268,18 @@ export default function TarotPage({ onBack }: Props) {
                   <div key={pos.key} className="flex flex-col items-center gap-2">
                     <div className="w-full aspect-[2/3]">
                       {card ? <TarotCardFace card={card}/> : (
-                        <div className="w-full h-full rounded-xl border border-dashed border-[#C9962A30] flex items-center justify-center">
-                          <span className="text-[#4A4060] text-xs">{i + 1}</span>
+                        <div className="w-full h-full rounded-xl border border-dashed border-[#9A6A1230] flex items-center justify-center">
+                          <span className="text-[#A89167] text-xs">{i + 1}</span>
                         </div>
                       )}
                     </div>
-                    <p className="text-[11px] text-[#7B6F9A] font-semibold">{pos.label}{card?.reversed ? ' · 역방향' : ''}</p>
+                    <p className="text-[11px] text-[#9A8155] font-semibold">{pos.label}{card?.reversed ? ' · 역방향' : ''}</p>
                   </div>
                 )
               })}
             </div>
 
-            <p className="text-center text-sm text-[#A89BC0]">22장 중 3장을 골라주세요 ({picked.length}/3)</p>
+            <p className="text-center text-sm text-[#6E5836]">22장 중 3장을 골라주세요 ({picked.length}/3)</p>
 
             <div className="flex flex-wrap gap-2 justify-center">
               {spread.map((card, i) => {
@@ -304,7 +304,7 @@ export default function TarotPage({ onBack }: Props) {
             <button
               onClick={handleInterpret}
               disabled={!allPicked}
-              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full py-3.5 bg-gradient-to-r from-[#9A6A12] to-[#B5841C] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#9A6A12] hover:to-[#B5841C] transition-all active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {allPicked ? '✨ 해석 보기' : `${picked.length}/3장 뽑는 중...`}
             </button>
@@ -315,14 +315,14 @@ export default function TarotPage({ onBack }: Props) {
         {step === 'loading' && (
           <div className="flex flex-col items-center justify-center py-24 space-y-6">
             <div className="relative w-20 h-20">
-              <div className="absolute inset-0 rounded-full border-2 border-[#C9962A20] animate-ping"/>
-              <div className="absolute inset-2 rounded-full border-2 border-[#C9962A40] animate-ping" style={{ animationDelay: '0.3s' }}/>
-              <div className="absolute inset-4 rounded-full border-2 border-[#C9962A60] animate-ping" style={{ animationDelay: '0.6s' }}/>
-              <div className="absolute inset-0 flex items-center justify-center"><IcTarot size={32} className="text-[#C9962A]"/></div>
+              <div className="absolute inset-0 rounded-full border-2 border-[#9A6A1220] animate-ping"/>
+              <div className="absolute inset-2 rounded-full border-2 border-[#9A6A1240] animate-ping" style={{ animationDelay: '0.3s' }}/>
+              <div className="absolute inset-4 rounded-full border-2 border-[#9A6A1260] animate-ping" style={{ animationDelay: '0.6s' }}/>
+              <div className="absolute inset-0 flex items-center justify-center"><IcTarot size={32} className="text-[#9A6A12]"/></div>
             </div>
             <div className="text-center">
-              <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>해석 중...</p>
-              <p className="text-sm text-[#7B6F9A]">AI가 카드의 의미를 풀어내고 있습니다</p>
+              <p className="text-base font-bold text-[#3B2A16] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>해석 중...</p>
+              <p className="text-sm text-[#9A8155]">AI가 카드의 의미를 풀어내고 있습니다</p>
             </div>
           </div>
         )}
@@ -334,7 +334,7 @@ export default function TarotPage({ onBack }: Props) {
             {/* Hero */}
             <div
               className="rounded-3xl p-6 border shadow-xl shadow-[#000]/40"
-              style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)', borderColor: luck.border }}
+              style={{ background: 'linear-gradient(135deg, #FBF4E2 0%, #F3E7C8 60%, #EAD9B0 100%)', borderColor: luck.border }}
             >
               <div className="flex items-start justify-between mb-4">
                 <span className="text-6xl leading-none">{luck.emoji}</span>
@@ -345,10 +345,10 @@ export default function TarotPage({ onBack }: Props) {
                   {luck.label}
                 </span>
               </div>
-              <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
+              <h2 className="text-2xl font-bold text-[#3B2A16] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 타로 상담 결과
               </h2>
-              <p className="text-xs text-[#7B6F9A]">{result.summary}</p>
+              <p className="text-xs text-[#9A8155]">{result.summary}</p>
             </div>
 
             {/* 뽑힌 카드 한눈에 보기 */}
@@ -357,11 +357,11 @@ export default function TarotPage({ onBack }: Props) {
                 const card = drawn[i]
                 if (!card) return null
                 return (
-                  <div key={pos.key} className="bg-[#130E24] border border-[#2A1F4A] rounded-2xl p-2 flex flex-col items-center gap-1.5">
+                  <div key={pos.key} className="bg-[#FBF4E2] border border-[#D8C290] rounded-2xl p-2 flex flex-col items-center gap-1.5">
                     <div className="w-full aspect-[2/3]"><TarotCardFace card={card}/></div>
-                    <p className="text-[10px] font-bold text-[#F5EDD4] text-center leading-tight">{card.name}</p>
+                    <p className="text-[10px] font-bold text-[#3B2A16] text-center leading-tight">{card.name}</p>
                     {card.reversed && <span className="text-[8px] text-[#E05252] font-semibold">역방향</span>}
-                    <p className="text-[9px] text-[#7B6F9A] mt-0.5">{pos.label}</p>
+                    <p className="text-[9px] text-[#9A8155] mt-0.5">{pos.label}</p>
                   </div>
                 )
               })}
@@ -369,26 +369,26 @@ export default function TarotPage({ onBack }: Props) {
 
             {/* Detail sections */}
             {(['past', 'present', 'future'] as const).map((key, i) => (
-              <div key={key} className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
+              <div key={key} className="bg-[#FBF4E2] rounded-3xl border border-[#D8C290] p-5 shadow-[0_2px_20px_rgba(122,90,40,0.15)]">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-1 h-5 rounded-full" style={{ backgroundColor: luck.color }}/>
-                  <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
+                  <h3 className="text-sm font-bold text-[#3B2A16]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                     {POSITIONS[i].label}
                   </h3>
                 </div>
-                <p className="text-sm text-[#C4B8D8] leading-relaxed">{result[key]}</p>
+                <p className="text-sm text-[#5C4A2E] leading-relaxed">{result[key]}</p>
               </div>
             ))}
 
             {/* Advice */}
-            <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
+            <div className="bg-gradient-to-br from-[#FBF4E2] via-[#F3E7C8] to-[#EAD9B0] rounded-3xl p-5 border border-[#9A6A1225] shadow-xl shadow-[#000]/40">
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-1 h-5 bg-[#C9962A] rounded-full"/>
-                <h3 className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
+                <div className="w-1 h-5 bg-[#9A6A12] rounded-full"/>
+                <h3 className="text-sm font-bold text-[#3B2A16]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   오늘의 조언
                 </h3>
               </div>
-              <p className="text-sm text-[#C4B8D8] leading-relaxed">{result.advice}</p>
+              <p className="text-sm text-[#5C4A2E] leading-relaxed">{result.advice}</p>
             </div>
 
             {/* 포인트 받기 */}
@@ -397,14 +397,14 @@ export default function TarotPage({ onBack }: Props) {
             {/* Restart CTA */}
             <button
               onClick={handleRestart}
-              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99]"
+              className="w-full py-3.5 bg-gradient-to-r from-[#9A6A12] to-[#B5841C] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#9A6A12] hover:to-[#B5841C] transition-all active:scale-[0.99]"
             >
               다른 카드로 다시 보기 →
             </button>
           </div>
         )}
 
-        <p className="text-center text-xs text-[#4A4060] pb-6 pt-4">
+        <p className="text-center text-xs text-[#A89167] pb-6 pt-4">
           타로 상담 — Google Gemini AI · 메이저 아르카나 기반 · 참고용으로만 활용하세요
         </p>
       </div>

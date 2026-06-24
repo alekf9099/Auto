@@ -45,7 +45,7 @@ export default function LoadingScreen({ onComplete }: Props) {
     <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center px-8">
 
       {/* 배경 블롭 */}
-      <div className="absolute -top-20 -right-16 w-72 h-72 rounded-full bg-[#C9962A]/10 blur-3xl pointer-events-none" />
+      <div className="absolute -top-20 -right-16 w-72 h-72 rounded-full bg-[#9A6A12]/10 blur-3xl pointer-events-none" />
       <div className="absolute -bottom-16 -left-12 w-64 h-64 rounded-full bg-violet-900/20 blur-3xl pointer-events-none" />
 
       {/* 배경 산점 */}
@@ -71,14 +71,14 @@ export default function LoadingScreen({ onComplete }: Props) {
           style={{ backgroundColor: OHAENG_COLORS[msgIdx] + '1A' }}
         />
         {/* 장식 링 */}
-        <div className="absolute rounded-full border border-[#C9962A]/20" style={{ width: 160, height: 160 }} />
+        <div className="absolute rounded-full border border-[#9A6A12]/20" style={{ width: 160, height: 160 }} />
         {/* 회전 링 — 오행 색상 순환 */}
         <div
-          className="absolute rounded-full border-[3px] border-[#2A1F4A] animate-spin transition-colors duration-700"
+          className="absolute rounded-full border-[3px] border-[#D8C290] animate-spin transition-colors duration-700"
           style={{ width: 124, height: 124, animationDuration: '1.4s', borderTopColor: OHAENG_COLORS[msgIdx] }}
         />
         {/* 아이콘 원 */}
-        <div className="relative w-24 h-24 rounded-full bg-[#130E24] border border-[#2A1F4A] shadow-[0_4px_24px_rgba(201,150,42,0.18)] flex items-center justify-center">
+        <div className="relative w-24 h-24 rounded-full bg-[#FBF4E2] border border-[#D8C290] shadow-[0_4px_24px_rgba(201,150,42,0.18)] flex items-center justify-center">
           <span
             className="text-5xl select-none animate-spin transition-colors duration-700"
             style={{ color: OHAENG_COLORS[msgIdx], animationDuration: '6s', fontFamily: 'serif' }}
@@ -89,21 +89,21 @@ export default function LoadingScreen({ onComplete }: Props) {
       </div>
 
       <h2
-        className="text-2xl font-bold text-[#F5EDD4] mb-2"
+        className="text-2xl font-bold text-[#3B2A16] mb-2"
         style={{ fontFamily: "'Gowun Batang', serif" }}
       >
         사주 분석중
       </h2>
-      <p className="text-sm text-[#7B6F9A] mb-8 text-center h-5">{MESSAGES[msgIdx]}</p>
+      <p className="text-sm text-[#9A8155] mb-8 text-center h-5">{MESSAGES[msgIdx]}</p>
 
       {/* 진행 바 */}
-      <div className="w-56 bg-[#231844] rounded-full h-2 overflow-hidden mb-2">
+      <div className="w-56 bg-[#E3D0A4] rounded-full h-2 overflow-hidden mb-2">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-[#C9962A] to-[#E8B84B] transition-all duration-150"
+          className="h-full rounded-full bg-gradient-to-r from-[#9A6A12] to-[#B5841C] transition-all duration-150"
           style={{ width: `${progress}%` }}
         />
       </div>
-      <p className="text-xs text-[#7B6F9A] mb-12">{Math.round(progress)}%</p>
+      <p className="text-xs text-[#9A8155] mb-12">{Math.round(progress)}%</p>
 
       {/* 오행 도트 */}
       <div className="flex items-end gap-4">
@@ -124,7 +124,7 @@ export default function LoadingScreen({ onComplete }: Props) {
               />
               <span
                 className="text-[10px] font-bold transition-colors duration-300"
-                style={{ color: active ? c : '#7B6F9A' }}
+                style={{ color: active ? c : '#9A8155' }}
               >
                 {OHAENG_LABELS[i]}
               </span>
