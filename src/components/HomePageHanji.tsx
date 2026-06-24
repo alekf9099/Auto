@@ -406,7 +406,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         <div style={reveal(3)}>
         <button
           onClick={() => onNavigate('tarot')}
-          className="w-full text-left relative overflow-hidden rounded-2xl border border-[#9a6a12]/50 bg-cover bg-center p-6 shadow-[0_4px_18px_rgba(60,40,15,0.35)] active:scale-[0.99] transition-transform"
+          className="w-full text-left relative overflow-hidden rounded-3xl border border-[#9a6a12]/50 bg-cover bg-center p-6 shadow-[0_4px_18px_rgba(60,40,15,0.35)] active:scale-[0.99] transition-transform"
           style={{ backgroundImage: "url('/tarot-wood-bg.png')" }}
         >
           <div className="flex items-center justify-center mb-6 h-32 relative">
