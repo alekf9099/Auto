@@ -406,7 +406,8 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         <div style={reveal(3)}>
         <button
           onClick={() => onNavigate('tarot')}
-          className="w-full text-left relative overflow-hidden rounded-2xl border border-[#9a6a12]/30 bg-gradient-to-b from-[#FBF4E2] to-[#F1E4C4] p-6 shadow-[0_0_20px_rgba(212,175,55,0.1)] active:scale-[0.99] transition-transform"
+          className="w-full text-left relative overflow-hidden rounded-2xl border border-[#9a6a12]/50 bg-cover bg-center p-6 shadow-[0_4px_18px_rgba(60,40,15,0.35)] active:scale-[0.99] transition-transform"
+          style={{ backgroundImage: "url('/tarot-wood-bg.png')" }}
         >
           <div className="flex items-center justify-center mb-6 h-32 relative">
             <div className="absolute inset-x-0 top-0 h-32 flex items-center justify-center pointer-events-none">
@@ -425,14 +426,14 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
             </div>
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-[#D8C290]">
+          <div className="flex items-center justify-between pt-2 border-t border-[#E8C75C]/25">
             <div>
-              <h3 className="text-lg font-bold text-[#b5841c] tracking-wide">
+              <h3 className="text-lg font-bold text-[#F1E0A8] tracking-wide" style={{ textShadow: '0 1px 4px rgba(0,0,0,0.5)' }}>
                 나만의 타로 상담
               </h3>
-              <p className="text-xs text-[#9A8155] mt-0.5">오늘의 고민을 카드로 풀어보세요</p>
+              <p className="text-xs text-[#E3D4B0] mt-0.5" style={{ textShadow: '0 1px 3px rgba(0,0,0,0.5)' }}>오늘의 고민을 카드로 풀어보세요</p>
             </div>
-            <span className="flex items-center space-x-1 px-4 py-1.5 rounded-full border border-[#9a6a12] bg-transparent text-xs text-[#b5841c]">
+            <span className="flex items-center space-x-1 px-4 py-1.5 rounded-full border border-[#E8C75C]/70 bg-black/20 text-xs text-[#F1E0A8]">
               <span>지금 시작하기</span>
               <span>➔</span>
             </span>
