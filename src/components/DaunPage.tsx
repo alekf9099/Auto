@@ -240,7 +240,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
   const seunReading = SEUN_READING[seunSipsin]
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A]">
+    <div className="min-h-screen">
       {/* Sticky header */}
       <div className="sticky top-0 z-10 bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#C9962A30]">
         <div className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex items-center gap-3">

@@ -97,7 +97,7 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A] relative overflow-hidden flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center px-6">
 
       {/* ── 배경 블롭 ── */}
       <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-[#C9962A]/8 blur-3xl pointer-events-none" />

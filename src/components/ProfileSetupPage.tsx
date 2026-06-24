@@ -83,7 +83,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A] flex flex-col">
+    <div className="min-h-screen flex flex-col">
 
       {/* 상단 인사 영역 */}
       <div className="px-6 pt-14 pb-8 text-center">

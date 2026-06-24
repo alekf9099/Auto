@@ -200,7 +200,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
   }, [birthProfile])
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A] relative">
+    <div className="min-h-screen relative">
 
       {/* ── 배경 색감 장식 (블롭 + 오행 산점) ── */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">

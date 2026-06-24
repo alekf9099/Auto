@@ -58,15 +58,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A] relative">
-      {/* 배경 — 별자리 디자인 이미지 (스크롤과 무관하게 고정) */}
-      <div
-        className="fixed inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
-        style={{ backgroundImage: "url('/event-lucky-timer-bg.png')" }}
-        aria-hidden="true"
-      />
-      <div className="fixed inset-0 bg-[#0D0A1A]/50 pointer-events-none" aria-hidden="true" />
-
+    <div className="min-h-screen relative">
       {/* 헤더 */}
       <div className="bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">

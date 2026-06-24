@@ -123,7 +123,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
   const yc       = ELEMENT_COLORS[yearStem.element]
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A]">
+    <div className="min-h-screen">
       {/* 헤더 */}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">

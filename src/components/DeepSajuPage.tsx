@@ -90,7 +90,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
   const [ohaengLines, ohaengVerdict] = ohaengText.split('\n\n')
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A]">
+    <div className="min-h-screen">
       {/* 상단 바 */}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">

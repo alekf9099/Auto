@@ -20,7 +20,7 @@ export default function SplashScreen({ onDone }: Props) {
 
   return (
     <div
-      className="min-h-screen bg-[#0D0A1A] relative overflow-hidden flex flex-col items-center justify-center transition-opacity duration-500"
+      className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center transition-opacity duration-500"
       style={{ opacity: fade ? 0 : visible ? 1 : 0 }}
     >
       {/* 배경 블롭 */}

@@ -71,7 +71,7 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A]">
+    <div className="min-h-screen">
       {/* 헤더 */}
       <div className="bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">

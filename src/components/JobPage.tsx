@@ -75,7 +75,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
   const canSubmit = birth.year && birth.month && birth.day
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A]">
+    <div className="min-h-screen">
 
       {/* Sticky header */}
       <div className="sticky top-0 z-10 bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#C9962A30]">

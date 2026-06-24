@@ -42,7 +42,7 @@ export default function LoadingScreen({ onComplete }: Props) {
   }, [onComplete])
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A] relative overflow-hidden flex flex-col items-center justify-center px-8">
+    <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center px-8">
 
       {/* 배경 블롭 */}
       <div className="absolute -top-20 -right-16 w-72 h-72 rounded-full bg-[#C9962A]/10 blur-3xl pointer-events-none" />

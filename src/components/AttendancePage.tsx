@@ -79,7 +79,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A]">
+    <div className="min-h-screen">
       {toast && <PointsToast amount={toast.amount} total={toast.total} label={toast.label} onClose={() => setToast(null)} />}
 
       {/* 헤더 */}

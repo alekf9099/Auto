@@ -45,7 +45,7 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A] flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4">
 
       {/* 헤더 영역 */}
       <div className="w-full max-w-sm mb-6 text-center">

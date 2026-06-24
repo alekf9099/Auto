@@ -67,7 +67,7 @@ export default function InvitePage({ onBack, onPointsUpdate }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A]">
+    <div className="min-h-screen">
       {toast && <PointsToast amount={toast.amount} total={toast.total} label="추천 코드 사용 보너스 🎁" onClose={() => setToast(null)} />}
 
       {/* 헤더 */}

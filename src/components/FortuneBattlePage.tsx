@@ -198,7 +198,7 @@ export default function FortuneBattlePage({ savedBirth, onSave, onBack }: Props)
     : result.me.fortune.star > result.them.fortune.star ? 'me' : 'them'
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A]">
+    <div className="min-h-screen">
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>

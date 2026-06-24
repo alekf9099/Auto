@@ -63,7 +63,7 @@ function restoreUser(): UserInfo | null {
 
 function PageFallback() {
   return (
-    <div className="min-h-screen bg-[#0D0A1A] flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center">
       <div
         className="w-10 h-10 rounded-full border-[3px] border-[#2A1F4A] border-t-[#C9962A] animate-spin"
         style={{ animationDuration: '0.8s' }}
@@ -289,6 +289,14 @@ export default function App() {
 
   return (
     <>
+      {/* 전역 배경 — 별자리 디자인 이미지 + 가독성 오버레이 (모든 화면 공통) */}
+      <div
+        className="fixed inset-0 -z-20 bg-cover bg-center bg-no-repeat pointer-events-none"
+        style={{ backgroundImage: "url('/app-bg.png')" }}
+        aria-hidden="true"
+      />
+      <div className="fixed inset-0 -z-10 bg-[#0D0A1A]/55 pointer-events-none" aria-hidden="true" />
+
       {(syncIssue || notice) && (
         <div className="relative z-[60] flex flex-col">
           {syncIssue && (
@@ -307,7 +315,7 @@ export default function App() {
         </div>
       )}
       <Suspense fallback={<PageFallback />}>
-        <div className={showNav ? 'pb-16 bg-[#0D0A1A]' : ''}>{content}</div>
+        <div className={showNav ? 'pb-16' : ''}>{content}</div>
       </Suspense>
       {showNav && <BottomNav current={page as NavTab} onNavigate={handleTabNavigate} />}
     </>
