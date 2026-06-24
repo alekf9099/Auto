@@ -15,7 +15,7 @@ import BottomNav from './components/BottomNav'
 import type { NavTab } from './components/BottomNav'
 
 const ProfileSetupPage = lazy(() => import('./components/ProfileSetupPage'))
-const HomePage         = lazy(() => import('./components/HomePage'))
+const HomePage         = lazy(() => import('./components/HomePageHanji'))
 const AttendancePage   = lazy(() => import('./components/AttendancePage'))
 const SinnyeonPage     = lazy(() => import('./components/SinnyeonPage'))
 const TojeongPage      = lazy(() => import('./components/TojeongPage'))
