@@ -345,8 +345,84 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           </div>
         </div>
 
+        {/* 저장된 프로필 배지 */}
+        {birthProfile && (
+          <div style={reveal(2)} className="flex items-center justify-between bg-[#C9962A15] border border-[#C9962A30] rounded-2xl px-4 py-2.5">
+            <div className="flex items-center gap-2">
+              <span className="text-[#C9962A] text-sm">✓</span>
+              <p className="text-xs text-[#C4B8D8]">
+                {nickname && <span className="font-semibold">{nickname}</span>}
+                {nickname && <span className="text-[#7B6F9A] mx-1">·</span>}
+                <span className="font-semibold">{birthProfile.year}.{String(birthProfile.month).padStart(2,'0')}.{String(birthProfile.day).padStart(2,'0')}</span>
+                <span className="text-[#7B6F9A] ml-1">· {birthProfile.gender === 'male' ? '남성' : '여성'}</span>
+                {birthProfile.hour !== null && <span className="text-[#7B6F9A] ml-1">· {birthProfile.hour}시</span>}
+              </p>
+            </div>
+            <button onClick={onEditProfile} className="text-xs text-[#C9962A] font-semibold hover:text-[#E8B84B] transition">수정</button>
+          </div>
+        )}
+
+        {/* 프로필 미설정 CTA */}
+        {!birthProfile && (
+          <button
+            onClick={onEditProfile}
+            style={reveal(2)}
+            className="w-full flex items-center justify-between gap-3 bg-gradient-to-r from-[#1A0E30] to-[#100820] border border-[#C9962A40] rounded-2xl px-4 py-3.5 text-left active:scale-[0.99] transition-transform"
+          >
+            <div className="flex items-center gap-3">
+              <span className="w-9 h-9 rounded-full bg-[#C9962A20] flex items-center justify-center text-base shrink-0">🎂</span>
+              <p className="text-xs text-[#E8DFC8]">
+                <span className="font-semibold">생년월일을 등록</span>하면<br/>
+                <span className="text-[#7B6F9A]">나만의 사주 풀이를 볼 수 있어요</span>
+              </p>
+            </div>
+            <span className="text-xs text-[#C9962A] font-semibold shrink-0">등록 →</span>
+          </button>
+        )}
+
+        {/* 현재 대운 요약 */}
+        {daunInfo && (
+          <div style={reveal(2)}>
+          <button
+            onClick={() => onNavigate('daun')}
+            className="w-full bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 text-left hover:border-[#C9962A40] active:scale-[0.99] transition-all shadow-[0_2px_20px_rgba(0,0,0,0.3)]"
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-[#C9962A12] border border-[#C9962A30] flex items-center justify-center flex-shrink-0">
+                <IcDaun size={20} className="text-[#C9962A]"/>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="text-xs font-bold text-[#C9962A]">현재 대운</p>
+                  <span className="text-xs bg-amber-900/30 text-amber-400 border border-amber-900/50 px-2 py-0.5 rounded-full font-bold">
+                    {daunInfo.pillarStr} · {daunInfo.sipsin}
+                  </span>
+                </div>
+                <p className="text-sm font-bold text-[#F5EDD4] mb-0.5" style={{ fontFamily: "'Gowun Batang', serif" }}>
+                  💬 {daunInfo.sipsin === '정관' ? '조직에서 인정받고 명예가 따르는 시기입니다' :
+                      daunInfo.sipsin === '편관' ? '강한 압박이 있지만 이겨내면 도약하는 시기입니다' :
+                      daunInfo.sipsin === '식신' ? '재능을 펼치고 풍요를 누리는 여유로운 시기입니다' :
+                      daunInfo.sipsin === '정재' ? '꾸준한 노력이 결실로 돌아오는 안정의 시기입니다' :
+                      daunInfo.sipsin === '편재' ? '돈이 크게 움직이는 투자와 기회의 시기입니다' :
+                      daunInfo.sipsin === '상관' ? '창의력이 폭발하고 변화가 일어나는 시기입니다' :
+                      daunInfo.sipsin === '비견' ? '독립심이 강해지고 경쟁이 심화되는 시기입니다' :
+                      daunInfo.sipsin === '겁재' ? '변동과 충동을 조심해야 하는 시기입니다' :
+                      daunInfo.sipsin === '정인' ? '배움과 안정, 귀인의 도움이 찾아오는 시기입니다' :
+                      daunInfo.sipsin === '편인' ? '새 학문과 이동이 잦아지는 역마의 시기입니다' :
+                      `${daunInfo.meaning}의 기운이 흐르는 시기입니다`}
+                </p>
+                <p className="text-xs text-[#7B6F9A]">{daunInfo.ageRange} · 자세히 보기 →</p>
+              </div>
+            </div>
+          </button>
+          </div>
+        )}
+
+        {/* ── 오늘의 이벤트 ── */}
+        <p style={reveal(3)} className="text-xs font-semibold text-[#7B6F9A] px-1 pt-2">오늘의 이벤트</p>
+
         {/* 나만의 타로 상담 배너 */}
-        <div style={reveal(2)}>
+        <div style={reveal(3)}>
         <button
           onClick={() => onNavigate('tarot')}
           className="w-full text-left relative overflow-hidden rounded-2xl border border-[#d4af37]/30 bg-gradient-to-b from-[#1a1026] to-[#120a1c] p-6 shadow-[0_0_20px_rgba(212,175,55,0.1)] active:scale-[0.99] transition-transform"
@@ -389,7 +465,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           const TOTAL_DAYS = 7
           const completed = streak >= TOTAL_DAYS
           return (
-            <div style={reveal(2)}>
+            <div style={reveal(3)}>
             <button
               onClick={onAttendance}
               className={`w-full overflow-hidden rounded-3xl active:scale-[0.99] transition-all ${completed ? 'shadow-[0_2px_20px_rgba(201,150,42,0.25)]' : 'shadow-[0_2px_16px_rgba(180,30,30,0.10)]'}`}
@@ -472,7 +548,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         {(() => {
           const remaining = LUCKY_TIMER_MAX_ATTEMPTS - getLuckyTimerAttempts()
           return (
-            <div style={reveal(3)}>
+            <div style={reveal(4)}>
             <button
               onClick={onLuckyTimer}
               className="w-full overflow-hidden rounded-3xl shadow-[0_2px_16px_rgba(201,150,42,0.10)] active:scale-[0.99] transition-all"
@@ -511,83 +587,11 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           )
         })()}
 
-        {/* 저장된 프로필 배지 */}
-        {birthProfile && (
-          <div style={reveal(4)} className="flex items-center justify-between bg-[#C9962A15] border border-[#C9962A30] rounded-2xl px-4 py-2.5">
-            <div className="flex items-center gap-2">
-              <span className="text-[#C9962A] text-sm">✓</span>
-              <p className="text-xs text-[#C4B8D8]">
-                {nickname && <span className="font-semibold">{nickname}</span>}
-                {nickname && <span className="text-[#7B6F9A] mx-1">·</span>}
-                <span className="font-semibold">{birthProfile.year}.{String(birthProfile.month).padStart(2,'0')}.{String(birthProfile.day).padStart(2,'0')}</span>
-                <span className="text-[#7B6F9A] ml-1">· {birthProfile.gender === 'male' ? '남성' : '여성'}</span>
-                {birthProfile.hour !== null && <span className="text-[#7B6F9A] ml-1">· {birthProfile.hour}시</span>}
-              </p>
-            </div>
-            <button onClick={onEditProfile} className="text-xs text-[#C9962A] font-semibold hover:text-[#E8B84B] transition">수정</button>
-          </div>
-        )}
-
-        {/* 프로필 미설정 CTA */}
-        {!birthProfile && (
-          <button
-            onClick={onEditProfile}
-            style={reveal(4)}
-            className="w-full flex items-center justify-between gap-3 bg-gradient-to-r from-[#1A0E30] to-[#100820] border border-[#C9962A40] rounded-2xl px-4 py-3.5 text-left active:scale-[0.99] transition-transform"
-          >
-            <div className="flex items-center gap-3">
-              <span className="w-9 h-9 rounded-full bg-[#C9962A20] flex items-center justify-center text-base shrink-0">🎂</span>
-              <p className="text-xs text-[#E8DFC8]">
-                <span className="font-semibold">생년월일을 등록</span>하면<br/>
-                <span className="text-[#7B6F9A]">나만의 사주 풀이를 볼 수 있어요</span>
-              </p>
-            </div>
-            <span className="text-xs text-[#C9962A] font-semibold shrink-0">등록 →</span>
-          </button>
-        )}
-
-        {/* ── 피드 카드 ── */}
-
-        {/* 현재 대운 요약 */}
-        {daunInfo && (
-          <div style={reveal(5)}>
-          <button
-            onClick={() => onNavigate('daun')}
-            className="w-full bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5 text-left hover:border-[#C9962A40] active:scale-[0.99] transition-all shadow-[0_2px_20px_rgba(0,0,0,0.3)]"
-          >
-            <div className="flex items-start gap-3">
-              <div className="w-10 h-10 rounded-2xl bg-[#C9962A12] border border-[#C9962A30] flex items-center justify-center flex-shrink-0">
-                <IcDaun size={20} className="text-[#C9962A]"/>
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <p className="text-xs font-bold text-[#C9962A]">현재 대운</p>
-                  <span className="text-xs bg-amber-900/30 text-amber-400 border border-amber-900/50 px-2 py-0.5 rounded-full font-bold">
-                    {daunInfo.pillarStr} · {daunInfo.sipsin}
-                  </span>
-                </div>
-                <p className="text-sm font-bold text-[#F5EDD4] mb-0.5" style={{ fontFamily: "'Gowun Batang', serif" }}>
-                  💬 {daunInfo.sipsin === '정관' ? '조직에서 인정받고 명예가 따르는 시기입니다' :
-                      daunInfo.sipsin === '편관' ? '강한 압박이 있지만 이겨내면 도약하는 시기입니다' :
-                      daunInfo.sipsin === '식신' ? '재능을 펼치고 풍요를 누리는 여유로운 시기입니다' :
-                      daunInfo.sipsin === '정재' ? '꾸준한 노력이 결실로 돌아오는 안정의 시기입니다' :
-                      daunInfo.sipsin === '편재' ? '돈이 크게 움직이는 투자와 기회의 시기입니다' :
-                      daunInfo.sipsin === '상관' ? '창의력이 폭발하고 변화가 일어나는 시기입니다' :
-                      daunInfo.sipsin === '비견' ? '독립심이 강해지고 경쟁이 심화되는 시기입니다' :
-                      daunInfo.sipsin === '겁재' ? '변동과 충동을 조심해야 하는 시기입니다' :
-                      daunInfo.sipsin === '정인' ? '배움과 안정, 귀인의 도움이 찾아오는 시기입니다' :
-                      daunInfo.sipsin === '편인' ? '새 학문과 이동이 잦아지는 역마의 시기입니다' :
-                      `${daunInfo.meaning}의 기운이 흐르는 시기입니다`}
-                </p>
-                <p className="text-xs text-[#7B6F9A]">{daunInfo.ageRange} · 자세히 보기 →</p>
-              </div>
-            </div>
-          </button>
-          </div>
-        )}
+        {/* ── 추천 콘텐츠 ── */}
+        <p style={reveal(5)} className="text-xs font-semibold text-[#7B6F9A] px-1 pt-2">추천 콘텐츠</p>
 
         {/* 오늘의 코디 프로모 카드 — 디자인 이미지를 그대로 사용 */}
-        <div style={reveal(6)}>
+        <div style={reveal(5)}>
         <button
           onClick={() => onNavigate('outfit')}
           className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(224,82,130,0.25)] hover:border-[rgba(224,82,130,0.5)] hover:shadow-[0_0_24px_rgba(224,82,130,0.3)] active:shadow-[0_0_24px_rgba(224,82,130,0.35)]"
@@ -597,7 +601,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         </div>
 
         {/* 취업운 프로모 카드 — 디자인 이미지를 그대로 사용 */}
-        <div style={reveal(6)}>
+        <div style={reveal(5)}>
         <button
           onClick={() => onNavigate('job')}
           className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(75,191,126,0.25)] hover:border-[rgba(75,191,126,0.5)] hover:shadow-[0_0_24px_rgba(75,191,126,0.3)] active:shadow-[0_0_24px_rgba(75,191,126,0.35)]"
@@ -607,7 +611,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         </div>
 
         {/* 신년운세 프로모 카드 — 디자인 이미지를 그대로 사용 */}
-        <div style={reveal(6)}>
+        <div style={reveal(5)}>
         <button
           onClick={() => onNavigate('sinnyeon')}
           className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(201,150,42,0.2)] hover:border-[rgba(201,150,42,0.5)] hover:shadow-[0_0_24px_rgba(201,150,42,0.3)] active:shadow-[0_0_24px_rgba(201,150,42,0.35)]"
@@ -617,7 +621,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         </div>
 
         {/* 토정비결 프로모 카드 — 디자인 이미지를 그대로 사용 (연도가 바뀌면 이미지 교체 필요) */}
-        <div style={reveal(6)}>
+        <div style={reveal(5)}>
         <button
           onClick={() => onNavigate('tojeong')}
           className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(201,150,42,0.2)] hover:border-[rgba(201,150,42,0.5)] hover:shadow-[0_0_24px_rgba(201,150,42,0.3)] active:shadow-[0_0_24px_rgba(201,150,42,0.35)]"
