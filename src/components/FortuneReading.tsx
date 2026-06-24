@@ -1,5 +1,6 @@
 import type { SajuResult, OhaengCount } from '../types'
 import { STEMS, BRANCHES, ELEMENT_COLORS, ILJU_MEANING } from '../utils/constants'
+import { IcBalance, IcCareerLuck, IcSparkleKeyword } from './icons/SajuIcons'
 
 interface Props { result: SajuResult; count: OhaengCount }
 
@@ -41,7 +42,7 @@ export default function FortuneReading({ result, count }: Props) {
 
       {/* 오행 균형 */}
       <div className="rounded-2xl bg-[#C9962A15] border border-[#C9962A30] p-4 mb-3">
-        <p className="text-xs font-semibold text-[#C9962A] mb-2">🔮 오행 균형 분석</p>
+        <p className="text-xs font-semibold text-[#C9962A] mb-2 flex items-center gap-1.5"><IcBalance size={15} /> 오행 균형 분석</p>
         {isBalanced ? (
           <p className="text-sm text-[#C4B8D8]">오행이 고르게 분포되어 있습니다. 한쪽에 치우치지 않으니 다양한 분야에서 그대로 능력을 발휘하세요. 환경을 가리지 않고 적응하는 것이 당신의 가장 큰 무기입니다.</p>
         ) : (
@@ -57,7 +58,7 @@ export default function FortuneReading({ result, count }: Props) {
 
       {/* 적성 */}
       <div className="rounded-2xl bg-[#1C1438] border border-[#2A1F4A] p-4 mb-3">
-        <p className="text-xs font-semibold text-[#C4B8D8] mb-2.5">💼 적성 &amp; 직업</p>
+        <p className="text-xs font-semibold text-[#C4B8D8] mb-2.5 flex items-center gap-1.5"><IcCareerLuck size={15} /> 적성 &amp; 직업</p>
         <div className="flex flex-wrap gap-1.5">
           {[...CAREER[strongest], ...CAREER[dayStem.element]]
             .filter((v, i, a) => a.indexOf(v) === i).slice(0, 6)
@@ -72,7 +73,7 @@ export default function FortuneReading({ result, count }: Props) {
 
       {/* 키워드 */}
       <div className="rounded-2xl bg-[#1C1438] border border-[#2A1F4A] p-4">
-        <p className="text-xs font-semibold text-[#C4B8D8] mb-2.5">✨ 핵심 키워드</p>
+        <p className="text-xs font-semibold text-[#C4B8D8] mb-2.5 flex items-center gap-1.5"><IcSparkleKeyword size={15} /> 핵심 키워드</p>
         <div className="flex flex-wrap gap-1.5">
           {[...KEYWORDS[dayStem.element], ...KEYWORDS[strongest]]
             .filter((v, i, a) => a.indexOf(v) === i).slice(0, 6)
