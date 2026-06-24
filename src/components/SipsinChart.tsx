@@ -71,7 +71,7 @@ export default function SipsinChart({ result }: Props) {
           const sipsin = p.label === '일주' ? null : getSipsin(dayStemIdx, p.stemIndex)
           return (
             <div key={i} className="flex items-center gap-3 py-2.5 border-b border-[#1C1438] last:border-0">
-              <span className="w-14 text-xs text-[#7B6F9A]">{p.label} 천간</span>
+              <span className="w-16 text-xs text-[#7B6F9A] whitespace-nowrap">{p.label} 천간</span>
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl" style={{ backgroundColor: c + '12' }}>
                 <span className="text-base font-bold" style={{ color: c }}>{stem.hanja}</span>
                 <span className="text-xs" style={{ color: c + 'cc' }}>{stem.ko}</span>
@@ -99,7 +99,7 @@ export default function SipsinChart({ result }: Props) {
             const sipsin = p.label === '일주' ? null : getSipsin(dayStemIdx, equiv)
             return (
               <div key={i} className="flex items-center gap-3 py-2.5 border-b border-[#1C1438] last:border-0">
-                <span className="w-14 text-xs text-[#7B6F9A]">{p.label} 지지</span>
+                <span className="w-16 text-xs text-[#7B6F9A] whitespace-nowrap">{p.label} 지지</span>
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl" style={{ backgroundColor: c + '12' }}>
                   <span className="text-base font-bold" style={{ color: c }}>{branch.hanja}</span>
                   <span className="text-xs" style={{ color: c + 'cc' }}>{branch.ko}</span>
