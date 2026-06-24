@@ -328,12 +328,16 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                     </span>
                   )}
                   <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-sm transition"
+                    className="relative w-14 h-14 rounded-2xl flex items-center justify-center overflow-hidden backdrop-blur-sm transition"
                     style={recommended
-                      ? { backgroundColor: todayAccent + '20', border: `1.5px solid ${todayAccent}80`, color: todayAccent }
-                      : { backgroundColor: '#C9962A10', border: '1px solid #C9962A28' }}
+                      ? { background: 'rgba(255,255,255,0.10)', border: `1.5px solid ${todayAccent}AA`, boxShadow: `0 0 14px ${todayAccent}40` }
+                      : { background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(201,150,42,0.45)' }}
                   >
-                    <chip.Icon size={26} className={recommended ? '' : 'text-[#C9962A]'}/>
+                    <span className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/15 to-transparent pointer-events-none" />
+                    <span className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-white/10 pointer-events-none" />
+                    <span className="relative" style={recommended ? { color: todayAccent } : undefined}>
+                      <chip.Icon size={26} className={recommended ? '' : 'text-[#E8C75C]'}/>
+                    </span>
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-[#C4B8D8] font-semibold leading-tight">{chip.label}</p>
