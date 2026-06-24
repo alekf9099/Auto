@@ -72,20 +72,17 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
-        {/* 안내 배너 */}
-        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-violet-500/10 -translate-y-10 translate-x-10" />
-          <div className="relative z-10 text-center">
-            <p className="text-violet-300/70 text-xs mb-2">오늘의 이벤트</p>
-            <p className="text-7xl font-bold text-[#C9962A] mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>7</p>
-            <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
-              행운의 숫자, 7초를 맞춰보세요!
-            </p>
-            <p className="text-sm text-[#A89BC0] leading-relaxed">
-              시작 후 정확히 <span className="text-[#C9962A] font-semibold">7.00초</span>에 멈추면 <span className="text-[#C9962A] font-semibold">+20P</span>,<br/>
-              아쉽게 놓쳐도 참가 보상으로 <span className="text-[#4BBF7E] font-semibold">+5P</span> 지급!
-            </p>
-          </div>
+        {/* 안내 배너 — 디자인 이미지를 그대로 사용 */}
+        <div className="rounded-3xl overflow-hidden shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
+          <img src="/event-lucky-timer.png" alt="행운의 숫자 잡기 — 기다리는 7초, 다가오는 행운" className="w-full h-auto block" />
+        </div>
+
+        {/* 보상 안내 */}
+        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-4 shadow-xl shadow-[#000]/40 border border-[#C9962A25] text-center">
+          <p className="text-sm text-[#A89BC0] leading-relaxed">
+            시작 후 정확히 <span className="text-[#C9962A] font-semibold">7.00초</span>에 멈추면 <span className="text-[#C9962A] font-semibold">+20P</span>,<br/>
+            아쉽게 놓쳐도 참가 보상으로 <span className="text-[#4BBF7E] font-semibold">+5P</span> 지급!
+          </p>
         </div>
 
         {/* 게임 영역 */}
