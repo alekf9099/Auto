@@ -400,7 +400,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         )}
 
         {/* ── 오늘의 이벤트 ── */}
-        <p style={reveal(3)} className="text-xs font-semibold text-[#9A8155] px-1 pt-2">오늘의 이벤트</p>
+        <p style={reveal(3)} className="text-xs font-bold text-[#4A3820] px-1 pt-2">오늘의 이벤트</p>
 
         {/* 나만의 타로 상담 배너 */}
         <div style={reveal(3)}>
@@ -569,7 +569,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         })()}
 
         {/* ── 추천 콘텐츠 ── */}
-        <p style={reveal(5)} className="text-xs font-semibold text-[#9A8155] px-1 pt-2">추천 콘텐츠</p>
+        <p style={reveal(5)} className="text-xs font-bold text-[#4A3820] px-1 pt-2">추천 콘텐츠</p>
 
         {/* 오늘의 코디 프로모 카드 — 디자인 이미지를 그대로 사용 */}
         <div style={reveal(5)}>
