@@ -700,3 +700,16 @@ export function IcSparkleKeyword({ size = 24, className = '' }: P) {
     </svg>
   )
 }
+
+// 행운의 숫자 잡기 성공 — 정중앙에 꽂힌 화살과 타겟
+export function IcTargetHit({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <circle cx="11" cy="13" r="8.3" stroke="currentColor" strokeWidth="1.4" fill="currentColor" fillOpacity="0.08"/>
+      <circle cx="11" cy="13" r="5" stroke="currentColor" strokeWidth="1.4" fill="currentColor" fillOpacity="0.12"/>
+      <circle cx="11" cy="13" r="1.8" fill="currentColor"/>
+      <path d="M20.5 3.5 L12.3 11.7" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/>
+      <path d="M20.5 3.5 L20.8 7.1 L17.2 6.4 Z" fill="currentColor"/>
+    </svg>
+  )
+}

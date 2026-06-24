@@ -4,6 +4,7 @@ import {
 } from '../utils/points'
 import type { PointsState, RouletteSegment } from '../utils/points'
 import { trackEvent } from '../utils/analytics'
+import { IcRoulette, IcSparkleKeyword } from './icons/SajuIcons'
 
 interface Props {
   onBack: () => void
@@ -89,7 +90,9 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
           <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-violet-500/10 -translate-y-10 translate-x-10" />
           <div className="relative z-10 text-center">
             <p className="text-violet-300/70 text-xs mb-2">오늘의 이벤트</p>
-            <p className="text-5xl mb-2">🎡</p>
+            <div className="flex justify-center mb-2">
+              <IcRoulette size={48} className="text-[#C9962A]" />
+            </div>
             <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
               오행 룰렛을 돌려보세요!
             </p>
@@ -182,13 +185,13 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
             {/* 중심 허브 */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
               <div
-                className="w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
+                className="w-12 h-12 rounded-full flex items-center justify-center shadow-[0_2px_8px_rgba(0,0,0,0.5)]"
                 style={{
                   background: 'radial-gradient(circle at 35% 30%, #FCEAA6, #C9962A 60%, #8A6C1F)',
                   border: '2px solid #F5D78E',
                 }}
               >
-                🎡
+                <IcRoulette size={20} className="text-[#3A2A10]" />
               </div>
             </div>
           </div>
@@ -199,8 +202,9 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
                 className="rounded-2xl p-4 mb-4"
                 style={{ backgroundColor: `${result.color}18`, border: `1px solid ${result.color}55` }}
               >
-                <p className="text-base font-bold" style={{ color: result.color }}>
-                  {result.key === 'jackpot' ? '🎉 잭폿 당첨!' : result.key === 'blank' ? '꽝! 참가 보상 지급' : `${result.label} 적중!`}
+                <p className="text-base font-bold flex items-center justify-center gap-1.5" style={{ color: result.color }}>
+                  {result.key === 'jackpot' && <IcSparkleKeyword size={16} />}
+                  {result.key === 'jackpot' ? '잭폿 당첨!' : result.key === 'blank' ? '꽝! 참가 보상 지급' : `${result.label} 적중!`}
                 </p>
                 <p className="text-2xl font-bold mt-1" style={{ color: result.color }}>+{result.amount}P</p>
               </div>
@@ -216,9 +220,9 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
             <button
               onClick={handleSpin}
               disabled={spinning}
-              className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] active:scale-[0.98] transition-all disabled:opacity-60"
+              className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] active:scale-[0.98] transition-all disabled:opacity-60 flex items-center justify-center gap-1.5"
             >
-              {spinning ? '돌아가는 중...' : '🎡 룰렛 돌리기'}
+              {spinning ? '돌아가는 중...' : <><IcRoulette size={16} /> 룰렛 돌리기</>}
             </button>
           )}
         </div>

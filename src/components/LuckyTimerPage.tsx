@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { loadPoints, getLuckyTimerAttempts, claimLuckyTimer, LUCKY_TIMER_MAX_ATTEMPTS } from '../utils/points'
 import type { PointsState } from '../utils/points'
 import { trackEvent } from '../utils/analytics'
-import { IcLucky } from './icons/SajuIcons'
+import { IcLucky, IcTargetHit, IcSparkleKeyword } from './icons/SajuIcons'
 
 interface Props {
   onBack: () => void
@@ -147,7 +147,11 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
 
           {phase === 'result' && result && (
             <div className="text-center py-4">
-              <p className="text-6xl mb-3">{result.success ? '🎯' : '⏱️'}</p>
+              <div className="flex justify-center mb-3">
+                {result.success
+                  ? <IcTargetHit size={56} className="text-[#C9962A]" />
+                  : <IcLucky size={56} className="text-[#7B6F9A]" />}
+              </div>
               <p className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 {elapsed.toFixed(2)}초
               </p>
@@ -161,8 +165,9 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
                   border: `1px solid ${result.success ? '#C9962A45' : '#4BBF7E45'}`,
                 }}
               >
-                <p className="text-base font-bold" style={{ color: result.success ? '#C9962A' : '#4BBF7E' }}>
-                  {result.success ? '🎉 정확히 맞췄어요! 대성공!' : '아깝네요! 참가 보상 지급'}
+                <p className="text-base font-bold flex items-center justify-center gap-1.5" style={{ color: result.success ? '#C9962A' : '#4BBF7E' }}>
+                  {result.success && <IcSparkleKeyword size={16} />}
+                  {result.success ? '정확히 맞췄어요! 대성공!' : '아깝네요! 참가 보상 지급'}
                 </p>
                 <p className="text-2xl font-bold mt-1" style={{ color: result.success ? '#C9962A' : '#4BBF7E' }}>
                   +{result.amount}P
