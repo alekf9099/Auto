@@ -58,7 +58,15 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D0A1A]">
+    <div className="min-h-screen bg-[#0D0A1A] relative">
+      {/* 배경 — 별자리 디자인 이미지 (스크롤과 무관하게 고정) */}
+      <div
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
+        style={{ backgroundImage: "url('/event-lucky-timer-bg.png')" }}
+        aria-hidden="true"
+      />
+      <div className="fixed inset-0 bg-[#0D0A1A]/50 pointer-events-none" aria-hidden="true" />
+
       {/* 헤더 */}
       <div className="bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
@@ -70,7 +78,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
+      <div className="max-w-2xl mx-auto px-4 py-5 space-y-4 relative z-10">
 
         {/* 안내 배너 — 디자인 이미지를 그대로 사용 */}
         <div className="rounded-3xl overflow-hidden shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
@@ -78,7 +86,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
         </div>
 
         {/* 보상 안내 */}
-        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-4 shadow-xl shadow-[#000]/40 border border-[#C9962A25] text-center">
+        <div className="bg-gradient-to-br from-[#1A0E30]/80 via-[#100820]/80 to-[#060410]/80 backdrop-blur-sm rounded-3xl p-4 shadow-xl shadow-[#000]/40 border border-[#C9962A25] text-center">
           <p className="text-sm text-[#A89BC0] leading-relaxed">
             시작 후 정확히 <span className="text-[#C9962A] font-semibold">7.00초</span>에 멈추면 <span className="text-[#C9962A] font-semibold">+20P</span>,<br/>
             아쉽게 놓쳐도 참가 보상으로 <span className="text-[#4BBF7E] font-semibold">+5P</span> 지급!
@@ -86,7 +94,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
         </div>
 
         {/* 게임 영역 */}
-        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
+        <div className="bg-[#130E24]/80 backdrop-blur-sm rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
           {/* 남은 기회 표시 */}
           <div className="flex items-center justify-center gap-2 mb-4">
             <p className="text-xs text-[#7B6F9A]">남은 기회</p>
@@ -186,7 +194,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
         </div>
 
         {/* 안내 */}
-        <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] p-5">
+        <div className="bg-[#130E24]/80 backdrop-blur-sm rounded-3xl border border-[#2A1F4A] p-5">
           <div className="flex items-center gap-2 mb-3">
             <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
             <h2 className="text-sm font-bold text-[#F5EDD4]">참여 방법</h2>
@@ -201,7 +209,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
 
       </div>
 
-      <div className="text-center pb-8 text-xs text-[#4A4060]">행운의 숫자 잡기 — 매일 자정 초기화</div>
+      <div className="text-center pb-8 text-xs text-[#4A4060] relative z-10">행운의 숫자 잡기 — 매일 자정 초기화</div>
     </div>
   )
 }
