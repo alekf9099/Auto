@@ -291,33 +291,36 @@ export default function App() {
     <>
       {/* 전역 배경 — 별자리 디자인 이미지 + 가독성 오버레이 (모든 화면 공통) */}
       <div
-        className="fixed inset-0 -z-20 bg-cover bg-center bg-no-repeat pointer-events-none"
+        className="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat pointer-events-none"
         style={{ backgroundImage: "url('/app-bg.png')" }}
         aria-hidden="true"
       />
-      <div className="fixed inset-0 -z-10 bg-[#0D0A1A]/55 pointer-events-none" aria-hidden="true" />
+      <div className="fixed inset-0 z-0 bg-[#0D0A1A]/40 pointer-events-none" aria-hidden="true" />
 
-      {(syncIssue || notice) && (
-        <div className="relative z-[60] flex flex-col">
-          {syncIssue && (
-            <SyncErrorBanner
-              expired={syncIssue === 'expired'}
-              onDismiss={() => setSyncIssue(null)}
-              onRelogin={handleLogout}
-            />
-          )}
-          {notice && (
-            <NoticeBanner
-              message={notice.message}
-              onDismiss={() => { dismissNotice(notice.id); setNotice(null) }}
-            />
-          )}
-        </div>
-      )}
-      <Suspense fallback={<PageFallback />}>
-        <div className={showNav ? 'pb-16' : ''}>{content}</div>
-      </Suspense>
-      {showNav && <BottomNav current={page as NavTab} onNavigate={handleTabNavigate} />}
+      {/* 콘텐츠 — 항상 배경 위에 */}
+      <div className="relative z-10">
+        {(syncIssue || notice) && (
+          <div className="relative z-[60] flex flex-col">
+            {syncIssue && (
+              <SyncErrorBanner
+                expired={syncIssue === 'expired'}
+                onDismiss={() => setSyncIssue(null)}
+                onRelogin={handleLogout}
+              />
+            )}
+            {notice && (
+              <NoticeBanner
+                message={notice.message}
+                onDismiss={() => { dismissNotice(notice.id); setNotice(null) }}
+              />
+            )}
+          </div>
+        )}
+        <Suspense fallback={<PageFallback />}>
+          <div className={showNav ? 'pb-16' : ''}>{content}</div>
+        </Suspense>
+        {showNav && <BottomNav current={page as NavTab} onNavigate={handleTabNavigate} />}
+      </div>
     </>
   )
 }
