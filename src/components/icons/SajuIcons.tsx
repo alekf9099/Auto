@@ -626,3 +626,77 @@ export function IcTalisman({ size = 24, className = '' }: P) {
     </svg>
   )
 }
+
+// 목(木) — 새싹, 위로 돋아나는 두 잎
+export function IcElementWood({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 21 V11" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"/>
+      <path d="M12 13 C12 9 9 7.5 5.5 8 C5.7 11.7 8.5 13.3 12 13 Z" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+      <path d="M12 11 C12 6.5 15.3 4.7 18.5 5 C18.4 9.2 15.3 11.3 12 11 Z" fill="currentColor" fillOpacity="0.35" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+    </svg>
+  )
+}
+
+// 화(火) — 한 줄기 불꽃
+export function IcElementFire({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 2.5 C16 7.5 17.5 10.8 17.5 14 C17.5 18 15.1 21 12 21 C8.9 21 6.5 18 6.5 14 C6.5 11.6 7.6 9.3 9.3 7.2 C9.2 9 9.7 10.2 10.6 10.8 C10.4 8 11 5 12 2.5 Z" fill="currentColor" fillOpacity="0.3" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <path d="M12 12.5 C13.2 14 13.6 15.2 13.2 16.3 C12.9 15.7 12.5 15.4 12 15.4 C11.5 15.4 11.1 15.7 10.8 16.3 C10.4 15.2 10.8 14 12 12.5 Z" fill="currentColor" opacity="0.85"/>
+    </svg>
+  )
+}
+
+// 토(土) — 흙더미, 단단하게 쌓인 세 층
+export function IcElementEarth({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M4 19 L8 14.5 L12 17.5 L16 12 L20 19 Z" fill="currentColor" fillOpacity="0.3" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <line x1="3" y1="19" x2="21" y2="19" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+// 금(金) — 정제된 금속 주괴
+export function IcElementMetal({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M7 6.5 H17 L20.5 12 L17 17.5 H7 L3.5 12 Z" fill="currentColor" fillOpacity="0.22" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <path d="M7 6.5 L10 12 L7 17.5 M17 6.5 L14 12 L17 17.5" stroke="currentColor" strokeWidth="1.1" opacity="0.55"/>
+    </svg>
+  )
+}
+
+// 수(水) — 잔잔한 물결과 그 위의 물방울
+export function IcElementWater({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 3 C14.5 7 15.8 9.5 15.8 11.6 C15.8 14.2 14.1 16 12 16 C9.9 16 8.2 14.2 8.2 11.6 C8.2 9.5 9.5 7 12 3 Z" fill="currentColor" fillOpacity="0.3" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/>
+      <path d="M3.5 19.5 C5 18 6.5 18 8 19 C9.5 20 11 20 12.5 19 C14 18 15.5 18 17 19 C18.5 20 20 20 20.5 19.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none" opacity="0.75"/>
+    </svg>
+  )
+}
+
+// 균형 — 좌우로 기운을 재는 저울
+export function IcBalance({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <line x1="12" y1="3" x2="12" y2="18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      <line x1="4.5" y1="6.5" x2="19.5" y2="6.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M4.5 6.5 L2 11.5 H7 Z" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M19.5 6.5 L17 11.5 H22 Z" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+      <path d="M8.5 18 H15.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  )
+}
+
+// 핵심 키워드 — 반짝이는 네 갈래 별
+export function IcSparkleKeyword({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <path d="M12 2.5 C12.4 7 13.5 9 17.5 9.5 C13.5 10 12.4 12 12 16.5 C11.6 12 10.5 10 6.5 9.5 C10.5 9 11.6 7 12 2.5 Z" fill="currentColor" opacity="0.9"/>
+      <path d="M18.5 14.5 C18.7 16.5 19.3 17.3 21 17.5 C19.3 17.7 18.7 18.5 18.5 20.5 C18.3 18.5 17.7 17.7 16 17.5 C17.7 17.3 18.3 16.5 18.5 14.5 Z" fill="currentColor" opacity="0.6"/>
+    </svg>
+  )
+}
