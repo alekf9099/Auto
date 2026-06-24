@@ -241,11 +241,11 @@ export default function App() {
       />
     )
   } else if (page === 'lucky') {
-    content = <LuckyTimerPage onBack={goHome} onPointsUpdate={p => { setPoints(p) }} />
+    content = <LuckyTimerPage onBack={() => { setPage('event'); window.scrollTo(0, 0) }} onPointsUpdate={p => { setPoints(p) }} />
   } else if (page === 'roulette') {
-    content = <RoulettePage onBack={goHome} onPointsUpdate={p => { setPoints(p) }} />
+    content = <RoulettePage onBack={() => { setPage('event'); window.scrollTo(0, 0) }} onPointsUpdate={p => { setPoints(p) }} />
   } else if (page === 'invite') {
-    content = <InvitePage onBack={goHome} onPointsUpdate={p => { setPoints(p) }} />
+    content = <InvitePage onBack={() => { setPage('event'); window.scrollTo(0, 0) }} onPointsUpdate={p => { setPoints(p) }} />
   } else if (page === 'sinnyeon') {
     content = <SinnyeonPage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   } else if (page === 'tojeong') {
