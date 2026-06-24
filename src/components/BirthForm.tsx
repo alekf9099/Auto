@@ -7,9 +7,9 @@ interface Props {
 }
 
 const inputCls = `
-  w-full px-3 py-3 rounded-xl text-center text-[#3B2A16] placeholder-[#A89167]
-  bg-[#E9DAB8] border border-[#D8C290]
-  focus:outline-none focus:border-[#9A6A12] focus:ring-2 focus:ring-[#9A6A1220]
+  w-full px-3 py-3 rounded-xl text-center text-[#F5EDD4] placeholder-[#4A4060]
+  bg-[#1C1438] border border-[#2A1F4A]
+  focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20]
   transition text-sm font-medium
 `.trim()
 
@@ -51,29 +51,29 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
       <div className="w-full max-w-sm mb-6 text-center">
         {/* 아이콘 */}
         <div className="relative inline-flex items-center justify-center mb-5">
-          <div className="absolute w-28 h-28 rounded-full bg-[#9A6A12]/10 blur-2xl" />
+          <div className="absolute w-28 h-28 rounded-full bg-[#C9962A]/10 blur-2xl" />
           <div className="relative w-[80px] h-[80px] rounded-full p-[3px]"
-            style={{ background: 'linear-gradient(135deg, #9A6A12, #B5841C)' }}>
-            <div className="w-full h-full rounded-full bg-[#FBF4E2] flex items-center justify-center">
-              <span className="text-4xl" style={{ color: '#9A6A12', fontFamily: 'serif' }}>☯</span>
+            style={{ background: 'linear-gradient(135deg, #C9962A, #E8B84B)' }}>
+            <div className="w-full h-full rounded-full bg-[#0D0A1A] flex items-center justify-center">
+              <span className="text-4xl" style={{ color: '#C9962A', fontFamily: 'serif' }}>☯</span>
             </div>
           </div>
         </div>
         <h1
-          className="text-3xl font-bold text-[#3B2A16] mb-1"
+          className="text-3xl font-bold text-[#F5EDD4] mb-1"
           style={{ fontFamily: "'Gowun Batang', serif" }}
         >
           사주팔자
         </h1>
-        <p className="text-[#9A8155] text-sm">내 운명의 네 기둥을 확인하세요</p>
+        <p className="text-[#7B6F9A] text-sm">내 운명의 네 기둥을 확인하세요</p>
       </div>
 
       {/* 입력 카드 */}
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm bg-[#FBF4E2] rounded-3xl shadow-[0_4px_24px_rgba(201,150,42,0.10)] border border-[#D8C290] p-6"
+        className="w-full max-w-sm bg-[#130E24] rounded-3xl shadow-[0_4px_24px_rgba(201,150,42,0.10)] border border-[#2A1F4A] p-6"
       >
-        <p className="text-xs font-semibold text-[#9A6A12] mb-4 uppercase tracking-wider">생년월일 입력</p>
+        <p className="text-xs font-semibold text-[#C9962A] mb-4 uppercase tracking-wider">생년월일 입력</p>
 
         {/* 년 월 일 */}
         <div className="grid grid-cols-3 gap-2 mb-4">
@@ -83,7 +83,7 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
             { label: '일 (日)', ph: '1',    val: day,   set: setDay   },
           ].map(f => (
             <div key={f.label}>
-              <label className="block text-xs text-[#6E5836] mb-1.5 font-medium">{f.label}</label>
+              <label className="block text-xs text-[#A89BC0] mb-1.5 font-medium">{f.label}</label>
               <input
                 type="number" placeholder={f.ph} value={f.val}
                 onChange={e => f.set(e.target.value)}
@@ -96,12 +96,12 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
         {/* 시 · 분 */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-xs text-[#6E5836] font-medium">시 · 분 (24h)</label>
-            <label className="flex items-center gap-1.5 text-xs text-[#6E5836] cursor-pointer select-none">
+            <label className="text-xs text-[#A89BC0] font-medium">시 · 분 (24h)</label>
+            <label className="flex items-center gap-1.5 text-xs text-[#A89BC0] cursor-pointer select-none">
               <input
                 type="checkbox" checked={unknownHour}
                 onChange={e => setUnknownHour(e.target.checked)}
-                className="accent-[#9A6A12] rounded"
+                className="accent-[#C9962A] rounded"
               />
               모름
             </label>
@@ -121,7 +121,7 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
             />
           </div>
           {!unknownHour && (
-            <p className="text-[11px] text-[#A89167] mt-1.5 text-center">
+            <p className="text-[11px] text-[#4A4060] mt-1.5 text-center">
               분 입력 시 분주(分柱)까지 계산됩니다
             </p>
           )}
@@ -129,7 +129,7 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
 
         {/* 성별 */}
         <div className="mb-6">
-          <label className="block text-xs text-[#6E5836] mb-1.5 font-medium">성별 (性別)</label>
+          <label className="block text-xs text-[#A89BC0] mb-1.5 font-medium">성별 (性別)</label>
           <div className="grid grid-cols-2 gap-2">
             {(['male', 'female'] as Gender[]).map(g => (
               <button
@@ -137,8 +137,8 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
                 onClick={() => setGender(g)}
                 className={`py-2.5 rounded-xl font-semibold text-sm transition-all ${
                   gender === g
-                    ? 'bg-gradient-to-r from-[#9A6A12] to-[#B5841C] text-[#0D0A1A] shadow-md shadow-[#9A6A1230]'
-                    : 'bg-[#E9DAB8] text-[#6E5836] border border-[#D8C290] hover:border-[#9A6A1240]'
+                    ? 'bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] shadow-md shadow-[#C9962A30]'
+                    : 'bg-[#1C1438] text-[#A89BC0] border border-[#2A1F4A] hover:border-[#C9962A40]'
                 }`}
               >
                 {g === 'male' ? '♂ 남성' : '♀ 여성'}
@@ -156,16 +156,16 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
         <button
           type="submit"
           className="w-full py-3.5 rounded-xl font-bold text-[#0D0A1A] text-base
-            bg-gradient-to-r from-[#9A6A12] to-[#B5841C]
-            hover:from-[#9A6A12] hover:to-[#B5841C]
-            shadow-lg shadow-[#9A6A1230]
+            bg-gradient-to-r from-[#C9962A] to-[#E8B84B]
+            hover:from-[#B8871F] hover:to-[#D4A030]
+            shadow-lg shadow-[#C9962A30]
             transition-all active:scale-[0.98]"
         >
           사주 보기 →
         </button>
       </form>
 
-      <p className="text-center text-xs text-[#A89167] mt-5">
+      <p className="text-center text-xs text-[#4A4060] mt-5">
         양력 기준 · 절기 근사값 · 참고용으로만 활용하세요
       </p>
     </div>

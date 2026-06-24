@@ -12,7 +12,7 @@ interface Props {
   onBack: () => void
 }
 
-const RANK_BADGE = ['#9A6A12', '#6E5836', '#9A8155']
+const RANK_BADGE = ['#C9962A', '#A89BC0', '#7B6F9A']
 
 function today(): string {
   return new Date().toISOString().slice(0, 10)
@@ -80,12 +80,12 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
 
   return (
     <div className="min-h-screen">
-      <div className="bg-[#FBF4E2] border-b border-[#D8C290] sticky top-0 z-20">
+      <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#9A8155] hover:text-[#5C4A2E] transition text-lg">←</button>
+          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
-            <h1 className="text-base font-bold text-[#3B2A16]" style={{ fontFamily: "'Gowun Batang', serif" }}>사주매칭</h1>
-            <p className="text-xs text-[#9A8155]">익명의 인연과 닉네임으로 궁합을 확인해보세요</p>
+            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>사주매칭</h1>
+            <p className="text-xs text-[#7B6F9A]">익명의 인연과 닉네임으로 궁합을 확인해보세요</p>
           </div>
         </div>
       </div>
@@ -93,30 +93,30 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
         {/* 히어로 배너 */}
-        <div className="bg-gradient-to-br from-[#FBF4E2] via-[#F3E7C8] to-[#EAD9B0] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#9A6A1225] relative overflow-hidden">
+        <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative overflow-hidden">
           <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-violet-400/15 blur-2xl" />
           <div className="absolute -bottom-8 -left-8 w-36 h-36 rounded-full bg-rose-500/15 blur-2xl" />
           <div className="relative z-10 flex items-center gap-4">
             <div className="flex-1">
-              <p className="text-[#9A8155] text-xs mb-2">옵트인 사용자 풀 · 무작위 매칭</p>
+              <p className="text-violet-300/70 text-xs mb-2">옵트인 사용자 풀 · 무작위 매칭</p>
               <p className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 사주매칭
               </p>
-              <p className="text-sm text-[#9A8155]/80 leading-relaxed">닉네임으로만 만나는<br/>무작위 인연과의 궁합</p>
+              <p className="text-sm text-violet-300/80 leading-relaxed">닉네임으로만 만나는<br/>무작위 인연과의 궁합</p>
             </div>
-            <div className="w-16 h-16 rounded-full bg-[#9A6A1215] border border-[#9A6A1230] flex items-center justify-center shrink-0">
-              <IcMatch size={32} className="text-[#9A6A12]" />
+            <div className="w-16 h-16 rounded-full bg-[#C9962A15] border border-[#C9962A30] flex items-center justify-center shrink-0">
+              <IcMatch size={32} className="text-[#C9962A]" />
             </div>
           </div>
         </div>
 
         {/* 참여 안내 / 상태 */}
         {!optedIn ? (
-          <div className="bg-[#FBF4E2] rounded-3xl border border-[#D8C290] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5 space-y-4">
+          <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5 space-y-4">
             <div>
-              <p className="text-sm font-bold text-[#3B2A16] mb-2">매칭에 참여하면</p>
-              <ul className="space-y-1.5 text-xs text-[#6E5836] leading-relaxed">
-                <li>· 닉네임 <span className="font-semibold text-[#9A6A12]">{nickname || '미설정'}</span>과 생년월일시가 매칭 풀에 등록돼요</li>
+              <p className="text-sm font-bold text-[#F5EDD4] mb-2">매칭에 참여하면</p>
+              <ul className="space-y-1.5 text-xs text-[#A89BC0] leading-relaxed">
+                <li>· 닉네임 <span className="font-semibold text-[#C9962A]">{nickname || '미설정'}</span>과 생년월일시가 매칭 풀에 등록돼요</li>
                 {myPhoto && <li>· 설정해둔 프로필 사진도 매칭 상대에게 보여요</li>}
                 <li>· 이메일·실명·구글 계정 사진 등 실제 신원 정보는 절대 공개되지 않아요</li>
                 <li>· 언제든 매칭 풀에서 나갈 수 있어요</li>
@@ -126,20 +126,20 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
             <button
               onClick={handleJoin}
               disabled={busy || !nickname}
-              className="w-full py-4 bg-gradient-to-r from-[#9A6A12] to-[#B5841C] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#9A6A1230] transition-all text-sm active:scale-[0.98] disabled:opacity-50"
+              className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] transition-all text-sm active:scale-[0.98] disabled:opacity-50"
             >
               {busy ? '참여하는 중...' : '매칭 풀에 참여하기'}
             </button>
-            {!nickname && <p className="text-[11px] text-center text-[#A89167]">프로필에 닉네임을 먼저 등록해주세요</p>}
+            {!nickname && <p className="text-[11px] text-center text-[#4A4060]">프로필에 닉네임을 먼저 등록해주세요</p>}
           </div>
         ) : (
           <>
-            <div className="bg-[#9A6A1215] border border-[#9A6A1230] rounded-3xl px-5 py-3.5 flex items-center justify-between">
-              <p className="text-xs text-[#5C4A2E]">
-                <span className="text-[#9A6A12] font-semibold">✓ 매칭 풀 참여 중</span>
-                <span className="text-[#9A8155] ml-1.5">· {nickname}</span>
+            <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-3xl px-5 py-3.5 flex items-center justify-between">
+              <p className="text-xs text-[#C4B8D8]">
+                <span className="text-[#C9962A] font-semibold">✓ 매칭 풀 참여 중</span>
+                <span className="text-[#7B6F9A] ml-1.5">· {nickname}</span>
               </p>
-              <button onClick={handleLeave} disabled={busy} className="text-xs text-[#9A8155] hover:text-rose-400 transition disabled:opacity-50">나가기</button>
+              <button onClick={handleLeave} disabled={busy} className="text-xs text-[#7B6F9A] hover:text-rose-400 transition disabled:opacity-50">나가기</button>
             </div>
 
             {error && (
@@ -151,7 +151,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
             <button
               onClick={handleDraw}
               disabled={busy}
-              className="w-full py-4 bg-gradient-to-r from-[#9A6A12] to-[#B5841C] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#9A6A1230] transition-all text-sm active:scale-[0.98] disabled:opacity-50"
+              className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] transition-all text-sm active:scale-[0.98] disabled:opacity-50"
             >
               {busy ? '매칭 상대를 찾는 중...' : '랜덤 매칭 뽑기 🎲'}
             </button>
@@ -160,7 +160,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
 
         {/* 결과 */}
         {result && opponent && (
-          <div className="bg-gradient-to-br from-[#FBF4E2] via-[#F3E7C8] to-[#EAD9B0] rounded-3xl overflow-hidden shadow-xl shadow-[#000]/40 border border-[#9A6A1225] relative animate-fade-in-up">
+          <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl overflow-hidden shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative animate-fade-in-up">
             <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-violet-500/10 blur-3xl" />
             <div className="relative z-10 p-6">
               <div className="flex items-center gap-3 mb-5">
@@ -177,7 +177,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
               <div className="flex items-center gap-4">
                 <div className="text-center shrink-0 w-20">
                   <p className="text-4xl font-bold text-white leading-none tabular-nums">{result.total}</p>
-                  <p className="text-sm font-bold text-[#9A8155]">%</p>
+                  <p className="text-sm font-bold text-violet-300">%</p>
                 </div>
                 <div className="flex-1 space-y-2">
                   <span
@@ -200,24 +200,24 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
 
         {/* 나의 매칭 랭킹 */}
         {optedIn && ranking.length > 0 && (
-          <div className="bg-[#FBF4E2] rounded-3xl border border-[#D8C290] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
+          <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-1 h-5 bg-[#9A6A12] rounded-full" />
-              <h2 className="text-sm font-bold text-[#3B2A16]">나의 매칭 랭킹</h2>
+              <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+              <h2 className="text-sm font-bold text-[#F5EDD4]">나의 매칭 랭킹</h2>
             </div>
             <div className="space-y-2">
               {ranking.map((entry, i) => (
-                <div key={`${entry.nickname}-${entry.date}-${i}`} className="flex items-center gap-3 px-3 py-2.5 rounded-2xl bg-[#E9DAB8]">
+                <div key={`${entry.nickname}-${entry.date}-${i}`} className="flex items-center gap-3 px-3 py-2.5 rounded-2xl bg-[#1C1438]">
                   <span
                     className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-[#0D0A1A] shrink-0"
-                    style={{ backgroundColor: RANK_BADGE[i] ?? '#3A2F55', color: i < 3 ? '#0D0A1A' : '#5C4A2E' }}
+                    style={{ backgroundColor: RANK_BADGE[i] ?? '#3A2F55', color: i < 3 ? '#0D0A1A' : '#C4B8D8' }}
                   >
                     {i + 1}
                   </span>
                   <MiniAvatar photo={entry.photo} label={entry.nickname} bg="bg-violet-500" />
-                  <p className="text-xs font-semibold text-[#5C4A2E] flex-1 truncate">{entry.nickname}</p>
-                  <span className="text-[11px] text-[#9A8155]">{entry.grade}</span>
-                  <span className="text-xs font-bold text-[#9A6A12] tabular-nums">{entry.score}%</span>
+                  <p className="text-xs font-semibold text-[#C4B8D8] flex-1 truncate">{entry.nickname}</p>
+                  <span className="text-[11px] text-[#7B6F9A]">{entry.grade}</span>
+                  <span className="text-xs font-bold text-[#C9962A] tabular-nums">{entry.score}%</span>
                 </div>
               ))}
             </div>
@@ -225,7 +225,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
         )}
       </div>
 
-      <div className="text-center pb-8 text-xs text-[#A89167]">사주매칭 — 참고용 · 닉네임 기반 익명 매칭</div>
+      <div className="text-center pb-8 text-xs text-[#4A4060]">사주매칭 — 참고용 · 닉네임 기반 익명 매칭</div>
     </div>
   )
 }

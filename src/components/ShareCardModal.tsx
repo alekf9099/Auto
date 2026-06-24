@@ -87,11 +87,11 @@ export default function ShareCardModal({ data, onClose }: Props) {
           <div
             ref={cardRef}
             className="w-[300px] aspect-[9/16] rounded-[26px] p-[1.5px]"
-            style={{ background: `linear-gradient(160deg, ${data.accent}90, #D8C290 45%, ${data.accent}50)` }}
+            style={{ background: `linear-gradient(160deg, ${data.accent}90, #2A1F4A 45%, ${data.accent}50)` }}
           >
           <div
             className="w-full h-full rounded-[24.5px] overflow-hidden relative flex flex-col p-6"
-            style={{ background: 'linear-gradient(160deg, #FBF4E2 0%, #F3E7C8 55%, #EAD9B0 100%)' }}
+            style={{ background: 'linear-gradient(160deg, #1A0E30 0%, #100820 55%, #060410 100%)' }}
           >
             {/* 장식 */}
             <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full opacity-20 blur-2xl" style={{ backgroundColor: data.accent }} />
@@ -104,7 +104,7 @@ export default function ShareCardModal({ data, onClose }: Props) {
             <div className="relative flex items-center justify-between mb-6">
               <div className="flex items-center gap-1">
                 <span style={{ color: data.accent }}><IcGem size={13}/></span>
-                <p className="text-sm font-bold text-[#3B2A16]" style={{ fontFamily: "'Gowun Batang', serif" }}>운명봄</p>
+                <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>운명봄</p>
               </div>
               <span
                 className="text-[10px] font-bold px-2.5 py-1 rounded-full"
@@ -122,18 +122,18 @@ export default function ShareCardModal({ data, onClose }: Props) {
               >
                 <span className="text-5xl leading-none">{data.emoji}</span>
               </div>
-              <h2 className="text-xl font-bold text-[#3B2A16] mb-2 leading-snug" style={{ fontFamily: "'Gowun Batang', serif" }}>
+              <h2 className="text-xl font-bold text-[#F5EDD4] mb-2 leading-snug" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 {data.title}
               </h2>
               <div className="w-9 h-[2px] rounded-full mb-3" style={{ backgroundColor: data.accent }} />
-              <p className="text-xs text-[#5C4A2E] leading-relaxed mb-5">{data.highlight}</p>
+              <p className="text-xs text-[#C4B8D8] leading-relaxed mb-5">{data.highlight}</p>
 
               {data.items.length > 0 && (
                 <div className="w-full grid grid-cols-2 gap-2">
                   {data.items.map(item => (
                     <div key={item.label} className="rounded-xl px-2 py-2" style={{ backgroundColor: data.accent + '12', border: `1px solid ${data.accent}30` }}>
-                      <p className="text-[9px] text-[#9A8155] mb-0.5">{item.label}</p>
-                      <p className="text-xs font-bold text-[#4A3820] truncate">{item.value}</p>
+                      <p className="text-[9px] text-[#7B6F9A] mb-0.5">{item.label}</p>
+                      <p className="text-xs font-bold text-[#E8DFC8] truncate">{item.value}</p>
                     </div>
                   ))}
                 </div>
@@ -142,8 +142,8 @@ export default function ShareCardModal({ data, onClose }: Props) {
 
             {/* 푸터 */}
             <div className="relative text-center mt-4">
-              <p className="text-[10px] text-[#9A8155]">{data.date}</p>
-              <p className="text-[9px] text-[#A89167] mt-1">{data.footer}</p>
+              <p className="text-[10px] text-[#7B6F9A]">{data.date}</p>
+              <p className="text-[9px] text-[#4A4060] mt-1">{data.footer}</p>
               <div className="flex items-center justify-center gap-1 mt-2">
                 <span style={{ color: data.accent }}><IcGem size={9}/></span>
                 <p className="text-[9px] font-bold" style={{ color: data.accent }}>매일 운세, 운명봄에서</p>
@@ -158,7 +158,7 @@ export default function ShareCardModal({ data, onClose }: Props) {
           <button
             onClick={handleSave}
             disabled={busy}
-            className="flex-1 py-3 rounded-2xl text-sm font-bold bg-[#E3D0A4] text-[#5C4A2E] hover:bg-[#D8C290] transition active:scale-[0.98] disabled:opacity-50"
+            className="flex-1 py-3 rounded-2xl text-sm font-bold bg-[#231844] text-[#C4B8D8] hover:bg-[#2A1F4A] transition active:scale-[0.98] disabled:opacity-50"
           >
             {done ? '✓ 저장됨' : '📥 이미지 저장'}
           </button>
@@ -173,7 +173,7 @@ export default function ShareCardModal({ data, onClose }: Props) {
         </div>
         <button
           onClick={onClose}
-          className="w-full mt-2 py-2.5 text-xs text-[#9A8155] hover:text-[#5C4A2E] transition"
+          className="w-full mt-2 py-2.5 text-xs text-[#7B6F9A] hover:text-[#C4B8D8] transition"
         >
           닫기
         </button>

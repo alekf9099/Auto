@@ -35,8 +35,8 @@ function CoinBadge({ children, ornaments = false }: { children: React.ReactNode;
     <div className="relative shrink-0 w-14 h-14 flex items-center justify-center">
       {ornaments && (
         <>
-          <div className="absolute -left-[5px] top-1/2 -translate-y-1/2 w-2 h-2 rotate-45 bg-[#9A6A12]" />
-          <div className="absolute -right-[5px] top-1/2 -translate-y-1/2 w-2 h-2 rotate-45 bg-[#9A6A12]" />
+          <div className="absolute -left-[5px] top-1/2 -translate-y-1/2 w-2 h-2 rotate-45 bg-[#C9962A]" />
+          <div className="absolute -right-[5px] top-1/2 -translate-y-1/2 w-2 h-2 rotate-45 bg-[#C9962A]" />
         </>
       )}
       <div
@@ -49,7 +49,7 @@ function CoinBadge({ children, ornaments = false }: { children: React.ReactNode;
           className="absolute inset-[11px] rounded-full"
           style={{ background: 'radial-gradient(circle at 35% 28%, #C9A05A, #8A6230 65%, #5C3D1C 100%)', boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.55), inset 0 -1px 2px rgba(255,224,170,0.25)' }}
         />
-        <div className="relative text-[#4A3820]">{children}</div>
+        <div className="relative text-[#2E1B0A]">{children}</div>
       </div>
     </div>
   )
@@ -69,34 +69,34 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
   return (
     <div className="min-h-screen">
       {/* 헤더 */}
-      <div className="bg-[#FBF4E2] border-b border-[#D8C290] sticky top-0 z-10">
+      <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#9A8155] hover:text-[#5C4A2E] transition text-lg">←</button>
+          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
-            <h1 className="text-base font-bold text-[#3B2A16]" style={{ fontFamily: "'Gowun Batang', serif" }}>이벤트</h1>
-            <p className="text-xs text-[#9A8155]">진행 중인 이벤트에 참여하고 포인트를 받아보세요</p>
+            <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>이벤트</h1>
+            <p className="text-xs text-[#7B6F9A]">진행 중인 이벤트에 참여하고 포인트를 받아보세요</p>
           </div>
         </div>
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
         <button onClick={onOpenLucky} className="w-full text-left active:scale-[0.99] transition-all">
-          <div className="relative bg-[#170820] rounded-2xl border border-[#9A6A12]/70 px-5 py-4 shadow-[0_2px_16px_rgba(201,150,42,0.10)] overflow-hidden">
-            <CornerFret className="absolute top-2 left-2 text-[#9A6A12]" />
-            <CornerFret className="absolute top-2 right-2 text-[#9A6A12] -scale-x-100" />
-            <CornerFret className="absolute bottom-2 left-2 text-[#9A6A12] -scale-y-100" />
-            <CornerFret className="absolute bottom-2 right-2 text-[#9A6A12] -scale-x-100 -scale-y-100" />
+          <div className="relative bg-[#170820] rounded-2xl border border-[#C9962A]/70 px-5 py-4 shadow-[0_2px_16px_rgba(201,150,42,0.10)] overflow-hidden">
+            <CornerFret className="absolute top-2 left-2 text-[#C9962A]" />
+            <CornerFret className="absolute top-2 right-2 text-[#C9962A] -scale-x-100" />
+            <CornerFret className="absolute bottom-2 left-2 text-[#C9962A] -scale-y-100" />
+            <CornerFret className="absolute bottom-2 right-2 text-[#C9962A] -scale-x-100 -scale-y-100" />
 
             <div className="flex items-center gap-3">
               <CoinBadge>
-                <IcLucky size={24} className="text-[#4A3820]" />
+                <IcLucky size={24} className="text-[#2E1B0A]" />
               </CoinBadge>
               <div className="flex-1">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-base font-bold text-[#9A6A12]">1</span>
+                  <span className="text-base font-bold text-[#C9962A]">1</span>
                   <p
                     className="text-base font-bold"
-                    style={{ fontFamily: "'Gowun Batang', serif", background: 'linear-gradient(180deg,#F3E7C8,#B5841C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+                    style={{ fontFamily: "'Gowun Batang', serif", background: 'linear-gradient(180deg,#FFF4C7,#E8B84B)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
                   >
                     행운의 숫자 잡기
                   </p>
@@ -105,7 +105,7 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
                   {remaining > 0 ? `성공 시 +20P, 참가만 해도 +5P · 남은 기회 ${remaining}/${LUCKY_TIMER_MAX_ATTEMPTS}` : '오늘 참여 완료 · 내일 다시 도전'}
                 </p>
               </div>
-              <span className="text-[11px] text-[#9A6A12] font-semibold shrink-0">
+              <span className="text-[11px] text-[#C9962A] font-semibold shrink-0">
                 {remaining > 0 ? '도전 →' : '완료 ✓'}
               </span>
             </div>
@@ -113,22 +113,22 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
         </button>
 
         <button onClick={onOpenRoulette} className="w-full text-left active:scale-[0.99] transition-all">
-          <div className="relative bg-[#170820] rounded-2xl border border-[#9A6A12]/70 px-5 py-4 shadow-[0_2px_16px_rgba(201,150,42,0.10)] overflow-hidden">
-            <CornerFret className="absolute top-2 left-2 text-[#9A6A12]" />
-            <CornerFret className="absolute top-2 right-2 text-[#9A6A12] -scale-x-100" />
-            <CornerFret className="absolute bottom-2 left-2 text-[#9A6A12] -scale-y-100" />
-            <CornerFret className="absolute bottom-2 right-2 text-[#9A6A12] -scale-x-100 -scale-y-100" />
+          <div className="relative bg-[#170820] rounded-2xl border border-[#C9962A]/70 px-5 py-4 shadow-[0_2px_16px_rgba(201,150,42,0.10)] overflow-hidden">
+            <CornerFret className="absolute top-2 left-2 text-[#C9962A]" />
+            <CornerFret className="absolute top-2 right-2 text-[#C9962A] -scale-x-100" />
+            <CornerFret className="absolute bottom-2 left-2 text-[#C9962A] -scale-y-100" />
+            <CornerFret className="absolute bottom-2 right-2 text-[#C9962A] -scale-x-100 -scale-y-100" />
 
             <div className="flex items-center gap-3">
               <CoinBadge>
-                <IcRoulette size={24} className="text-[#4A3820]" />
+                <IcRoulette size={24} className="text-[#2E1B0A]" />
               </CoinBadge>
               <div className="flex-1">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-base font-bold text-[#9A6A12]">2</span>
+                  <span className="text-base font-bold text-[#C9962A]">2</span>
                   <p
                     className="text-base font-bold"
-                    style={{ fontFamily: "'Gowun Batang', serif", background: 'linear-gradient(180deg,#F3E7C8,#B5841C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+                    style={{ fontFamily: "'Gowun Batang', serif", background: 'linear-gradient(180deg,#FFF4C7,#E8B84B)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
                   >
                     오행 룰렛
                   </p>
@@ -137,7 +137,7 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
                   {spunToday ? '오늘 참여 완료 · 내일 다시 도전' : '최소 +5P, 잭폿 당첨 시 +100P'}
                 </p>
               </div>
-              <span className="text-[11px] text-[#9A6A12] font-semibold shrink-0">
+              <span className="text-[11px] text-[#C9962A] font-semibold shrink-0">
                 {spunToday ? '완료 ✓' : '도전 →'}
               </span>
             </div>
@@ -145,22 +145,22 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
         </button>
 
         <button onClick={onOpenInvite} className="w-full text-left active:scale-[0.99] transition-all">
-          <div className="relative bg-[#170820] rounded-2xl border border-[#9A6A12]/70 px-5 py-4 shadow-[0_2px_16px_rgba(201,150,42,0.10)] overflow-hidden">
-            <CornerFret className="absolute top-2 left-2 text-[#9A6A12]" />
-            <CornerFret className="absolute top-2 right-2 text-[#9A6A12] -scale-x-100" />
-            <CornerFret className="absolute bottom-2 left-2 text-[#9A6A12] -scale-y-100" />
-            <CornerFret className="absolute bottom-2 right-2 text-[#9A6A12] -scale-x-100 -scale-y-100" />
+          <div className="relative bg-[#170820] rounded-2xl border border-[#C9962A]/70 px-5 py-4 shadow-[0_2px_16px_rgba(201,150,42,0.10)] overflow-hidden">
+            <CornerFret className="absolute top-2 left-2 text-[#C9962A]" />
+            <CornerFret className="absolute top-2 right-2 text-[#C9962A] -scale-x-100" />
+            <CornerFret className="absolute bottom-2 left-2 text-[#C9962A] -scale-y-100" />
+            <CornerFret className="absolute bottom-2 right-2 text-[#C9962A] -scale-x-100 -scale-y-100" />
 
             <div className="flex items-center gap-3">
               <CoinBadge ornaments>
-                <IcGift size={24} className="text-[#4A3820]" />
+                <IcGift size={24} className="text-[#2E1B0A]" />
               </CoinBadge>
               <div className="flex-1">
                 <div className="flex items-baseline gap-2">
-                  <span className="text-base font-bold text-[#9A6A12]">3</span>
+                  <span className="text-base font-bold text-[#C9962A]">3</span>
                   <p
                     className="text-base font-bold"
-                    style={{ fontFamily: "'Gowun Batang', serif", background: 'linear-gradient(180deg,#F3E7C8,#B5841C)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
+                    style={{ fontFamily: "'Gowun Batang', serif", background: 'linear-gradient(180deg,#FFF4C7,#E8B84B)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}
                   >
                     친구 초대 선물
                   </p>
@@ -169,7 +169,7 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
                   친구는 +30P, 나는 +50P
                 </p>
               </div>
-              <span className="text-[11px] text-[#9A6A12] font-semibold shrink-0">
+              <span className="text-[11px] text-[#C9962A] font-semibold shrink-0">
                 초대하기 →
               </span>
             </div>
@@ -177,7 +177,7 @@ export default function EventPage({ onBack, onOpenLucky, onOpenRoulette, onOpenI
         </button>
       </div>
 
-      <div className="text-center pb-8 text-xs text-[#A89167]">새로운 이벤트가 곧 추가될 예정이에요</div>
+      <div className="text-center pb-8 text-xs text-[#4A4060]">새로운 이벤트가 곧 추가될 예정이에요</div>
     </div>
   )
 }

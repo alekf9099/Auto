@@ -110,7 +110,7 @@ export default function SummaryPage({ input, result, ohaeng, onBack, onReset }: 
 
         {/* 메인 카드 */}
         <div className="bg-gradient-to-br from-amber-900/60 to-stone-900/80 rounded-3xl border border-amber-700/30 p-6">
-          <p className="text-[#9A6A12]/70 text-xs mb-1">{result.minutePillar ? '나의 오주십자 요약' : '나의 사주팔자 요약'}</p>
+          <p className="text-amber-400/70 text-xs mb-1">{result.minutePillar ? '나의 오주십자 요약' : '나의 사주팔자 요약'}</p>
           <p className="text-stone-400 text-xs mb-4">
             {input.year}.{String(input.month).padStart(2,'0')}.{String(input.day).padStart(2,'0')}
             &nbsp;·&nbsp;{input.gender === 'male' ? '남성' : '여성'}

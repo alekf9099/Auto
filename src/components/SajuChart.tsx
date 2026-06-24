@@ -18,7 +18,7 @@ function PillarCell({ label, stemIndex, branchIndex, compact = false }: {
 
   return (
     <div className="flex flex-col items-center">
-      <span className={`${compact ? 'text-[10px]' : 'text-xs'} text-[#9A8155] mb-2 font-medium text-center leading-tight`}>{label}</span>
+      <span className={`${compact ? 'text-[10px]' : 'text-xs'} text-[#7B6F9A] mb-2 font-medium text-center leading-tight`}>{label}</span>
       <div
         className={`${cardW} ${stemH} rounded-2xl flex flex-col items-center justify-center border-2 mb-1 shadow-sm`}
         style={{ borderColor: sc + '50', backgroundColor: sc + '12' }}
@@ -26,7 +26,7 @@ function PillarCell({ label, stemIndex, branchIndex, compact = false }: {
         <span className={`${hanja} font-bold`} style={{ color: sc }}>{stem.hanja}</span>
         <span className="text-xs font-medium" style={{ color: sc + 'cc' }}>{stem.ko}</span>
       </div>
-      <div className="text-xs mb-2 text-[#9A8155]">
+      <div className="text-xs mb-2 text-[#7B6F9A]">
         {stem.element === 'wood' ? '목' : stem.element === 'fire' ? '화' : stem.element === 'earth' ? '토' : stem.element === 'metal' ? '금' : '수'}
         {stem.yinYang === 'yang' ? '양' : '음'}
       </div>
@@ -38,7 +38,7 @@ function PillarCell({ label, stemIndex, branchIndex, compact = false }: {
         <span className="text-xs font-medium" style={{ color: bc + 'cc' }}>{branch.ko}</span>
         <span className="text-[11px] mt-0.5" style={{ color: bc + '99' }}>{branch.animal}</span>
       </div>
-      <div className="text-xs mt-1 text-[#9A8155]">
+      <div className="text-xs mt-1 text-[#7B6F9A]">
         {branch.element === 'wood' ? '목' : branch.element === 'fire' ? '화' : branch.element === 'earth' ? '토' : branch.element === 'metal' ? '금' : '수'}
         {branch.yinYang === 'yang' ? '양' : '음'}
       </div>
@@ -60,10 +60,10 @@ export default function SajuChart({ result }: Props) {
   })()
 
   return (
-    <div className="bg-[#FBF4E2] rounded-3xl border border-[#D8C290] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
+    <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
       <div className="flex items-center gap-2 mb-5">
-        <div className="w-1 h-5 bg-[#9A6A12] rounded-full" />
-        <h2 className="text-base font-bold text-[#3B2A16]" style={{ fontFamily: "'Gowun Batang', serif" }}>
+        <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+        <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
           {minutePillar ? '오주십자 (五柱十字)' : '사주팔자 (四柱八字)'}
         </h2>
       </div>
@@ -74,16 +74,16 @@ export default function SajuChart({ result }: Props) {
         ))}
       </div>
 
-      <div className="mt-5 pt-4 border-t border-[#D8C290]">
+      <div className="mt-5 pt-4 border-t border-[#2A1F4A]">
         <div className="flex items-center gap-2 mb-1.5">
-          <span className="text-xs bg-[#9A6A1220] text-[#9A6A12] border border-[#9A6A1240] px-2 py-0.5 rounded-full font-medium">일주</span>
-          <span className="text-sm font-semibold text-[#3B2A16]">
+          <span className="text-xs bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40] px-2 py-0.5 rounded-full font-medium">일주</span>
+          <span className="text-sm font-semibold text-[#F5EDD4]">
             {STEMS[dayPillar.stemIndex].hanja}{BRANCHES[dayPillar.branchIndex].hanja}
-            <span className="text-[#9A8155] font-normal text-xs ml-1">({STEMS[dayPillar.stemIndex].ko}{BRANCHES[dayPillar.branchIndex].ko}일)</span>
+            <span className="text-[#7B6F9A] font-normal text-xs ml-1">({STEMS[dayPillar.stemIndex].ko}{BRANCHES[dayPillar.branchIndex].ko}일)</span>
           </span>
         </div>
-        <p className="text-sm text-[#6E5836] leading-relaxed">
-          일간 <strong className="text-[#4A3820]">{STEMS[dayPillar.stemIndex].hanja}({STEMS[dayPillar.stemIndex].ko})</strong>이 본명(本命)입니다.{' '}
+        <p className="text-sm text-[#A89BC0] leading-relaxed">
+          일간 <strong className="text-[#E8DFC8]">{STEMS[dayPillar.stemIndex].hanja}({STEMS[dayPillar.stemIndex].ko})</strong>이 본명(本命)입니다.{' '}
           {STEMS[dayPillar.stemIndex].element === 'wood' ? '목(木)' : STEMS[dayPillar.stemIndex].element === 'fire' ? '화(火)' : STEMS[dayPillar.stemIndex].element === 'earth' ? '토(土)' : STEMS[dayPillar.stemIndex].element === 'metal' ? '금(金)' : '수(水)'}
           {STEMS[dayPillar.stemIndex].yinYang === 'yang' ? ' 양(陽)' : ' 음(陰)'}의 기운을 지닌 명식입니다.
         </p>

@@ -10,7 +10,7 @@ function Stars({ n }: { n: number }) {
   return (
     <div className="flex gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
-        <span key={i} className={`text-sm ${i < n ? 'text-[#9A6A12]' : 'text-[#D8C290]'}`}>★</span>
+        <span key={i} className={`text-sm ${i < n ? 'text-amber-400' : 'text-[#3D3358]'}`}>★</span>
       ))}
     </div>
   )
@@ -21,17 +21,17 @@ function CategoryRow({ emoji, label, summary, detail, star }: {
   emoji: string; label: string; summary: string; detail: string; star: number
 }) {
   return (
-    <details className="border border-[#D8C290] rounded-2xl overflow-hidden group">
-      <summary className="flex items-center gap-2 p-3.5 cursor-pointer list-none select-none hover:bg-[#E9DAB8] transition">
+    <details className="border border-[#2A1F4A] rounded-2xl overflow-hidden group">
+      <summary className="flex items-center gap-2 p-3.5 cursor-pointer list-none select-none hover:bg-[#1C1438] transition">
         <span className="text-base">{emoji}</span>
-        <span className="text-sm font-semibold text-[#5C4A2E]">{label}</span>
-        <span className="text-xs text-[#9A8155] flex-1 truncate">{summary}</span>
+        <span className="text-sm font-semibold text-[#C4B8D8]">{label}</span>
+        <span className="text-xs text-[#7B6F9A] flex-1 truncate">{summary}</span>
         <Stars n={star} />
-        <span className="text-[#A89167] text-xs ml-1 shrink-0 group-open:rotate-180 transition-transform">▼</span>
+        <span className="text-[#4A4060] text-xs ml-1 shrink-0 group-open:rotate-180 transition-transform">▼</span>
       </summary>
       <div className="px-4 pb-4">
-        <div className="h-px bg-[#D8C290] mb-3" />
-        <p className="text-sm text-[#6E5836] leading-relaxed">{detail}</p>
+        <div className="h-px bg-[#2A1F4A] mb-3" />
+        <p className="text-sm text-[#A89BC0] leading-relaxed">{detail}</p>
       </div>
     </details>
   )
@@ -81,17 +81,17 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
   ]
 
   return (
-    <div className="bg-[#FBF4E2] rounded-3xl border border-[#D8C290] shadow-[0_2px_20px_rgba(201,150,42,0.10)] overflow-hidden">
+    <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] overflow-hidden">
       {/* 서브탭 */}
-      <div className="flex gap-1 border-b border-[#D8C290] px-2 pt-2">
+      <div className="flex gap-1 border-b border-[#2A1F4A] px-2 pt-2">
         {tabs.map(t => (
           <button
             key={t.id}
             onClick={() => setSub(t.id)}
             className={`flex-1 py-2.5 text-sm font-semibold rounded-xl transition-all ${
               sub === t.id
-                ? 'text-[#9A6A12] bg-[#9A6A1215]'
-                : 'text-[#9A8155] hover:text-[#6E5836]'
+                ? 'text-[#C9962A] bg-[#C9962A15]'
+                : 'text-[#7B6F9A] hover:text-[#A89BC0]'
             }`}
           >
             <span>{t.label}</span>
@@ -111,11 +111,11 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
               style={{ backgroundColor: todayData.color + '10', borderColor: todayData.color + '30' }}
             >
               <div>
-                <p className="text-xs text-[#9A8155] mb-1">오늘 일주 · {today.getMonth()+1}/{today.getDate()}</p>
+                <p className="text-xs text-[#7B6F9A] mb-1">오늘 일주 · {today.getMonth()+1}/{today.getDate()}</p>
                 <div className="flex items-center gap-1.5">
                   <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[todayStem.element] }}>{todayStem.hanja}</span>
                   <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[todayBranch.element] }}>{todayBranch.hanja}</span>
-                  <span className="text-sm text-[#9A8155] ml-1">{todayStem.ko}{todayBranch.ko} · {todayBranch.animal}</span>
+                  <span className="text-sm text-[#7B6F9A] ml-1">{todayStem.ko}{todayBranch.ko} · {todayBranch.animal}</span>
                 </div>
               </div>
               <div className="text-right">
@@ -127,13 +127,13 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
             </div>
 
             {/* 조언 + 주의 */}
-            <div className="bg-[#9A6A1215] border border-[#9A6A1230] rounded-2xl p-3.5">
-              <p className="text-xs font-semibold text-[#9A6A12] mb-1">✨ 오늘의 조언</p>
-              <p className="text-sm text-[#5C4A2E] leading-relaxed">{todayData.조언}</p>
+            <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl p-3.5">
+              <p className="text-xs font-semibold text-[#C9962A] mb-1">✨ 오늘의 조언</p>
+              <p className="text-sm text-[#C4B8D8] leading-relaxed">{todayData.조언}</p>
             </div>
             <div className="bg-red-900/20 border border-red-900/40 rounded-2xl px-4 py-2.5 flex items-center gap-2">
               <span>⚠️</span>
-              <p className="text-xs text-[#6E5836]"><span className="font-semibold text-red-400">주의 </span>{todayData.주의}</p>
+              <p className="text-xs text-[#A89BC0]"><span className="font-semibold text-red-400">주의 </span>{todayData.주의}</p>
             </div>
 
             {/* 항목별 */}
@@ -153,18 +153,18 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
 
             {/* 시간대별 */}
             <div>
-              <p className="text-sm font-semibold text-[#5C4A2E] mb-2">🕐 시간대별</p>
+              <p className="text-sm font-semibold text-[#C4B8D8] mb-2">🕐 시간대별</p>
               <div className="space-y-2">
                 {[
                   { icon: '🌅', label: '오전 06~12시', text: todayData.시간오전 },
                   { icon: '☀️',  label: '오후 12~18시', text: todayData.시간오후 },
                   { icon: '🌙', label: '저녁 18~24시', text: todayData.시간저녁 },
                 ].map(t => (
-                  <div key={t.label} className="flex gap-3 bg-[#E9DAB8] border border-[#D8C290] rounded-2xl px-4 py-3">
+                  <div key={t.label} className="flex gap-3 bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-4 py-3">
                     <span className="shrink-0">{t.icon}</span>
                     <div>
-                      <p className="text-xs font-semibold text-[#9A8155] mb-0.5">{t.label}</p>
-                      <p className="text-sm text-[#5C4A2E]">{t.text}</p>
+                      <p className="text-xs font-semibold text-[#7B6F9A] mb-0.5">{t.label}</p>
+                      <p className="text-sm text-[#C4B8D8]">{t.text}</p>
                     </div>
                   </div>
                 ))}
@@ -173,7 +173,7 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
 
             {/* 행운 아이템 */}
             <div>
-              <p className="text-sm font-semibold text-[#5C4A2E] mb-2">🍀 오늘의 행운</p>
+              <p className="text-sm font-semibold text-[#C4B8D8] mb-2">🍀 오늘의 행운</p>
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { label: '행운 색상', value: LUCKY_COLOR_NAME[luckyEl], dot: LUCKY_COLOR_MAP[luckyEl] },
@@ -181,11 +181,11 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
                   { label: '행운 방향', value: LUCKY_DIR[luckyEl],         dot: null },
                   { label: '행운 음식', value: LUCKY_FOOD[luckyEl],        dot: null },
                 ].map(item => (
-                  <div key={item.label} className="bg-[#9A6A1215] border border-[#9A6A1230] rounded-2xl p-3">
-                    <p className="text-xs text-[#9A8155] mb-1">{item.label}</p>
+                  <div key={item.label} className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl p-3">
+                    <p className="text-xs text-[#7B6F9A] mb-1">{item.label}</p>
                     <div className="flex items-center gap-1.5">
                       {item.dot && <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.dot }} />}
-                      <p className="text-sm font-semibold text-[#5C4A2E]">{item.value}</p>
+                      <p className="text-sm font-semibold text-[#C4B8D8]">{item.value}</p>
                     </div>
                   </div>
                 ))}
@@ -202,22 +202,22 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
               style={{ backgroundColor: ELEMENT_COLORS[monthStem.element] + '10', borderColor: ELEMENT_COLORS[monthStem.element] + '30' }}
             >
               <div>
-                <p className="text-xs text-[#9A8155] mb-1">이달 월주 · {today.getFullYear()}.{String(today.getMonth()+1).padStart(2,'0')}</p>
+                <p className="text-xs text-[#7B6F9A] mb-1">이달 월주 · {today.getFullYear()}.{String(today.getMonth()+1).padStart(2,'0')}</p>
                 <div className="flex items-center gap-1.5">
                   <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[monthStem.element] }}>{monthStem.hanja}</span>
                   <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[monthBranch.element] }}>{monthBranch.hanja}</span>
-                  <span className="text-sm text-[#9A8155] ml-1">{monthStem.ko}{monthBranch.ko}월</span>
+                  <span className="text-sm text-[#7B6F9A] ml-1">{monthStem.ko}{monthBranch.ko}월</span>
                 </div>
               </div>
               <div className="text-right">
-                <span className="text-xl font-bold px-3 py-1 rounded-xl bg-[#9A6A1220] text-[#9A6A12] border border-[#9A6A1240]">{monthSipsin}</span>
+                <span className="text-xl font-bold px-3 py-1 rounded-xl bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40]">{monthSipsin}</span>
                 <div className="mt-1.5 flex justify-end"><Stars n={monthData.star} /></div>
               </div>
             </div>
 
-            <div className="bg-[#9A6A1215] border border-[#9A6A1230] rounded-2xl p-3.5">
-              <p className="text-xs font-semibold text-[#9A6A12] mb-1">📅 이달의 조언</p>
-              <p className="text-sm text-[#5C4A2E] leading-relaxed">{monthData.조언}</p>
+            <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl p-3.5">
+              <p className="text-xs font-semibold text-[#C9962A] mb-1">📅 이달의 조언</p>
+              <p className="text-sm text-[#C4B8D8] leading-relaxed">{monthData.조언}</p>
             </div>
 
             <div className="space-y-2">
@@ -244,22 +244,22 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
               style={{ backgroundColor: ELEMENT_COLORS[yearStem.element] + '10', borderColor: ELEMENT_COLORS[yearStem.element] + '30' }}
             >
               <div>
-                <p className="text-xs text-[#9A8155] mb-1">올해 년주 · {today.getFullYear()}년</p>
+                <p className="text-xs text-[#7B6F9A] mb-1">올해 년주 · {today.getFullYear()}년</p>
                 <div className="flex items-center gap-1.5">
                   <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[yearStem.element] }}>{yearStem.hanja}</span>
                   <span className="text-3xl font-bold" style={{ color: ELEMENT_COLORS[yearBranch.element] }}>{yearBranch.hanja}</span>
-                  <span className="text-sm text-[#9A8155] ml-1">{yearStem.ko}{yearBranch.ko}년 · {yearBranch.animal}의 해</span>
+                  <span className="text-sm text-[#7B6F9A] ml-1">{yearStem.ko}{yearBranch.ko}년 · {yearBranch.animal}의 해</span>
                 </div>
               </div>
               <div className="text-right">
-                <span className="text-xl font-bold px-3 py-1 rounded-xl bg-[#9A6A1220] text-[#9A6A12] border border-[#9A6A1240]">{yearSipsin}</span>
+                <span className="text-xl font-bold px-3 py-1 rounded-xl bg-[#C9962A20] text-[#C9962A] border border-[#C9962A40]">{yearSipsin}</span>
                 <div className="mt-1.5 flex justify-end"><Stars n={yearData.star} /></div>
               </div>
             </div>
 
-            <div className="bg-[#9A6A1215] border border-[#9A6A1230] rounded-2xl p-3.5">
-              <p className="text-xs font-semibold text-[#9A6A12] mb-1">🗓️ 올해의 조언</p>
-              <p className="text-sm text-[#5C4A2E] leading-relaxed">{yearData.조언}</p>
+            <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl p-3.5">
+              <p className="text-xs font-semibold text-[#C9962A] mb-1">🗓️ 올해의 조언</p>
+              <p className="text-sm text-[#C4B8D8] leading-relaxed">{yearData.조언}</p>
             </div>
 
             <div className="space-y-2">

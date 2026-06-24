@@ -84,23 +84,23 @@ const SECTIONS: { title: string; body: string[] }[] = [
 export default function PrivacyPolicyPage({ onBack }: Props) {
   return (
     <div className="min-h-screen">
-      <div className="sticky top-0 z-10 bg-[#F3E7C8]/90 backdrop-blur-md border-b border-[#9A6A1230]">
+      <div className="sticky top-0 z-10 bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#C9962A30]">
         <div className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex items-center gap-3">
           <button
             onClick={onBack}
             aria-label="뒤로 가기"
-            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#E3D0A4] transition text-[#5C4A2E] text-lg flex-shrink-0"
+            className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#231844] transition text-[#C4B8D8] text-lg flex-shrink-0"
           >
             ←
           </button>
-          <h1 className="text-base font-bold text-[#3B2A16]" style={{ fontFamily: "'Gowun Batang', serif" }}>
+          <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
             개인정보처리방침
           </h1>
         </div>
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
-        <p className="text-xs text-[#9A8155] leading-relaxed">
+        <p className="text-xs text-[#7B6F9A] leading-relaxed">
           운명봄(이하 "서비스")은 이용자의 개인정보를 중요시하며, 「개인정보 보호법」을 준수하고 있습니다.
           서비스는 본 개인정보처리방침을 통해 이용자가 제공하는 개인정보가 어떠한 목적과 방식으로 이용되고 있으며,
           개인정보 보호를 위해 어떠한 조치가 취해지고 있는지 알려드립니다.
@@ -108,9 +108,9 @@ export default function PrivacyPolicyPage({ onBack }: Props) {
 
         {SECTIONS.map((sec, i) => (
           <section key={i} className="space-y-1.5">
-            <h2 className="text-sm font-bold text-[#3B2A16]">{sec.title}</h2>
+            <h2 className="text-sm font-bold text-[#F5EDD4]">{sec.title}</h2>
             {sec.body.map((line, j) => (
-              <p key={j} className="text-xs text-[#6E5836] leading-relaxed">{line}</p>
+              <p key={j} className="text-xs text-[#A89BC0] leading-relaxed">{line}</p>
             ))}
           </section>
         ))}
