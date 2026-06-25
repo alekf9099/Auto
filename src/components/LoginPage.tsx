@@ -98,30 +98,15 @@ export default function LoginPage({ onLogin, onGuest, onShowPrivacy, onShowTerms
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen relative overflow-hidden isolate flex flex-col items-center justify-center px-6">
 
-      {/* ── 배경 블롭 ── */}
-      <div className="absolute -top-24 -right-20 w-80 h-80 rounded-full bg-[#C9962A]/8 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-20 -left-16 w-72 h-72 rounded-full bg-violet-900/20 blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 -right-12 w-40 h-40 rounded-full bg-[#C9962A]/5 blur-2xl pointer-events-none" />
-
-      {/* ── 배경 산점 기호 ── */}
-      {[
-        { ch: '木', x: '8%',  y: '12%', c: '#86EFAC', s: '13px' },
-        { ch: '火', x: '88%', y: '10%', c: '#FCA5A5', s: '11px' },
-        { ch: '水', x: '6%',  y: '72%', c: '#93C5FD', s: '12px' },
-        { ch: '金', x: '90%', y: '68%', c: '#D1D5DB', s: '11px' },
-        { ch: '土', x: '50%', y: '91%', c: '#FCD34D', s: '11px' },
-        { ch: '✦',  x: '80%', y: '30%', c: '#C4B5FD', s: '10px' },
-        { ch: '✦',  x: '14%', y: '42%', c: '#C4B5FD', s: '8px'  },
-        { ch: '⋆',  x: '72%', y: '82%', c: '#DDD6FE', s: '16px' },
-        { ch: '⋆',  x: '22%', y: '88%', c: '#DDD6FE', s: '14px' },
-      ].map((d, i) => (
-        <span key={i} className="absolute select-none pointer-events-none font-bold"
-          style={{ left: d.x, top: d.y, color: d.c, fontSize: d.s, opacity: 0.8 }}>
-          {d.ch}
-        </span>
-      ))}
+      {/* ── 전역 별자리 배경 (앱 내부와 통일) ── */}
+      <div
+        className="absolute inset-0 -z-20 bg-cover bg-center bg-no-repeat pointer-events-none"
+        style={{ backgroundImage: "url('/app-bg.png')" }}
+        aria-hidden="true"
+      />
+      <div className="absolute inset-0 -z-10 bg-[#0D0A1A]/45 pointer-events-none" aria-hidden="true" />
 
       {/* ── 로고 영역 ── */}
       <div className="flex flex-col items-center mb-9 relative">
