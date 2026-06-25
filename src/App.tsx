@@ -178,6 +178,9 @@ export default function App() {
   }
 
   async function handleLogin(u: UserInfo) {
+    // 게스트/이전 세션의 로컬 데이터를 먼저 비워, 로그인한 계정의 클라우드 데이터만 반영되도록 한다.
+    // (게스트로 입력한 정보가 다른 계정에 새거나, 기존 계정 정보를 덮는 것을 방지)
+    clearAllLocalData()
     setUser(u)
     setCurrentEmail(u.email)
     setIdToken(u.idToken)
@@ -209,8 +212,14 @@ export default function App() {
   }
 
   // 게스트가 로그인이 필요한 기능을 누르거나 상단 "로그인"을 누르면 로그인 화면으로.
-  // (로컬 데이터는 유지되며, 로그인 시 클라우드로 업로드된다.)
+  // 게스트 세션 데이터를 비워 provider='guest'를 제거한다. 이래야 카카오 리다이렉트 로그인이
+  // 정상 완료되고(리로드 시 게스트로 복원되지 않음), 게스트 정보가 계정에 남지 않는다.
   function handleRequestLogin() {
+    clearAllLocalData()
+    setUser(null)
+    setBirthProfile(null)
+    setNickname('')
+    setPoints(loadPoints())
     setLoginPrompt(null)
     setPage('login')
     window.scrollTo(0, 0)
