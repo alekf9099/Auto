@@ -162,3 +162,8 @@ export function tryFeatureBonus(
   const next = awardPoints(p, 5, label)
   return { next, claimed: true }
 }
+
+// 오늘 이 기능의 보너스를 이미 받았는지 여부
+export function isFeatureBonusClaimed(featureKey: string): boolean {
+  return !!localStorage.getItem(`${KEY}_feat_${featureKey}_${today()}`)
+}
