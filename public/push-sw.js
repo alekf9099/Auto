@@ -8,7 +8,7 @@ self.addEventListener('push', function (event) {
   const options = {
     body: data.body || '오늘의 운세가 도착했어요',
     icon: '/icon-192.png',
-    badge: '/icon-192.png',
+    badge: '/badge.png',
     vibrate: [80, 40, 80],
     data: { url: data.url || '/?go=today' },
   }
