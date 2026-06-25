@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import type { BirthInput } from '../types'
 import { calcGunghab, type GunghabRelation, type GunghabResult } from '../utils/gunghab'
 import PointsClaimButton from './PointsClaimButton'
+import { IcGunghab, IcLoveLuck, IcMatch, IcJob, IcProfile } from './icons/SajuIcons'
 
 interface Props {
   savedBirth?: BirthInput | null
@@ -9,10 +10,12 @@ interface Props {
   onBack: () => void
 }
 
-const REL_OPTIONS: { key: GunghabRelation; icon: string; label: string; desc: string }[] = [
-  { key: 'couple', icon: '💕', label: '커플',     desc: '연인 궁합' },
-  { key: 'friend', icon: '🤝', label: '친구',     desc: '우정 궁합' },
-  { key: 'work',   icon: '💼', label: '직장동료', desc: '업무 궁합' },
+type IconCmp = React.FC<{ size?: number; className?: string }>
+
+const REL_OPTIONS: { key: GunghabRelation; Icon: IconCmp; label: string; desc: string }[] = [
+  { key: 'couple', Icon: IcLoveLuck, label: '커플',     desc: '연인 궁합' },
+  { key: 'friend', Icon: IcMatch,    label: '친구',     desc: '우정 궁합' },
+  { key: 'work',   Icon: IcJob,      label: '직장동료', desc: '업무 궁합' },
 ]
 
 // 캔바 디자인의 점수 바 색상 — 빨강(낮음) → 골드(중간) → 초록(높음) 스펙트럼
@@ -81,7 +84,7 @@ function CornerBracket({ corner }: { corner: 'tl' | 'tr' | 'bl' | 'br' }) {
 function PersonForm({
   title, icon, fields, onChange, accent,
 }: {
-  title: string; icon: string
+  title: string; icon: React.ReactNode
   fields: BirthFields; onChange: (f: BirthFields) => void
   accent: 'violet' | 'rose'
 }) {
@@ -98,7 +101,7 @@ function PersonForm({
     <div>
       <div className="flex items-center gap-2 mb-3">
         <div className={`w-1 h-4 ${accentLine} rounded-full`} />
-        <span className="text-base">{icon}</span>
+        {icon}
         <p className="text-sm font-bold text-[#F5EDD4]">{title}</p>
       </div>
       <div className="space-y-2.5">
@@ -211,7 +214,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
                 </p>
                 <p className="text-sm text-violet-300/80 leading-relaxed">두 사람의 사주를 분석해<br />얼마나 잘 맞는지 알려드립니다</p>
               </div>
-              <div className="text-6xl opacity-80">💕</div>
+              <IcGunghab size={60} className="text-[#C9962A] opacity-90 shrink-0" />
             </div>
           </div>
 
@@ -219,27 +222,30 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
           <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
             <p className="text-xs font-semibold text-[#A89BC0] mb-3">관계 선택</p>
             <div className="grid grid-cols-3 gap-2">
-              {REL_OPTIONS.map(opt => (
-                <button
-                  key={opt.key} type="button" onClick={() => setRel(opt.key)}
-                  className={`py-3.5 rounded-2xl text-center transition-all active:scale-95 ${
-                    rel === opt.key
-                      ? 'bg-gradient-to-b from-[#C9962A] to-[#B8871F] text-[#0D0A1A] shadow-lg shadow-[#C9962A30]'
-                      : 'bg-[#1C1438] border border-[#2A1F4A] text-[#A89BC0]'
-                  }`}
-                >
-                  <p className="text-2xl mb-1">{opt.icon}</p>
-                  <p className="text-xs font-bold">{opt.label}</p>
-                  <p className="text-[10px] opacity-60 mt-0.5">{opt.desc}</p>
-                </button>
-              ))}
+              {REL_OPTIONS.map(opt => {
+                const active = rel === opt.key
+                return (
+                  <button
+                    key={opt.key} type="button" onClick={() => setRel(opt.key)}
+                    className={`py-3.5 rounded-2xl text-center transition-all active:scale-95 border ${
+                      active
+                        ? 'bg-gradient-to-b from-[#C9962A] to-[#B8871F] border-[#E8B84B] text-[#0D0A1A] shadow-lg shadow-[#C9962A40]'
+                        : 'bg-[#1C1438] border-[#2A1F4A] text-[#A89BC0]'
+                    }`}
+                  >
+                    <opt.Icon size={26} className={`mx-auto mb-1.5 ${active ? 'text-[#0D0A1A]' : 'text-[#C9962A]'}`} />
+                    <p className="text-xs font-bold">{opt.label}</p>
+                    <p className="text-[10px] opacity-70 mt-0.5">{opt.desc}</p>
+                  </button>
+                )
+              })}
             </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-3">
             {/* 나 */}
             <div className="bg-[#130E24] rounded-3xl border border-[#C9962A30] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
-              <PersonForm title="나" icon="🧑" fields={me} onChange={setMe} accent="violet" />
+              <PersonForm title="나" icon={<IcProfile size={16} className="text-[#C9962A]" />} fields={me} onChange={setMe} accent="violet" />
             </div>
 
             {/* VS 구분선 */}
@@ -257,9 +263,10 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
             {/* 상대방 */}
             <div className="bg-[#130E24] rounded-3xl border border-rose-900/40 shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5 space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">
-                  {relOpt.icon} {relOpt.label} 이름
-                  <span className="text-[#4A4060] font-normal ml-1">(선택)</span>
+                <label className="flex items-center gap-1.5 text-xs font-semibold text-[#A89BC0] mb-1.5">
+                  <relOpt.Icon size={14} className="text-[#C9962A]" />
+                  {relOpt.label} 이름
+                  <span className="text-[#4A4060] font-normal">(선택)</span>
                 </label>
                 <input
                   ref={inputRef}
@@ -270,14 +277,14 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
                   className="w-full bg-[#1C1438] border border-rose-900/40 rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-900/20 transition"
                 />
               </div>
-              <PersonForm title="상대방" icon={relOpt.icon} fields={them} onChange={setThem} accent="rose" />
+              <PersonForm title="상대방" icon={<relOpt.Icon size={16} className="text-rose-300" />} fields={them} onChange={setThem} accent="rose" />
             </div>
 
             <button
               type="submit"
-              className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] transition-all text-sm active:scale-[0.98]"
+              className="w-full py-4 flex items-center justify-center gap-1.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] transition-all text-sm active:scale-[0.98]"
             >
-              {relOpt.icon} {nameLabel}과의 궁합 확인하기 →
+              <relOpt.Icon size={16} className="text-[#0D0A1A]" /> {nameLabel}과의 궁합 확인하기 →
             </button>
           </form>
         </div>
@@ -295,7 +302,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
               <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1 w-6 h-6 rounded-full bg-rose-400 shadow-lg shadow-rose-200" />
             </div>
             <div className="absolute inset-4 rounded-full border-2 border-dashed border-[#2A1F4A] animate-spin" style={{ animationDuration: '4s', animationDirection: 'reverse' }} />
-            <div className="absolute inset-0 flex items-center justify-center text-4xl">💕</div>
+            <div className="absolute inset-0 flex items-center justify-center"><IcGunghab size={36} className="text-[#C9962A]" /></div>
           </div>
           <div className="text-center">
             <p className="text-base font-bold text-[#F5EDD4] mb-1">사주를 분석하는 중</p>
