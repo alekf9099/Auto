@@ -149,6 +149,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
   })()
 
   useEffect(() => {
+    if (isGuest) return  // 게스트는 포인트가 없으므로 출석 보너스도 적립하지 않는다
     const { next, claimed, milestone } = tryClaimDaily(points)
     if (claimed) {
       onPointsUpdate(next)
@@ -243,13 +244,15 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <h1 className="text-lg font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>운명봄</h1>
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => setShowPoints(true)}
-              className="flex items-center gap-1 bg-[#C9962A15] border border-[#C9962A30] px-3 py-1.5 rounded-full hover:bg-[#C9962A25] transition"
-            >
-              <IcGem size={14} className="text-[#C9962A]"/>
-              <span className="text-xs font-bold text-[#C9962A]">{animatedBalance.toLocaleString()}P</span>
-            </button>
+            {!isGuest && (
+              <button
+                onClick={() => setShowPoints(true)}
+                className="flex items-center gap-1 bg-[#C9962A15] border border-[#C9962A30] px-3 py-1.5 rounded-full hover:bg-[#C9962A25] transition"
+              >
+                <IcGem size={14} className="text-[#C9962A]"/>
+                <span className="text-xs font-bold text-[#C9962A]">{animatedBalance.toLocaleString()}P</span>
+              </button>
+            )}
             {isGuest
               ? <button onClick={onRequestLogin} className="text-xs font-semibold text-[#C9962A] hover:text-[#E8B84B] transition px-2 py-1">로그인</button>
               : <button onClick={onLogout} className="text-xs text-[#A89BC0] hover:text-[#C4B8D8] transition px-2 py-1">로그아웃</button>
@@ -484,8 +487,8 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         </button>
         </div>
 
-        {/* 출석체크 배너 */}
-        {(() => {
+        {/* 출석체크 배너 — 게스트는 포인트가 없어 숨김 */}
+        {!isGuest && (() => {
           const checked = points.lastDaily === new Date().toISOString().slice(0, 10)
           const TOTAL_DAYS = 7
           const completed = streak >= TOTAL_DAYS
@@ -569,8 +572,8 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           )
         })()}
 
-        {/* 행운의 숫자 잡기 이벤트 배너 */}
-        {(() => {
+        {/* 행운의 숫자 잡기 이벤트 배너 — 게스트는 포인트가 없어 숨김 */}
+        {!isGuest && (() => {
           const remaining = LUCKY_TIMER_MAX_ATTEMPTS - getLuckyTimerAttempts()
           return (
             <div style={reveal(4)}>

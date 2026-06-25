@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { loadPoints, tryFeatureBonus } from '../utils/points'
+import { isGuest } from '../utils/guestGate'
 import PointsToast from './PointsToast'
 import { IcGem } from './icons/SajuIcons'
 
@@ -10,6 +11,9 @@ interface Props {
 
 export default function PointsClaimButton({ featureKey, label }: Props) {
   const [toast, setToast] = useState<{ amount: number; total: number } | null>(null)
+
+  // 게스트는 포인트가 없으므로 적립 버튼을 노출하지 않는다.
+  if (isGuest()) return null
 
   function handleClaim() {
     const { next, claimed } = tryFeatureBonus(loadPoints(), featureKey, label)

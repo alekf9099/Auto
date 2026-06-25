@@ -5,6 +5,7 @@ import type { PointsState } from './utils/points'
 import { setCurrentEmail, setIdToken, getIdToken, getCurrentEmail, getCurrentName, setCurrentName, getCurrentPicture, setCurrentPicture, getProvider, setProvider, pullCloudData, scheduleCloudPush, onSyncStatusChange, deleteCloudAccount, clearAllLocalData } from './utils/cloudSync'
 import { fetchRemoteConfig, isNoticeDismissed, dismissNotice } from './utils/remoteConfig'
 import { loadNickname, saveNickname } from './utils/nickname'
+import { isGuestUsed, markGuestUsed } from './utils/guestGate'
 import { trackPageView, trackEvent } from './utils/analytics'
 import LoginPage        from './components/LoginPage'
 import SplashScreen     from './components/SplashScreen'
@@ -217,7 +218,8 @@ export default function App() {
     setNickname(nick)
     saveBirthProfile(b)
     const cur = loadPoints()
-    if (isNewCloudUser && cur.history.length === 0) {
+    // 게스트는 포인트가 없으므로 가입 보너스도 지급하지 않는다.
+    if (!isGuest && isNewCloudUser && cur.history.length === 0) {
       setPoints(awardPoints(cur, 100, '가입 보너스 🎉'))
       trackEvent('sign_up')
     }
@@ -229,6 +231,11 @@ export default function App() {
     // 사주매칭은 서버(익명 풀)가 필요해 게스트는 사용할 수 없다.
     if (isGuest && dest === 'match') { setLoginPrompt('사주매칭은 로그인이 필요해요.'); return }
     if (!birthProfile) { setPage('profile'); window.scrollTo(0, 0); return }
+    // 게스트는 각 분석을 1회만 볼 수 있다.
+    if (isGuest) {
+      if (isGuestUsed(dest)) { setLoginPrompt('게스트는 각 분석을 1회만 볼 수 있어요.'); return }
+      markGuestUsed(dest)
+    }
     setPage(dest)
     window.scrollTo(0, 0)
   }
@@ -236,6 +243,11 @@ export default function App() {
   function handleTabNavigate(tab: NavTab) {
     if (tab === 'home') { goHome(); return }
     if (tab === 'saju') { handleHomeNavigate('saju'); return }
+    // 출석·이벤트는 포인트 기반이라 게스트는 로그인 후 이용한다.
+    if (isGuest && (tab === 'attendance' || tab === 'event')) {
+      setLoginPrompt('출석·이벤트는 로그인 후 이용할 수 있어요.')
+      return
+    }
     setPage(tab)
     window.scrollTo(0, 0)
   }
