@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { createClient } from '@supabase/supabase-js'
-import { verifyAuthToken, AuthProviderUnreachableError } from './_auth'
+import { verifyAuthToken, AuthProviderUnreachableError } from '../lib/auth.js'
 
 // 구글/카카오 인증 토큰을 서버에서 검증한 뒤, service_role 키로만 사용자 데이터에 접근한다.
 // 클라이언트(anon 키)는 user_data 테이블에 직접 접근할 수 없다.

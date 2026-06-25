@@ -1,5 +1,7 @@
 /// <reference types="node" />
-// 파일명이 _로 시작해 Vercel이 별도 라우트로 배포하지 않는다 (sync.ts, match.ts에서만 가져다 쓴다).
+// 구글/카카오 인증 토큰 검증 (서버 전용 공유 모듈).
+// api/ 밖에 두어 라우트로 노출되지 않게 하고, 각 함수에서 '../lib/auth.js'로 가져다 쓴다.
+// (ESM 서버리스 환경에서 import 경로는 .js 확장자를 명시해야 안전하게 해석된다.)
 
 interface GoogleTokenInfo {
   aud: string

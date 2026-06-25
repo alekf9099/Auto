@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { createClient } from '@supabase/supabase-js'
-import { verifyAuthToken, AuthProviderUnreachableError } from './_auth'
+import { verifyAuthToken, AuthProviderUnreachableError } from '../lib/auth.js'
 
 // 사주매칭: 옵트인한 사용자 풀에서 무작위로 한 명을 뽑아 닉네임 + 생년월일시 + (선택)프로필 사진을 돌려준다.
 // 이메일/이름/계정 사진 등 실제 신원 정보는 절대 클라이언트에 노출하지 않는다.

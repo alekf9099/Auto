@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { createClient } from '@supabase/supabase-js'
-import { verifyAuthToken, AuthProviderUnreachableError } from './_auth'
+import { verifyAuthToken, AuthProviderUnreachableError } from '../lib/auth.js'
 
 // 웹 푸시 구독 저장/해제. 본인 인증 토큰을 검증한 뒤 service_role 키로 push_subscriptions에 기록한다.
 

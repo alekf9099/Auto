@@ -1,7 +1,7 @@
 /// <reference types="node" />
 import { randomBytes } from 'crypto'
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
-import { verifyAuthToken } from './_auth'
+import { verifyAuthToken } from '../lib/auth.js'
 
 // 친구 초대: 사용자마다 추천 코드를 하나씩 발급하고, 다른 사람이 그 코드를 입력하면
 // 둘 다 포인트를 받는다. 포인트는 클라이언트가 스스로 지급할 수 없도록 서버가 직접
