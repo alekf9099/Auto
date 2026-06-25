@@ -85,6 +85,21 @@ export function claimLuckyTimer(p: PointsState, success: boolean): { next: Point
 // 심층 사주 잠금 해제에 필요한 포인트
 export const DEEP_SAJU_UNLOCK_COST = 50
 
+// 리워드 광고 보상 — 광고 1회 시청당 지급 / 하루 상한.
+// 라벨·금액은 서버 검증(api/sync.ts POINT_RULES)과 반드시 일치해야 한다.
+export const REWARDED_AD_REWARD = 20
+export const REWARDED_AD_DAILY_CAP = 5
+export const REWARDED_AD_LABEL = '광고 보상 🎬'
+
+export function getRewardedAdCountToday(p: PointsState): number {
+  return p.history.filter(h => h.date === today() && h.label === REWARDED_AD_LABEL).length
+}
+
+export function claimRewardedAd(p: PointsState): { next: PointsState; ok: boolean } {
+  if (getRewardedAdCountToday(p) >= REWARDED_AD_DAILY_CAP) return { next: p, ok: false }
+  return { next: awardPoints(p, REWARDED_AD_REWARD, REWARDED_AD_LABEL), ok: true }
+}
+
 export function spendPoints(p: PointsState, amount: number, label: string): { next: PointsState; success: boolean } {
   if (p.balance < amount) return { next: p, success: false }
   const next: PointsState = {

@@ -1,12 +1,29 @@
+import { useState } from 'react'
 import type { PointsState } from '../utils/points'
+import { claimRewardedAd, getRewardedAdCountToday, REWARDED_AD_REWARD, REWARDED_AD_DAILY_CAP } from '../utils/points'
+import { showRewardedAd, REWARDED_ADS_ENABLED } from '../utils/rewardedAd'
 import { IcGem } from './icons/SajuIcons'
 
 interface Props {
   points: PointsState
   onClose: () => void
+  onPointsUpdate?: (p: PointsState) => void
 }
 
-export default function PointsModal({ points, onClose }: Props) {
+export default function PointsModal({ points, onClose, onPointsUpdate }: Props) {
+  const [watching, setWatching] = useState(false)
+  const adsLeft = REWARDED_AD_DAILY_CAP - getRewardedAdCountToday(points)
+
+  async function watchAd() {
+    if (watching || adsLeft <= 0) return
+    setWatching(true)
+    const earned = await showRewardedAd()
+    setWatching(false)
+    if (!earned) return
+    const { next, ok } = claimRewardedAd(points)
+    if (ok) onPointsUpdate?.(next)
+  }
+
   return (
     <div
       className="fixed inset-0 z-50 flex items-end justify-center"
@@ -48,6 +65,21 @@ export default function PointsModal({ points, onClose }: Props) {
             ))}
           </div>
         </div>
+
+        {/* 광고 보고 포인트 받기 (리워드 광고 연동 시 노출) */}
+        {REWARDED_ADS_ENABLED && onPointsUpdate && (
+          <button
+            onClick={watchAd}
+            disabled={watching || adsLeft <= 0}
+            className="w-full mb-5 py-3.5 rounded-2xl bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold text-sm active:scale-[0.98] transition disabled:opacity-50"
+          >
+            {watching
+              ? '광고 시청 중…'
+              : adsLeft > 0
+                ? `🎬 광고 보고 +${REWARDED_AD_REWARD}P 받기 (오늘 ${adsLeft}회 남음)`
+                : '오늘 광고 보상을 모두 받았어요'}
+          </button>
+        )}
 
         {/* 내역 */}
         <div className="flex items-center gap-2 mb-3">

@@ -33,6 +33,8 @@ const POINT_RULES: Record<string, { amount: number; dailyCap?: number; totalCap?
   '꿈해몽 확인 💭':           { amount: 5,   dailyCap: 1 },
   '타로 상담 확인 🔮':        { amount: 5,   dailyCap: 1 },
   '심층 사주 전체 잠금 해제':  { amount: -50 },
+  // 리워드 광고 시청 보상 (src/utils/points.ts REWARDED_AD_* 와 일치해야 한다)
+  '광고 보상 🎬':             { amount: 20,  dailyCap: 5 },
   // 친구 초대(api/referral.ts)가 직접 지급하는 보너스. 라벨/금액이 여기 등록돼 있지 않으면
   // 다음 동기화 때 위조로 간주돼 history에서 사라진다.
   '친구 초대 보너스 🎁':       { amount: 50,  totalCap: 10 },

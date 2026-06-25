@@ -236,7 +236,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
             : `🎉 ${dailyToast.milestone}일 연속 출석 달성! +${10 + dailyToast.bonus}P 지급!`}
         </div>
       )}
-      {showPoints && <PointsModal points={points} onClose={() => setShowPoints(false)} />}
+      {showPoints && <PointsModal points={points} onClose={() => setShowPoints(false)} onPointsUpdate={onPointsUpdate} />}
 
       {/* 상단 바 */}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
