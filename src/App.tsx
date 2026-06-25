@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from 'react'
+import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import type { BirthInput, UserInfo } from './types'
 import { loadPoints, awardPoints } from './utils/points'
 import type { PointsState } from './utils/points'
@@ -98,10 +98,24 @@ export default function App() {
 
   const isGuest = user?.provider === 'guest'
 
+  // 알림(푸시)을 눌러 들어온 경우 ?go=today → 로그인/프로필이 준비되면 오늘의 운세로 이동
+  const pendingGo = useRef<string | null>(
+    typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('go') : null
+  )
+
   useEffect(() => onSyncStatusChange(status => setSyncIssue(status === 'ok' ? null : status)), [])
 
   // 개별 분석 페이지의 "다시 하기"가 게스트일 때 로그인 모달을 띄울 수 있도록 핸들러를 등록한다.
   useEffect(() => registerGuestPrompt(msg => setLoginPrompt(msg)), [])
+
+  // 알림으로 진입(?go=today): 사용자/생년월일이 준비되면 오늘의 운세 화면으로 보낸다.
+  useEffect(() => {
+    if (pendingGo.current !== 'today' || !user || !birthProfile) return
+    pendingGo.current = null
+    try { window.history.replaceState({}, '', window.location.pathname) } catch { /* noop */ }
+    setPage('today')
+    window.scrollTo(0, 0)
+  }, [user, birthProfile])
 
   // 배포 없이 공지/점검 메시지를 띄울 수 있도록 원격 설정을 한 번 가져온다 (실패해도 무시).
   useEffect(() => {

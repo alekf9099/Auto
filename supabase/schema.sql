@@ -70,3 +70,15 @@ alter table public.referrals enable row level security;
 
 -- user_data와 동일하게 anon/authenticated 키로는 전혀 접근할 수 없고,
 -- 서버(/api/referral)가 구글/카카오 인증 토큰을 검증한 뒤 service_role 키로만 읽고/쓴다.
+
+-- 웹 푸시 구독: "매일 운세 알림"을 켠 사용자의 푸시 구독 정보를 저장한다.
+-- email은 본인 식별/발송 대상 조회용으로만 쓰이며, 서버(/api/push-subscribe, /api/cron-daily-fortune)가
+-- service_role 키로만 접근한다 (다른 테이블과 동일한 패턴).
+create table if not exists public.push_subscriptions (
+  email        text primary key,
+  subscription jsonb not null,
+  enabled      boolean not null default true,
+  updated_at   timestamptz not null default now()
+);
+
+alter table public.push_subscriptions enable row level security;

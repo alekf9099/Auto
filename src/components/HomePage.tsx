@@ -8,6 +8,7 @@ import { SIPSIN_DESC, STEMS, ELEMENT_COLORS, ELEMENT_LABELS } from '../utils/con
 import { DAY_FORTUNE } from '../utils/fortuneData'
 import PointsModal from './PointsModal'
 import AdBanner from './AdBanner'
+import { isPushSupported, isPushEnabled, enablePush, disablePush } from '../utils/pushNotify'
 import {
   IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcTarot, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon, IcTojeong, IcLucky, IcBattle, IcMatch,
 } from './icons/SajuIcons'
@@ -88,6 +89,57 @@ function PromoBanner({
         </div>
 
         <span className="relative text-xs font-semibold shrink-0" style={{ color: accent }}>보기 →</span>
+      </button>
+    </div>
+  )
+}
+
+// 매일 운세 알림 on/off 토글 (로그인 사용자 전용, 브라우저가 푸시를 지원할 때만 표시)
+function NotifyToggle() {
+  const [enabled, setEnabled] = useState(() => (typeof window !== 'undefined' ? isPushEnabled() : false))
+  const [busy, setBusy] = useState(false)
+  const [denied, setDenied] = useState(false)
+
+  if (!isPushSupported()) return null
+
+  async function toggle() {
+    if (busy) return
+    setBusy(true)
+    setDenied(false)
+    if (enabled) {
+      await disablePush()
+      setEnabled(false)
+    } else {
+      const r = await enablePush()
+      if (r.ok) setEnabled(true)
+      else if (r.reason === 'denied') setDenied(true)
+    }
+    setBusy(false)
+  }
+
+  return (
+    <div className="flex items-center justify-between bg-[#130E24] rounded-3xl border border-[#2A1F4A] px-4 py-3.5">
+      <div className="flex items-center gap-3">
+        <span className="w-9 h-9 rounded-full bg-[#C9962A15] border border-[#C9962A30] flex items-center justify-center shrink-0">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none">
+            <path d="M12 3a5 5 0 0 0-5 5v3.5L5.5 15h13L17 11.5V8a5 5 0 0 0-5-5z" stroke="#C9962A" strokeWidth="1.6" strokeLinejoin="round" />
+            <path d="M10 18a2 2 0 0 0 4 0" stroke="#C9962A" strokeWidth="1.6" strokeLinecap="round" />
+          </svg>
+        </span>
+        <div>
+          <p className="text-sm font-semibold text-[#F5EDD4]">매일 운세 알림</p>
+          <p className="text-[11px] text-[#7B6F9A]">
+            {denied ? '브라우저 알림이 차단돼 있어요. 설정에서 허용해주세요' : '매일 아침 8시, 오늘의 운세를 보내드려요'}
+          </p>
+        </div>
+      </div>
+      <button
+        onClick={toggle}
+        disabled={busy}
+        aria-label="매일 운세 알림 토글"
+        className={`relative w-12 h-7 rounded-full transition-colors shrink-0 disabled:opacity-60 ${enabled ? 'bg-[#C9962A]' : 'bg-[#2A1F4A]'}`}
+      >
+        <span className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow transition-all ${enabled ? 'left-[22px]' : 'left-0.5'}`} />
       </button>
     </div>
   )
@@ -424,6 +476,13 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
             })}
           </div>
         </div>
+
+        {/* 매일 운세 알림 토글 (로그인 사용자 전용) */}
+        {!isGuest && (
+          <div style={reveal(2)}>
+            <NotifyToggle />
+          </div>
+        )}
 
         {/* 저장된 프로필 배지 */}
         {birthProfile && (
