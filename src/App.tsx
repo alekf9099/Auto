@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react'
 import type { BirthInput, UserInfo } from './types'
 import { loadPoints, awardPoints } from './utils/points'
 import type { PointsState } from './utils/points'
-import { setCurrentEmail, setIdToken, getIdToken, getCurrentEmail, getCurrentName, setCurrentName, getCurrentPicture, setCurrentPicture, getProvider, setProvider, pullCloudData, scheduleCloudPush, onSyncStatusChange, deleteCloudAccount } from './utils/cloudSync'
+import { setCurrentEmail, setIdToken, getIdToken, getCurrentEmail, getCurrentName, setCurrentName, getCurrentPicture, setCurrentPicture, getProvider, setProvider, pullCloudData, scheduleCloudPush, onSyncStatusChange, deleteCloudAccount, clearAllLocalData } from './utils/cloudSync'
 import { fetchRemoteConfig, isNoticeDismissed, dismissNotice } from './utils/remoteConfig'
 import { loadNickname, saveNickname } from './utils/nickname'
 import { trackPageView, trackEvent } from './utils/analytics'
@@ -142,12 +142,13 @@ export default function App() {
   function goHome() { setPoints(loadPoints()); setPage('home'); window.scrollTo(0, 0) }
 
   function handleLogout() {
-    setCurrentEmail(null)
-    setIdToken(null)
-    setCurrentName(null)
-    setCurrentPicture(null)
-    setProvider(null)
+    // 로컬에 남은 개인 데이터(생년월일·닉네임·포인트 등)까지 모두 비워, 같은 기기에서
+    // 다음 사용자(게스트 또는 다른 계정)에게 이전 정보가 새지 않도록 한다.
+    clearAllLocalData()
     setUser(null)
+    setBirthProfile(null)
+    setNickname('')
+    setPoints(loadPoints())
     setSyncIssue(null)
     setPage('login')
     window.scrollTo(0, 0)
@@ -189,13 +190,17 @@ export default function App() {
     window.scrollTo(0, 0)
   }
 
-  // 로그인 없이 둘러보기. 생년월일이 없으면 프로필 입력으로, 있으면 홈으로.
+  // 로그인 없이 둘러보기. 게스트는 익명으로 시작하므로 이전 계정/세션 데이터를 모두 비운다.
   function handleGuest() {
+    clearAllLocalData()
     setProvider('guest')
     setUser(GUEST_USER)
+    setBirthProfile(null)
+    setNickname('')
+    setPoints(loadPoints())
     setIsNewCloudUser(true)
     trackEvent('guest_start')
-    setPage(loadBirthProfile() ? 'home' : 'profile')
+    setPage('profile')
     window.scrollTo(0, 0)
   }
 

@@ -73,6 +73,17 @@ export function decodeIdToken(token: string): { name: string; email: string; pic
   } catch { return null }
 }
 
+// 이 앱이 localStorage에 저장한 모든 데이터(unmyeongbom_*)를 제거한다.
+// 로그아웃·게스트 시작 시 이전 계정/세션 데이터가 남아 다음 사용자에게 보이는 것을 막는다.
+export function clearAllLocalData(): void {
+  const keys: string[] = []
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i)
+    if (k && k.startsWith(PREFIX)) keys.push(k)
+  }
+  keys.forEach(k => localStorage.removeItem(k))
+}
+
 function collectLocalData(): Record<string, unknown> {
   const data: Record<string, unknown> = {}
   for (let i = 0; i < localStorage.length; i++) {
