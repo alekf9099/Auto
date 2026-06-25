@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { UserInfo } from '../types'
 import { decodeIdToken } from '../utils/cloudSync'
 
@@ -36,6 +36,11 @@ declare global {
 }
 
 export default function LoginPage({ onLogin, onGuest, onShowPrivacy, onShowTerms }: Props) {
+  // 카카오 리다이렉트(?code=…)로 돌아온 직후엔 토큰 교환을 처리하는 동안 "로그인 중…"을 보여준다.
+  const [processingKakao, setProcessingKakao] = useState<boolean>(
+    () => !!KAKAO_KEY && new URLSearchParams(window.location.search).has('code')
+  )
+
   useEffect(() => {
     if (!CLIENT_ID) return
 
@@ -84,7 +89,7 @@ export default function LoginPage({ onLogin, onGuest, onShowPrivacy, onShowTerms
       .then(data => {
         onLogin({ name: data.name, email: data.email, picture: data.picture ?? undefined, idToken: data.accessToken, provider: 'kakao' })
       })
-      .catch(err => console.error('카카오 로그인 처리 실패:', err))
+      .catch(err => { console.error('카카오 로그인 처리 실패:', err); setProcessingKakao(false) })
   }, [])
 
   function handleKakaoLogin() {
@@ -141,6 +146,14 @@ export default function LoginPage({ onLogin, onGuest, onShowPrivacy, onShowTerms
         <p className="text-sm text-[#7B6F9A]">당신의 운명을 봅니다</p>
       </div>
 
+      {processingKakao ? (
+        <div className="w-full max-w-sm flex flex-col items-center py-12">
+          <div className="w-10 h-10 rounded-full border-[3px] border-[#2A1F4A] border-t-[#C9962A] animate-spin" style={{ animationDuration: '0.8s' }} />
+          <p className="mt-4 text-sm font-semibold text-[#C4B8D8]">카카오 로그인 중…</p>
+          <p className="mt-1 text-xs text-[#7B6F9A]">잠시만 기다려주세요</p>
+        </div>
+      ) : (
+      <>
       {/* ── 로그인 카드 ── */}
       <div className="w-full max-w-sm bg-[#130E24] rounded-3xl shadow-[0_4px_24px_rgba(201,150,42,0.12)] border border-[#2A1F4A] p-7">
         <h2 className="text-base font-bold text-[#F5EDD4] mb-1 text-center">로그인</h2>
@@ -192,6 +205,8 @@ export default function LoginPage({ onLogin, onGuest, onShowPrivacy, onShowTerms
         로그인 없이 둘러보기 →
       </button>
       <p className="mt-2 text-[11px] text-[#4A4060] text-center">출석·포인트 저장, 사주매칭은 로그인 후 이용할 수 있어요</p>
+      </>
+      )}
 
       <p className="mt-6 text-xs text-[#4A4060] text-center">본 서비스는 참고용이며 정확성을 보장하지 않습니다</p>
       <p className="mt-2 text-xs text-[#4A4060] text-center">

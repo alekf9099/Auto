@@ -78,7 +78,11 @@ function PageFallback() {
 }
 
 export default function App() {
-  const [page,         setPage]         = useState<Page>('splash')
+  // 카카오 로그인 리다이렉트로 돌아온 경우(?code=…)엔 스플래시를 건너뛰고 바로 로그인 화면에서
+  // 토큰 교환을 처리한다(스플래시 2초 + 로그인 화면 깜빡임 제거).
+  const [page,         setPage]         = useState<Page>(() =>
+    typeof window !== 'undefined' && new URLSearchParams(window.location.search).has('code') ? 'login' : 'splash'
+  )
   const [user,         setUser]         = useState<UserInfo | null>(restoreUser)
   const [birthProfile, setBirthProfile] = useState<BirthInput | null>(loadBirthProfile)
   const [nickname,     setNickname]     = useState<string>(loadNickname)
