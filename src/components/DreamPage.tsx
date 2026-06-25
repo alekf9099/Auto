@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { blockGuestRetry } from '../utils/guestGate'
 import PointsClaimButton from './PointsClaimButton'
 import { IcDream } from './icons/SajuIcons'
 
@@ -243,7 +244,7 @@ export default function DreamPage({ onBack }: Props) {
 
             {/* Restart CTA */}
             <button
-              onClick={() => { setStep('input'); setResult(null); setDreamText(''); window.scrollTo(0, 0) }}
+              onClick={() => { if (blockGuestRetry()) return; setStep('input'); setResult(null); setDreamText(''); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99]"
             >
               다른 꿈 해몽하기 →

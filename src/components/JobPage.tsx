@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { blockGuestRetry } from '../utils/guestGate'
 import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin } from '../utils/saju'
 import { getElement, JOB_DATA, JOB_LUCK_BY_SIPSIN, LUCK_GRADE_CFG } from '../utils/jobData'
@@ -355,7 +356,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
               📤 취업운 카드 공유하기
             </button>
             <button
-              onClick={() => { setStep('form'); setSubmitted(null); window.scrollTo(0, 0) }}
+              onClick={() => { if (blockGuestRetry()) return; setStep('form'); setSubmitted(null); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-gradient-to-r from-[#3FA86A] to-[#4BBF7E] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#359A5E] hover:to-[#3FAE6E] transition-all active:scale-[0.99]"
             >
               다시 분석하기 →

@@ -5,7 +5,7 @@ import type { PointsState } from './utils/points'
 import { setCurrentEmail, setIdToken, getIdToken, getCurrentEmail, getCurrentName, setCurrentName, getCurrentPicture, setCurrentPicture, getProvider, setProvider, pullCloudData, scheduleCloudPush, onSyncStatusChange, deleteCloudAccount, clearAllLocalData } from './utils/cloudSync'
 import { fetchRemoteConfig, isNoticeDismissed, dismissNotice } from './utils/remoteConfig'
 import { loadNickname, saveNickname } from './utils/nickname'
-import { isGuestUsed, markGuestUsed } from './utils/guestGate'
+import { isGuestUsed, markGuestUsed, registerGuestPrompt } from './utils/guestGate'
 import { trackPageView, trackEvent } from './utils/analytics'
 import LoginPage        from './components/LoginPage'
 import SplashScreen     from './components/SplashScreen'
@@ -95,6 +95,9 @@ export default function App() {
   const isGuest = user?.provider === 'guest'
 
   useEffect(() => onSyncStatusChange(status => setSyncIssue(status === 'ok' ? null : status)), [])
+
+  // 개별 분석 페이지의 "다시 하기"가 게스트일 때 로그인 모달을 띄울 수 있도록 핸들러를 등록한다.
+  useEffect(() => registerGuestPrompt(msg => setLoginPrompt(msg)), [])
 
   // 배포 없이 공지/점검 메시지를 띄울 수 있도록 원격 설정을 한 번 가져온다 (실패해도 무시).
   useEffect(() => {

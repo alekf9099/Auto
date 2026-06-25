@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { blockGuestRetry } from '../utils/guestGate'
 import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin } from '../utils/saju'
 import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
@@ -296,7 +297,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
 
             <PointsClaimButton featureKey="sinnyeon" label="신년운세 확인 🗓️" />
             <button
-              onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
+              onClick={() => { if (blockGuestRetry()) return; setStep('form'); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
             >
               다시 조회하기

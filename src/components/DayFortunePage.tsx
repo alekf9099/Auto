@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { blockGuestRetry } from '../utils/guestGate'
 import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin } from '../utils/saju'
 import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
@@ -463,7 +464,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             </button>
             <PointsClaimButton key={featKey} featureKey={featKey} label={`${title} 확인 🔮`} />
             <button
-              onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
+              onClick={() => { if (blockGuestRetry()) return; setStep('form'); window.scrollTo(0, 0) }}
               className="w-full py-3.5 text-[#C4B8D8] font-semibold rounded-2xl text-sm border border-[#C9962A20] transition active:scale-[0.98]"
               style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #1C1438 100%)' }}
             >

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { blockGuestRetry } from '../utils/guestGate'
 import type { BirthInput } from '../types'
 import { calcTojeongGwe, getTojeongMonthly, getTojeongTotal } from '../utils/tojeong'
 import PointsClaimButton from './PointsClaimButton'
@@ -256,7 +257,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
 
             <PointsClaimButton featureKey="tojeong" label="토정비결 확인 📖" />
             <button
-              onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
+              onClick={() => { if (blockGuestRetry()) return; setStep('form'); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
             >
               다시 조회하기

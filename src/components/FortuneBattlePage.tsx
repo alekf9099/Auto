@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { blockGuestRetry } from '../utils/guestGate'
 import type { BirthInput } from '../types'
 import { calculateSaju, getSipsin } from '../utils/saju'
 import { DAY_FORTUNE } from '../utils/fortuneData'
@@ -325,7 +326,7 @@ export default function FortuneBattlePage({ savedBirth, onSave, onBack }: Props)
           </button>
           <PointsClaimButton featureKey="battle" label="운세대결 확인" />
           <button
-            onClick={() => { setStep('form'); window.scrollTo(0, 0) }}
+            onClick={() => { if (blockGuestRetry()) return; setStep('form'); window.scrollTo(0, 0) }}
             className="w-full py-3.5 bg-[#231844] text-[#C4B8D8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
           >
             다시 대결하기

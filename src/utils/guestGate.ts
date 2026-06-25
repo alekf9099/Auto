@@ -28,3 +28,21 @@ export function markGuestUsed(feature: string): void {
   used.push(feature)
   localStorage.setItem(USED_KEY, JSON.stringify(used))
 }
+
+// 분석 페이지의 "다시 하기" 버튼처럼, App 바깥(개별 페이지)에서 로그인 유도 모달을 띄우기 위한 다리.
+// App이 마운트 시 핸들러를 등록한다.
+let promptHandler: ((msg: string) => void) | null = null
+
+export function registerGuestPrompt(fn: (msg: string) => void): () => void {
+  promptHandler = fn
+  return () => { if (promptHandler === fn) promptHandler = null }
+}
+
+// 게스트가 재분석("다시 하기")을 시도하면 로그인 모달을 띄우고 true를 반환한다.
+// 게스트가 아니면 false(정상 진행).
+export function blockGuestRetry(): boolean {
+  if (!isGuest()) return false
+  promptHandler?.('게스트는 분석을 1회만 볼 수 있어요. 다시 보려면 로그인하세요.')
+  return true
+}
+

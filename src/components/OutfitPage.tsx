@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { blockGuestRetry } from '../utils/guestGate'
 import type { BirthInput } from '../types'
 import { calculateSaju } from '../utils/saju'
 import { getElement, OUTFIT_DATA } from '../utils/outfitData'
@@ -378,7 +379,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
 
             {/* Restart CTA */}
             <button
-              onClick={() => { setStep('form'); setSubmitted(null); setSelectedColor(null); window.scrollTo(0, 0) }}
+              onClick={() => { if (blockGuestRetry()) return; setStep('form'); setSubmitted(null); setSelectedColor(null); window.scrollTo(0, 0) }}
               className="w-full py-3.5 bg-gradient-to-r from-[#C9507A] to-[#E05282] text-white font-bold rounded-2xl shadow-lg hover:from-[#B8406A] hover:to-[#CE4272] transition-all active:scale-[0.99]"
             >
               다시 분석하기 →

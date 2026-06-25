@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { blockGuestRetry } from '../utils/guestGate'
 import { shuffleDeck, cardImageSrc } from '../utils/tarotDeck'
 import type { DrawnCard } from '../utils/tarotDeck'
 import PointsClaimButton from './PointsClaimButton'
@@ -137,6 +138,7 @@ export default function TarotPage({ onBack }: Props) {
   }
 
   function handleRestart() {
+    if (blockGuestRetry()) return
     setStep('intro')
     setQuestion('')
     setSpread([])
