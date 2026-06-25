@@ -2,7 +2,7 @@ import { useState, useEffect, lazy, Suspense } from 'react'
 import type { BirthInput, UserInfo } from './types'
 import { loadPoints, awardPoints } from './utils/points'
 import type { PointsState } from './utils/points'
-import { setCurrentEmail, setIdToken, getIdToken, getCurrentEmail, getCurrentName, setCurrentName, getCurrentPicture, setCurrentPicture, getProvider, setProvider, pullCloudData, scheduleCloudPush, onSyncStatusChange } from './utils/cloudSync'
+import { setCurrentEmail, setIdToken, getIdToken, getCurrentEmail, getCurrentName, setCurrentName, getCurrentPicture, setCurrentPicture, getProvider, setProvider, pullCloudData, scheduleCloudPush, onSyncStatusChange, deleteCloudAccount } from './utils/cloudSync'
 import { fetchRemoteConfig, isNoticeDismissed, dismissNotice } from './utils/remoteConfig'
 import { loadNickname, saveNickname } from './utils/nickname'
 import { trackPageView, trackEvent } from './utils/analytics'
@@ -82,6 +82,9 @@ export default function App() {
   const [legalReturn,  setLegalReturn]  = useState<Page>('login')
   const [syncIssue,    setSyncIssue]    = useState<'error' | 'expired' | null>(null)
   const [notice,       setNotice]       = useState<{ id: string; message: string } | null>(null)
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [deleting,     setDeleting]     = useState(false)
+  const [deleteError,  setDeleteError]  = useState(false)
 
   useEffect(() => onSyncStatusChange(status => setSyncIssue(status === 'ok' ? null : status)), [])
 
@@ -141,6 +144,25 @@ export default function App() {
     setSyncIssue(null)
     setPage('login')
     window.scrollTo(0, 0)
+  }
+
+  // 회원 탈퇴: 서버 데이터 삭제 → 로컬 데이터 전체 삭제 → 로그아웃. (Google Play 계정 삭제 정책)
+  async function handleDeleteAccount() {
+    setDeleting(true)
+    const ok = await deleteCloudAccount()
+    if (!ok) {
+      setDeleting(false)
+      setDeleteError(true)
+      return
+    }
+    trackEvent('account_delete')
+    localStorage.clear()
+    setBirthProfile(null)
+    setNickname('')
+    setPoints(loadPoints())
+    setShowDeleteConfirm(false)
+    setDeleting(false)
+    handleLogout()
   }
 
   async function handleLogin(u: UserInfo) {
@@ -227,6 +249,7 @@ export default function App() {
         onLogout={handleLogout}
         onShowPrivacy={() => openLegal('privacy', 'home')}
         onShowTerms={() => openLegal('terms', 'home')}
+        onDeleteAccount={() => { setDeleteError(false); setShowDeleteConfirm(true) }}
       />
     )
   } else if (page === 'attendance') {
@@ -321,6 +344,46 @@ export default function App() {
         </Suspense>
         {showNav && <BottomNav current={page as NavTab} onNavigate={handleTabNavigate} />}
       </div>
+
+      {/* 회원 탈퇴 확인 모달 */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center p-6 bg-black/70 backdrop-blur-sm" onClick={() => !deleting && setShowDeleteConfirm(false)}>
+          <div
+            className="w-full max-w-sm rounded-3xl bg-[#130E24] border border-[#2A1F4A] p-6 shadow-2xl"
+            onClick={e => e.stopPropagation()}
+          >
+            <h2 className="text-lg font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>회원 탈퇴</h2>
+            <p className="text-sm text-[#A89BC0] leading-relaxed mb-1">
+              탈퇴하면 <span className="text-[#E05252] font-semibold">계정과 모든 데이터가 영구 삭제</span>됩니다.
+            </p>
+            <ul className="text-xs text-[#7B6F9A] leading-relaxed mb-4 list-disc pl-4">
+              <li>사주·프로필·닉네임 정보</li>
+              <li>보유 포인트 {points.balance.toLocaleString()}P 및 적립 내역</li>
+              <li>사주매칭·친구초대 기록</li>
+            </ul>
+            <p className="text-xs text-[#7B6F9A] mb-4">삭제된 데이터는 복구할 수 없습니다.</p>
+            {deleteError && (
+              <p className="text-xs text-[#E05252] mb-3">삭제 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.</p>
+            )}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowDeleteConfirm(false)}
+                disabled={deleting}
+                className="flex-1 py-3 rounded-2xl bg-[#1C1438] border border-[#2A1F4A] text-sm font-semibold text-[#C4B8D8] active:scale-[0.98] transition disabled:opacity-50"
+              >
+                취소
+              </button>
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deleting}
+                className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#E05252] to-[#FF7A7A] text-sm font-bold text-white active:scale-[0.98] transition disabled:opacity-60"
+              >
+                {deleting ? '삭제 중…' : '탈퇴하기'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }

@@ -25,6 +25,7 @@ interface Props {
   onLogout: () => void
   onShowPrivacy: () => void
   onShowTerms: () => void
+  onDeleteAccount: () => void
 }
 
 // 배너 모서리를 장식하는 금색 이중선 브래킷 (전통 한지 액자 느낌)
@@ -104,7 +105,7 @@ const TAROT_CARD_IMAGES = [
   { src: '/images/tarot/hand.webp',       rotate: 'rotate-[14deg]' },
 ]
 
-export default function HomePage({ user, nickname, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms }: Props) {
+export default function HomePage({ user, nickname, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms, onDeleteAccount }: Props) {
   const todayDate = new Date()
   const month = todayDate.getMonth() + 1
   const day   = todayDate.getDate()
@@ -639,10 +640,12 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
       <AdBanner />
 
       <div className="text-center pb-2 text-xs text-[#4A4060]">사주팔자 — 양력 기준 · 절기 근사값 적용</div>
-      <div className="text-center pb-8 text-xs text-[#4A4060]">
+      <div className="text-center pb-3 text-xs text-[#4A4060]">
         <button onClick={onShowPrivacy} className="underline hover:text-[#7B6F9A] transition">개인정보처리방침</button>
         <span className="mx-2">·</span>
         <button onClick={onShowTerms} className="underline hover:text-[#7B6F9A] transition">이용약관</button>
+        <span className="mx-2">·</span>
+        <button onClick={onDeleteAccount} className="underline hover:text-[#E05252] transition">회원탈퇴</button>
       </div>
     </div>
   )

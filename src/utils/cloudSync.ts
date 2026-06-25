@@ -180,3 +180,22 @@ export async function pullCloudData(): Promise<{ isNewUser: boolean }> {
     return { isNewUser: true }
   }
 }
+
+// 회원 탈퇴: 서버에 저장된 본인의 모든 데이터(user_data·match_pool·referrals)를 영구 삭제한다.
+// 성공 시 true. (호출부에서 로컬 데이터 삭제 + 로그아웃을 함께 처리한다.)
+export async function deleteCloudAccount(): Promise<boolean> {
+  const idToken = getIdToken()
+  if (!idToken) return false
+  if (pushTimer) { clearTimeout(pushTimer); pushTimer = null }
+  try {
+    const res = await fetch('/api/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ idToken, provider: getProvider(), action: 'delete' }),
+    })
+    return res.ok
+  } catch (e) {
+    captureException(e)
+    return false
+  }
+}

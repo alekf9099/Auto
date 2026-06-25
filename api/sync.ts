@@ -104,11 +104,11 @@ export default async function handler(req: any, res: any) {
   const { idToken, provider, action, data } = (req.body ?? {}) as {
     idToken?: string
     provider?: string
-    action?: 'pull' | 'push'
+    action?: 'pull' | 'push' | 'delete'
     data?: Record<string, unknown>
   }
 
-  if (!idToken || (action !== 'pull' && action !== 'push')) {
+  if (!idToken || (action !== 'pull' && action !== 'push' && action !== 'delete')) {
     return res.status(400).json({ error: 'invalid request' })
   }
 
@@ -132,6 +132,24 @@ export default async function handler(req: any, res: any) {
     return res.status(500).json({ error: 'server not configured' })
   }
   const supabase = createClient(supabaseUrl, serviceKey)
+
+  // 회원 탈퇴: 본인 인증된 email에 연결된 모든 서버 데이터를 영구 삭제한다.
+  // (Google Play "앱 내 계정/데이터 삭제" 정책 충족)
+  if (action === 'delete') {
+    const { error: e1 } = await supabase.from('user_data').delete().eq('email', email)
+    if (e1) return res.status(500).json({ error: e1.message })
+
+    const { error: e2 } = await supabase.from('match_pool').delete().eq('email', email)
+    if (e2) return res.status(500).json({ error: e2.message })
+
+    const { error: e3 } = await supabase.from('referrals').delete().eq('referee_email', email)
+    if (e3) return res.status(500).json({ error: e3.message })
+
+    const { error: e4 } = await supabase.from('referrals').delete().eq('referrer_email', email)
+    if (e4) return res.status(500).json({ error: e4.message })
+
+    return res.status(200).json({ ok: true })
+  }
 
   if (action === 'pull') {
     const { data: row, error } = await supabase
