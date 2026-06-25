@@ -98,23 +98,30 @@ function PromoBanner({
 function NotifyToggle() {
   const [enabled, setEnabled] = useState(() => (typeof window !== 'undefined' ? isPushEnabled() : false))
   const [busy, setBusy] = useState(false)
-  const [denied, setDenied] = useState(false)
+  const [msg, setMsg] = useState<string | null>(null)
 
   if (!isPushSupported()) return null
 
   async function toggle() {
     if (busy) return
     setBusy(true)
-    setDenied(false)
-    if (enabled) {
-      await disablePush()
-      setEnabled(false)
-    } else {
-      const r = await enablePush()
-      if (r.ok) setEnabled(true)
-      else if (r.reason === 'denied') setDenied(true)
+    setMsg(null)
+    try {
+      if (enabled) {
+        await disablePush()
+        setEnabled(false)
+      } else {
+        const r = await enablePush()
+        if (r.ok) setEnabled(true)
+        else if (r.reason === 'denied') setMsg('브라우저 알림이 차단돼 있어요. 설정 → 알림에서 허용해주세요')
+        else if (r.reason === 'unsupported') setMsg('이 브라우저는 알림을 지원하지 않아요 (iOS는 홈화면 추가 PWA만)')
+        else setMsg('알림 등록에 실패했어요. 잠시 후 다시 시도해주세요')
+      }
+    } catch (e) {
+      setMsg('알림 처리 중 오류가 발생했어요')
+    } finally {
+      setBusy(false)
     }
-    setBusy(false)
   }
 
   return (
@@ -128,8 +135,8 @@ function NotifyToggle() {
         </span>
         <div>
           <p className="text-sm font-semibold text-[#F5EDD4]">매일 운세 알림</p>
-          <p className="text-[11px] text-[#7B6F9A]">
-            {denied ? '브라우저 알림이 차단돼 있어요. 설정에서 허용해주세요' : '매일 아침 8시, 오늘의 운세를 보내드려요'}
+          <p className={`text-[11px] ${msg ? 'text-[#E05252]' : 'text-[#7B6F9A]'}`}>
+            {busy ? '처리 중…' : msg ?? '매일 아침 8시, 오늘의 운세를 보내드려요'}
           </p>
         </div>
       </div>
