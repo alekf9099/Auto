@@ -9,7 +9,7 @@ import { DAY_FORTUNE } from '../utils/fortuneData'
 import PointsModal from './PointsModal'
 import AdBanner from './AdBanner'
 import {
-  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcTarot, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon, IcLucky, IcBattle, IcMatch,
+  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcTarot, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon, IcTojeong, IcLucky, IcBattle, IcMatch,
 } from './icons/SajuIcons'
 
 interface Props {
@@ -38,6 +38,58 @@ function CornerOrnament({ className = '', size = 30 }: { className?: string; siz
       <path d="M7 26V10Q7 7 10 7H26" stroke="#C9962A" strokeWidth="1" opacity="0.4"/>
       <circle cx="6" cy="2" r="1.4" fill="#E8C75C" opacity="0.8"/>
     </svg>
+  )
+}
+
+// 추천 콘텐츠용 코드 배너 — 다크/별자리 테마에 맞춘 한땀한땀 제작 카드.
+// 이미지 대신 그라데이션 + 글로우 + 별 장식 + SVG 아이콘으로 구성한다.
+function PromoBanner({
+  Icon, title, subtitle, accent, onClick, delay,
+}: {
+  Icon: React.FC<{ size?: number; className?: string }>
+  title: string; subtitle: string; accent: string
+  onClick: () => void; delay: React.CSSProperties
+}) {
+  return (
+    <div style={delay}>
+      <button
+        onClick={onClick}
+        className="w-full relative overflow-hidden rounded-3xl border p-5 flex items-center gap-4 active:scale-[0.99] transition-all"
+        style={{
+          borderColor: accent + '40',
+          background: 'linear-gradient(135deg, #1B1036 0%, #130E24 55%, #0C091A 100%)',
+          boxShadow: `0 2px 20px ${accent}1A`,
+        }}
+      >
+        {/* 포인트 글로우 */}
+        <div
+          className="absolute -right-6 top-1/2 -translate-y-1/2 w-44 h-44 rounded-full blur-3xl pointer-events-none"
+          style={{ background: `radial-gradient(circle, ${accent}40, transparent 70%)` }}
+        />
+        {/* 별 장식 */}
+        <div className="absolute inset-0 pointer-events-none">
+          <span className="absolute" style={{ left: '62%', top: '24%', color: accent, fontSize: 9, opacity: 0.7 }}>✦</span>
+          <span className="absolute" style={{ left: '84%', top: '58%', color: accent, fontSize: 7, opacity: 0.5 }}>✦</span>
+          <span className="absolute" style={{ left: '73%', top: '74%', color: '#F5EDD4', fontSize: 6, opacity: 0.4 }}>⋆</span>
+        </div>
+        <CornerOrnament size={18} className="absolute top-2 left-2 pointer-events-none opacity-60" />
+
+        {/* 아이콘 타일 */}
+        <span
+          className="relative shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center"
+          style={{ background: accent + '1F', border: `1px solid ${accent}55`, color: accent, boxShadow: `0 0 16px ${accent}33 inset` }}
+        >
+          <Icon size={30} />
+        </span>
+
+        <div className="relative flex-1 text-left">
+          <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>{title}</p>
+          <p className="text-xs text-[#A89BC0] mt-0.5 leading-snug">{subtitle}</p>
+        </div>
+
+        <span className="relative text-xs font-semibold shrink-0" style={{ color: accent }}>보기 →</span>
+      </button>
+    </div>
   )
 }
 
@@ -618,45 +670,11 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         {/* ── 추천 콘텐츠 ── */}
         <p style={reveal(5)} className="text-xs font-semibold text-[#7B6F9A] px-1 pt-2">추천 콘텐츠</p>
 
-        {/* 오늘의 코디 프로모 카드 — 디자인 이미지를 그대로 사용 */}
-        <div style={reveal(5)}>
-        <button
-          onClick={() => onNavigate('outfit')}
-          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(224,82,130,0.25)] hover:border-[rgba(224,82,130,0.5)] hover:shadow-[0_0_24px_rgba(224,82,130,0.3)] active:shadow-[0_0_24px_rgba(224,82,130,0.35)]"
-        >
-          <img src="/promo-outfit.png" alt="오늘의 코디 — 오행 기반 스타일링" className="w-full h-auto block" />
-        </button>
-        </div>
-
-        {/* 취업운 프로모 카드 — 디자인 이미지를 그대로 사용 */}
-        <div style={reveal(5)}>
-        <button
-          onClick={() => onNavigate('job')}
-          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(75,191,126,0.25)] hover:border-[rgba(75,191,126,0.5)] hover:shadow-[0_0_24px_rgba(75,191,126,0.3)] active:shadow-[0_0_24px_rgba(75,191,126,0.35)]"
-        >
-          <img src="/promo-job.png" alt="취업운 — 합격과 취업을 위한 필수 아이템" className="w-full h-auto block" />
-        </button>
-        </div>
-
-        {/* 신년운세 프로모 카드 — 디자인 이미지를 그대로 사용 */}
-        <div style={reveal(5)}>
-        <button
-          onClick={() => onNavigate('sinnyeon')}
-          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(201,150,42,0.2)] hover:border-[rgba(201,150,42,0.5)] hover:shadow-[0_0_24px_rgba(201,150,42,0.3)] active:shadow-[0_0_24px_rgba(201,150,42,0.35)]"
-        >
-          <img src="/promo-sinnyeon.png" alt="신년 대박 운세 — 새로운 기회·성취 대박, 사주로 보는 신년 로드맵" className="w-full h-auto block" />
-        </button>
-        </div>
-
-        {/* 토정비결 프로모 카드 — 디자인 이미지를 그대로 사용 (연도가 바뀌면 이미지 교체 필요) */}
-        <div style={reveal(5)}>
-        <button
-          onClick={() => onNavigate('tojeong')}
-          className="w-full rounded-3xl overflow-hidden active:scale-[0.99] transition-all border border-[rgba(201,150,42,0.2)] hover:border-[rgba(201,150,42,0.5)] hover:shadow-[0_0_24px_rgba(201,150,42,0.3)] active:shadow-[0_0_24px_rgba(201,150,42,0.35)]"
-        >
-          <img src="/promo-tojeong-2027.png" alt="토정비결 — 지혜로운 삶의 이정표, 나의 운세 흐름과 비결" className="w-full h-auto block" />
-        </button>
-        </div>
+        {/* 추천 콘텐츠 프로모 배너 — 코드로 제작 (다크/별자리 테마) */}
+        <PromoBanner Icon={IcOutfit}   title="오늘의 코디"     subtitle="오행 기반 데일리 스타일링"    accent="#E05282" onClick={() => onNavigate('outfit')}   delay={reveal(5)} />
+        <PromoBanner Icon={IcJob}      title="취업운"          subtitle="합격·취업을 위한 사주 전략"     accent="#4BBF7E" onClick={() => onNavigate('job')}      delay={reveal(5)} />
+        <PromoBanner Icon={IcSinnyeon} title="신년 대박 운세"  subtitle="새해 기회와 성취 로드맵"        accent="#C9962A" onClick={() => onNavigate('sinnyeon')} delay={reveal(5)} />
+        <PromoBanner Icon={IcTojeong}  title="토정비결"        subtitle="지혜로운 삶의 이정표"           accent="#A78BFA" onClick={() => onNavigate('tojeong')}  delay={reveal(5)} />
 
       </div>
 
