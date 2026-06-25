@@ -50,9 +50,13 @@ function loadBirthProfile(): BirthInput | null {
   } catch { return null }
 }
 
+// 로그인 없이 둘러보는 게스트 사용자. 인증 토큰이 없어 클라우드 동기화/서버 기능은 자동으로 비활성화된다.
+const GUEST_USER: UserInfo = { name: '게스트', email: '', idToken: '', provider: 'guest' }
+
 // 새로고침/재방문 시 localStorage에 남은 인증 토큰으로 로그인 화면 없이 세션을 복원한다.
 // 토큰이 실제로 만료됐다면 이후 클라우드 동기화 호출에서 401을 받아 SyncErrorBanner로 재로그인을 유도한다.
 function restoreUser(): UserInfo | null {
+  if (getProvider() === 'guest') return GUEST_USER
   const token = getIdToken()
   const email = getCurrentEmail()
   const name = getCurrentName()
@@ -85,6 +89,9 @@ export default function App() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [deleting,     setDeleting]     = useState(false)
   const [deleteError,  setDeleteError]  = useState(false)
+  const [loginPrompt,  setLoginPrompt]  = useState<string | null>(null)
+
+  const isGuest = user?.provider === 'guest'
 
   useEffect(() => onSyncStatusChange(status => setSyncIssue(status === 'ok' ? null : status)), [])
 
@@ -182,6 +189,24 @@ export default function App() {
     window.scrollTo(0, 0)
   }
 
+  // 로그인 없이 둘러보기. 생년월일이 없으면 프로필 입력으로, 있으면 홈으로.
+  function handleGuest() {
+    setProvider('guest')
+    setUser(GUEST_USER)
+    setIsNewCloudUser(true)
+    trackEvent('guest_start')
+    setPage(loadBirthProfile() ? 'home' : 'profile')
+    window.scrollTo(0, 0)
+  }
+
+  // 게스트가 로그인이 필요한 기능을 누르거나 상단 "로그인"을 누르면 로그인 화면으로.
+  // (로컬 데이터는 유지되며, 로그인 시 클라우드로 업로드된다.)
+  function handleRequestLogin() {
+    setLoginPrompt(null)
+    setPage('login')
+    window.scrollTo(0, 0)
+  }
+
   function handleProfileSave(b: BirthInput, nick: string) {
     saveNickname(nick)
     setNickname(nick)
@@ -196,6 +221,8 @@ export default function App() {
   }
 
   function handleHomeNavigate(dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'tarot' | 'outfit' | 'job' | 'battle' | 'match') {
+    // 사주매칭은 서버(익명 풀)가 필요해 게스트는 사용할 수 없다.
+    if (isGuest && dest === 'match') { setLoginPrompt('사주매칭은 로그인이 필요해요.'); return }
     if (!birthProfile) { setPage('profile'); window.scrollTo(0, 0); return }
     setPage(dest)
     window.scrollTo(0, 0)
@@ -219,6 +246,7 @@ export default function App() {
     return (
       <LoginPage
         onLogin={handleLogin}
+        onGuest={handleGuest}
         onShowPrivacy={() => openLegal('privacy', 'login')}
         onShowTerms={() => openLegal('terms', 'login')}
       />
@@ -250,6 +278,8 @@ export default function App() {
         onShowPrivacy={() => openLegal('privacy', 'home')}
         onShowTerms={() => openLegal('terms', 'home')}
         onDeleteAccount={() => { setDeleteError(false); setShowDeleteConfirm(true) }}
+        isGuest={isGuest}
+        onRequestLogin={handleRequestLogin}
       />
     )
   } else if (page === 'attendance') {
@@ -260,7 +290,7 @@ export default function App() {
         onBack={goHome}
         onOpenLucky={() => { setPage('lucky'); window.scrollTo(0, 0) }}
         onOpenRoulette={() => { setPage('roulette'); window.scrollTo(0, 0) }}
-        onOpenInvite={() => { setPage('invite'); window.scrollTo(0, 0) }}
+        onOpenInvite={() => { if (isGuest) { setLoginPrompt('친구 초대는 로그인이 필요해요.'); return } setPage('invite'); window.scrollTo(0, 0) }}
       />
     )
   } else if (page === 'lucky') {
@@ -344,6 +374,21 @@ export default function App() {
         </Suspense>
         {showNav && <BottomNav current={page as NavTab} onNavigate={handleTabNavigate} />}
       </div>
+
+      {/* 게스트 — 로그인 필요 안내 모달 */}
+      {loginPrompt && (
+        <div className="fixed inset-0 z-[80] flex items-center justify-center p-6 bg-black/70 backdrop-blur-sm" onClick={() => setLoginPrompt(null)}>
+          <div className="w-full max-w-sm rounded-3xl bg-[#130E24] border border-[#2A1F4A] p-6 shadow-2xl text-center" onClick={e => e.stopPropagation()}>
+            <p className="text-2xl mb-2">🔒</p>
+            <h2 className="text-lg font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>로그인이 필요해요</h2>
+            <p className="text-sm text-[#A89BC0] leading-relaxed mb-5">{loginPrompt}<br/>로그인하면 데이터도 안전하게 저장돼요.</p>
+            <div className="flex gap-2">
+              <button onClick={() => setLoginPrompt(null)} className="flex-1 py-3 rounded-2xl bg-[#1C1438] border border-[#2A1F4A] text-sm font-semibold text-[#C4B8D8] active:scale-[0.98] transition">나중에</button>
+              <button onClick={handleRequestLogin} className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-sm font-bold text-[#0D0A1A] active:scale-[0.98] transition">로그인</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 회원 탈퇴 확인 모달 */}
       {showDeleteConfirm && (

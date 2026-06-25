@@ -4,6 +4,7 @@ import { decodeIdToken } from '../utils/cloudSync'
 
 interface Props {
   onLogin: (user: UserInfo) => void
+  onGuest: () => void
   onShowPrivacy: () => void
   onShowTerms: () => void
 }
@@ -34,7 +35,7 @@ declare global {
   }
 }
 
-export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props) {
+export default function LoginPage({ onLogin, onGuest, onShowPrivacy, onShowTerms }: Props) {
   useEffect(() => {
     if (!CLIENT_ID) return
 
@@ -198,6 +199,14 @@ export default function LoginPage({ onLogin, onShowPrivacy, onShowTerms }: Props
           </div>
         )}
       </div>
+
+      <button
+        onClick={onGuest}
+        className="mt-4 w-full max-w-xs mx-auto block py-3 rounded-2xl border border-[#2A1F4A] text-sm font-semibold text-[#C4B8D8] hover:border-[#C9962A60] hover:text-[#F5EDD4] active:scale-[0.98] transition"
+      >
+        로그인 없이 둘러보기 →
+      </button>
+      <p className="mt-2 text-[11px] text-[#4A4060] text-center">출석·포인트 저장, 사주매칭은 로그인 후 이용할 수 있어요</p>
 
       <p className="mt-6 text-xs text-[#4A4060] text-center">본 서비스는 참고용이며 정확성을 보장하지 않습니다</p>
       <p className="mt-2 text-xs text-[#4A4060] text-center">

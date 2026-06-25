@@ -8,7 +8,7 @@ const PROVIDER_KEY = 'unmyeongbom_provider'
 const PREFIX       = 'unmyeongbom_'
 const NON_SYNC_KEYS = new Set([EMAIL_KEY, TOKEN_KEY, NAME_KEY, PICTURE_KEY, PROVIDER_KEY])
 
-export type AuthProvider = 'google' | 'kakao'
+export type AuthProvider = 'google' | 'kakao' | 'guest'
 
 export function getCurrentEmail(): string | null {
   return localStorage.getItem(EMAIL_KEY)
@@ -39,7 +39,7 @@ export function setCurrentPicture(picture: string | null): void {
 
 export function getProvider(): AuthProvider | null {
   const v = localStorage.getItem(PROVIDER_KEY)
-  return v === 'google' || v === 'kakao' ? v : null
+  return v === 'google' || v === 'kakao' || v === 'guest' ? v : null
 }
 
 export function setProvider(provider: AuthProvider | null): void {

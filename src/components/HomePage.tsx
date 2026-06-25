@@ -26,6 +26,8 @@ interface Props {
   onShowPrivacy: () => void
   onShowTerms: () => void
   onDeleteAccount: () => void
+  isGuest: boolean
+  onRequestLogin: () => void
 }
 
 // 배너 모서리를 장식하는 금색 이중선 브래킷 (전통 한지 액자 느낌)
@@ -105,7 +107,7 @@ const TAROT_CARD_IMAGES = [
   { src: '/images/tarot/hand.webp',       rotate: 'rotate-[14deg]' },
 ]
 
-export default function HomePage({ user, nickname, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms, onDeleteAccount }: Props) {
+export default function HomePage({ user, nickname, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms, onDeleteAccount, isGuest, onRequestLogin }: Props) {
   const todayDate = new Date()
   const month = todayDate.getMonth() + 1
   const day   = todayDate.getDate()
@@ -248,7 +250,10 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
               <IcGem size={14} className="text-[#C9962A]"/>
               <span className="text-xs font-bold text-[#C9962A]">{animatedBalance.toLocaleString()}P</span>
             </button>
-            <button onClick={onLogout} className="text-xs text-[#A89BC0] hover:text-[#C4B8D8] transition px-2 py-1">로그아웃</button>
+            {isGuest
+              ? <button onClick={onRequestLogin} className="text-xs font-semibold text-[#C9962A] hover:text-[#E8B84B] transition px-2 py-1">로그인</button>
+              : <button onClick={onLogout} className="text-xs text-[#A89BC0] hover:text-[#C4B8D8] transition px-2 py-1">로그아웃</button>
+            }
             {photo || user.picture
               ? <img src={photo ?? user.picture} alt={user.name} className="w-8 h-8 rounded-full object-cover"/>
               : <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center"><span className="text-white text-xs font-bold">{user.name[0]}</span></div>
@@ -256,6 +261,21 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           </div>
         </div>
       </div>
+
+      {/* 게스트 안내 배너 — 로그인 유도 */}
+      {isGuest && (
+        <div className="max-w-2xl mx-auto px-4 pt-3">
+          <button
+            onClick={onRequestLogin}
+            className="w-full flex items-center justify-between gap-3 bg-gradient-to-r from-[#C9962A18] to-[#1A0E30] border border-[#C9962A40] rounded-2xl px-4 py-2.5 text-left active:scale-[0.99] transition"
+          >
+            <p className="text-xs text-[#E8DFC8]">
+              <span className="font-semibold text-[#C9962A]">게스트로 둘러보는 중</span> · 로그인하면 데이터가 안전하게 저장돼요
+            </p>
+            <span className="text-xs text-[#C9962A] font-semibold shrink-0">로그인 →</span>
+          </button>
+        </div>
+      )}
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
 
@@ -644,8 +664,12 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         <button onClick={onShowPrivacy} className="underline hover:text-[#7B6F9A] transition">개인정보처리방침</button>
         <span className="mx-2">·</span>
         <button onClick={onShowTerms} className="underline hover:text-[#7B6F9A] transition">이용약관</button>
-        <span className="mx-2">·</span>
-        <button onClick={onDeleteAccount} className="underline hover:text-[#E05252] transition">회원탈퇴</button>
+        {!isGuest && (
+          <>
+            <span className="mx-2">·</span>
+            <button onClick={onDeleteAccount} className="underline hover:text-[#E05252] transition">회원탈퇴</button>
+          </>
+        )}
       </div>
     </div>
   )

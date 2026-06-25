@@ -3,7 +3,7 @@ export interface UserInfo {
   email: string
   picture?: string
   idToken: string
-  provider: 'google' | 'kakao'
+  provider: 'google' | 'kakao' | 'guest'
 }
 
 export type Element = 'wood' | 'fire' | 'earth' | 'metal' | 'water'
