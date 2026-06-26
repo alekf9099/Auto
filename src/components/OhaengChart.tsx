@@ -32,7 +32,7 @@ export default function OhaengChart({ count, hasHour }: Props) {
           return (
             <div key={el} className="flex items-center gap-3">
               <span className="w-5" style={{ color: c }}><Icon size={18} /></span>
-              <span className="w-14 text-sm text-[#A89BC0] font-medium">{ELEMENT_LABELS[el]}</span>
+              <span className="w-14 text-sm text-[#BCB1D4] font-medium">{ELEMENT_LABELS[el]}</span>
               <div className="flex-1 bg-[#231844] rounded-full h-3 overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all duration-700"
@@ -47,19 +47,19 @@ export default function OhaengChart({ count, hasHour }: Props) {
 
       <div className="mt-5 grid grid-cols-2 gap-3">
         <div className="rounded-2xl p-3 border" style={{ backgroundColor: ELEMENT_COLORS[strongest] + '10', borderColor: ELEMENT_COLORS[strongest] + '30' }}>
-          <p className="text-xs text-[#7B6F9A] mb-1">강한 기운</p>
+          <p className="text-xs text-[#A79CC2] mb-1">강한 기운</p>
           <p className="font-bold text-sm flex items-center gap-1.5" style={{ color: ELEMENT_COLORS[strongest] }}>
             <StrongIcon size={16} /> {ELEMENT_LABELS[strongest]}
           </p>
-          <p className="text-xs text-[#7B6F9A] mt-0.5">{TRAITS[strongest]}</p>
+          <p className="text-xs text-[#A79CC2] mt-0.5">{TRAITS[strongest]}</p>
         </div>
         {count[weakest] < count[strongest] && (
           <div className="rounded-2xl p-3 border border-[#2A1F4A] bg-[#1C1438]">
-            <p className="text-xs text-[#7B6F9A] mb-1">약한 기운 (보완)</p>
+            <p className="text-xs text-[#A79CC2] mb-1">약한 기운 (보완)</p>
             <p className="font-bold text-sm flex items-center gap-1.5" style={{ color: ELEMENT_COLORS[weakest] }}>
               <WeakIcon size={16} /> {ELEMENT_LABELS[weakest]}
             </p>
-            <p className="text-xs text-[#7B6F9A] mt-0.5">{TRAITS[weakest]}</p>
+            <p className="text-xs text-[#A79CC2] mt-0.5">{TRAITS[weakest]}</p>
           </div>
         )}
       </div>

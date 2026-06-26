@@ -106,7 +106,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
             <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Gowun Batang', serif" }}>
               정통 사주 (正統四柱)
             </h1>
-            <p className="text-xs text-[#7B6F9A]">사주팔자 명식 전체 분석</p>
+            <p className="text-xs text-[#A79CC2]">사주팔자 명식 전체 분석</p>
           </div>
         </div>
       </div>
@@ -116,7 +116,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
         {step === 'form' && (
           <>
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-              <p className="text-violet-300/70 text-xs mb-2">동양 철학의 정수</p>
+              <p className="text-violet-300/85 text-xs mb-2">동양 철학의 정수</p>
               <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 正統四柱
               </p>
@@ -138,41 +138,41 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
                     { label: '일',       name: 'day',   placeholder: '1',    min: 1,    max: 31 },
                   ].map(f => (
                     <div key={f.name}>
-                      <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">{f.label}</label>
+                      <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">{f.label}</label>
                       <input
                         type="number" required placeholder={f.placeholder}
                         min={f.min} max={f.max}
                         value={birth[f.name as 'year' | 'month' | 'day']}
                         onChange={e => setBirth(p => ({ ...p, [f.name]: e.target.value }))}
-                        className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                        className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
                       />
                     </div>
                   ))}
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">출생 시간 <span className="text-[#4A4060] font-normal">(선택)</span></label>
+                    <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">출생 시간 <span className="text-[#857AA0] font-normal">(선택)</span></label>
                     <input
                       type="number" placeholder="0~23"
                       min={0} max={23}
                       value={birth.hour}
                       onChange={e => setBirth(p => ({ ...p, hour: e.target.value }))}
-                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">분 <span className="text-[#4A4060] font-normal">(선택)</span></label>
+                    <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">분 <span className="text-[#857AA0] font-normal">(선택)</span></label>
                     <input
                       type="number" placeholder="0~59"
                       min={0} max={59}
                       disabled={birth.hour === ''}
                       value={birth.minute}
                       onChange={e => setBirth(p => ({ ...p, minute: e.target.value }))}
-                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center disabled:opacity-40"
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center disabled:opacity-40"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">성별</label>
+                    <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">성별</label>
                     <div className="flex gap-2 h-[46px]">
                       {(['male', 'female'] as const).map(g => (
                         <button
@@ -182,7 +182,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
                           className={`flex-1 text-sm font-semibold rounded-2xl border transition ${
                             birth.gender === g
                               ? 'bg-[#C9962A] border-[#C9962A] text-[#0D0A1A]'
-                              : 'bg-[#1C1438] border-[#2A1F4A] text-[#A89BC0]'
+                              : 'bg-[#1C1438] border-[#2A1F4A] text-[#BCB1D4]'
                           }`}
                         >
                           {g === 'male' ? '남성' : '여성'}
@@ -212,7 +212,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
             </div>
             <div className="text-center space-y-1">
               <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>사주팔자 분석 중...</p>
-              <p className="text-sm text-[#7B6F9A]">천간지지를 풀이하고 있습니다</p>
+              <p className="text-sm text-[#A79CC2]">천간지지를 풀이하고 있습니다</p>
             </div>
           </div>
         )}
@@ -221,7 +221,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
           <div className="space-y-4 animate-fade-in-up">
             {/* Dark hero */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-              <p className="text-violet-300/70 text-xs mb-2">
+              <p className="text-violet-300/85 text-xs mb-2">
                 {submitted.year}년 {submitted.month}월 {submitted.day}일생 · {submitted.gender === 'male' ? '남성' : '여성'}
               </p>
               <div
@@ -232,7 +232,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
                 {result.hourPillar   ? pillarName(result.hourPillar)   : ''}
                 {result.minutePillar ? pillarName(result.minutePillar) : ''}
               </div>
-              <p className="text-violet-300/60 text-sm mb-4">
+              <p className="text-violet-300/80 text-sm mb-4">
                 ({pillarNameKo(result.yearPillar)}{pillarNameKo(result.monthPillar)}{pillarNameKo(result.dayPillar)}
                 {result.hourPillar   ? pillarNameKo(result.hourPillar)   : ''}
                 {result.minutePillar ? pillarNameKo(result.minutePillar) : ''})
@@ -270,7 +270,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
                     <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                       {nature.title}
                     </p>
-                    <p className="text-xs text-[#7B6F9A]">
+                    <p className="text-xs text-[#A79CC2]">
                       {ELEMENT_KO[dayStem.element]} {dayStem.yinYang === 'yang' ? '양(陽)' : '음(陰)'}
                     </p>
                   </div>
@@ -285,7 +285,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
                     <span className="w-5 h-5 rounded-full bg-[#C9962A20] text-[#C9962A] text-[10px] font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
                       {i + 1}
                     </span>
-                    <p className="text-xs text-[#A89BC0] leading-relaxed">{desc}</p>
+                    <p className="text-xs text-[#BCB1D4] leading-relaxed">{desc}</p>
                   </div>
                 ))}
               </div>
@@ -311,7 +311,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
               >
                 <IcDaun size={22} className="text-[#0891B2] mb-2" />
                 <p className="text-sm font-bold text-[#F5EDD4]">대운 분석</p>
-                <p className="text-[11px] text-[#7B6F9A] mt-0.5">10년 단위 인생의 흐름</p>
+                <p className="text-[11px] text-[#A79CC2] mt-0.5">10년 단위 인생의 흐름</p>
               </button>
               <button
                 onClick={onGunghab}
@@ -319,7 +319,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
               >
                 <IcGunghab size={22} className="text-[#E05282] mb-2" />
                 <p className="text-sm font-bold text-[#F5EDD4]">궁합 보기</p>
-                <p className="text-[11px] text-[#7B6F9A] mt-0.5">상대방과 사주 궁합 분석</p>
+                <p className="text-[11px] text-[#A79CC2] mt-0.5">상대방과 사주 궁합 분석</p>
               </button>
             </div>
 
@@ -354,7 +354,7 @@ export default function SajuPage({ savedBirth, onBack, onDeepSaju, onDaun, onGun
               다시 조회하기
             </button>
 
-            <p className="text-center text-xs text-[#4A4060] pb-6">
+            <p className="text-center text-xs text-[#857AA0] pb-6">
               사주팔자 계산기 — 양력 기준 · 절기 근사값 적용
             </p>
           </div>

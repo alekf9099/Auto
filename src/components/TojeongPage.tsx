@@ -78,10 +78,10 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
       {/* 헤더 */}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
+          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#A79CC2] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
             <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>토정비결</h1>
-            <p className="text-xs text-[#7B6F9A]">이지함 선생의 한 해 예언서</p>
+            <p className="text-xs text-[#A79CC2]">이지함 선생의 한 해 예언서</p>
           </div>
         </div>
       </div>
@@ -91,7 +91,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
           <>
             {/* 소개 배너 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-              <p className="text-violet-300/70 text-xs mb-2">조선 시대의 지혜</p>
+              <p className="text-violet-300/85 text-xs mb-2">조선 시대의 지혜</p>
               <p className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 土亭秘訣
               </p>
@@ -107,7 +107,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
                 <h2 className="text-base font-bold text-[#F5EDD4]">생년월일 입력</h2>
               </div>
-              <p className="text-xs text-[#7B6F9A] mb-4 ml-3">양력 기준으로 입력하세요</p>
+              <p className="text-xs text-[#A79CC2] mb-4 ml-3">양력 기준으로 입력하세요</p>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-3 gap-3">
                   {[
@@ -116,37 +116,37 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
                     { label: '일',       name: 'day',   placeholder: '1',    min: 1,    max: 31 },
                   ].map(f => (
                     <div key={f.name}>
-                      <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">{f.label}</label>
+                      <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">{f.label}</label>
                       <input
                         type="number" required placeholder={f.placeholder}
                         min={f.min} max={f.max}
                         value={birth[f.name as keyof typeof birth]}
                         onChange={e => setBirth(p => ({ ...p, [f.name]: e.target.value }))}
-                        className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                        className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
                       />
                     </div>
                   ))}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">출생 시간 <span className="text-[#4A4060] font-normal">(선택, 0~23시)</span></label>
+                    <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">출생 시간 <span className="text-[#857AA0] font-normal">(선택, 0~23시)</span></label>
                     <input
                       type="number" placeholder="예: 14"
                       min={0} max={23}
                       value={birth.hour}
                       onChange={e => setBirth(p => ({ ...p, hour: e.target.value }))}
-                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">분 <span className="text-[#4A4060] font-normal">(선택, 0~59분)</span></label>
+                    <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">분 <span className="text-[#857AA0] font-normal">(선택, 0~59분)</span></label>
                     <input
                       type="number" placeholder="예: 30"
                       min={0} max={59}
                       disabled={birth.hour === ''}
                       value={birth.minute}
                       onChange={e => setBirth(p => ({ ...p, minute: e.target.value }))}
-                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center disabled:opacity-40"
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center disabled:opacity-40"
                     />
                   </div>
                 </div>
@@ -171,7 +171,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
             </div>
             <div className="text-center space-y-1">
               <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>토정비결 풀이 중...</p>
-              <p className="text-sm text-[#7B6F9A]">이지함 선생의 비결서를 펼치고 있습니다</p>
+              <p className="text-sm text-[#A79CC2]">이지함 선생의 비결서를 펼치고 있습니다</p>
             </div>
           </div>
         )}
@@ -180,7 +180,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
           <div className="space-y-4 animate-fade-in-up">
             {/* 괘수 배너 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-              <p className="text-violet-300/70 text-xs mb-3">{CURR_YEAR}년 토정비결 괘수</p>
+              <p className="text-violet-300/85 text-xs mb-3">{CURR_YEAR}년 토정비결 괘수</p>
               <div className="flex items-end gap-4 mb-3">
                 {[
                   { label: '상괘', val: gwe.sang },
@@ -189,11 +189,11 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
                 ].map(g => (
                   <div key={g.label} className="text-center">
                     <p className="text-3xl font-bold text-white" style={{ fontFamily: "'Gowun Batang', serif" }}>{g.val}</p>
-                    <p className="text-xs text-violet-300/60 mt-1">{g.label}</p>
+                    <p className="text-xs text-violet-300/80 mt-1">{g.label}</p>
                   </div>
                 ))}
                 <div className="ml-auto text-right">
-                  <p className="text-xs text-violet-300/60 mb-1">종합</p>
+                  <p className="text-xs text-violet-300/80 mb-1">종합</p>
                   <p className="text-2xl font-bold text-amber-400">{gwe.gwe}괘</p>
                 </div>
               </div>
@@ -232,7 +232,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
                         className="w-full flex items-center gap-3 p-3.5 text-left hover:bg-[#1C1438] transition"
                         onClick={() => setOpen(isOpen ? null : m.month)}
                       >
-                        <span className="text-sm font-bold text-[#A89BC0] w-8 shrink-0">{m.month}월</span>
+                        <span className="text-sm font-bold text-[#BCB1D4] w-8 shrink-0">{m.month}월</span>
                         <span
                           className="text-xs font-bold px-2 py-0.5 rounded-full shrink-0"
                           style={{ color: meta.color, backgroundColor: meta.bg }}
@@ -241,12 +241,12 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
                         </span>
                         <span className="flex-1" />
                         <Stars n={m.score} />
-                        <span className="text-[#4A4060] text-xs ml-1">{isOpen ? '▲' : '▼'}</span>
+                        <span className="text-[#857AA0] text-xs ml-1">{isOpen ? '▲' : '▼'}</span>
                       </button>
                       {isOpen && (
                         <div className="px-4 pb-4">
                           <div className="h-px bg-[#2A1F4A] mb-3" />
-                          <p className="text-sm text-[#A89BC0] leading-relaxed">{m.text}</p>
+                          <p className="text-sm text-[#BCB1D4] leading-relaxed">{m.text}</p>
                         </div>
                       )}
                     </div>
@@ -265,7 +265,7 @@ export default function TojeongPage({ savedBirth, onSave, onBack }: Props) {
           </div>
         )}
       </div>
-      <div className="text-center pb-8 text-xs text-[#4A4060]">토정비결 — 참고용 · 전통 역술 기반</div>
+      <div className="text-center pb-8 text-xs text-[#857AA0]">토정비결 — 참고용 · 전통 역술 기반</div>
     </div>
   )
 }

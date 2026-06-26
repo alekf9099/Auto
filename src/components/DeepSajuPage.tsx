@@ -114,7 +114,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
         {step === 'form' && (
           <>
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-              <p className="text-violet-300/70 text-xs mb-2">사주팔자 심층 분석</p>
+              <p className="text-violet-300/85 text-xs mb-2">사주팔자 심층 분석</p>
               <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 深層 解釋
               </p>
@@ -136,41 +136,41 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                     { label: '일',       name: 'day',   placeholder: '1',    min: 1,    max: 31 },
                   ].map(f => (
                     <div key={f.name}>
-                      <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">{f.label}</label>
+                      <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">{f.label}</label>
                       <input
                         type="number" required placeholder={f.placeholder}
                         min={f.min} max={f.max}
                         value={birth[f.name as 'year' | 'month' | 'day']}
                         onChange={e => setBirth(p => ({ ...p, [f.name]: e.target.value }))}
-                        className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                        className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
                       />
                     </div>
                   ))}
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">출생 시간 <span className="text-[#4A4060] font-normal">(선택)</span></label>
+                    <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">출생 시간 <span className="text-[#857AA0] font-normal">(선택)</span></label>
                     <input
                       type="number" placeholder="0~23"
                       min={0} max={23}
                       value={birth.hour}
                       onChange={e => setBirth(p => ({ ...p, hour: e.target.value }))}
-                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">분 <span className="text-[#4A4060] font-normal">(선택)</span></label>
+                    <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">분 <span className="text-[#857AA0] font-normal">(선택)</span></label>
                     <input
                       type="number" placeholder="0~59"
                       min={0} max={59}
                       disabled={birth.hour === ''}
                       value={birth.minute}
                       onChange={e => setBirth(p => ({ ...p, minute: e.target.value }))}
-                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center disabled:opacity-40"
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center disabled:opacity-40"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">성별</label>
+                    <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">성별</label>
                     <div className="flex gap-2 h-[46px]">
                       {(['male', 'female'] as const).map(g => (
                         <button
@@ -180,7 +180,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                           className={`flex-1 text-sm font-semibold rounded-2xl border transition ${
                             birth.gender === g
                               ? 'bg-[#C9962A] border-[#C9962A] text-[#0D0A1A]'
-                              : 'bg-[#1C1438] border-[#2A1F4A] text-[#A89BC0]'
+                              : 'bg-[#1C1438] border-[#2A1F4A] text-[#BCB1D4]'
                           }`}
                         >
                           {g === 'male' ? '남성' : '여성'}
@@ -210,7 +210,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
             </div>
             <div className="text-center space-y-1">
               <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>심층 분석 중...</p>
-              <p className="text-sm text-[#7B6F9A]">사주팔자를 깊이 풀이하고 있습니다</p>
+              <p className="text-sm text-[#A79CC2]">사주팔자를 깊이 풀이하고 있습니다</p>
             </div>
           </div>
         )}
@@ -225,14 +225,14 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
               >
                 {content.stemHanja}
               </div>
-              <p className="text-violet-300/60 text-xs mb-3">일간(日干) · 타고난 본질의 기운</p>
+              <p className="text-violet-300/80 text-xs mb-3">일간(日干) · 타고난 본질의 기운</p>
               <div className="flex items-end gap-4 mb-4">
                 <span className="text-6xl font-bold text-white" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   {content.stemHanja}
                 </span>
                 <div>
                   <p className="text-2xl font-bold text-white leading-tight">{content.stemName}일간</p>
-                  <p className="text-violet-300/70 text-sm mt-0.5">{content.element} · {content.yinYang}</p>
+                  <p className="text-violet-300/85 text-sm mt-0.5">{content.element} · {content.yinYang}</p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -259,7 +259,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                 <span className="ml-auto text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">무료</span>
               </div>
               <p className="text-sm font-semibold text-[#E8DFC8] mb-2">{content.personality}</p>
-              <p className="text-sm text-[#A89BC0] leading-relaxed">{content.personalityDetail}</p>
+              <p className="text-sm text-[#BCB1D4] leading-relaxed">{content.personalityDetail}</p>
             </div>
 
             {/* 무료 섹션 2: 오행 분포 */}
@@ -279,7 +279,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                   return (
                     <div key={i} className="flex-1">
                       <div className="flex justify-between items-center mb-1">
-                        <span className="text-[10px] text-[#7B6F9A]">{name}</span>
+                        <span className="text-[10px] text-[#A79CC2]">{name}</span>
                         <span className="text-[10px] font-bold" style={{ color: colors[i] }}>{pctStr}</span>
                       </div>
                       <div className="h-1.5 bg-[#231844] rounded-full overflow-hidden">
@@ -289,7 +289,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                   )
                 })}
               </div>
-              <p className="text-sm text-[#A89BC0] leading-relaxed">{ohaengVerdict}</p>
+              <p className="text-sm text-[#BCB1D4] leading-relaxed">{ohaengVerdict}</p>
             </div>
 
             {/* 유료 잠금 구역 */}
@@ -302,7 +302,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                     <span className="ml-auto text-[10px] bg-amber-50 text-amber-600 border border-amber-200 px-2 py-0.5 rounded-full font-semibold">미리보기</span>
                   </div>
                   <div className="relative mb-4">
-                    <p className="text-sm text-[#A89BC0] leading-relaxed line-clamp-2">{content.wealth}</p>
+                    <p className="text-sm text-[#BCB1D4] leading-relaxed line-clamp-2">{content.wealth}</p>
                     <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-[#130E24] to-transparent" />
                   </div>
                 </div>
@@ -312,7 +312,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                     <span className="text-base">🔒</span>
                     <p className="text-sm font-bold text-[#F5EDD4]">아래 {LOCKED_SECTIONS.length}개 섹션이 잠겨 있습니다</p>
                   </div>
-                  <p className="text-xs text-[#7B6F9A] mb-4 ml-6">잠금 해제 후 영구 열람 가능</p>
+                  <p className="text-xs text-[#A79CC2] mb-4 ml-6">잠금 해제 후 영구 열람 가능</p>
 
                   <div className="space-y-2 mb-5">
                     {LOCKED_SECTIONS.map(sec => (
@@ -320,7 +320,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                         <span className="text-base shrink-0">{sec.icon}</span>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-semibold text-[#E8DFC8]">{sec.label}</p>
-                          <p className="text-[10px] text-[#7B6F9A]">{sec.sub}</p>
+                          <p className="text-[10px] text-[#A79CC2]">{sec.sub}</p>
                         </div>
                         <span className="text-[#3D3358] text-sm shrink-0">🔒</span>
                       </div>
@@ -339,7 +339,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                       포인트가 부족합니다 (보유 {loadPoints().balance}P / 필요 {DEEP_SAJU_UNLOCK_COST}P)
                     </p>
                   )}
-                  <p className="text-center text-[11px] text-[#4A4060] mt-2.5">1회 사용 · 동일 계정 영구 열람</p>
+                  <p className="text-center text-[11px] text-[#857AA0] mt-2.5">1회 사용 · 동일 계정 영구 열람</p>
                 </div>
               </div>
             ) : (
@@ -361,7 +361,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
             {wasFirstFree && unlocked && (
               <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl px-4 py-3 text-center">
                 <p className="text-xs text-[#C9962A] font-semibold">🎉 첫 심층 해석은 무료로 제공됩니다!</p>
-                <p className="text-[11px] text-[#A89BC0] mt-0.5">다음 방문부터는 {DEEP_SAJU_UNLOCK_COST}P가 필요합니다</p>
+                <p className="text-[11px] text-[#BCB1D4] mt-0.5">다음 방문부터는 {DEEP_SAJU_UNLOCK_COST}P가 필요합니다</p>
               </div>
             )}
 
@@ -376,7 +376,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
         )}
       </div>
 
-      <div className="text-center pb-8 text-xs text-[#4A4060]">사주팔자 — 양력 기준 · 절기 근사값 적용</div>
+      <div className="text-center pb-8 text-xs text-[#857AA0]">사주팔자 — 양력 기준 · 절기 근사값 적용</div>
     </div>
   )
 }
@@ -401,7 +401,7 @@ function SectionCard({
           <span className="ml-auto text-[10px] bg-[#C9962A15] text-[#C9962A] border border-[#C9962A30] px-2 py-0.5 rounded-full font-semibold">핵심</span>
         )}
       </div>
-      <p className="text-sm text-[#A89BC0] leading-relaxed">{content}</p>
+      <p className="text-sm text-[#BCB1D4] leading-relaxed">{content}</p>
     </div>
   )
 }
@@ -431,7 +431,7 @@ function LuckyCard({
               className={`rounded-2xl px-3.5 py-3 border ${isPrimary ? '' : 'bg-[#1C1438] border-[#2A1F4A]'}`}
               style={isPrimary ? { background: elemStyle.bg, borderColor: elemStyle.border } : {}}
             >
-              <p className="text-[10px] text-[#7B6F9A] mb-0.5">{label}</p>
+              <p className="text-[10px] text-[#A79CC2] mb-0.5">{label}</p>
               <p
                 className="text-xs font-bold"
                 style={isPrimary ? { color: elemStyle.text } : { color: '#C4B8D8' }}

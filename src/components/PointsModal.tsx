@@ -42,7 +42,7 @@ export default function PointsModal({ points, onClose, onPointsUpdate }: Props) 
 
         {/* 잔액 헤더 */}
         <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 mb-5 border border-[#C9962A25]">
-          <p className="text-violet-300/70 text-xs mb-1">보유 포인트</p>
+          <p className="text-violet-300/85 text-xs mb-1">보유 포인트</p>
           <div className="flex items-end gap-3">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#E8B84B] to-[#C9962A] flex items-center justify-center shadow-[0_0_18px_rgba(201,150,42,0.45)] shrink-0">
               <IcGem size={26} className="text-[#0D0A1A]"/>
@@ -59,7 +59,7 @@ export default function PointsModal({ points, onClose, onPointsUpdate }: Props) 
               { label: '운세 확인',   val: '+5P'  },
             ].map(item => (
               <div key={item.label} className="flex-1 bg-white/10 rounded-2xl px-3 py-2 text-center">
-                <p className="text-violet-300/70 text-[10px] mb-0.5">{item.label}</p>
+                <p className="text-violet-300/85 text-[10px] mb-0.5">{item.label}</p>
                 <p className="text-white text-sm font-bold">{item.val}</p>
               </div>
             ))}
@@ -88,14 +88,14 @@ export default function PointsModal({ points, onClose, onPointsUpdate }: Props) 
         </div>
 
         {points.history.length === 0 ? (
-          <p className="text-center text-xs text-[#7B6F9A] py-8">아직 포인트 내역이 없습니다</p>
+          <p className="text-center text-xs text-[#A79CC2] py-8">아직 포인트 내역이 없습니다</p>
         ) : (
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {points.history.map((h, i) => (
               <div key={i} className="flex items-center justify-between px-4 py-3 bg-[#1C1438] rounded-2xl">
                 <div>
                   <p className="text-sm font-medium text-[#C4B8D8]">{h.label}</p>
-                  <p className="text-xs text-[#7B6F9A]">{h.date}</p>
+                  <p className="text-xs text-[#A79CC2]">{h.date}</p>
                 </div>
                 <span className="text-sm font-bold text-[#C9962A]">+{h.amount}P</span>
               </div>

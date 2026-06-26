@@ -7,7 +7,7 @@ interface Props {
 }
 
 const inputCls = `
-  w-full px-3 py-3 rounded-xl text-center text-[#F5EDD4] placeholder-[#4A4060]
+  w-full px-3 py-3 rounded-xl text-center text-[#F5EDD4] placeholder-[#857AA0]
   bg-[#1C1438] border border-[#2A1F4A]
   focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20]
   transition text-sm font-medium
@@ -65,7 +65,7 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
         >
           사주팔자
         </h1>
-        <p className="text-[#7B6F9A] text-sm">내 운명의 네 기둥을 확인하세요</p>
+        <p className="text-[#A79CC2] text-sm">내 운명의 네 기둥을 확인하세요</p>
       </div>
 
       {/* 입력 카드 */}
@@ -83,7 +83,7 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
             { label: '일 (日)', ph: '1',    val: day,   set: setDay   },
           ].map(f => (
             <div key={f.label}>
-              <label className="block text-xs text-[#A89BC0] mb-1.5 font-medium">{f.label}</label>
+              <label className="block text-xs text-[#BCB1D4] mb-1.5 font-medium">{f.label}</label>
               <input
                 type="number" placeholder={f.ph} value={f.val}
                 onChange={e => f.set(e.target.value)}
@@ -96,8 +96,8 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
         {/* 시 · 분 */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-xs text-[#A89BC0] font-medium">시 · 분 (24h)</label>
-            <label className="flex items-center gap-1.5 text-xs text-[#A89BC0] cursor-pointer select-none">
+            <label className="text-xs text-[#BCB1D4] font-medium">시 · 분 (24h)</label>
+            <label className="flex items-center gap-1.5 text-xs text-[#BCB1D4] cursor-pointer select-none">
               <input
                 type="checkbox" checked={unknownHour}
                 onChange={e => setUnknownHour(e.target.checked)}
@@ -121,7 +121,7 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
             />
           </div>
           {!unknownHour && (
-            <p className="text-[11px] text-[#4A4060] mt-1.5 text-center">
+            <p className="text-[11px] text-[#857AA0] mt-1.5 text-center">
               분 입력 시 분주(分柱)까지 계산됩니다
             </p>
           )}
@@ -129,7 +129,7 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
 
         {/* 성별 */}
         <div className="mb-6">
-          <label className="block text-xs text-[#A89BC0] mb-1.5 font-medium">성별 (性別)</label>
+          <label className="block text-xs text-[#BCB1D4] mb-1.5 font-medium">성별 (性別)</label>
           <div className="grid grid-cols-2 gap-2">
             {(['male', 'female'] as Gender[]).map(g => (
               <button
@@ -138,7 +138,7 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
                 className={`py-2.5 rounded-xl font-semibold text-sm transition-all ${
                   gender === g
                     ? 'bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] shadow-md shadow-[#C9962A30]'
-                    : 'bg-[#1C1438] text-[#A89BC0] border border-[#2A1F4A] hover:border-[#C9962A40]'
+                    : 'bg-[#1C1438] text-[#BCB1D4] border border-[#2A1F4A] hover:border-[#C9962A40]'
                 }`}
               >
                 {g === 'male' ? '♂ 남성' : '♀ 여성'}
@@ -165,7 +165,7 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
         </button>
       </form>
 
-      <p className="text-center text-xs text-[#4A4060] mt-5">
+      <p className="text-center text-xs text-[#857AA0] mt-5">
         양력 기준 · 절기 근사값 · 참고용으로만 활용하세요
       </p>
     </div>

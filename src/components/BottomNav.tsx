@@ -26,8 +26,8 @@ export default function BottomNav({ current, onNavigate }: Props) {
               onClick={() => onNavigate(tab.key)}
               className="flex flex-col items-center gap-1 py-2.5 active:scale-95 transition-transform"
             >
-              <tab.Icon size={20} className={active ? 'text-[#C9962A]' : 'text-[#7B6F9A]'} />
-              <span className={`text-[10px] font-semibold ${active ? 'text-[#C9962A]' : 'text-[#7B6F9A]'}`}>{tab.label}</span>
+              <tab.Icon size={20} className={active ? 'text-[#C9962A]' : 'text-[#A79CC2]'} />
+              <span className={`text-[10px] font-semibold ${active ? 'text-[#C9962A]' : 'text-[#A79CC2]'}`}>{tab.label}</span>
             </button>
           )
         })}

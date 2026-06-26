@@ -66,7 +66,7 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
           {isForward ? '순행 ▶' : '역행 ◀'} · {daunStartAge}세
         </span>
       </div>
-      <p className="text-xs text-[#7B6F9A] mb-5 ml-3">10년 단위 대운 흐름</p>
+      <p className="text-xs text-[#A79CC2] mb-5 ml-3">10년 단위 대운 흐름</p>
 
       {/* 대운 기세 그래프 */}
       <div className="relative mb-6 mt-2">
@@ -117,7 +117,7 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
               y={labelY}
               textAnchor="middle"
               fontSize="13"
-              fill={p.isCurrent ? '#C9962A' : '#7B6F9A'}
+              fill={p.isCurrent ? '#C9962A' : '#A79CC2'}
               fontWeight={p.isCurrent ? 700 : 400}
             >
               {p.age}세
@@ -165,8 +165,8 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
                 {isCurrent && (
                   <span className="text-[10px] bg-amber-400 text-white px-1.5 py-0.5 rounded-full mb-1 font-bold">현재</span>
                 )}
-                <span className="text-xs text-[#7B6F9A] mb-0.5">{age}세</span>
-                <span className="text-[10px] text-[#4A4060]">{ageYear}~</span>
+                <span className="text-xs text-[#A79CC2] mb-0.5">{age}세</span>
+                <span className="text-[10px] text-[#857AA0]">{ageYear}~</span>
 
                 {/* 천간 */}
                 <div
@@ -176,7 +176,7 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
                   <span className="text-base font-bold leading-none" style={{ color: stemColor }}>{stem.hanja}</span>
                   <span className="text-[10px]" style={{ color: stemColor + 'cc' }}>{stem.ko}</span>
                 </div>
-                <span className="text-[10px] mt-1 text-[#7B6F9A]">{sipsinStem}</span>
+                <span className="text-[10px] mt-1 text-[#A79CC2]">{sipsinStem}</span>
 
                 {/* 지지 */}
                 <div
@@ -186,15 +186,15 @@ export default function DaunChart({ result, birthYear, currentYear = new Date().
                   <span className="text-base font-bold leading-none" style={{ color: branchColor }}>{branch.hanja}</span>
                   <span className="text-[10px]" style={{ color: branchColor + 'cc' }}>{branch.ko}</span>
                 </div>
-                <span className="text-[10px] mt-1 text-[#7B6F9A]">{sipsinBranch}</span>
-                <span className="text-[10px] text-[#4A4060] mt-1">{pillarName(entry.pillar)}</span>
+                <span className="text-[10px] mt-1 text-[#A79CC2]">{sipsinBranch}</span>
+                <span className="text-[10px] text-[#857AA0] mt-1">{pillarName(entry.pillar)}</span>
               </div>
             )
           })}
         </div>
       </div>
 
-      <p className="text-xs text-[#4A4060] mt-3">
+      <p className="text-xs text-[#857AA0] mt-3">
         * 절기 날짜는 근사값이므로 참고용으로 활용하세요.
       </p>
     </div>

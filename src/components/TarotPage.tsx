@@ -65,7 +65,7 @@ interface TarotResult {
 const LUCK_CFG = {
   great:   { label: '대길',   color: '#C9962A', bg: '#C9962A18', border: '#C9962A45', emoji: '✨' },
   good:    { label: '길',     color: '#4BBF7E', bg: '#4BBF7E18', border: '#4BBF7E45', emoji: '🌟' },
-  neutral: { label: '평',     color: '#8B8FA8', bg: '#8B8FA818', border: '#8B8FA845', emoji: '🌙' },
+  neutral: { label: '평',     color: '#A3A6BC', bg: '#A3A6BC18', border: '#A3A6BC45', emoji: '🌙' },
   caution: { label: '주의',   color: '#E05252', bg: '#E0525218', border: '#E0525245', emoji: '⚡' },
 }
 
@@ -174,7 +174,7 @@ export default function TarotPage({ onBack }: Props) {
             <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Gowun Batang', serif" }}>
               나만의 타로 상담
             </h1>
-            <p className="text-xs text-[#7B6F9A] truncate">
+            <p className="text-xs text-[#A79CC2] truncate">
               {step === 'intro' ? 'AI 타로 카드 해석' : step === 'shuffling' ? '카드를 섞는 중...' : step === 'draw' ? '카드를 뽑아주세요' : step === 'loading' ? '해석 중...' : '상담 결과'}
             </p>
           </div>
@@ -208,11 +208,11 @@ export default function TarotPage({ onBack }: Props) {
             </div>
 
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
-              <p className="text-violet-300/70 text-xs mb-1">과거 · 현재 · 미래 3카드 스프레드</p>
+              <p className="text-violet-300/85 text-xs mb-1">과거 · 현재 · 미래 3카드 스프레드</p>
               <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 무엇이 궁금하신가요?
               </h2>
-              <p className="text-sm text-[#A89BC0] leading-relaxed">
+              <p className="text-sm text-[#BCB1D4] leading-relaxed">
                 궁금한 점을 적으면 더 정확한 해석을 받을 수 있어요.
               </p>
             </div>
@@ -224,9 +224,9 @@ export default function TarotPage({ onBack }: Props) {
                 placeholder="예) 지금 하는 일이 잘 풀릴까요?"
                 maxLength={200}
                 rows={3}
-                className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-4 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition resize-none leading-relaxed"
+                className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-4 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition resize-none leading-relaxed"
               />
-              <p className="text-xs text-[#4A4060] mt-2 px-1">{question.length}/200자 · 필수 입력</p>
+              <p className="text-xs text-[#857AA0] mt-2 px-1">{question.length}/200자 · 필수 입력</p>
             </div>
 
             <button
@@ -240,7 +240,7 @@ export default function TarotPage({ onBack }: Props) {
 
             <div className="flex items-center gap-2 justify-center">
               <div className="h-px flex-1 bg-[#2A1F4A]"/>
-              <p className="text-[10px] text-[#4A4060]">Google Gemini AI · 메이저 아르카나 22장</p>
+              <p className="text-[10px] text-[#857AA0]">Google Gemini AI · 메이저 아르카나 22장</p>
               <div className="h-px flex-1 bg-[#2A1F4A]"/>
             </div>
           </div>
@@ -271,17 +271,17 @@ export default function TarotPage({ onBack }: Props) {
                     <div className="w-full aspect-[2/3]">
                       {card ? <TarotCardFace card={card}/> : (
                         <div className="w-full h-full rounded-xl border border-dashed border-[#C9962A30] flex items-center justify-center">
-                          <span className="text-[#4A4060] text-xs">{i + 1}</span>
+                          <span className="text-[#857AA0] text-xs">{i + 1}</span>
                         </div>
                       )}
                     </div>
-                    <p className="text-[11px] text-[#7B6F9A] font-semibold">{pos.label}{card?.reversed ? ' · 역방향' : ''}</p>
+                    <p className="text-[11px] text-[#A79CC2] font-semibold">{pos.label}{card?.reversed ? ' · 역방향' : ''}</p>
                   </div>
                 )
               })}
             </div>
 
-            <p className="text-center text-sm text-[#A89BC0]">22장 중 3장을 골라주세요 ({picked.length}/3)</p>
+            <p className="text-center text-sm text-[#BCB1D4]">22장 중 3장을 골라주세요 ({picked.length}/3)</p>
 
             <div className="flex flex-wrap gap-2 justify-center">
               {spread.map((card, i) => {
@@ -324,7 +324,7 @@ export default function TarotPage({ onBack }: Props) {
             </div>
             <div className="text-center">
               <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>해석 중...</p>
-              <p className="text-sm text-[#7B6F9A]">AI가 카드의 의미를 풀어내고 있습니다</p>
+              <p className="text-sm text-[#A79CC2]">AI가 카드의 의미를 풀어내고 있습니다</p>
             </div>
           </div>
         )}
@@ -350,7 +350,7 @@ export default function TarotPage({ onBack }: Props) {
               <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 타로 상담 결과
               </h2>
-              <p className="text-xs text-[#7B6F9A]">{result.summary}</p>
+              <p className="text-xs text-[#A79CC2]">{result.summary}</p>
             </div>
 
             {/* 뽑힌 카드 한눈에 보기 */}
@@ -363,7 +363,7 @@ export default function TarotPage({ onBack }: Props) {
                     <div className="w-full aspect-[2/3]"><TarotCardFace card={card}/></div>
                     <p className="text-[10px] font-bold text-[#F5EDD4] text-center leading-tight">{card.name}</p>
                     {card.reversed && <span className="text-[8px] text-[#E05252] font-semibold">역방향</span>}
-                    <p className="text-[9px] text-[#7B6F9A] mt-0.5">{pos.label}</p>
+                    <p className="text-[9px] text-[#A79CC2] mt-0.5">{pos.label}</p>
                   </div>
                 )
               })}
@@ -406,7 +406,7 @@ export default function TarotPage({ onBack }: Props) {
           </div>
         )}
 
-        <p className="text-center text-xs text-[#4A4060] pb-6 pt-4">
+        <p className="text-center text-xs text-[#857AA0] pb-6 pt-4">
           타로 상담 — Google Gemini AI · 메이저 아르카나 기반 · 참고용으로만 활용하세요
         </p>
       </div>

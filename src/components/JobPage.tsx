@@ -92,7 +92,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
             <h1 className="text-base font-bold text-[#F5EDD4] leading-tight" style={{ fontFamily: "'Gowun Batang', serif" }}>
               취업운
             </h1>
-            <p className="text-xs text-[#7B6F9A] truncate">
+            <p className="text-xs text-[#A79CC2] truncate">
               {step === 'form' ? '사주로 보는 커리어 운' : step === 'loading' ? '취업운 분석 중...' : '취업운 분석 결과'}
             </p>
           </div>
@@ -113,7 +113,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
               <h2 className="text-xl font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 취업·이직 운이 궁금하다면?
               </h2>
-              <p className="text-sm text-[#A89BC0] leading-relaxed">
+              <p className="text-sm text-[#BCB1D4] leading-relaxed">
                 생년월일로 현재 대운의 십성을 분석해 취업운, 적성 직무, 면접 팁, 행운의 요일까지 알려드립니다.
               </p>
             </div>
@@ -122,7 +122,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
 
               {/* Gender */}
               <div>
-                <p className="text-xs text-[#7B6F9A] mb-2 font-semibold">성별</p>
+                <p className="text-xs text-[#A79CC2] mb-2 font-semibold">성별</p>
                 <div className="grid grid-cols-2 gap-2">
                   {(['male','female'] as const).map(g => (
                     <button
@@ -131,7 +131,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
                       className={`py-2.5 rounded-xl text-sm font-semibold border transition-all ${
                         birth.gender === g
                           ? 'bg-[#4BBF7E20] border-[#4BBF7E] text-[#F5EDD4]'
-                          : 'bg-[#1C1438] border-[#2A1F4A] text-[#7B6F9A] hover:border-[#4BBF7E50]'
+                          : 'bg-[#1C1438] border-[#2A1F4A] text-[#A79CC2] hover:border-[#4BBF7E50]'
                       }`}
                     >
                       {g === 'male' ? '남성 🧑' : '여성 👩'}
@@ -142,7 +142,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
 
               {/* Date */}
               <div>
-                <p className="text-xs text-[#7B6F9A] mb-2 font-semibold">생년월일</p>
+                <p className="text-xs text-[#A79CC2] mb-2 font-semibold">생년월일</p>
                 <div className="grid grid-cols-3 gap-2">
                   {(['year','month','day'] as const).map(f => (
                     <input
@@ -151,7 +151,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
                       value={birth[f]}
                       onChange={e => setBirth(b => ({ ...b, [f]: e.target.value }))}
                       placeholder={f === 'year' ? '년도' : f === 'month' ? '월' : '일'}
-                      className="bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#4BBF7E] transition text-center"
+                      className="bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#4BBF7E] transition text-center"
                     />
                   ))}
                 </div>
@@ -160,18 +160,18 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
               {/* Hour & Minute */}
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <p className="text-xs text-[#7B6F9A] mb-2 font-semibold">태어난 시간 <span className="text-[#4A4060] font-normal">(선택)</span></p>
+                  <p className="text-xs text-[#A79CC2] mb-2 font-semibold">태어난 시간 <span className="text-[#857AA0] font-normal">(선택)</span></p>
                   <input
                     type="number"
                     value={birth.hour}
                     onChange={e => setBirth(b => ({ ...b, hour: e.target.value }))}
                     placeholder="0~23시"
                     min={0} max={23}
-                    className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#4BBF7E] transition text-center"
+                    className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#4BBF7E] transition text-center"
                   />
                 </div>
                 <div>
-                  <p className="text-xs text-[#7B6F9A] mb-2 font-semibold">분 <span className="text-[#4A4060] font-normal">(선택)</span></p>
+                  <p className="text-xs text-[#A79CC2] mb-2 font-semibold">분 <span className="text-[#857AA0] font-normal">(선택)</span></p>
                   <input
                     type="number"
                     value={birth.minute}
@@ -179,7 +179,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
                     placeholder="0~59분"
                     min={0} max={59}
                     disabled={birth.hour === ''}
-                    className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#4BBF7E] transition text-center disabled:opacity-40"
+                    className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-xl px-3 py-2.5 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#4BBF7E] transition text-center disabled:opacity-40"
                   />
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
 
             <div className="flex items-center gap-2 justify-center">
               <div className="h-px flex-1 bg-[#2A1F4A]"/>
-              <p className="text-[10px] text-[#4A4060]">사주팔자 십성(十星) 기반 분석</p>
+              <p className="text-[10px] text-[#857AA0]">사주팔자 십성(十星) 기반 분석</p>
               <div className="h-px flex-1 bg-[#2A1F4A]"/>
             </div>
           </form>
@@ -214,7 +214,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
               <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 취업운 분석 중...
               </p>
-              <p className="text-sm text-[#7B6F9A]">사주 십성을 분석해 커리어 운을 풀이합니다</p>
+              <p className="text-sm text-[#A79CC2]">사주 십성을 분석해 커리어 운을 풀이합니다</p>
             </div>
           </div>
         )}
@@ -240,7 +240,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
               <h2 className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 {result.overallLuck.title}
               </h2>
-              <p className="text-xs text-[#7B6F9A] mb-3">현재 대운 ({result.daunRange}) 기준 분석</p>
+              <p className="text-xs text-[#A79CC2] mb-3">현재 대운 ({result.daunRange}) 기준 분석</p>
 
               <div
                 className="rounded-2xl p-4"
@@ -280,7 +280,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
                   {result.myData.elementChi}({result.myData.element}) 일간의 적성 직무
                 </h3>
               </div>
-              <p className="text-xs text-[#7B6F9A] mb-3">{result.myData.mood}</p>
+              <p className="text-xs text-[#A79CC2] mb-3">{result.myData.mood}</p>
               <div className="flex flex-wrap gap-1.5 mb-4">
                 {result.myData.industries.map((item, i) => (
                   <span
@@ -322,7 +322,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
                   </span>
                 ))}
               </div>
-              <p className="text-[10px] text-[#7B6F9A] mt-2">면접·지원서 제출은 이 요일을 활용해보세요.</p>
+              <p className="text-[10px] text-[#A79CC2] mt-2">면접·지원서 제출은 이 요일을 활용해보세요.</p>
             </div>
 
             {/* 면접 팁 */}
@@ -364,7 +364,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
           </div>
         )}
 
-        <p className="text-center text-xs text-[#4A4060] pb-6 pt-4">
+        <p className="text-center text-xs text-[#857AA0] pb-6 pt-4">
           취업운 — 사주팔자 십성(十星) 기반 분석 · 참고용으로 활용하세요
         </p>
       </div>

@@ -129,7 +129,7 @@ function DayLuckGauge({ percent, star }: { percent: number; star: number }) {
 
         {/* 중앙 수치 */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <p className="text-[11px] text-[#A89BC0] mb-0.5">종합 행운 지수</p>
+          <p className="text-[11px] text-[#BCB1D4] mb-0.5">종합 행운 지수</p>
           <p className="font-bold leading-none" style={{ color: accent, fontFamily: "'Gowun Batang', serif", textShadow: '0 1px 8px rgba(0,0,0,0.75)' }}>
             <span className="text-4xl">{percent}</span><span className="text-xl">%</span>
           </p>
@@ -164,14 +164,14 @@ function CategoryRow({ icon, label, text, star }: { icon: React.ReactNode; label
       >
         <GoldBadge><span className="text-[#C9962A]">{icon}</span></GoldBadge>
         <span className="text-sm font-semibold text-[#E8DFC8]">{label}</span>
-        <span className="text-xs text-[#7B6F9A] flex-1 truncate">{text.slice(0, 18)}…</span>
+        <span className="text-xs text-[#A79CC2] flex-1 truncate">{text.slice(0, 18)}…</span>
         <Stars n={star} />
-        <span className="text-[#4A4060] text-xs ml-1">{open ? '▲' : '▼'}</span>
+        <span className="text-[#857AA0] text-xs ml-1">{open ? '▲' : '▼'}</span>
       </button>
       {open && (
         <div className="px-4 pb-4">
           <div className="h-px bg-[#C9962A20] mb-3" />
-          <p className="text-sm text-[#A89BC0] leading-relaxed">{text}</p>
+          <p className="text-sm text-[#BCB1D4] leading-relaxed">{text}</p>
         </div>
       )}
     </div>
@@ -254,10 +254,10 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
       {/* 헤더 */}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg flex-shrink-0">←</button>
+          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#A79CC2] hover:text-[#C4B8D8] transition text-lg flex-shrink-0">←</button>
           <div className="flex-1 min-w-0">
             <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>{title}</h1>
-            <p className="text-xs text-[#7B6F9A]">사주 기반 일일 운세 분석</p>
+            <p className="text-xs text-[#A79CC2]">사주 기반 일일 운세 분석</p>
           </div>
           {step === 'result' && (
             <div className="flex bg-[#1C1438] rounded-2xl p-1 gap-1 border border-[#2A1F4A] flex-shrink-0">
@@ -284,9 +284,9 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
           <>
             {/* 배너 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-              <p className="text-violet-300/70 text-xs mb-2">{isToday ? '🔮 오늘' : '⏰ 내일'} · {new Date(Date.now() + activeOffset * 86400000).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })}</p>
+              <p className="text-violet-300/85 text-xs mb-2">{isToday ? '🔮 오늘' : '⏰ 내일'} · {new Date(Date.now() + activeOffset * 86400000).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })}</p>
               <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>{title}</p>
-              <p className="text-violet-300/60 text-sm">생년월일로 나만의 {isToday ? '오늘' : '내일'} 운세를 확인하세요</p>
+              <p className="text-violet-300/80 text-sm">생년월일로 나만의 {isToday ? '오늘' : '내일'} 운세를 확인하세요</p>
             </div>
 
             {/* 입력 폼 */}
@@ -303,37 +303,37 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
                     { label: '일',       name: 'day',   placeholder: '1',    min: 1,    max: 31 },
                   ].map(f => (
                     <div key={f.name}>
-                      <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">{f.label}</label>
+                      <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">{f.label}</label>
                       <input
                         type="number" required placeholder={f.placeholder}
                         min={f.min} max={f.max}
                         value={birth[f.name as keyof typeof birth]}
                         onChange={e => setBirth(p => ({ ...p, [f.name]: e.target.value }))}
-                        className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                        className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
                       />
                     </div>
                   ))}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">출생 시간 <span className="text-[#4A4060] font-normal">(선택, 0~23시)</span></label>
+                    <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">출생 시간 <span className="text-[#857AA0] font-normal">(선택, 0~23시)</span></label>
                     <input
                       type="number" placeholder="예: 14"
                       min={0} max={23}
                       value={birth.hour}
                       onChange={e => setBirth(p => ({ ...p, hour: e.target.value }))}
-                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-[#A89BC0] mb-1.5">분 <span className="text-[#4A4060] font-normal">(선택, 0~59분)</span></label>
+                    <label className="block text-xs font-semibold text-[#BCB1D4] mb-1.5">분 <span className="text-[#857AA0] font-normal">(선택, 0~59분)</span></label>
                     <input
                       type="number" placeholder="예: 30"
                       min={0} max={59}
                       disabled={birth.hour === ''}
                       value={birth.minute}
                       onChange={e => setBirth(p => ({ ...p, minute: e.target.value }))}
-                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#4A4060] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center disabled:opacity-40"
+                      className="w-full bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-3 py-3 text-sm text-[#F5EDD4] placeholder:text-[#857AA0] focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition text-center disabled:opacity-40"
                     />
                   </div>
                 </div>
@@ -358,7 +358,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             </div>
             <div className="text-center space-y-1">
               <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>운세 분석 중...</p>
-              <p className="text-sm text-[#7B6F9A]">사주를 풀이하고 있습니다</p>
+              <p className="text-sm text-[#A79CC2]">사주를 풀이하고 있습니다</p>
             </div>
           </div>
         )}
@@ -378,7 +378,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
                 <GoldBadge size="w-9 h-9 text-lg">✨</GoldBadge>
                 <div>
                   <p className="text-sm font-semibold text-[#F5EDD4]">{isToday ? '오늘' : '내일'}의 전체 운세</p>
-                  <p className="text-xs text-[#A89BC0] mt-0.5">⭐ 종합 행운 지수: {luckPercent}%</p>
+                  <p className="text-xs text-[#BCB1D4] mt-0.5">⭐ 종합 행운 지수: {luckPercent}%</p>
                 </div>
               </div>
             </div>
@@ -394,8 +394,8 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
                   <span className="text-4xl font-bold" style={{ color: ELEMENT_COLORS[tStem.element] }}>{tStem.hanja}</span>
                   <span className="text-4xl font-bold" style={{ color: ELEMENT_COLORS[tBranch.element] }}>{tBranch.hanja}</span>
                   <div className="ml-1">
-                    <p className="text-sm text-[#A89BC0]">{tStem.ko}{tBranch.ko} · {tBranch.animal}</p>
-                    <p className="text-xs text-[#7B6F9A]">{STEMS[dayStemIdx].hanja}일간 기준</p>
+                    <p className="text-sm text-[#BCB1D4]">{tStem.ko}{tBranch.ko} · {tBranch.animal}</p>
+                    <p className="text-xs text-[#A79CC2]">{STEMS[dayStemIdx].hanja}일간 기준</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -417,7 +417,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             </div>
             <div className="border border-red-900/40 rounded-2xl px-4 py-3 flex items-start gap-2" style={{ background: 'linear-gradient(135deg, rgba(127,29,29,0.28) 0%, rgba(127,29,29,0.10) 100%)' }}>
               <span className="shrink-0 mt-0.5">⚠️</span>
-              <p className="text-xs text-[#A89BC0] leading-relaxed">
+              <p className="text-xs text-[#BCB1D4] leading-relaxed">
                 <span className="font-semibold text-red-400">주의 </span>{fortune.주의}
               </p>
             </div>
@@ -452,7 +452,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
                   <div key={t.label} className="flex gap-3 border border-[#C9962A20] rounded-2xl px-4 py-3" style={{ background: 'linear-gradient(135deg, #201A3A 0%, #160F2C 100%)' }}>
                     <GoldBadge><span className="text-[#C9962A]">{t.icon}</span></GoldBadge>
                     <div>
-                      <p className="text-xs font-semibold text-[#7B6F9A] mb-0.5">{t.label}</p>
+                      <p className="text-xs font-semibold text-[#A79CC2] mb-0.5">{t.label}</p>
                       <p className="text-sm text-[#C4B8D8]">{t.text}</p>
                     </div>
                   </div>
@@ -474,7 +474,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
                   { label: '행운 음식', value: LUCKY_FOOD[luckyEl],       dot: null },
                 ].map(item => (
                   <div key={item.label} className="border border-[#C9962A30] rounded-2xl p-3" style={{ background: 'linear-gradient(135deg, #C9962A22 0%, #C9962A0A 100%)' }}>
-                    <p className="text-xs text-[#7B6F9A] mb-1">{item.label}</p>
+                    <p className="text-xs text-[#A79CC2] mb-1">{item.label}</p>
                     <div className="flex items-center gap-1.5">
                       {item.dot && <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.dot }} />}
                       <p className="text-sm font-semibold text-[#E8DFC8]">{item.value}</p>
@@ -523,7 +523,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
           }}
         />
       )}
-      <div className="text-center pb-8 text-xs text-[#4A4060]">운명봄 — 양력 기준 · 사주 기반 일운</div>
+      <div className="text-center pb-8 text-xs text-[#857AA0]">운명봄 — 양력 기준 · 사주 기반 일운</div>
     </div>
   )
 }

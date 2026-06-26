@@ -34,7 +34,7 @@ export default function PointsClaimButton({ featureKey, label }: Props) {
         disabled={claimedToday}
         className={`w-full py-3.5 rounded-2xl text-sm font-bold flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all ${
           claimedToday
-            ? 'bg-[#1C1530] text-[#7B6F9A]'
+            ? 'bg-[#1C1530] text-[#A79CC2]'
             : 'bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] shadow-md shadow-[#C9962A30]'
         }`}
       >

@@ -91,7 +91,7 @@ export default function TermsPage({ onBack }: Props) {
           <section key={i} className="space-y-1.5">
             <h2 className="text-sm font-bold text-[#F5EDD4]">{sec.title}</h2>
             {sec.body.map((line, j) => (
-              <p key={j} className="text-xs text-[#A89BC0] leading-relaxed">{line}</p>
+              <p key={j} className="text-xs text-[#BCB1D4] leading-relaxed">{line}</p>
             ))}
           </section>
         ))}

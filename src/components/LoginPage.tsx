@@ -143,21 +143,21 @@ export default function LoginPage({ onLogin, onGuest, onShowPrivacy, onShowTerms
 
         <h1 className="text-3xl font-bold text-[#F5EDD4] mb-1"
           style={{ fontFamily: "'Gowun Batang', serif" }}>운명봄</h1>
-        <p className="text-sm text-[#7B6F9A]">당신의 운명을 봅니다</p>
+        <p className="text-sm text-[#A79CC2]">당신의 운명을 봅니다</p>
       </div>
 
       {processingKakao ? (
         <div className="w-full max-w-sm flex flex-col items-center py-12">
           <div className="w-10 h-10 rounded-full border-[3px] border-[#2A1F4A] border-t-[#C9962A] animate-spin" style={{ animationDuration: '0.8s' }} />
           <p className="mt-4 text-sm font-semibold text-[#C4B8D8]">카카오 로그인 중…</p>
-          <p className="mt-1 text-xs text-[#7B6F9A]">잠시만 기다려주세요</p>
+          <p className="mt-1 text-xs text-[#A79CC2]">잠시만 기다려주세요</p>
         </div>
       ) : (
       <>
       {/* ── 로그인 카드 ── */}
       <div className="w-full max-w-sm bg-[#130E24] rounded-3xl shadow-[0_4px_24px_rgba(201,150,42,0.12)] border border-[#2A1F4A] p-7">
         <h2 className="text-base font-bold text-[#F5EDD4] mb-1 text-center">로그인</h2>
-        <p className="text-xs text-[#7B6F9A] mb-6 text-center">간편하게 로그인하고 운세를 확인하세요</p>
+        <p className="text-xs text-[#A79CC2] mb-6 text-center">간편하게 로그인하고 운세를 확인하세요</p>
 
         {(CLIENT_ID || KAKAO_KEY) ? (
           <div className="space-y-3">
@@ -175,7 +175,7 @@ export default function LoginPage({ onLogin, onGuest, onShowPrivacy, onShowTerms
             )}
 
             {CLIENT_ID && KAKAO_KEY && (
-              <div className="flex items-center gap-2 text-[#4A4060] text-xs">
+              <div className="flex items-center gap-2 text-[#857AA0] text-xs">
                 <div className="flex-1 h-px bg-[#2A1F4A]" />
                 <span>또는</span>
                 <div className="flex-1 h-px bg-[#2A1F4A]" />
@@ -204,15 +204,15 @@ export default function LoginPage({ onLogin, onGuest, onShowPrivacy, onShowTerms
       >
         로그인 없이 둘러보기 →
       </button>
-      <p className="mt-2 text-[11px] text-[#4A4060] text-center">출석·포인트 저장, 사주매칭은 로그인 후 이용할 수 있어요</p>
+      <p className="mt-2 text-[11px] text-[#857AA0] text-center">출석·포인트 저장, 사주매칭은 로그인 후 이용할 수 있어요</p>
       </>
       )}
 
-      <p className="mt-6 text-xs text-[#4A4060] text-center">본 서비스는 참고용이며 정확성을 보장하지 않습니다</p>
-      <p className="mt-2 text-xs text-[#4A4060] text-center">
-        <button onClick={onShowPrivacy} className="underline hover:text-[#7B6F9A] transition">개인정보처리방침</button>
+      <p className="mt-6 text-xs text-[#857AA0] text-center">본 서비스는 참고용이며 정확성을 보장하지 않습니다</p>
+      <p className="mt-2 text-xs text-[#857AA0] text-center">
+        <button onClick={onShowPrivacy} className="underline hover:text-[#A79CC2] transition">개인정보처리방침</button>
         <span className="mx-2">·</span>
-        <button onClick={onShowTerms} className="underline hover:text-[#7B6F9A] transition">이용약관</button>
+        <button onClick={onShowTerms} className="underline hover:text-[#A79CC2] transition">이용약관</button>
       </p>
     </div>
   )

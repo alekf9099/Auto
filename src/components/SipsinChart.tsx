@@ -36,8 +36,8 @@ function SipsinBadge({ name }: { name: string }) {
   return (
     <div className="text-right max-w-[180px]">
       <div className="flex items-center justify-end gap-1.5 mb-0.5">
-        <span className={`inline-block px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[name] ?? 'bg-[#231844] text-[#A89BC0] border-[#2A1F4A]'}`}>{name}</span>
-        {desc && <span className="text-[10px] text-[#7B6F9A]">{desc.meaning}</span>}
+        <span className={`inline-block px-2 py-0.5 rounded-lg text-xs font-bold border ${BADGE[name] ?? 'bg-[#231844] text-[#BCB1D4] border-[#2A1F4A]'}`}>{name}</span>
+        {desc && <span className="text-[10px] text-[#A79CC2]">{desc.meaning}</span>}
       </div>
       {plain && (
         <p className="text-[10px] text-[#C9962A]/80 leading-snug">
@@ -60,7 +60,7 @@ export default function SipsinChart({ result }: Props) {
         <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
         <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>십신 분석 (十神)</h2>
       </div>
-      <p className="text-xs text-[#7B6F9A] mb-5 ml-3">
+      <p className="text-xs text-[#A79CC2] mb-5 ml-3">
         일간 <span className="font-bold" style={{ color: ELEMENT_COLORS[dayStem.element] }}>{dayStem.hanja}({dayStem.ko})</span> 기준
       </p>
 
@@ -71,7 +71,7 @@ export default function SipsinChart({ result }: Props) {
           const sipsin = p.label === '일주' ? null : getSipsin(dayStemIdx, p.stemIndex)
           return (
             <div key={i} className="flex items-center gap-3 py-2.5 border-b border-[#1C1438] last:border-0">
-              <span className="w-16 text-xs text-[#7B6F9A] whitespace-nowrap">{p.label} 천간</span>
+              <span className="w-16 text-xs text-[#A79CC2] whitespace-nowrap">{p.label} 천간</span>
               <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl" style={{ backgroundColor: c + '12' }}>
                 <span className="text-base font-bold" style={{ color: c }}>{stem.hanja}</span>
                 <span className="text-xs" style={{ color: c + 'cc' }}>{stem.ko}</span>
@@ -87,7 +87,7 @@ export default function SipsinChart({ result }: Props) {
 
       {/* 지지 */}
       <div className="border-t border-[#2A1F4A] pt-4">
-        <p className="text-xs text-[#7B6F9A] mb-3">지지 (地支) 장간 기준</p>
+        <p className="text-xs text-[#A79CC2] mb-3">지지 (地支) 장간 기준</p>
         <div className="space-y-1">
           {pillars.map((p, i) => {
             const branch = BRANCHES[p.branchIndex], c = ELEMENT_COLORS[branch.element]
@@ -99,11 +99,11 @@ export default function SipsinChart({ result }: Props) {
             const sipsin = p.label === '일주' ? null : getSipsin(dayStemIdx, equiv)
             return (
               <div key={i} className="flex items-center gap-3 py-2.5 border-b border-[#1C1438] last:border-0">
-                <span className="w-16 text-xs text-[#7B6F9A] whitespace-nowrap">{p.label} 지지</span>
+                <span className="w-16 text-xs text-[#A79CC2] whitespace-nowrap">{p.label} 지지</span>
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl" style={{ backgroundColor: c + '12' }}>
                   <span className="text-base font-bold" style={{ color: c }}>{branch.hanja}</span>
                   <span className="text-xs" style={{ color: c + 'cc' }}>{branch.ko}</span>
-                  <span className="text-xs text-[#7B6F9A]">{branch.animal}</span>
+                  <span className="text-xs text-[#A79CC2]">{branch.animal}</span>
                 </div>
                 <div className="flex-1" />
                 {sipsin

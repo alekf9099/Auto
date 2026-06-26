@@ -75,10 +75,10 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
       {/* 헤더 */}
       <div className="bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
+          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#A79CC2] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
             <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>오행 룰렛</h1>
-            <p className="text-xs text-[#7B6F9A]">하루 한 번, 오행의 기운을 뽑아보세요</p>
+            <p className="text-xs text-[#A79CC2]">하루 한 번, 오행의 기운을 뽑아보세요</p>
           </div>
         </div>
       </div>
@@ -89,14 +89,14 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
         <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-violet-500/10 -translate-y-10 translate-x-10" />
           <div className="relative z-10 text-center">
-            <p className="text-violet-300/70 text-xs mb-2">오늘의 이벤트</p>
+            <p className="text-violet-300/85 text-xs mb-2">오늘의 이벤트</p>
             <div className="flex justify-center mb-2">
               <IcRoulette size={48} className="text-[#C9962A]" />
             </div>
             <p className="text-base font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
               오행 룰렛을 돌려보세요!
             </p>
-            <p className="text-sm text-[#A89BC0] leading-relaxed">
+            <p className="text-sm text-[#BCB1D4] leading-relaxed">
               칸마다 포인트가 달라요. 운이 좋으면 <span className="text-[#C9962A] font-semibold">잭폿 +100P</span>까지!
             </p>
           </div>
@@ -208,13 +208,13 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
                 </p>
                 <p className="text-2xl font-bold mt-1" style={{ color: result.color }}>+{result.amount}P</p>
               </div>
-              <p className="text-xs text-[#4A4060] mb-2">현재 보유 {points.balance.toLocaleString()}P</p>
-              <p className="text-sm font-semibold text-[#7B6F9A]">내일 다시 도전해보세요!</p>
+              <p className="text-xs text-[#857AA0] mb-2">현재 보유 {points.balance.toLocaleString()}P</p>
+              <p className="text-sm font-semibold text-[#A79CC2]">내일 다시 도전해보세요!</p>
             </div>
           ) : spunToday ? (
             <div className="text-center">
-              <p className="text-sm font-semibold text-[#7B6F9A]">오늘 룰렛을 모두 사용했어요</p>
-              <p className="text-xs text-[#4A4060] mt-1">내일 다시 도전해보세요!</p>
+              <p className="text-sm font-semibold text-[#A79CC2]">오늘 룰렛을 모두 사용했어요</p>
+              <p className="text-xs text-[#857AA0] mt-1">내일 다시 도전해보세요!</p>
             </div>
           ) : (
             <button
@@ -241,21 +241,21 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
                     className="w-3.5 h-3.5 rounded-full shrink-0 border border-white/20"
                     style={{ background: `linear-gradient(135deg, ${shade(seg.color, 0.35)}, ${seg.color} 55%, ${shade(seg.color, -0.3)})` }}
                   />
-                  <span className="text-[#A89BC0]">{seg.label}</span>
+                  <span className="text-[#BCB1D4]">{seg.label}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-[#7B6F9A] text-xs">{seg.weight}%</span>
+                  <span className="text-[#A79CC2] text-xs">{seg.weight}%</span>
                   <span className="text-[#C9962A] font-semibold">+{seg.amount}P</span>
                 </div>
               </li>
             ))}
           </ul>
-          <p className="text-xs text-[#4A4060] mt-3">하루에 한 번만 돌릴 수 있어요. 매일 자정 초기화돼요.</p>
+          <p className="text-xs text-[#857AA0] mt-3">하루에 한 번만 돌릴 수 있어요. 매일 자정 초기화돼요.</p>
         </div>
 
       </div>
 
-      <div className="text-center pb-8 text-xs text-[#4A4060]">오행 룰렛 — 매일 자정 초기화</div>
+      <div className="text-center pb-8 text-xs text-[#857AA0]">오행 룰렛 — 매일 자정 초기화</div>
     </div>
   )
 }

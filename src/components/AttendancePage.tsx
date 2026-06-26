@@ -85,10 +85,10 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
       {/* 헤더 */}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-10">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
+          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#A79CC2] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
             <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>출석 체크</h1>
-            <p className="text-xs text-[#7B6F9A]">매일 출석하고 포인트를 모으세요</p>
+            <p className="text-xs text-[#A79CC2]">매일 출석하고 포인트를 모으세요</p>
           </div>
         </div>
       </div>
@@ -105,10 +105,10 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
           </div>
 
           <div className="relative z-10">
-            <p className="text-violet-300/70 text-xs mb-4">운명봄 포인트</p>
+            <p className="text-violet-300/85 text-xs mb-4">운명봄 포인트</p>
             <div className="flex items-end justify-between mb-5">
               <div>
-                <p className="text-violet-300/60 text-xs mb-1">현재 보유</p>
+                <p className="text-violet-300/80 text-xs mb-1">현재 보유</p>
                 <p className="text-4xl font-bold text-white" style={{ fontFamily: "'Gowun Batang', serif" }}>
                   {points.balance.toLocaleString()}
                   <span className="text-xl text-violet-300 ml-1">P</span>
@@ -178,14 +178,14 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
                     )}
                     {checked
                       ? <IcGem size={16} className="relative text-[#2A1606]"/>
-                      : <span className={`text-xs font-semibold ${w.isToday ? 'text-[#C9962A]' : 'text-[#4A4060]'}`}>{dayNum}</span>
+                      : <span className={`text-xs font-semibold ${w.isToday ? 'text-[#C9962A]' : 'text-[#857AA0]'}`}>{dayNum}</span>
                     }
                   </div>
                 </div>
               )
             })}
           </div>
-          <div className="mt-4 pt-4 border-t border-[#2A1F4A] flex items-center gap-4 text-[11px] text-[#7B6F9A]">
+          <div className="mt-4 pt-4 border-t border-[#2A1F4A] flex items-center gap-4 text-[11px] text-[#A79CC2]">
             <span className="flex items-center gap-1.5">
               <span className="w-3.5 h-3.5 rounded-full bg-gradient-to-br from-[#C9962A] to-[#8A6418] inline-block" />
               출석 완료
@@ -221,7 +221,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
               </div>
             ))}
           </div>
-          <p className="text-[11px] text-[#7B6F9A] text-center mt-3">하루 1회 · 매일 자정 초기화</p>
+          <p className="text-[11px] text-[#A79CC2] text-center mt-3">하루 1회 · 매일 자정 초기화</p>
         </div>
 
         {/* 포인트 내역 */}
@@ -233,9 +233,9 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
           </div>
           {points.history.length === 0 ? (
             <div className="text-center py-8">
-              <IcGem size={32} className="text-[#4A4060] mx-auto mb-2"/>
-              <p className="text-sm text-[#7B6F9A]">아직 적립 내역이 없어요</p>
-              <p className="text-xs text-[#4A4060] mt-1">출석 체크부터 시작해보세요!</p>
+              <IcGem size={32} className="text-[#857AA0] mx-auto mb-2"/>
+              <p className="text-sm text-[#A79CC2]">아직 적립 내역이 없어요</p>
+              <p className="text-xs text-[#857AA0] mt-1">출석 체크부터 시작해보세요!</p>
             </div>
           ) : (
             <div className="space-y-2">
@@ -243,7 +243,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
                 <div key={i} className="flex items-center justify-between px-4 py-3 bg-[#1C1438] rounded-2xl">
                   <div>
                     <p className="text-xs font-semibold text-[#E8DFC8]">{h.label}</p>
-                    <p className="text-[11px] text-[#7B6F9A] mt-0.5">{h.date}</p>
+                    <p className="text-[11px] text-[#A79CC2] mt-0.5">{h.date}</p>
                   </div>
                   <span className="text-sm font-bold text-[#C9962A]">+{h.amount}P</span>
                 </div>
@@ -254,7 +254,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
 
       </div>
 
-      <div className="text-center pb-8 text-xs text-[#4A4060]">운명봄 포인트는 서비스 내 전용 포인트입니다</div>
+      <div className="text-center pb-8 text-xs text-[#857AA0]">운명봄 포인트는 서비스 내 전용 포인트입니다</div>
     </div>
   )
 }

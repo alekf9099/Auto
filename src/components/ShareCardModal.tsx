@@ -132,7 +132,7 @@ export default function ShareCardModal({ data, onClose }: Props) {
                 <div className="w-full grid grid-cols-2 gap-2">
                   {data.items.map(item => (
                     <div key={item.label} className="rounded-xl px-2 py-2" style={{ backgroundColor: data.accent + '12', border: `1px solid ${data.accent}30` }}>
-                      <p className="text-[9px] text-[#7B6F9A] mb-0.5">{item.label}</p>
+                      <p className="text-[9px] text-[#A79CC2] mb-0.5">{item.label}</p>
                       <p className="text-xs font-bold text-[#E8DFC8] truncate">{item.value}</p>
                     </div>
                   ))}
@@ -142,8 +142,8 @@ export default function ShareCardModal({ data, onClose }: Props) {
 
             {/* 푸터 */}
             <div className="relative text-center mt-4">
-              <p className="text-[10px] text-[#7B6F9A]">{data.date}</p>
-              <p className="text-[9px] text-[#4A4060] mt-1">{data.footer}</p>
+              <p className="text-[10px] text-[#A79CC2]">{data.date}</p>
+              <p className="text-[9px] text-[#857AA0] mt-1">{data.footer}</p>
               <div className="flex items-center justify-center gap-1 mt-2">
                 <span style={{ color: data.accent }}><IcGem size={9}/></span>
                 <p className="text-[9px] font-bold" style={{ color: data.accent }}>매일 운세, 운명봄에서</p>
@@ -173,7 +173,7 @@ export default function ShareCardModal({ data, onClose }: Props) {
         </div>
         <button
           onClick={onClose}
-          className="w-full mt-2 py-2.5 text-xs text-[#7B6F9A] hover:text-[#C4B8D8] transition"
+          className="w-full mt-2 py-2.5 text-xs text-[#A79CC2] hover:text-[#C4B8D8] transition"
         >
           닫기
         </button>

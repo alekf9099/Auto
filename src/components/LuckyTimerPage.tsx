@@ -62,10 +62,10 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
       {/* 헤더 */}
       <div className="bg-[#0D0A1A]/95 backdrop-blur-md border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#7B6F9A] hover:text-[#C4B8D8] transition text-lg">←</button>
+          <button onClick={onBack} aria-label="뒤로 가기" className="text-[#A79CC2] hover:text-[#C4B8D8] transition text-lg">←</button>
           <div>
             <h1 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>행운의 숫자 잡기</h1>
-            <p className="text-xs text-[#7B6F9A]">7초에 딱 맞춰 멈춰보세요</p>
+            <p className="text-xs text-[#A79CC2]">7초에 딱 맞춰 멈춰보세요</p>
           </div>
         </div>
       </div>
@@ -79,7 +79,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
 
         {/* 보상 안내 */}
         <div className="bg-gradient-to-br from-[#1A0E30]/80 via-[#100820]/80 to-[#060410]/80 backdrop-blur-sm rounded-3xl p-4 shadow-xl shadow-[#000]/40 border border-[#C9962A25] text-center">
-          <p className="text-sm text-[#A89BC0] leading-relaxed">
+          <p className="text-sm text-[#BCB1D4] leading-relaxed">
             시작 후 정확히 <span className="text-[#C9962A] font-semibold">7.00초</span>에 멈추면 <span className="text-[#C9962A] font-semibold">+20P</span>,<br/>
             아쉽게 놓쳐도 참가 보상으로 <span className="text-[#4BBF7E] font-semibold">+5P</span> 지급!
           </p>
@@ -89,7 +89,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
         <div className="bg-[#130E24]/80 backdrop-blur-sm rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-6">
           {/* 남은 기회 표시 */}
           <div className="flex items-center justify-center gap-2 mb-4">
-            <p className="text-xs text-[#7B6F9A]">남은 기회</p>
+            <p className="text-xs text-[#A79CC2]">남은 기회</p>
             <div className="flex gap-1.5">
               {Array.from({ length: LUCKY_TIMER_MAX_ATTEMPTS }).map((_, i) => (
                 <span
@@ -109,11 +109,11 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
                   <IcLucky size={36} className="text-[#C9962A] opacity-50 absolute -top-2"/>
                   {phase === 'running' ? (
                     <p className="text-4xl font-bold text-[#F5EDD4] tabular-nums">
-                      ?<span className="text-lg text-[#7B6F9A]">초</span>
+                      ?<span className="text-lg text-[#A79CC2]">초</span>
                     </p>
                   ) : (
                     <p className="text-4xl font-bold text-[#F5EDD4] tabular-nums" style={{ fontFamily: "'Gowun Batang', serif" }}>
-                      {elapsed.toFixed(2)}<span className="text-lg text-[#7B6F9A]">초</span>
+                      {elapsed.toFixed(2)}<span className="text-lg text-[#A79CC2]">초</span>
                     </p>
                   )}
                 </div>
@@ -121,8 +121,8 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
 
               {played ? (
                 <div className="text-center">
-                  <p className="text-sm font-semibold text-[#7B6F9A]">오늘 기회를 모두 사용했어요</p>
-                  <p className="text-xs text-[#4A4060] mt-1">내일 다시 도전해보세요!</p>
+                  <p className="text-sm font-semibold text-[#A79CC2]">오늘 기회를 모두 사용했어요</p>
+                  <p className="text-xs text-[#857AA0] mt-1">내일 다시 도전해보세요!</p>
                 </div>
               ) : phase === 'idle' ? (
                 <button
@@ -147,12 +147,12 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
               <div className="flex justify-center mb-3">
                 {result.success
                   ? <IcTargetHit size={56} className="text-[#C9962A]" />
-                  : <IcLucky size={56} className="text-[#7B6F9A]" />}
+                  : <IcLucky size={56} className="text-[#A79CC2]" />}
               </div>
               <p className="text-2xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 {elapsed.toFixed(2)}초
               </p>
-              <p className="text-sm text-[#A89BC0] mb-4">
+              <p className="text-sm text-[#BCB1D4] mb-4">
                 목표 7.00초와 <span className="font-semibold text-[#C9962A]">{result.diff.toFixed(2)}초</span> 차이
               </p>
               <div
@@ -170,9 +170,9 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
                   +{result.amount}P
                 </p>
               </div>
-              <p className="text-xs text-[#4A4060] mb-4">현재 보유 {points.balance.toLocaleString()}P</p>
+              <p className="text-xs text-[#857AA0] mb-4">현재 보유 {points.balance.toLocaleString()}P</p>
               {played ? (
-                <p className="text-sm font-semibold text-[#7B6F9A]">오늘 기회를 모두 사용했어요. 내일 다시 도전해보세요!</p>
+                <p className="text-sm font-semibold text-[#A79CC2]">오늘 기회를 모두 사용했어요. 내일 다시 도전해보세요!</p>
               ) : (
                 <button
                   onClick={handleRetry}
@@ -191,7 +191,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
             <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
             <h2 className="text-sm font-bold text-[#F5EDD4]">참여 방법</h2>
           </div>
-          <ul className="space-y-1.5 text-sm text-[#A89BC0]">
+          <ul className="space-y-1.5 text-sm text-[#BCB1D4]">
             <li>1. '시작하기'를 누르면 타이머가 시작됩니다.</li>
             <li>2. 머릿속으로 7초를 세다가 '멈춰!'를 누르세요.</li>
             <li>3. 7.00초 ±0.10초 이내면 <span className="text-[#C9962A] font-semibold">+20P</span>, 아니면 <span className="text-[#4BBF7E] font-semibold">+5P</span> 지급됩니다.</li>
@@ -201,7 +201,7 @@ export default function LuckyTimerPage({ onBack, onPointsUpdate }: Props) {
 
       </div>
 
-      <div className="text-center pb-8 text-xs text-[#4A4060] relative z-10">행운의 숫자 잡기 — 매일 자정 초기화</div>
+      <div className="text-center pb-8 text-xs text-[#857AA0] relative z-10">행운의 숫자 잡기 — 매일 자정 초기화</div>
     </div>
   )
 }

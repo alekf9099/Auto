@@ -428,7 +428,7 @@ export default function App() {
           <div className="w-full max-w-sm rounded-3xl bg-[#130E24] border border-[#2A1F4A] p-6 shadow-2xl text-center" onClick={e => e.stopPropagation()}>
             <p className="text-2xl mb-2">🔒</p>
             <h2 className="text-lg font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>로그인이 필요해요</h2>
-            <p className="text-sm text-[#A89BC0] leading-relaxed mb-5">{loginPrompt}<br/>로그인하면 데이터도 안전하게 저장돼요.</p>
+            <p className="text-sm text-[#BCB1D4] leading-relaxed mb-5">{loginPrompt}<br/>로그인하면 데이터도 안전하게 저장돼요.</p>
             <div className="flex gap-2">
               <button onClick={() => setLoginPrompt(null)} className="flex-1 py-3 rounded-2xl bg-[#1C1438] border border-[#2A1F4A] text-sm font-semibold text-[#C4B8D8] active:scale-[0.98] transition">나중에</button>
               <button onClick={handleRequestLogin} className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-sm font-bold text-[#0D0A1A] active:scale-[0.98] transition">로그인</button>
@@ -445,15 +445,15 @@ export default function App() {
             onClick={e => e.stopPropagation()}
           >
             <h2 className="text-lg font-bold text-[#F5EDD4] mb-2" style={{ fontFamily: "'Gowun Batang', serif" }}>회원 탈퇴</h2>
-            <p className="text-sm text-[#A89BC0] leading-relaxed mb-1">
+            <p className="text-sm text-[#BCB1D4] leading-relaxed mb-1">
               탈퇴하면 <span className="text-[#E05252] font-semibold">계정과 모든 데이터가 영구 삭제</span>됩니다.
             </p>
-            <ul className="text-xs text-[#7B6F9A] leading-relaxed mb-4 list-disc pl-4">
+            <ul className="text-xs text-[#A79CC2] leading-relaxed mb-4 list-disc pl-4">
               <li>사주·프로필·닉네임 정보</li>
               <li>보유 포인트 {points.balance.toLocaleString()}P 및 적립 내역</li>
               <li>사주매칭·친구초대 기록</li>
             </ul>
-            <p className="text-xs text-[#7B6F9A] mb-4">삭제된 데이터는 복구할 수 없습니다.</p>
+            <p className="text-xs text-[#A79CC2] mb-4">삭제된 데이터는 복구할 수 없습니다.</p>
             {deleteError && (
               <p className="text-xs text-[#E05252] mb-3">삭제 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.</p>
             )}

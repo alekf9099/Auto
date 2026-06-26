@@ -100,7 +100,7 @@ export default function PrivacyPolicyPage({ onBack }: Props) {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
-        <p className="text-xs text-[#7B6F9A] leading-relaxed">
+        <p className="text-xs text-[#A79CC2] leading-relaxed">
           운명봄(이하 "서비스")은 이용자의 개인정보를 중요시하며, 「개인정보 보호법」을 준수하고 있습니다.
           서비스는 본 개인정보처리방침을 통해 이용자가 제공하는 개인정보가 어떠한 목적과 방식으로 이용되고 있으며,
           개인정보 보호를 위해 어떠한 조치가 취해지고 있는지 알려드립니다.
@@ -110,7 +110,7 @@ export default function PrivacyPolicyPage({ onBack }: Props) {
           <section key={i} className="space-y-1.5">
             <h2 className="text-sm font-bold text-[#F5EDD4]">{sec.title}</h2>
             {sec.body.map((line, j) => (
-              <p key={j} className="text-xs text-[#A89BC0] leading-relaxed">{line}</p>
+              <p key={j} className="text-xs text-[#BCB1D4] leading-relaxed">{line}</p>
             ))}
           </section>
         ))}

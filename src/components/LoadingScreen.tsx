@@ -94,7 +94,7 @@ export default function LoadingScreen({ onComplete }: Props) {
       >
         사주 분석중
       </h2>
-      <p className="text-sm text-[#7B6F9A] mb-8 text-center h-5">{MESSAGES[msgIdx]}</p>
+      <p className="text-sm text-[#A79CC2] mb-8 text-center h-5">{MESSAGES[msgIdx]}</p>
 
       {/* 진행 바 */}
       <div className="w-56 bg-[#231844] rounded-full h-2 overflow-hidden mb-2">
@@ -103,7 +103,7 @@ export default function LoadingScreen({ onComplete }: Props) {
           style={{ width: `${progress}%` }}
         />
       </div>
-      <p className="text-xs text-[#7B6F9A] mb-12">{Math.round(progress)}%</p>
+      <p className="text-xs text-[#A79CC2] mb-12">{Math.round(progress)}%</p>
 
       {/* 오행 도트 */}
       <div className="flex items-end gap-4">
@@ -124,7 +124,7 @@ export default function LoadingScreen({ onComplete }: Props) {
               />
               <span
                 className="text-[10px] font-bold transition-colors duration-300"
-                style={{ color: active ? c : '#7B6F9A' }}
+                style={{ color: active ? c : '#A79CC2' }}
               >
                 {OHAENG_LABELS[i]}
               </span>

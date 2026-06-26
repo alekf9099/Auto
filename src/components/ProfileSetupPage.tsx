@@ -11,7 +11,7 @@ interface Props {
 }
 
 const inputCls = `
-  w-full px-3 py-3 rounded-2xl text-center text-[#F5EDD4] placeholder-[#4A4060]
+  w-full px-3 py-3 rounded-2xl text-center text-[#F5EDD4] placeholder-[#857AA0]
   bg-[#1C1438] border border-[#2A1F4A] text-sm font-medium
   focus:outline-none focus:border-[#C9962A] focus:ring-2 focus:ring-[#C9962A20] transition
 `.trim()
@@ -114,7 +114,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
         <h1 className="text-xl font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>
           내 정보 입력
         </h1>
-        <p className="text-[#7B6F9A] text-xs leading-relaxed">
+        <p className="text-[#A79CC2] text-xs leading-relaxed">
           정확한 운세 분석을 위해 생년월일을 입력해 주세요
         </p>
       </div>
@@ -129,7 +129,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
           <div>
             <p className="text-xs font-semibold text-[#C9962A] mb-2 flex items-center gap-1.5">
               <span className="w-1 h-4 bg-[#C9962A] rounded-full inline-block" />
-              프로필 사진 <span className="text-[#7B6F9A] font-normal">(선택)</span>
+              프로필 사진 <span className="text-[#A79CC2] font-normal">(선택)</span>
             </p>
             <div className="flex items-center gap-3">
               <div className="relative shrink-0">
@@ -152,7 +152,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
                   <button
                     type="button"
                     onClick={handlePhotoRemove}
-                    className="w-full py-1.5 rounded-xl text-[11px] font-semibold text-[#7B6F9A] hover:text-rose-400 transition"
+                    className="w-full py-1.5 rounded-xl text-[11px] font-semibold text-[#A79CC2] hover:text-rose-400 transition"
                   >
                     삭제
                   </button>
@@ -160,7 +160,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
               </div>
             </div>
             {photoError && <p className="text-[11px] text-rose-400 mt-1.5">{photoError}</p>}
-            <p className="text-[11px] text-[#4A4060] mt-1.5 text-center">
+            <p className="text-[11px] text-[#857AA0] mt-1.5 text-center">
               사주매칭에서 매칭 상대에게도 보일 수 있어요. 얼굴 사진이 아니어도 괜찮아요
             </p>
           </div>
@@ -177,7 +177,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
               onChange={e => setNickname(e.target.value)}
               className={inputCls}
             />
-            <p className="text-[11px] text-[#4A4060] mt-1.5 text-center">
+            <p className="text-[11px] text-[#857AA0] mt-1.5 text-center">
               다른 사용자와의 매칭 등에서 본명 대신 표시될 이름이에요
             </p>
           </div>
@@ -195,7 +195,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
                     key={c} type="button"
                     onClick={() => setCalendarType(c)}
                     className={`px-3 py-1 rounded-full text-[11px] font-semibold transition ${
-                      calendarType === c ? 'bg-[#C9962A] text-[#0D0A1A]' : 'text-[#7B6F9A]'
+                      calendarType === c ? 'bg-[#C9962A] text-[#0D0A1A]' : 'text-[#A79CC2]'
                     }`}
                   >
                     {c === 'solar' ? '양력' : '음력'}
@@ -210,7 +210,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
                 { label: '일 (日)', ph: '1',    val: day,   set: setDay,   min: 1,    max: 31   },
               ].map(f => (
                 <div key={f.label}>
-                  <label className="block text-[11px] text-[#A89BC0] mb-1.5 font-medium text-center">{f.label}</label>
+                  <label className="block text-[11px] text-[#BCB1D4] mb-1.5 font-medium text-center">{f.label}</label>
                   <input
                     type="number" required placeholder={f.ph} value={f.val}
                     min={f.min} max={f.max}
@@ -221,7 +221,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
               ))}
             </div>
             {calendarType === 'lunar' && (
-              <label className="flex items-center gap-1.5 text-xs text-[#A89BC0] cursor-pointer select-none mt-2.5">
+              <label className="flex items-center gap-1.5 text-xs text-[#BCB1D4] cursor-pointer select-none mt-2.5">
                 <input
                   type="checkbox" checked={isLeapMonth}
                   onChange={e => setIsLeapMonth(e.target.checked)}
@@ -239,7 +239,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
                 <span className="w-1 h-4 bg-[#C9962A] rounded-full inline-block" />
                 태어난 시간 (24h)
               </p>
-              <label className="flex items-center gap-1.5 text-xs text-[#A89BC0] cursor-pointer select-none">
+              <label className="flex items-center gap-1.5 text-xs text-[#BCB1D4] cursor-pointer select-none">
                 <input
                   type="checkbox" checked={unknownHour}
                   onChange={e => setUnknownHour(e.target.checked)}
@@ -250,7 +250,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div>
-                <label className="block text-[11px] text-[#A89BC0] mb-1.5 font-medium text-center">시</label>
+                <label className="block text-[11px] text-[#BCB1D4] mb-1.5 font-medium text-center">시</label>
                 <input
                   type="number" placeholder="14" min="0" max="23" value={hour}
                   disabled={unknownHour}
@@ -259,7 +259,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
                 />
               </div>
               <div>
-                <label className="block text-[11px] text-[#A89BC0] mb-1.5 font-medium text-center">분</label>
+                <label className="block text-[11px] text-[#BCB1D4] mb-1.5 font-medium text-center">분</label>
                 <input
                   type="number" placeholder="30" min="0" max="59" value={minute}
                   disabled={unknownHour}
@@ -269,7 +269,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
               </div>
             </div>
             {!unknownHour && (
-              <p className="text-[11px] text-[#4A4060] mt-1.5 text-center">
+              <p className="text-[11px] text-[#857AA0] mt-1.5 text-center">
                 분 입력 시 분주(分柱)까지 계산됩니다
               </p>
             )}
@@ -289,7 +289,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
                   className={`py-3 rounded-2xl font-semibold text-sm transition-all ${
                     gender === g
                       ? 'bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] shadow-md shadow-[#C9962A30]'
-                      : 'bg-[#1C1438] text-[#A89BC0] border border-[#2A1F4A] hover:border-[#C9962A40]'
+                      : 'bg-[#1C1438] text-[#BCB1D4] border border-[#2A1F4A] hover:border-[#C9962A40]'
                   }`}
                 >
                   {g === 'male' ? '♂ 남성' : '♀ 여성'}
@@ -315,7 +315,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
           </button>
         </form>
 
-        <p className="text-center text-xs text-[#4A4060] my-5">
+        <p className="text-center text-xs text-[#857AA0] my-5">
           입력 정보는 기기에만 저장되며 외부로 전송되지 않습니다
         </p>
       </div>

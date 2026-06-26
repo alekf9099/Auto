@@ -85,7 +85,7 @@ function PromoBanner({
 
         <div className="relative flex-1 text-left">
           <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>{title}</p>
-          <p className="text-xs text-[#A89BC0] mt-0.5 leading-snug">{subtitle}</p>
+          <p className="text-xs text-[#BCB1D4] mt-0.5 leading-snug">{subtitle}</p>
         </div>
 
         <span className="relative text-xs font-semibold shrink-0" style={{ color: accent }}>보기 →</span>
@@ -135,7 +135,7 @@ function NotifyToggle() {
         </span>
         <div>
           <p className="text-sm font-semibold text-[#F5EDD4]">매일 운세 알림</p>
-          <p className={`text-[11px] ${msg ? 'text-[#E05252]' : 'text-[#7B6F9A]'}`}>
+          <p className={`text-[11px] ${msg ? 'text-[#E05252]' : 'text-[#A79CC2]'}`}>
             {busy ? '처리 중…' : msg ?? '매일 아침 8시, 오늘의 운세를 보내드려요'}
           </p>
         </div>
@@ -366,7 +366,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
             )}
             {isGuest
               ? <button onClick={onRequestLogin} className="text-xs font-semibold text-[#C9962A] hover:text-[#E8B84B] transition px-2 py-1">로그인</button>
-              : <button onClick={onLogout} className="text-xs text-[#A89BC0] hover:text-[#C4B8D8] transition px-2 py-1">로그아웃</button>
+              : <button onClick={onLogout} className="text-xs text-[#BCB1D4] hover:text-[#C4B8D8] transition px-2 py-1">로그아웃</button>
             }
             {photo || user.picture
               ? <img src={photo ?? user.picture} alt={user.name} className="w-8 h-8 rounded-full object-cover"/>
@@ -405,7 +405,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           }}
         >
           <div className="relative flex items-center justify-between gap-2 mb-1">
-            <p className="text-violet-300/70 text-xs">
+            <p className="text-violet-300/85 text-xs">
               {todayDate.getFullYear()}년 {month}월 {day}일 · 안녕하세요, {user.name}님
             </p>
             {todayFortune.element && (
@@ -444,7 +444,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
 
         {/* 가로 스크롤 칩 메뉴 */}
         <div style={reveal(1)} className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-4">
-          <p className="text-xs text-[#7B6F9A] mb-3 px-1">기능 바로가기</p>
+          <p className="text-xs text-[#A79CC2] mb-3 px-1">기능 바로가기</p>
           <div className="flex gap-3 overflow-x-auto pb-1 -mx-1 px-1" style={{ scrollbarWidth: 'none' }}>
             {CHIPS.map(chip => {
               const recommended = chip.dest === recommendedChip
@@ -476,7 +476,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                   </div>
                   <div className="text-center">
                     <p className="text-xs text-[#C4B8D8] font-semibold leading-tight">{chip.label}</p>
-                    <p className="text-[9px] mt-0.5" style={{ color: recommended ? todayAccent : '#7B6F9A' }}>{chip.sub}</p>
+                    <p className="text-[9px] mt-0.5" style={{ color: recommended ? todayAccent : '#A79CC2' }}>{chip.sub}</p>
                   </div>
                 </button>
               )
@@ -498,10 +498,10 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
               <span className="text-[#C9962A] text-sm">✓</span>
               <p className="text-xs text-[#C4B8D8]">
                 {nickname && <span className="font-semibold">{nickname}</span>}
-                {nickname && <span className="text-[#7B6F9A] mx-1">·</span>}
+                {nickname && <span className="text-[#A79CC2] mx-1">·</span>}
                 <span className="font-semibold">{birthProfile.year}.{String(birthProfile.month).padStart(2,'0')}.{String(birthProfile.day).padStart(2,'0')}</span>
-                <span className="text-[#7B6F9A] ml-1">· {birthProfile.gender === 'male' ? '남성' : '여성'}</span>
-                {birthProfile.hour !== null && <span className="text-[#7B6F9A] ml-1">· {birthProfile.hour}시</span>}
+                <span className="text-[#A79CC2] ml-1">· {birthProfile.gender === 'male' ? '남성' : '여성'}</span>
+                {birthProfile.hour !== null && <span className="text-[#A79CC2] ml-1">· {birthProfile.hour}시</span>}
               </p>
             </div>
             <button onClick={onEditProfile} className="text-xs text-[#C9962A] font-semibold hover:text-[#E8B84B] transition">수정</button>
@@ -519,7 +519,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
               <span className="w-9 h-9 rounded-full bg-[#C9962A20] flex items-center justify-center text-base shrink-0">🎂</span>
               <p className="text-xs text-[#E8DFC8]">
                 <span className="font-semibold">생년월일을 등록</span>하면<br/>
-                <span className="text-[#7B6F9A]">나만의 사주 풀이를 볼 수 있어요</span>
+                <span className="text-[#A79CC2]">나만의 사주 풀이를 볼 수 있어요</span>
               </p>
             </div>
             <span className="text-xs text-[#C9962A] font-semibold shrink-0">등록 →</span>
@@ -557,7 +557,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                       daunInfo.sipsin === '편인' ? '새 학문과 이동이 잦아지는 역마의 시기입니다' :
                       `${daunInfo.meaning}의 기운이 흐르는 시기입니다`}
                 </p>
-                <p className="text-xs text-[#7B6F9A]">{daunInfo.ageRange} · 자세히 보기 →</p>
+                <p className="text-xs text-[#A79CC2]">{daunInfo.ageRange} · 자세히 보기 →</p>
               </div>
             </div>
           </button>
@@ -565,7 +565,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         )}
 
         {/* ── 오늘의 이벤트 ── */}
-        <p style={reveal(3)} className="text-xs font-semibold text-[#7B6F9A] px-1 pt-2">오늘의 이벤트</p>
+        <p style={reveal(3)} className="text-xs font-semibold text-[#A79CC2] px-1 pt-2">오늘의 이벤트</p>
 
         {/* 나만의 타로 상담 배너 */}
         <div style={reveal(3)}>
@@ -643,11 +643,11 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                     }
                   </div>
                   <div className="flex-1 text-left">
-                    <p className="text-[10px] text-[#7B6F9A] mb-0.5 font-medium">출석체크하고</p>
-                    <p className="text-base font-bold leading-tight" style={{ fontFamily: "'Gowun Batang', serif", color: checked ? '#A89BC0' : '#F5EDD4' }}>
+                    <p className="text-[10px] text-[#A79CC2] mb-0.5 font-medium">출석체크하고</p>
+                    <p className="text-base font-bold leading-tight" style={{ fontFamily: "'Gowun Batang', serif", color: checked ? '#BCB1D4' : '#F5EDD4' }}>
                       {checked ? '오늘 도장 찍었어요!' : '포인트 받아가세요!'}
                     </p>
-                    <p className="text-[11px] text-[#7B6F9A] mt-0.5">
+                    <p className="text-[11px] text-[#A79CC2] mt-0.5">
                       {checked
                         ? `${streak}일 연속 출석 중 · 누적 ${animatedBalance.toLocaleString()}P`
                         : `${streak > 0 ? `${streak}일 연속 출석 중 · ` : ''}매일 +10P 지급`}
@@ -655,7 +655,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                   </div>
                   {!checked
                     ? <div className="shrink-0 w-10 h-10 rounded-full bg-red-500 flex items-center justify-center shadow-md shadow-red-900/30"><span className="text-white text-[10px] font-bold">+10P</span></div>
-                    : <span className="text-[11px] text-[#7B6F9A] font-medium shrink-0">내역 →</span>
+                    : <span className="text-[11px] text-[#A79CC2] font-medium shrink-0">내역 →</span>
                   }
                 </div>
                 <div className="flex items-center gap-1.5">
@@ -672,7 +672,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                         }}
                       >
                         {filled && <span className={`text-[8px] font-bold ${isToday ? 'text-white' : 'text-red-400'}`}>{i + 1}일</span>}
-                        {!filled && <span className="text-[8px] text-[#4A4060]">{i + 1}</span>}
+                        {!filled && <span className="text-[8px] text-[#857AA0]">{i + 1}</span>}
                       </div>
                     )
                   })}
@@ -680,7 +680,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                 <div className={`mt-2.5 pt-2 border-t flex items-center justify-between ${completed ? 'border-amber-500/30' : 'border-red-900/30'}`}>
                   {completed
                     ? <span className="text-[10px] font-bold text-amber-400">🎉 7일 연속 보너스 +50P 받았어요!</span>
-                    : <span className="text-[10px] text-[#4A4060]">{TOTAL_DAYS - streak}일 더 출석하면 보너스 +50P</span>
+                    : <span className="text-[10px] text-[#857AA0]">{TOTAL_DAYS - streak}일 더 출석하면 보너스 +50P</span>
                   }
                   <span className={`text-[10px] font-semibold ${completed ? 'text-amber-400' : 'text-red-400'}`}>자세히 보기 →</span>
                 </div>
@@ -720,7 +720,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                   <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
                     행운의 숫자 잡기 — 7초에 도전!
                   </p>
-                  <p className="text-[11px] text-[#7B6F9A] mt-0.5">
+                  <p className="text-[11px] text-[#A79CC2] mt-0.5">
                     {remaining > 0 ? `성공 시 +20P, 참가만 해도 +5P · 남은 기회 ${remaining}/${LUCKY_TIMER_MAX_ATTEMPTS}` : '오늘 참여 완료 · 내일 다시 도전'}
                   </p>
                 </div>
@@ -734,7 +734,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         })()}
 
         {/* ── 추천 콘텐츠 ── */}
-        <p style={reveal(5)} className="text-xs font-semibold text-[#7B6F9A] px-1 pt-2">추천 콘텐츠</p>
+        <p style={reveal(5)} className="text-xs font-semibold text-[#A79CC2] px-1 pt-2">추천 콘텐츠</p>
 
         {/* 추천 콘텐츠 프로모 배너 — 코드로 제작 (다크/별자리 테마) */}
         <PromoBanner Icon={IcOutfit}   title="오늘의 코디"     subtitle="오행 기반 데일리 스타일링"    accent="#E05282" onClick={() => onNavigate('outfit')}   delay={reveal(5)} />
@@ -746,11 +746,11 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
 
       <AdBanner />
 
-      <div className="text-center pb-2 text-xs text-[#4A4060]">사주팔자 — 양력 기준 · 절기 근사값 적용</div>
-      <div className="text-center pb-3 text-xs text-[#4A4060]">
-        <button onClick={onShowPrivacy} className="underline hover:text-[#7B6F9A] transition">개인정보처리방침</button>
+      <div className="text-center pb-2 text-xs text-[#857AA0]">사주팔자 — 양력 기준 · 절기 근사값 적용</div>
+      <div className="text-center pb-3 text-xs text-[#857AA0]">
+        <button onClick={onShowPrivacy} className="underline hover:text-[#A79CC2] transition">개인정보처리방침</button>
         <span className="mx-2">·</span>
-        <button onClick={onShowTerms} className="underline hover:text-[#7B6F9A] transition">이용약관</button>
+        <button onClick={onShowTerms} className="underline hover:text-[#A79CC2] transition">이용약관</button>
         {!isGuest && (
           <>
             <span className="mx-2">·</span>

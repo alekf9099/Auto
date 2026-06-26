@@ -52,7 +52,7 @@ export default function PointsToast({ amount, total, label, onClose }: Props) {
           <p className="text-3xl font-bold text-[#F5EDD4] mb-1.5" style={{ fontFamily: "'Gowun Batang', serif" }}>
             +{amount}P
           </p>
-          <p className="text-sm text-[#7B6F9A]">누적 <span className="font-semibold text-[#C9962A]">{total.toLocaleString()}P</span></p>
+          <p className="text-sm text-[#A79CC2]">누적 <span className="font-semibold text-[#C9962A]">{total.toLocaleString()}P</span></p>
         </div>
       </div>
       <style>{`

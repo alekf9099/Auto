@@ -79,7 +79,7 @@ export default function SplashScreen({ onDone }: Props) {
       >
         운명봄
       </h1>
-      <p className="text-sm text-[#7B6F9A] mb-1">당신의 운명을 봅니다</p>
+      <p className="text-sm text-[#A79CC2] mb-1">당신의 운명을 봅니다</p>
       <p className="text-xs text-[#C9962A]/70">사주팔자 · 신년운세 · 토정비결</p>
     </div>
   )

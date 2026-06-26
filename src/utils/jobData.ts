@@ -158,6 +158,6 @@ export const JOB_LUCK_BY_SIPSIN: Record<string, SipsinJobLuck> = {
 export const LUCK_GRADE_CFG: Record<LuckGrade, { color: string; bg: string; border: string; emoji: string }> = {
   great:   { color: '#C9962A', bg: '#C9962A18', border: '#C9962A45', emoji: '✨' },
   good:    { color: '#4BBF7E', bg: '#4BBF7E18', border: '#4BBF7E45', emoji: '🌟' },
-  neutral: { color: '#8B8FA8', bg: '#8B8FA818', border: '#8B8FA845', emoji: '🌙' },
+  neutral: { color: '#A3A6BC', bg: '#A3A6BC18', border: '#A3A6BC45', emoji: '🌙' },
   caution: { color: '#E05252', bg: '#E0525218', border: '#E0525245', emoji: '⚡' },
 }

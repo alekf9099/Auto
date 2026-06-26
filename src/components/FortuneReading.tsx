@@ -35,7 +35,7 @@ export default function FortuneReading({ result, count }: Props) {
       <div className="rounded-2xl p-4 mb-3 border" style={{ backgroundColor: sc + '0D', borderColor: sc + '30' }}>
         <div className="flex items-center gap-2 mb-2">
           <span className="text-2xl font-bold" style={{ color: sc }}>{dayStem.hanja}{dayBranch.hanja}</span>
-          <span className="text-xs text-[#7B6F9A] bg-[#231844] px-2 py-0.5 rounded-full">일주 특성</span>
+          <span className="text-xs text-[#A79CC2] bg-[#231844] px-2 py-0.5 rounded-full">일주 특성</span>
         </div>
         <p className="text-sm text-[#C4B8D8] leading-relaxed">{ILJU_MEANING[result.dayPillar.stemIndex]}</p>
       </div>
@@ -83,7 +83,7 @@ export default function FortuneReading({ result, count }: Props) {
         </div>
       </div>
 
-      <p className="text-xs text-[#4A4060] mt-4 text-center">※ 본 해석은 참고용이며, 전문 역술가의 상담을 권장합니다.</p>
+      <p className="text-xs text-[#857AA0] mt-4 text-center">※ 본 해석은 참고용이며, 전문 역술가의 상담을 권장합니다.</p>
     </div>
   )
 }

@@ -443,7 +443,7 @@ export default function DailyFortune({ result, ohaeng }: Props) {
       {/* 헤더 */}
       <div className="flex items-center justify-between mb-5">
         <h2 className="text-lg font-bold text-[#F5EDD4] font-korean">오늘의 운세</h2>
-        <span className="text-xs text-[#7B6F9A] bg-[#1C1438] px-2 py-1 rounded-full">
+        <span className="text-xs text-[#A79CC2] bg-[#1C1438] px-2 py-1 rounded-full">
           {todayYear}.{String(todayMonth).padStart(2,'0')}.{String(todayDay).padStart(2,'0')}
         </span>
       </div>
@@ -455,7 +455,7 @@ export default function DailyFortune({ result, ohaeng }: Props) {
       >
         <div className="flex items-center justify-between mb-3">
           <div>
-            <p className="text-xs text-[#7B6F9A] mb-1">오늘의 일주</p>
+            <p className="text-xs text-[#A79CC2] mb-1">오늘의 일주</p>
             <div className="flex items-center gap-2">
               <span className="text-4xl font-bold" style={{ color: ELEMENT_COLORS[todayStem.element] }}>
                 {todayStem.hanja}
@@ -464,13 +464,13 @@ export default function DailyFortune({ result, ohaeng }: Props) {
                 {todayBranch.hanja}
               </span>
               <div className="ml-1">
-                <p className="text-sm text-[#A89BC0]">{todayStem.ko}{todayBranch.ko}일</p>
-                <p className="text-xs text-[#7B6F9A]">{todayBranch.animal}의 날</p>
+                <p className="text-sm text-[#BCB1D4]">{todayStem.ko}{todayBranch.ko}일</p>
+                <p className="text-xs text-[#A79CC2]">{todayBranch.animal}의 날</p>
               </div>
             </div>
           </div>
           <div className="text-right">
-            <p className="text-xs text-[#7B6F9A] mb-1">내 일간과의 관계</p>
+            <p className="text-xs text-[#A79CC2] mb-1">내 일간과의 관계</p>
             <span
               className="text-2xl font-bold px-3 py-1.5 rounded-xl inline-block"
               style={{ backgroundColor: fortune.color + '20', color: fortune.color }}
@@ -495,7 +495,7 @@ export default function DailyFortune({ result, ohaeng }: Props) {
         <span className="text-sm">⚠️</span>
         <div>
           <span className="text-xs font-semibold text-red-400">오늘 조심할 것 </span>
-          <span className="text-xs text-[#A89BC0]">{fortune.주의}</span>
+          <span className="text-xs text-[#BCB1D4]">{fortune.주의}</span>
         </div>
       </div>
 
@@ -509,16 +509,16 @@ export default function DailyFortune({ result, ohaeng }: Props) {
                 <div className="flex items-center gap-2">
                   <span className="text-lg">{emoji}</span>
                   <span className="text-sm font-semibold text-[#C4B8D8]">{label}</span>
-                  <span className="text-xs text-[#7B6F9A] ml-1">{f.summary}</span>
+                  <span className="text-xs text-[#A79CC2] ml-1">{f.summary}</span>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <Stars n={f.star} />
-                  <span className="text-[#4A4060] text-xs group-open:rotate-180 transition-transform">▼</span>
+                  <span className="text-[#857AA0] text-xs group-open:rotate-180 transition-transform">▼</span>
                 </div>
               </summary>
               <div className="px-4 pb-4 pt-0">
                 <div className="h-px bg-[#2A1F4A] mb-3" />
-                <p className="text-sm text-[#A89BC0] leading-relaxed">{f.detail}</p>
+                <p className="text-sm text-[#BCB1D4] leading-relaxed">{f.detail}</p>
               </div>
             </details>
           )
@@ -537,7 +537,7 @@ export default function DailyFortune({ result, ohaeng }: Props) {
             <div key={t.label} className="flex gap-3 bg-[#1C1438] rounded-2xl px-4 py-3">
               <span className="text-lg shrink-0">{t.icon}</span>
               <div>
-                <p className="text-xs font-semibold text-[#7B6F9A] mb-0.5">{t.label}</p>
+                <p className="text-xs font-semibold text-[#A79CC2] mb-0.5">{t.label}</p>
                 <p className="text-sm text-[#C4B8D8] leading-relaxed">{t.text}</p>
               </div>
             </div>
@@ -557,7 +557,7 @@ export default function DailyFortune({ result, ohaeng }: Props) {
             { label: '행운 음식', value: LUCKY_FOOD[luckyEl], icon: '🍽️', dot: null },
           ].map(item => (
             <div key={item.label} className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl p-3">
-              <p className="text-xs text-[#7B6F9A] mb-1">{item.icon} {item.label}</p>
+              <p className="text-xs text-[#A79CC2] mb-1">{item.icon} {item.label}</p>
               <div className="flex items-center gap-1.5">
                 {item.dot && (
                   <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.dot }} />
