@@ -5,7 +5,21 @@ import { calcDeepSaju, isDeepFreeUsed, markDeepFreeUsed } from '../utils/deepSaj
 import { loadPoints, spendPoints, DEEP_SAJU_UNLOCK_COST } from '../utils/points'
 import { trackEvent } from '../utils/analytics'
 import PointsClaimButton from './PointsClaimButton'
-import { IcDeepSaju } from './icons/SajuIcons'
+import {
+  IcDeepSaju, IcWealthLuck, IcCareerLuck, IcLoveLuck, IcHealthLuck,
+  IcSinnyeon, IcBalance, IcProfile, IcMatch, IcCloverLucky, IcSparkleKeyword,
+} from './icons/SajuIcons'
+
+type IconCmp = React.FC<{ size?: number; className?: string }>
+
+function LockIcon({ size = 14, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" strokeWidth="1.8" />
+    </svg>
+  )
+}
 
 interface Props {
   savedBirth: BirthInput | null
@@ -21,18 +35,18 @@ const ELEM_COLOR: Record<string, { bg: string; text: string; border: string; glo
   '수(水)': { bg: '#EFF6FF', text: '#2563EB', border: '#BFDBFE', glow: '#2563EB' },
 }
 
-const LOCKED_SECTIONS = [
-  { icon: '💰', label: '재물운',       sub: '재물 흐름과 투자 성향' },
-  { icon: '💼', label: '직업/직장운',   sub: '적합 직군과 커리어 방향' },
-  { icon: '💖', label: '애정운',       sub: '연애·결혼 성향과 파트너십' },
-  { icon: '🌿', label: '건강운',       sub: '취약 부위와 건강 관리법' },
-  { icon: '📅', label: `${new Date().getFullYear()}년 운세`,  sub: '올해 개인 운세 흐름' },
-  { icon: '🌀', label: '용신(用神) 분석', sub: '나에게 필요한 오행과 에너지' },
-  { icon: '🤝', label: '귀인(貴人) 분석', sub: '나를 도와주는 사람의 유형' },
-  { icon: '🌐', label: '대인관계',     sub: '인간관계 패턴과 소통 방식' },
-  { icon: '🍀', label: '행운 키워드',  sub: '색상·방향·숫자·계절' },
-  { icon: '📜', label: '총평',         sub: '일생 흐름과 핵심 메시지' },
-  { icon: '✨', label: '조언',         sub: '당신을 위한 한마디' },
+const LOCKED_SECTIONS: { Icon: IconCmp; label: string; sub: string }[] = [
+  { Icon: IcWealthLuck,    label: '재물운',       sub: '재물 흐름과 투자 성향' },
+  { Icon: IcCareerLuck,    label: '직업/직장운',   sub: '적합 직군과 커리어 방향' },
+  { Icon: IcLoveLuck,      label: '애정운',       sub: '연애·결혼 성향과 파트너십' },
+  { Icon: IcHealthLuck,    label: '건강운',       sub: '취약 부위와 건강 관리법' },
+  { Icon: IcSinnyeon,      label: `${new Date().getFullYear()}년 운세`,  sub: '올해 개인 운세 흐름' },
+  { Icon: IcBalance,       label: '용신(用神) 분석', sub: '나에게 필요한 오행과 에너지' },
+  { Icon: IcProfile,       label: '귀인(貴人) 분석', sub: '나를 도와주는 사람의 유형' },
+  { Icon: IcMatch,         label: '대인관계',     sub: '인간관계 패턴과 소통 방식' },
+  { Icon: IcCloverLucky,   label: '행운 키워드',  sub: '색상·방향·숫자·계절' },
+  { Icon: IcDeepSaju,      label: '총평',         sub: '일생 흐름과 핵심 메시지' },
+  { Icon: IcSparkleKeyword, label: '조언',        sub: '당신을 위한 한마디' },
 ]
 
 export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
@@ -297,7 +311,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
               <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] overflow-hidden">
                 <div className="p-5 pb-0">
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="text-lg">💰</span>
+                    <span className="text-[#C9962A]"><IcWealthLuck size={18} /></span>
                     <p className="text-sm font-bold text-[#F5EDD4]">재물운</p>
                     <span className="ml-auto text-[10px] bg-amber-50 text-amber-600 border border-amber-200 px-2 py-0.5 rounded-full font-semibold">미리보기</span>
                   </div>
@@ -309,7 +323,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
 
                 <div className="bg-gradient-to-b from-[#1C1438] to-[#C9962A15] border-t border-[#2A1F4A] px-5 pt-5 pb-6">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-base">🔒</span>
+                    <span className="text-[#C9962A]"><LockIcon size={16} /></span>
                     <p className="text-sm font-bold text-[#F5EDD4]">아래 {LOCKED_SECTIONS.length}개 섹션이 잠겨 있습니다</p>
                   </div>
                   <p className="text-xs text-[#A79CC2] mb-4 ml-6">잠금 해제 후 영구 열람 가능</p>
@@ -317,12 +331,12 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                   <div className="space-y-2 mb-5">
                     {LOCKED_SECTIONS.map(sec => (
                       <div key={sec.label} className="flex items-center gap-3 bg-[#130E24]/70 border border-[#2A1F4A] rounded-2xl px-3.5 py-2.5">
-                        <span className="text-base shrink-0">{sec.icon}</span>
+                        <span className="shrink-0 text-[#C9962A]"><sec.Icon size={17} /></span>
                         <div className="flex-1 min-w-0">
                           <p className="text-xs font-semibold text-[#E8DFC8]">{sec.label}</p>
                           <p className="text-[10px] text-[#A79CC2]">{sec.sub}</p>
                         </div>
-                        <span className="text-[#3D3358] text-sm shrink-0">🔒</span>
+                        <span className="text-[#3D3358] shrink-0"><LockIcon size={14} /></span>
                       </div>
                     ))}
                   </div>
@@ -331,7 +345,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
                     onClick={handleUnlock}
                     className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] hover:from-[#B8871F] hover:to-[#D4A030] transition-all text-sm active:scale-[0.99] flex items-center justify-center gap-2"
                   >
-                    <span className="text-base">✨</span>
+                    <span className="text-[#0D0A1A]"><IcSparkleKeyword size={16} /></span>
                     <span>{DEEP_SAJU_UNLOCK_COST}P로 전체 잠금 해제</span>
                   </button>
                   {unlockError && (
@@ -344,16 +358,16 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
               </div>
             ) : (
               <>
-                <SectionCard icon="💰" title="재물운" content={content.wealth} accent={elemStyle} />
-                <SectionCard icon="💼" title="직업/직장운" content={content.career} accent={elemStyle} />
-                <SectionCard icon="💖" title="애정운" content={content.love} accent={elemStyle} />
-                <SectionCard icon="🌿" title="건강운" content={content.health} accent={elemStyle} />
-                <SectionCard icon="📅" title={`${new Date().getFullYear()}년 운세`} content={content.yearFortune} accent={elemStyle} highlight />
-                <SectionCard icon="🌀" title="용신(用神) 분석" content={content.yongshin} accent={elemStyle} />
-                <SectionCard icon="🤝" title="귀인(貴人) 분석" content={content.guardian} accent={elemStyle} />
-                <SectionCard icon="🌐" title="대인관계" content={content.relationship} accent={elemStyle} />
+                <SectionCard icon={<IcWealthLuck size={18} />} title="재물운" content={content.wealth} accent={elemStyle} />
+                <SectionCard icon={<IcCareerLuck size={18} />} title="직업/직장운" content={content.career} accent={elemStyle} />
+                <SectionCard icon={<IcLoveLuck size={18} />} title="애정운" content={content.love} accent={elemStyle} />
+                <SectionCard icon={<IcHealthLuck size={18} />} title="건강운" content={content.health} accent={elemStyle} />
+                <SectionCard icon={<IcSinnyeon size={18} />} title={`${new Date().getFullYear()}년 운세`} content={content.yearFortune} accent={elemStyle} highlight />
+                <SectionCard icon={<IcBalance size={18} />} title="용신(用神) 분석" content={content.yongshin} accent={elemStyle} />
+                <SectionCard icon={<IcProfile size={18} />} title="귀인(貴人) 분석" content={content.guardian} accent={elemStyle} />
+                <SectionCard icon={<IcMatch size={18} />} title="대인관계" content={content.relationship} accent={elemStyle} />
                 <LuckyCard content={content.lucky} elemStyle={elemStyle} />
-                <SectionCard icon="📜" title="총평" content={content.overall} accent={elemStyle} highlight />
+                <SectionCard icon={<IcDeepSaju size={18} />} title="총평" content={content.overall} accent={elemStyle} highlight />
                 <AdviceCard content={content.advice} />
               </>
             )}
@@ -384,7 +398,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
 function SectionCard({
   icon, title, content, highlight = false,
 }: {
-  icon: string
+  icon: React.ReactNode
   title: string
   content: string
   accent?: { bg: string; text: string; border: string; glow: string }
@@ -395,7 +409,7 @@ function SectionCard({
       highlight ? 'border-[#C9962A30]' : 'border-[#2A1F4A]'
     }`}>
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-lg">{icon}</span>
+        <span className="text-[#C9962A]">{icon}</span>
         <p className="text-sm font-bold text-[#F5EDD4]">{title}</p>
         {highlight && (
           <span className="ml-auto text-[10px] bg-[#C9962A15] text-[#C9962A] border border-[#C9962A30] px-2 py-0.5 rounded-full font-semibold">핵심</span>
@@ -417,7 +431,7 @@ function LuckyCard({
   return (
     <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-lg">🍀</span>
+        <span className="text-[#C9962A]"><IcCloverLucky size={18} /></span>
         <p className="text-sm font-bold text-[#F5EDD4]">행운 키워드</p>
       </div>
       <div className="grid grid-cols-2 gap-2.5">
@@ -450,7 +464,7 @@ function AdviceCard({ content }: { content: string }) {
   return (
     <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-lg">✨</span>
+        <span className="text-violet-300"><IcSparkleKeyword size={18} /></span>
         <p className="text-sm font-bold text-violet-200">당신을 위한 조언</p>
       </div>
       <p className="text-sm text-violet-100/90 leading-relaxed font-medium" style={{ fontFamily: "'Gowun Batang', serif" }}>
