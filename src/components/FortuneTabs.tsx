@@ -3,6 +3,25 @@ import type { SajuResult, OhaengCount } from '../types'
 import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
 import { calculateSaju, getSipsin } from '../utils/saju'
 import { DAY_FORTUNE, MONTHLY_FORTUNE, YEARLY_FORTUNE, LUCKY_COLOR_MAP, LUCKY_COLOR_NAME, LUCKY_NUM, LUCKY_DIR, LUCKY_FOOD } from '../utils/fortuneData'
+import {
+  IcGeneralLuck, IcWealthLuck, IcLoveLuck, IcHealthLuck, IcCareerLuck,
+  IcMorning, IcAfternoon, IcEvening, IcCloverLucky, IcSparkleKeyword,
+} from './icons/SajuIcons'
+
+type IconCmp = React.FC<{ size?: number; className?: string }>
+
+// 운세 카테고리 — 아이콘 + 의미별 강조색 (이모지 대신 통일된 SVG 아이콘 사용)
+const CATS: { Icon: IconCmp; label: string; key: '총평' | '재물' | '애정' | '건강' | '직업'; accent: string }[] = [
+  { Icon: IcGeneralLuck, label: '총운',   key: '총평', accent: '#C9962A' },
+  { Icon: IcWealthLuck,  label: '재물운', key: '재물', accent: '#E8B84B' },
+  { Icon: IcLoveLuck,    label: '애정운', key: '애정', accent: '#E05282' },
+  { Icon: IcHealthLuck,  label: '건강운', key: '건강', accent: '#4BBF7E' },
+  { Icon: IcCareerLuck,  label: '직장운', key: '직업', accent: '#5B9BD5' },
+]
+
+function catStars(base: number): number[] {
+  return [base, Math.max(1, base - 1), base, base, Math.min(5, base + 1)]
+}
 
 // ── 공통 UI ───────────────────────────────────────────────────────────
 
@@ -17,13 +36,13 @@ function Stars({ n }: { n: number }) {
 }
 
 
-function CategoryRow({ emoji, label, summary, detail, star }: {
-  emoji: string; label: string; summary: string; detail: string; star: number
+function CategoryRow({ Icon, accent, label, summary, detail, star }: {
+  Icon: IconCmp; accent: string; label: string; summary: string; detail: string; star: number
 }) {
   return (
     <details className="border border-[#2A1F4A] rounded-2xl overflow-hidden group">
       <summary className="flex items-center gap-2 p-3.5 cursor-pointer list-none select-none hover:bg-[#1C1438] transition">
-        <span className="text-base">{emoji}</span>
+        <span className="shrink-0" style={{ color: accent }}><Icon size={18} /></span>
         <span className="text-sm font-semibold text-[#C4B8D8]">{label}</span>
         <span className="text-xs text-[#A79CC2] flex-1 truncate">{summary}</span>
         <Stars n={star} />
@@ -128,40 +147,34 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
 
             {/* 조언 + 주의 */}
             <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl p-3.5">
-              <p className="text-xs font-semibold text-[#C9962A] mb-1">✨ 오늘의 조언</p>
+              <p className="text-xs font-semibold text-[#C9962A] mb-1 flex items-center gap-1"><IcSparkleKeyword size={13} /> 오늘의 조언</p>
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{todayData.조언}</p>
             </div>
-            <div className="bg-red-900/20 border border-red-900/40 rounded-2xl px-4 py-2.5 flex items-center gap-2">
-              <span>⚠️</span>
+            <div className="bg-red-900/20 border border-red-900/40 rounded-2xl px-4 py-2.5 flex items-start gap-2">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="shrink-0 mt-0.5"><path d="M12 4l9 16H3z" stroke="#F87171" strokeWidth="1.8" strokeLinejoin="round"/><path d="M12 10v4" stroke="#F87171" strokeWidth="1.8" strokeLinecap="round"/><circle cx="12" cy="17" r="0.6" fill="#F87171"/></svg>
               <p className="text-xs text-[#BCB1D4]"><span className="font-semibold text-red-400">주의 </span>{todayData.주의}</p>
             </div>
 
             {/* 항목별 */}
             <div className="space-y-2">
-              {([
-                { emoji: '🔮', label: '총운',  key: '총평' as const,  star: todayData.star },
-                { emoji: '💰', label: '재물운', key: '재물' as const,  star: Math.max(1, todayData.star - 1) },
-                { emoji: '💕', label: '애정운', key: '애정' as const,  star: Math.max(1, todayData.star) },
-                { emoji: '💪', label: '건강운', key: '건강' as const,  star: Math.max(1, todayData.star) },
-                { emoji: '💼', label: '직장운', key: '직업' as const,  star: Math.min(5, todayData.star + 1) },
-              ]).map(c => (
-                <CategoryRow key={c.key} emoji={c.emoji} label={c.label}
+              {CATS.map((c, i) => (
+                <CategoryRow key={c.key} Icon={c.Icon} accent={c.accent} label={c.label}
                   summary={todayData[c.key].slice(0, 20) + '…'}
-                  detail={todayData[c.key]} star={c.star} />
+                  detail={todayData[c.key]} star={catStars(todayData.star)[i]} />
               ))}
             </div>
 
             {/* 시간대별 */}
             <div>
-              <p className="text-sm font-semibold text-[#C4B8D8] mb-2">🕐 시간대별</p>
+              <p className="text-sm font-semibold text-[#C4B8D8] mb-2">시간대별</p>
               <div className="space-y-2">
                 {[
-                  { icon: '🌅', label: '오전 06~12시', text: todayData.시간오전 },
-                  { icon: '☀️',  label: '오후 12~18시', text: todayData.시간오후 },
-                  { icon: '🌙', label: '저녁 18~24시', text: todayData.시간저녁 },
+                  { Icon: IcMorning,   label: '오전 06~12시', text: todayData.시간오전 },
+                  { Icon: IcAfternoon, label: '오후 12~18시', text: todayData.시간오후 },
+                  { Icon: IcEvening,   label: '저녁 18~24시', text: todayData.시간저녁 },
                 ].map(t => (
                   <div key={t.label} className="flex gap-3 bg-[#1C1438] border border-[#2A1F4A] rounded-2xl px-4 py-3">
-                    <span className="shrink-0">{t.icon}</span>
+                    <span className="shrink-0 text-[#C9962A] mt-0.5"><t.Icon size={18} /></span>
                     <div>
                       <p className="text-xs font-semibold text-[#A79CC2] mb-0.5">{t.label}</p>
                       <p className="text-sm text-[#C4B8D8]">{t.text}</p>
@@ -173,7 +186,7 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
 
             {/* 행운 아이템 */}
             <div>
-              <p className="text-sm font-semibold text-[#C4B8D8] mb-2">🍀 오늘의 행운</p>
+              <p className="text-sm font-semibold text-[#C4B8D8] mb-2 flex items-center gap-1.5"><IcCloverLucky size={16} className="text-[#C9962A]" /> 오늘의 행운</p>
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { label: '행운 색상', value: LUCKY_COLOR_NAME[luckyEl], dot: LUCKY_COLOR_MAP[luckyEl] },
@@ -216,22 +229,15 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
             </div>
 
             <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl p-3.5">
-              <p className="text-xs font-semibold text-[#C9962A] mb-1">📅 이달의 조언</p>
+              <p className="text-xs font-semibold text-[#C9962A] mb-1 flex items-center gap-1"><IcSparkleKeyword size={13} /> 이달의 조언</p>
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{monthData.조언}</p>
             </div>
 
             <div className="space-y-2">
-              {([
-                { emoji: '🔮', label: '총운',  text: monthData.총평 },
-                { emoji: '💰', label: '재물운', text: monthData.재물 },
-                { emoji: '💕', label: '애정운', text: monthData.애정 },
-                { emoji: '💪', label: '건강운', text: monthData.건강 },
-                { emoji: '💼', label: '직장운', text: monthData.직업 },
-              ]).map((c, i) => {
-                const stars = [monthData.star, Math.max(1,monthData.star-1), monthData.star, monthData.star, Math.min(5,monthData.star+1)]
-                return <CategoryRow key={c.label} emoji={c.emoji} label={c.label}
-                  summary={c.text.slice(0, 20) + '…'} detail={c.text} star={stars[i]} />
-              })}
+              {CATS.map((c, i) => (
+                <CategoryRow key={c.key} Icon={c.Icon} accent={c.accent} label={c.label}
+                  summary={monthData[c.key].slice(0, 20) + '…'} detail={monthData[c.key]} star={catStars(monthData.star)[i]} />
+              ))}
             </div>
           </>
         )}
@@ -258,22 +264,15 @@ export default function FortuneTabs({ result, ohaeng }: Props) {
             </div>
 
             <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl p-3.5">
-              <p className="text-xs font-semibold text-[#C9962A] mb-1">🗓️ 올해의 조언</p>
+              <p className="text-xs font-semibold text-[#C9962A] mb-1 flex items-center gap-1"><IcSparkleKeyword size={13} /> 올해의 조언</p>
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{yearData.조언}</p>
             </div>
 
             <div className="space-y-2">
-              {([
-                { emoji: '🔮', label: '총운',  text: yearData.총평 },
-                { emoji: '💰', label: '재물운', text: yearData.재물 },
-                { emoji: '💕', label: '애정운', text: yearData.애정 },
-                { emoji: '💪', label: '건강운', text: yearData.건강 },
-                { emoji: '💼', label: '직업운', text: yearData.직업 },
-              ]).map((c, i) => {
-                const stars = [yearData.star, Math.max(1,yearData.star-1), yearData.star, yearData.star, Math.min(5,yearData.star+1)]
-                return <CategoryRow key={c.label} emoji={c.emoji} label={c.label}
-                  summary={c.text.slice(0, 20) + '…'} detail={c.text} star={stars[i]} />
-              })}
+              {CATS.map((c, i) => (
+                <CategoryRow key={c.key} Icon={c.Icon} accent={c.accent} label={c.label}
+                  summary={yearData[c.key].slice(0, 20) + '…'} detail={yearData[c.key]} star={catStars(yearData.star)[i]} />
+              ))}
             </div>
           </>
         )}
