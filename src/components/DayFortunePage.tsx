@@ -64,7 +64,16 @@ function polar(cx: number, cy: number, r: number, angleDeg: number) {
 function luckLabel(percent: number) {
   if (percent >= 90) return '매우 좋음'
   if (percent >= 75) return '좋음'
-  return '보통'
+  if (percent >= 60) return '보통'
+  return '주의'
+}
+
+// 행운 지수에 따른 강조색 (빨강=주의 → 초록=최고)
+function luckColor(percent: number) {
+  if (percent >= 90) return '#4BBF7E'
+  if (percent >= 75) return '#F5DA8B'
+  if (percent >= 60) return '#E8B84B'
+  return '#E0524D'
 }
 
 function describeArc(cx: number, cy: number, r: number, startDeg: number, endDeg: number) {
@@ -74,38 +83,58 @@ function describeArc(cx: number, cy: number, r: number, startDeg: number, endDeg
   return `M ${p1.x} ${p1.y} A ${r} ${r} 0 ${large} 1 ${p2.x} ${p2.y}`
 }
 
-// 다이얼 그림(public/gauge-dial.png) 위에 종합 행운 지수(percent)가 가리키는 바늘과 점수를 겹쳐 그린다
+// 점성반(public/gauge-dial.png)을 은은한 배경으로 깔고, 빨강(주의)→초록(최고) 색 스케일 위에
+// 바늘이 종합 행운 지수를 가리키는 "운명의 나침반" 게이지. 한눈에 좋고 나쁨이 보이게 한다.
 function DayLuckGauge({ percent, star }: { percent: number; star: number }) {
   const size = 240
   const cx = size / 2, cy = size / 2
-  const needleAngle = Math.max(0, Math.min(180, (100 - percent) * 1.8))
-  const needleTip = polar(cx, cy, size * 0.34, needleAngle)
-  const arcPath = describeArc(cx, cy, 70, 0, 180)
+  const r = 90
+  const START = 225, SWEEP = 270            // 아래쪽이 트인 270° 게이지 (좌하단=주의 → 우하단=최고)
+  const p = Math.max(0, Math.min(100, percent))
+  const markerAngle = START + SWEEP * (p / 100)
+  const marker = polar(cx, cy, r, markerAngle)
+  const accent = luckColor(percent)
+  const track = describeArc(cx, cy, r, START, START + SWEEP)
 
   return (
     <div className="flex items-center justify-center py-2">
-      <div className="relative" style={{ width: size, height: size, clipPath: 'circle(50%)' }}>
-        <img src="/gauge-dial.png" alt="" width={size} height={size} className="absolute inset-0 w-full h-full select-none pointer-events-none" draggable={false} />
+      <div className="relative" style={{ width: size, height: size }}>
+        {/* 점성반 배경 (은은하게) + 가독성용 중앙 비네팅 */}
+        <img src="/gauge-dial.png" alt="" width={size} height={size} className="absolute inset-0 w-full h-full opacity-40 select-none pointer-events-none" style={{ clipPath: 'circle(50%)' }} draggable={false} />
+        <div className="absolute inset-0" style={{ clipPath: 'circle(50%)', background: 'radial-gradient(circle, rgba(13,10,26,0.88) 36%, rgba(13,10,26,0.25) 68%, transparent 100%)' }} />
+
         <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} className="absolute inset-0">
           <defs>
-            <linearGradient id="needleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#A9762B" />
-              <stop offset="100%" stopColor="#F5DA8B" />
-            </linearGradient>
-            <linearGradient id="arcGradient" x1="50%" y1="0%" x2="50%" y2="100%">
-              <stop offset="0%" stopColor="#E8B84B" />
-              <stop offset="100%" stopColor="#E3503A" />
+            <linearGradient id="luckScale" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#E0524D" />
+              <stop offset="45%" stopColor="#E8B84B" />
+              <stop offset="72%" stopColor="#F5DA8B" />
+              <stop offset="100%" stopColor="#4BBF7E" />
             </linearGradient>
           </defs>
-          <path d={arcPath} fill="none" stroke="url(#arcGradient)" strokeWidth="14" strokeLinecap="round" opacity={0.4} style={{ filter: 'blur(6px)' }} />
-          <path d={arcPath} fill="none" stroke="url(#arcGradient)" strokeWidth="7" strokeLinecap="round" />
-          <line x1={cx} y1={cy} x2={needleTip.x} y2={needleTip.y} stroke="url(#needleGradient)" strokeWidth="3" strokeLinecap="round" />
-          <circle cx={cx} cy={cy} r="6" fill="#1C1438" stroke="url(#needleGradient)" strokeWidth="1.5" />
+          {/* 트랙(색 스케일): 빨강→초록 */}
+          <path d={track} fill="none" stroke="#2A1F4A" strokeWidth="13" strokeLinecap="round" />
+          <path d={track} fill="none" stroke="url(#luckScale)" strokeWidth="9" strokeLinecap="round" opacity="0.9" />
+          {/* 바늘 (중심 → 현재 값) */}
+          <line x1={cx} y1={cy} x2={marker.x} y2={marker.y} stroke={accent} strokeWidth="3" strokeLinecap="round" />
+          <circle cx={cx} cy={cy} r="6" fill="#130E24" stroke={accent} strokeWidth="2" />
+          {/* 현재 위치 마커 + 글로우 */}
+          <circle cx={marker.x} cy={marker.y} r="11" fill={accent} opacity="0.25" />
+          <circle cx={marker.x} cy={marker.y} r="5.5" fill={accent} stroke="#FFF8E6" strokeWidth="1.5" />
         </svg>
-        <div className="absolute inset-x-0 flex flex-col items-center" style={{ top: cy + 28 }}>
-          <p className="text-2xl font-bold text-[#F5DA8B]" style={{ fontFamily: "'Gowun Batang', serif", textShadow: '0 1px 6px rgba(0,0,0,0.7)' }}>{percent}%</p>
-          <p className="text-xs font-semibold text-[#E8DFC8]" style={{ textShadow: '0 1px 6px rgba(0,0,0,0.7)' }}>{luckLabel(percent)}</p>
-          <div className="mt-1 scale-75"><Stars n={star} /></div>
+
+        {/* 양끝 안내 라벨 */}
+        <span className="absolute text-[10px] font-semibold text-[#E0524D]" style={{ left: 26, bottom: 30 }}>주의</span>
+        <span className="absolute text-[10px] font-semibold text-[#4BBF7E]" style={{ right: 26, bottom: 30 }}>최고</span>
+
+        {/* 중앙 수치 */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <p className="text-[11px] text-[#A89BC0] mb-0.5">종합 행운 지수</p>
+          <p className="font-bold leading-none" style={{ color: accent, fontFamily: "'Gowun Batang', serif", textShadow: '0 1px 8px rgba(0,0,0,0.75)' }}>
+            <span className="text-4xl">{percent}</span><span className="text-xl">%</span>
+          </p>
+          <p className="text-sm font-bold mt-1" style={{ color: accent }}>{luckLabel(percent)}</p>
+          <div className="mt-1 scale-90"><Stars n={star} /></div>
         </div>
       </div>
     </div>
