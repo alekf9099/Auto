@@ -1,6 +1,12 @@
 import type { SajuResult, OhaengCount } from '../types'
 import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
 import { calculateSaju, getSipsin } from '../utils/saju'
+import {
+  IcGeneralLuck, IcWealthLuck, IcLoveLuck, IcHealthLuck, IcCareerLuck,
+  IcMorning, IcAfternoon, IcEvening, IcCloverLucky, IcSparkleKeyword,
+} from './icons/SajuIcons'
+
+type IconCmp = React.FC<{ size?: number; className?: string }>
 
 interface Props {
   result: SajuResult
@@ -394,7 +400,7 @@ function Stars({ n, max = 5 }: { n: number; max?: number }) {
   return (
     <div className="flex gap-0.5">
       {Array.from({ length: max }).map((_, i) => (
-        <span key={i} className={`text-sm ${i < n ? 'text-amber-400' : 'text-stone-200'}`}>★</span>
+        <span key={i} className={`text-sm ${i < n ? 'text-amber-400' : 'text-[#3D3358]'}`}>★</span>
       ))}
     </div>
   )
@@ -430,12 +436,12 @@ export default function DailyFortune({ result, ohaeng }: Props) {
       .reduce((s, v) => s + v, 0) / 5
   )
 
-  const categories = [
-    { key: '총운' as const, emoji: '🔮', label: '총운' },
-    { key: '재물' as const, emoji: '💰', label: '재물운' },
-    { key: '애정' as const, emoji: '💕', label: '애정운' },
-    { key: '건강' as const, emoji: '💪', label: '건강운' },
-    { key: '직장' as const, emoji: '💼', label: '직장운' },
+  const categories: { key: '총운' | '재물' | '애정' | '건강' | '직장'; Icon: IconCmp; label: string; accent: string }[] = [
+    { key: '총운', Icon: IcGeneralLuck, label: '총운',   accent: '#C9962A' },
+    { key: '재물', Icon: IcWealthLuck,  label: '재물운', accent: '#E8B84B' },
+    { key: '애정', Icon: IcLoveLuck,    label: '애정운', accent: '#E05282' },
+    { key: '건강', Icon: IcHealthLuck,  label: '건강운', accent: '#4BBF7E' },
+    { key: '직장', Icon: IcCareerLuck,  label: '직장운', accent: '#5B9BD5' },
   ]
 
   return (
@@ -485,14 +491,14 @@ export default function DailyFortune({ result, ohaeng }: Props) {
 
         {/* 조언 */}
         <div className="bg-[#1C1438] rounded-xl p-3">
-          <p className="text-xs font-semibold mb-1" style={{ color: fortune.color }}>✨ 오늘의 조언</p>
+          <p className="text-xs font-semibold mb-1 flex items-center gap-1" style={{ color: fortune.color }}><IcSparkleKeyword size={13} /> 오늘의 조언</p>
           <p className="text-sm text-[#C4B8D8] leading-relaxed">{fortune.조언}</p>
         </div>
       </div>
 
       {/* 주의사항 */}
       <div className="bg-red-900/20 border border-red-900/40 rounded-2xl px-4 py-2.5 mb-4 flex items-start gap-2">
-        <span className="text-sm">⚠️</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" className="shrink-0 mt-0.5"><path d="M12 4l9 16H3z" stroke="#F87171" strokeWidth="1.8" strokeLinejoin="round"/><path d="M12 10v4" stroke="#F87171" strokeWidth="1.8" strokeLinecap="round"/><circle cx="12" cy="17" r="0.6" fill="#F87171"/></svg>
         <div>
           <span className="text-xs font-semibold text-red-400">오늘 조심할 것 </span>
           <span className="text-xs text-[#BCB1D4]">{fortune.주의}</span>
@@ -501,13 +507,13 @@ export default function DailyFortune({ result, ohaeng }: Props) {
 
       {/* 카테고리별 상세 운세 */}
       <div className="space-y-3 mb-5">
-        {categories.map(({ key, emoji, label }) => {
+        {categories.map(({ key, Icon, label, accent }) => {
           const f = fortune[key]
           return (
             <details key={key} className="border border-[#2A1F4A] rounded-2xl overflow-hidden group">
               <summary className="flex items-center justify-between p-4 cursor-pointer list-none select-none hover:bg-[#1C1438] transition">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">{emoji}</span>
+                  <span className="shrink-0" style={{ color: accent }}><Icon size={18} /></span>
                   <span className="text-sm font-semibold text-[#C4B8D8]">{label}</span>
                   <span className="text-xs text-[#A79CC2] ml-1">{f.summary}</span>
                 </div>
@@ -527,15 +533,15 @@ export default function DailyFortune({ result, ohaeng }: Props) {
 
       {/* 시간대별 운세 */}
       <div className="mb-5">
-        <p className="text-sm font-semibold text-[#C4B8D8] mb-3">🕐 시간대별 운세</p>
+        <p className="text-sm font-semibold text-[#C4B8D8] mb-3">시간대별 운세</p>
         <div className="space-y-2">
           {([
-            { label: '오전 (06~12시)', icon: '🌅', text: fortune.시간.오전 },
-            { label: '오후 (12~18시)', icon: '☀️',  text: fortune.시간.오후 },
-            { label: '저녁 (18~24시)', icon: '🌙', text: fortune.시간.저녁 },
+            { label: '오전 (06~12시)', Icon: IcMorning,   text: fortune.시간.오전 },
+            { label: '오후 (12~18시)', Icon: IcAfternoon, text: fortune.시간.오후 },
+            { label: '저녁 (18~24시)', Icon: IcEvening,   text: fortune.시간.저녁 },
           ]).map(t => (
             <div key={t.label} className="flex gap-3 bg-[#1C1438] rounded-2xl px-4 py-3">
-              <span className="text-lg shrink-0">{t.icon}</span>
+              <span className="shrink-0 text-[#C9962A] mt-0.5"><t.Icon size={18} /></span>
               <div>
                 <p className="text-xs font-semibold text-[#A79CC2] mb-0.5">{t.label}</p>
                 <p className="text-sm text-[#C4B8D8] leading-relaxed">{t.text}</p>
@@ -547,17 +553,16 @@ export default function DailyFortune({ result, ohaeng }: Props) {
 
       {/* 행운 아이템 */}
       <div>
-        <p className="text-sm font-semibold text-[#C4B8D8] mb-3">🍀 오늘의 행운 아이템</p>
+        <p className="text-sm font-semibold text-[#C4B8D8] mb-3 flex items-center gap-1.5"><IcCloverLucky size={16} className="text-[#C9962A]" /> 오늘의 행운 아이템</p>
         <div className="grid grid-cols-2 gap-2">
           {[
-            { label: '행운 색상', value: LUCKY_COLOR[luckyEl].name, icon: '🎨',
-              dot: LUCKY_COLOR[luckyEl].hex },
-            { label: '행운 숫자', value: LUCKY_NUM[luckyEl], icon: '🔢', dot: null },
-            { label: '행운 방향', value: LUCKY_DIR[luckyEl], icon: '🧭', dot: null },
-            { label: '행운 음식', value: LUCKY_FOOD[luckyEl], icon: '🍽️', dot: null },
+            { label: '행운 색상', value: LUCKY_COLOR[luckyEl].name, dot: LUCKY_COLOR[luckyEl].hex },
+            { label: '행운 숫자', value: LUCKY_NUM[luckyEl], dot: null },
+            { label: '행운 방향', value: LUCKY_DIR[luckyEl], dot: null },
+            { label: '행운 음식', value: LUCKY_FOOD[luckyEl], dot: null },
           ].map(item => (
             <div key={item.label} className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl p-3">
-              <p className="text-xs text-[#A79CC2] mb-1">{item.icon} {item.label}</p>
+              <p className="text-xs text-[#A79CC2] mb-1">{item.label}</p>
               <div className="flex items-center gap-1.5">
                 {item.dot && (
                   <span className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: item.dot }} />
