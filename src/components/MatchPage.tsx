@@ -32,8 +32,17 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
   const [opponent, setOpponent] = useState<MatchOpponent | null>(null)
   const [result, setResult] = useState<GunghabResult | null>(null)
   const [history, setHistory] = useState<MatchHistoryEntry[]>(loadMatchHistory)
+  const [matchRevealed, setMatchRevealed] = useState(false)
 
   useEffect(() => { setError(null) }, [optedIn])
+
+  // 뽑을 때마다 카드를 엎었다가 3D로 뒤집어 매칭 상대를 공개
+  useEffect(() => {
+    if (!result || !opponent) return
+    setMatchRevealed(false)
+    const t = setTimeout(() => setMatchRevealed(true), 480)
+    return () => clearTimeout(t)
+  }, [opponent, result])
 
   async function handleJoin() {
     setBusy(true)
@@ -158,9 +167,33 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
           </>
         )}
 
-        {/* 결과 */}
+        {/* 결과 — 카드를 뒤집어 매칭 상대 공개 */}
         {result && opponent && (
-          <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl overflow-hidden shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative animate-fade-in-up">
+          <div className="relative animate-fade-in-up" style={{ perspective: '1200px' }}>
+          <div
+            className="grid transition-transform duration-700 ease-out"
+            style={{ transformStyle: 'preserve-3d', transform: matchRevealed ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
+          >
+            {/* 뒷면 — 엎어둔 운명의 상대 카드 */}
+            <div
+              className="[grid-area:1/1] bg-gradient-to-br from-[#2A1F4A] to-[#1A0E30] rounded-3xl border border-[#C9962A40] flex flex-col items-center justify-center gap-3 p-10 overflow-hidden relative"
+              style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+            >
+              <div
+                className="absolute inset-3 rounded-2xl border border-[#C9962A20]"
+                style={{ backgroundImage: 'repeating-linear-gradient(45deg, rgba(201,150,42,0.08) 0px, rgba(201,150,42,0.08) 1px, transparent 1px, transparent 8px)' }}
+              />
+              <span className="relative w-14 h-14 rounded-full bg-[#C9962A18] border border-[#C9962A40] flex items-center justify-center animate-pulse">
+                <IcMatch size={26} className="text-[#C9962A]" />
+              </span>
+              <p className="relative text-sm font-bold text-[#F5EDD4]">운명의 상대를 뽑는 중...</p>
+            </div>
+
+            {/* 앞면 — 매칭 결과 */}
+            <div
+              className="[grid-area:1/1] bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl overflow-hidden shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative"
+              style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+            >
             <div className="absolute -top-10 -right-10 w-48 h-48 rounded-full bg-violet-500/10 blur-3xl" />
             <div className="relative z-10 p-6">
               <div className="flex items-center gap-3 mb-5">
@@ -193,6 +226,8 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
               </div>
               <p className="text-xs text-violet-200/85 leading-relaxed mt-4">{result.summary}</p>
             </div>
+            </div>
+          </div>
           </div>
         )}
 

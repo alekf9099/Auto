@@ -174,10 +174,19 @@ export default function FortuneBattlePage({ savedBirth, onSave, onBack }: Props)
   const [themName, setThemName] = useState('')
   const [result,   setResult]   = useState<{ me: SideResult; them: SideResult } | null>(null)
   const [showShare, setShowShare] = useState(false)
+  const [winnerRevealed, setWinnerRevealed] = useState(false)
 
   useEffect(() => {
     if (step !== 'loading') return
     const t = setTimeout(() => { setStep('result'); window.scrollTo(0, 0) }, 1800)
+    return () => clearTimeout(t)
+  }, [step])
+
+  // 결과 진입 시 승자 카드를 엎었다가 3D로 뒤집어 공개
+  useEffect(() => {
+    if (step !== 'result') { setWinnerRevealed(false); return }
+    setWinnerRevealed(false)
+    const t = setTimeout(() => setWinnerRevealed(true), 520)
     return () => clearTimeout(t)
   }, [step])
 
@@ -297,19 +306,38 @@ export default function FortuneBattlePage({ savedBirth, onSave, onBack }: Props)
       {step === 'result' && result && (
         <div className="max-w-2xl mx-auto px-4 py-5 space-y-4 animate-fade-in-up">
 
-          <div
-            className={`rounded-3xl p-4 text-center border ${
-              winner === 'tie' ? 'bg-[#231844] border-[#2A1F4A]' : 'bg-[#C9962A15] border-[#C9962A30]'
-            }`}
-          >
-            <p className="text-base font-bold flex items-center justify-center gap-1.5" style={{ fontFamily: "'Gowun Batang', serif", color: winner === 'tie' ? '#F5EDD4' : '#C9962A' }}>
-              {winner === 'tie' ? <IcDraw size={18} /> : <IcCrown size={18} />}
-              {winner === 'tie'
-                ? '오늘은 무승부예요!'
-                : winner === 'me'
-                  ? '오늘은 내 운세가 더 좋아요!'
-                  : `오늘은 ${nameLabel}의 운세가 더 좋아요!`}
-            </p>
+          {/* 승자 발표 — 카드를 뒤집어 공개 */}
+          <div className="relative" style={{ perspective: '1200px' }}>
+            <div
+              className="grid transition-transform duration-700 ease-out"
+              style={{ transformStyle: 'preserve-3d', transform: winnerRevealed ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
+            >
+              {/* 뒷면 — 엎어둔 결과 카드 */}
+              <div
+                className="[grid-area:1/1] rounded-3xl p-4 border bg-gradient-to-br from-[#2A1F4A] to-[#1A0E30] border-[#C9962A40] flex items-center justify-center gap-2"
+                style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+              >
+                <span className="text-[#C9962A] animate-pulse"><IcBattle size={18} /></span>
+                <p className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>결과 공개...</p>
+              </div>
+
+              {/* 앞면 — 승자 발표 */}
+              <div
+                className={`[grid-area:1/1] rounded-3xl p-4 text-center border ${
+                  winner === 'tie' ? 'bg-[#231844] border-[#2A1F4A]' : 'bg-[#C9962A15] border-[#C9962A30]'
+                }`}
+                style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+              >
+                <p className="text-base font-bold flex items-center justify-center gap-1.5" style={{ fontFamily: "'Gowun Batang', serif", color: winner === 'tie' ? '#F5EDD4' : '#C9962A' }}>
+                  {winner === 'tie' ? <IcDraw size={18} /> : <IcCrown size={18} />}
+                  {winner === 'tie'
+                    ? '오늘은 무승부예요!'
+                    : winner === 'me'
+                      ? '오늘은 내 운세가 더 좋아요!'
+                      : `오늘은 ${nameLabel}의 운세가 더 좋아요!`}
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
