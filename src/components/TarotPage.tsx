@@ -307,11 +307,8 @@ export default function TarotPage({ onBack }: Props) {
 
             <p className="text-center text-sm text-[#BCB1D4]">22장 중 3장을 골라주세요 ({picked.length}/3)</p>
 
-            {/* 부채꼴 레이아웃 컨테이너 (3D 공간 왜곡 설정) */}
-<div 
-  className="relative w-full max-w-md mx-auto h-[260px] flex items-end justify-center overflow-hidden pt-10 mb-4" 
-  style={{ perspective: '1000px' }}
->
+            {/* 부채꼴 레이아웃 컨테이너 (높이를 축소하고 모바일 화면 중앙 정렬 최적화) */}
+<div className="relative w-full max-w-sm mx-auto h-[200px] flex items-center justify-center overflow-visible my-4" style={{ perspective: '1000px' }}>
   {spread.map((card, i) => {
     const pickIndex = picked.indexOf(i)
     const isPicked = pickIndex !== -1
@@ -322,10 +319,11 @@ export default function TarotPage({ onBack }: Props) {
     const midIndex = (totalCards - 1) / 2
     const distanceFromCenter = i - midIndex
 
-    // 곡률 및 간격 조정 변수 (취향에 맞게 수치 조절 가능)
-    const rotateZ = distanceFromCenter * 2.2      // 카드당 회전 각도
-    const translateX = distanceFromCenter * 8.5    // 카드 간 좌우 간격 (px)
-    const translateY = Math.abs(distanceFromCenter) * 1.8 // 아래로 휘어지는 굴곡 (px)
+    // 아래쪽이 잘리거나 문구와 겹치지 않도록 회전 각도와 반경을 콤팩트하게 압축
+    const rotateZ = distanceFromCenter * 2.0      // 카드당 회전 각도 (더 촘촘하게)
+    const translateX = distanceFromCenter * 7.5    // 카드 간 좌우 간격 (px)
+    // 둥글게 휘어지는 축의 Y 위치를 위로 올려서 카드 밑바닥이 화면 밖으로 나가는 것을 방지
+    const translateY = Math.abs(distanceFromCenter) * 0.8 - 40 
 
     return (
       <button
@@ -334,20 +332,21 @@ export default function TarotPage({ onBack }: Props) {
         disabled={isPicked || allPicked}
         style={{
           transform: `translateX(${translateX}px) translateY(${translateY}px) rotateZ(${rotateZ}deg)`,
-          transformOrigin: 'bottom center',
+          transformOrigin: 'center 120%', // 회전 중심
+          축을 카드 아래 바깥쪽으로 설정해 완만한 아치 구현
           zIndex: i,
         }}
         className={`
-          absolute bottom-4 w-[64px] aspect-[2/3] transition-all duration-300 ease-out select-none
+          absolute w-[60px] aspect-[2/3] transition-all duration-300 ease-out select-none
           
-          /* 일반 상태 호버: 위로 쏙 올라오며 커지고 골드 빛 발산 */
-          ${!isPicked && !disabled ? 'hover:-translate-y-14 hover:scale-110 hover:z-[99] hover:shadow-[0_0_15px_rgba(201,150,42,0.6)]' : ''}
+          /* 일반 상태 호버: 위로 번쩍 솟아오르며 안내 문구를 가리지 않도록 조절 */
+          ${!isPicked && !disabled ? 'hover:-translate-y-20 hover:scale-115 hover:z-[99] hover:shadow-[0_0_20px_rgba(201,150,42,0.7)]' : ''}
           
           /* 이미 뽑힌 카드 처리 */
-          ${isPicked ? 'opacity-20 scale-90 pointer-events-none' : ''}
+          ${isPicked ? 'opacity-10 scale-75 pointer-events-none' : ''}
           
           /* 3장 다 뽑아서 잠긴 카드 처리 */
-          ${disabled ? 'opacity-30 pointer-events-none' : ''}
+          ${disabled ? 'opacity-20 pointer-events-none' : ''}
         `}
       >
         <TarotCardBack/>
