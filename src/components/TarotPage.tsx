@@ -307,23 +307,54 @@ export default function TarotPage({ onBack }: Props) {
 
             <p className="text-center text-sm text-[#BCB1D4]">22장 중 3장을 골라주세요 ({picked.length}/3)</p>
 
-            <div className="flex flex-wrap gap-2 justify-center">
-              {spread.map((card, i) => {
-                const pickIndex = picked.indexOf(i)
-                const isPicked = pickIndex !== -1
-                const disabled = allPicked && !isPicked
-                return (
-                  <button
-                    key={card.id}
-                    onClick={() => handlePick(i)}
-                    disabled={isPicked || allPicked}
-                    className={`w-[17.5%] aspect-[2/3] transition-all duration-300 ${isPicked ? 'opacity-20 scale-90' : disabled ? 'opacity-30' : 'active:scale-95 hover:-translate-y-1'}`}
-                  >
-                    <TarotCardBack/>
-                  </button>
-                )
-              })}
-            </div>
+            {/* 부채꼴 레이아웃 컨테이너 (3D 공간 왜곡 설정) */}
+<div 
+  className="relative w-full max-w-md mx-auto h-[260px] flex items-end justify-center overflow-hidden pt-10 mb-4" 
+  style={{ perspective: '1000px' }}
+>
+  {spread.map((card, i) => {
+    const pickIndex = picked.indexOf(i)
+    const isPicked = pickIndex !== -1
+    const disabled = allPicked && !isPicked
+
+    // 부채꼴 계산 로직
+    const totalCards = spread.length
+    const midIndex = (totalCards - 1) / 2
+    const distanceFromCenter = i - midIndex
+
+    // 곡률 및 간격 조정 변수 (취향에 맞게 수치 조절 가능)
+    const rotateZ = distanceFromCenter * 2.2      // 카드당 회전 각도
+    const translateX = distanceFromCenter * 8.5    // 카드 간 좌우 간격 (px)
+    const translateY = Math.abs(distanceFromCenter) * 1.8 // 아래로 휘어지는 굴곡 (px)
+
+    return (
+      <button
+        key={card.id}
+        onClick={() => handlePick(i)}
+        disabled={isPicked || allPicked}
+        style={{
+          transform: `translateX(${translateX}px) translateY(${translateY}px) rotateZ(${rotateZ}deg)`,
+          transformOrigin: 'bottom center',
+          zIndex: i,
+        }}
+        className={`
+          absolute bottom-4 w-[64px] aspect-[2/3] transition-all duration-300 ease-out select-none
+          
+          /* 일반 상태 호버: 위로 쏙 올라오며 커지고 골드 빛 발산 */
+          ${!isPicked && !disabled ? 'hover:-translate-y-14 hover:scale-110 hover:z-[99] hover:shadow-[0_0_15px_rgba(201,150,42,0.6)]' : ''}
+          
+          /* 이미 뽑힌 카드 처리 */
+          ${isPicked ? 'opacity-20 scale-90 pointer-events-none' : ''}
+          
+          /* 3장 다 뽑아서 잠긴 카드 처리 */
+          ${disabled ? 'opacity-30 pointer-events-none' : ''}
+        `}
+      >
+        <TarotCardBack/>
+      </button>
+    )
+  })}
+</div>
 
             {error && <p className="text-xs text-red-400 text-center">{error}</p>}
 
