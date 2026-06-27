@@ -97,7 +97,7 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
               오행 룰렛을 돌려보세요!
             </p>
             <p className="text-sm text-[#BCB1D4] leading-relaxed">
-              칸마다 포인트가 달라요. 운이 좋으면 <span className="text-[#C9962A] font-semibold">잭폿 +100P</span>까지!
+              칸마다 포인트가 달라요. 운이 좋으면 <span className="text-[#C9962A] font-semibold">잭팟 +100P</span>까지!
             </p>
           </div>
         </div>
