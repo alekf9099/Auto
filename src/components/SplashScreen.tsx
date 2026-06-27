@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { IcSaju } from './icons/SajuIcons'
+import { CoinTaegeuk } from './Anim3D'
 
 interface Props {
   onDone: () => void
@@ -65,10 +65,10 @@ export default function SplashScreen({ onDone }: Props) {
         <span className="absolute text-xs font-bold animate-pulse" style={{ color: '#93C5FD', left: 6,   top: '50%',  transform: 'translateY(-50%)', animationDelay: '0.9s' }}>水</span>
 
         {/* 메인 아이콘 */}
-        <div className="relative w-[110px] h-[110px] rounded-full p-[3px] animate-spin"
-          style={{ background: 'linear-gradient(135deg, #C9962A, #E8B84B)', animationDuration: '8s' }}>
+        <div className="relative w-[110px] h-[110px] rounded-full p-[3px]"
+          style={{ background: 'linear-gradient(135deg, #C9962A, #E8B84B)' }}>
           <div className="w-full h-full rounded-full bg-[#0D0A1A] flex items-center justify-center">
-            <IcSaju size={52} className="text-[#C9962A]" />
+            <CoinTaegeuk size={52} />
           </div>
         </div>
       </div>

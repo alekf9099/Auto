@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { blockGuestRetry } from '../utils/guestGate'
 import { shuffleDeck, cardImageSrc } from '../utils/tarotDeck'
 import type { DrawnCard } from '../utils/tarotDeck'
 import PointsClaimButton from './PointsClaimButton'
+import { FlipCard } from './Anim3D'
 import { IcTarot, IcGem, IcCloverLucky, IcBalance, IcTalisman, IcSparkleKeyword } from './icons/SajuIcons'
 
 // 카드 뒷면 — 모든 카드에 공통으로 쓰는 금빛 패턴 디자인
@@ -46,6 +47,33 @@ function TarotCardFace({ card }: { card: DrawnCard }) {
         <span className="text-2xl">{card.symbol}</span>
       )}
     </div>
+  )
+}
+
+// 과거/현재/미래 미리보기 카드 — 카드가 놓이면 뒷면→앞면으로 3D 뒤집기
+function PreviewCard({ card, index }: { card: DrawnCard | undefined; index: number }) {
+  const [flipped, setFlipped] = useState(false)
+  useEffect(() => {
+    if (card) {
+      const t = setTimeout(() => setFlipped(true), 80)
+      return () => clearTimeout(t)
+    }
+    setFlipped(false)
+  }, [card])
+
+  if (!card) {
+    return (
+      <div className="w-full h-full rounded-xl border border-dashed border-[#C9962A30] flex items-center justify-center">
+        <span className="text-[#857AA0] text-xs">{index + 1}</span>
+      </div>
+    )
+  }
+  return (
+    <FlipCard
+      flipped={flipped}
+      back={<TarotCardBack />}
+      front={<TarotCardFace card={card} />}
+    />
   )
 }
 
@@ -269,11 +297,7 @@ export default function TarotPage({ onBack }: Props) {
                 return (
                   <div key={pos.key} className="flex flex-col items-center gap-2">
                     <div className="w-full aspect-[2/3]">
-                      {card ? <TarotCardFace card={card}/> : (
-                        <div className="w-full h-full rounded-xl border border-dashed border-[#C9962A30] flex items-center justify-center">
-                          <span className="text-[#857AA0] text-xs">{i + 1}</span>
-                        </div>
-                      )}
+                      <PreviewCard card={card} index={i} />
                     </div>
                     <p className="text-[11px] text-[#A79CC2] font-semibold">{pos.label}{card?.reversed ? ' · 역방향' : ''}</p>
                   </div>
@@ -293,9 +317,9 @@ export default function TarotPage({ onBack }: Props) {
                     key={card.id}
                     onClick={() => handlePick(i)}
                     disabled={isPicked || allPicked}
-                    className={`w-[17.5%] aspect-[2/3] transition-all duration-300 ${isPicked ? 'opacity-20' : disabled ? 'opacity-30' : 'active:scale-95'}`}
+                    className={`w-[17.5%] aspect-[2/3] transition-all duration-300 ${isPicked ? 'opacity-20 scale-90' : disabled ? 'opacity-30' : 'active:scale-95 hover:-translate-y-1'}`}
                   >
-                    {isPicked ? <TarotCardFace card={card}/> : <TarotCardBack/>}
+                    <TarotCardBack/>
                   </button>
                 )
               })}

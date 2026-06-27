@@ -34,12 +34,17 @@ export default {
           '0%, 100%': { transform: 'translateY(0px) rotate(12deg)' },
           '50%':      { transform: 'translateY(-8px) rotate(12deg)' },
         },
+        coinSpin: {
+          '0%':   { transform: 'rotateY(0deg)' },
+          '100%': { transform: 'rotateY(360deg)' },
+        },
       },
       animation: {
         'fade-in-up': 'fadeInUp 0.5s ease both',
         'spin-glow': 'spinGlow 12s linear infinite',
         'float-left': 'floatLeft 4s ease-in-out infinite',
         'float-right': 'floatRight 4s ease-in-out infinite 0.3s backwards',
+        'coin-spin': 'coinSpin 7s linear infinite',
       },
     },
   },
