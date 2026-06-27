@@ -713,3 +713,14 @@ export function IcTargetHit({ size = 24, className = '' }: P) {
     </svg>
   )
 }
+
+// 잠금 — 자물쇠
+export function IcLock({ size = 24, className = '' }: P) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
+      <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.08"/>
+      <path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" strokeWidth="1.8"/>
+      <circle cx="12" cy="15.3" r="1.3" fill="currentColor"/>
+    </svg>
+  )
+}

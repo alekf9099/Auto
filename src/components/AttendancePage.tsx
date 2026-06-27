@@ -71,7 +71,7 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
       onPointsUpdate(next)
       trackEvent('daily_checkin')
       if (milestone) {
-        setToast({ amount: 10 + milestone.bonus, total: next.balance, label: `🎉 ${milestone.days}일 연속 출석 달성!` })
+        setToast({ amount: 10 + milestone.bonus, total: next.balance, label: `${milestone.days}일 연속 출석 달성!` })
       } else {
         setToast({ amount: 10, total: next.balance })
       }
@@ -135,9 +135,9 @@ export default function AttendancePage({ onBack, onPointsUpdate }: Props) {
                 checkedToday
                   ? 'bg-white/10 text-violet-300 border border-violet-400/30 cursor-not-allowed'
                   : 'bg-gradient-to-r from-amber-400 to-orange-400 text-stone-900 shadow-lg shadow-amber-900/30 hover:from-amber-300 hover:to-orange-300'
-              }`}
+              } flex items-center justify-center gap-2`}
             >
-              {checkedToday ? '✓ 오늘 출석 완료 — +10P 적립됨' : '📅 출석 체크하고 +10P 받기'}
+              {checkedToday ? '✓ 오늘 출석 완료 — +10P 적립됨' : <><IcStamp size={17} /> 출석 체크하고 +10P 받기</>}
             </button>
           </div>
         </div>

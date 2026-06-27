@@ -10,7 +10,7 @@ import PointsModal from './PointsModal'
 import AdBanner from './AdBanner'
 import { isPushSupported, isPushEnabled, enablePush, disablePush } from '../utils/pushNotify'
 import {
-  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcTarot, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon, IcTojeong, IcLucky, IcBattle, IcMatch,
+  IcSaju, IcTodayFortune, IcDaun, IcGunghab, IcDeepSaju, IcDream, IcTarot, IcOutfit, IcJob, IcGem, IcStamp, IcSinnyeon, IcTojeong, IcLucky, IcBattle, IcMatch, IcProfile, IcSparkleKeyword,
 } from './icons/SajuIcons'
 
 interface Props {
@@ -344,8 +344,8 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
       {dailyToast && (
         <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-[#C9962A] text-[#0D0A1A] text-xs font-semibold px-5 py-2.5 rounded-full shadow-lg animate-bounce text-center">
           {dailyToast === true
-            ? '🎉 출석 보너스 +10P 지급!'
-            : `🎉 ${dailyToast.milestone}일 연속 출석 달성! +${10 + dailyToast.bonus}P 지급!`}
+            ? '출석 보너스 +10P 지급!'
+            : `${dailyToast.milestone}일 연속 출석 달성! +${10 + dailyToast.bonus}P 지급!`}
         </div>
       )}
       {showPoints && <PointsModal points={points} onClose={() => setShowPoints(false)} onPointsUpdate={onPointsUpdate} />}
@@ -425,10 +425,10 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
             style={{ backgroundColor: todayAccent + '12', borderColor: todayAccent + '35' }}
           >
             <span
-              className="text-base flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: todayAccent + '20' }}
+              className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: todayAccent + '20', color: todayAccent }}
             >
-              💬
+              <IcSparkleKeyword size={16} />
             </span>
             <p className="text-sm leading-relaxed font-semibold" style={{ color: '#F5EDD4' }}>{todayFortune.text}</p>
           </div>
@@ -516,7 +516,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
             className="w-full flex items-center justify-between gap-3 bg-gradient-to-r from-[#1A0E30] to-[#100820] border border-[#C9962A40] rounded-2xl px-4 py-3.5 text-left active:scale-[0.99] transition-transform"
           >
             <div className="flex items-center gap-3">
-              <span className="w-9 h-9 rounded-full bg-[#C9962A20] flex items-center justify-center text-base shrink-0">🎂</span>
+              <span className="w-9 h-9 rounded-full bg-[#C9962A20] flex items-center justify-center text-[#C9962A] shrink-0"><IcProfile size={18} /></span>
               <p className="text-xs text-[#E8DFC8]">
                 <span className="font-semibold">생년월일을 등록</span>하면<br/>
                 <span className="text-[#A79CC2]">나만의 사주 풀이를 볼 수 있어요</span>
@@ -544,8 +544,8 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                     {daunInfo.pillarStr} · {daunInfo.sipsin}
                   </span>
                 </div>
-                <p className="text-sm font-bold text-[#F5EDD4] mb-0.5" style={{ fontFamily: "'Gowun Batang', serif" }}>
-                  💬 {daunInfo.sipsin === '정관' ? '조직에서 인정받고 명예가 따르는 시기입니다' :
+                <p className="text-sm font-bold text-[#F5EDD4] mb-0.5 flex items-start gap-1.5" style={{ fontFamily: "'Gowun Batang', serif" }}>
+                  <span className="text-[#C9962A] shrink-0 mt-0.5"><IcSparkleKeyword size={13} /></span>{daunInfo.sipsin === '정관' ? '조직에서 인정받고 명예가 따르는 시기입니다' :
                       daunInfo.sipsin === '편관' ? '강한 압박이 있지만 이겨내면 도약하는 시기입니다' :
                       daunInfo.sipsin === '식신' ? '재능을 펼치고 풍요를 누리는 여유로운 시기입니다' :
                       daunInfo.sipsin === '정재' ? '꾸준한 노력이 결실로 돌아오는 안정의 시기입니다' :
@@ -599,7 +599,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
             </div>
             <span className="flex items-center space-x-1 px-4 py-1.5 rounded-full border border-[#d4af37] bg-transparent text-xs text-[#e8c75c]">
               <span>지금 시작하기</span>
-              <span>➔</span>
+              <span>→</span>
             </span>
           </div>
         </button>
@@ -679,7 +679,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                 </div>
                 <div className={`mt-2.5 pt-2 border-t flex items-center justify-between ${completed ? 'border-amber-500/30' : 'border-red-900/30'}`}>
                   {completed
-                    ? <span className="text-[10px] font-bold text-amber-400">🎉 7일 연속 보너스 +50P 받았어요!</span>
+                    ? <span className="text-[10px] font-bold text-amber-400">7일 연속 보너스 +50P 받았어요!</span>
                     : <span className="text-[10px] text-[#857AA0]">{TOTAL_DAYS - streak}일 더 출석하면 보너스 +50P</span>
                   }
                   <span className={`text-[10px] font-semibold ${completed ? 'text-amber-400' : 'text-red-400'}`}>자세히 보기 →</span>

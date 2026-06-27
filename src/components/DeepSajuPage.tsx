@@ -7,7 +7,7 @@ import { trackEvent } from '../utils/analytics'
 import PointsClaimButton from './PointsClaimButton'
 import {
   IcDeepSaju, IcWealthLuck, IcCareerLuck, IcLoveLuck, IcHealthLuck,
-  IcSinnyeon, IcBalance, IcProfile, IcMatch, IcCloverLucky, IcSparkleKeyword,
+  IcSinnyeon, IcBalance, IcProfile, IcMatch, IcCloverLucky, IcSparkleKeyword, IcGift,
 } from './icons/SajuIcons'
 
 type IconCmp = React.FC<{ size?: number; className?: string }>
@@ -268,7 +268,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
             {/* 무료 섹션 1: 성향 분석 */}
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-lg">🧠</span>
+                <span className="text-[#C9962A]"><IcProfile size={18} /></span>
                 <p className="text-sm font-bold text-[#F5EDD4]">성향 분석</p>
                 <span className="ml-auto text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">무료</span>
               </div>
@@ -279,7 +279,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
             {/* 무료 섹션 2: 오행 분포 */}
             <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5">
               <div className="flex items-center gap-2 mb-3">
-                <span className="text-lg">⚖️</span>
+                <span className="text-[#C9962A]"><IcBalance size={18} /></span>
                 <p className="text-sm font-bold text-[#F5EDD4]">오행 분포 분석</p>
                 <span className="ml-auto text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">무료</span>
               </div>
@@ -374,7 +374,7 @@ export default function DeepSajuPage({ savedBirth, onBack, onSave }: Props) {
 
             {wasFirstFree && unlocked && (
               <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-2xl px-4 py-3 text-center">
-                <p className="text-xs text-[#C9962A] font-semibold">🎉 첫 심층 해석은 무료로 제공됩니다!</p>
+                <p className="text-xs text-[#C9962A] font-semibold flex items-center justify-center gap-1.5"><IcGift size={14} /> 첫 심층 해석은 무료로 제공됩니다!</p>
                 <p className="text-[11px] text-[#BCB1D4] mt-0.5">다음 방문부터는 {DEEP_SAJU_UNLOCK_COST}P가 필요합니다</p>
               </div>
             )}

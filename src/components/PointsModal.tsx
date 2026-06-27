@@ -71,12 +71,12 @@ export default function PointsModal({ points, onClose, onPointsUpdate }: Props) 
           <button
             onClick={watchAd}
             disabled={watching || adsLeft <= 0}
-            className="w-full mb-5 py-3.5 rounded-2xl bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold text-sm active:scale-[0.98] transition disabled:opacity-50"
+            className="w-full mb-5 py-3.5 rounded-2xl bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold text-sm active:scale-[0.98] transition disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {watching
               ? '광고 시청 중…'
               : adsLeft > 0
-                ? `🎬 광고 보고 +${REWARDED_AD_REWARD}P 받기 (오늘 ${adsLeft}회 남음)`
+                ? <><IcGem size={16} /> 광고 보고 +{REWARDED_AD_REWARD}P 받기 (오늘 {adsLeft}회 남음)</>
                 : '오늘 광고 보상을 모두 받았어요'}
           </button>
         )}

@@ -396,7 +396,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
 
             {/* 떠 있는 엠블럼 */}
             <div className="absolute -top-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] text-xs font-bold px-4 py-2 rounded-full shadow-lg shadow-[#C9962A40] whitespace-nowrap">
-              💫 궁합 포인트
+              <IcGunghab size={14} /> 궁합 포인트
             </div>
 
             <div className="grid grid-cols-2 gap-3 mt-1">
@@ -434,7 +434,7 @@ export default function GunghabPage({ savedBirth, onSave, onBack }: Props) {
           {/* 종합 설명 */}
           <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-3xl p-5 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-20 h-20 rounded-full bg-[#C9962A]/10 -translate-y-4 translate-x-4" />
-            <p className="text-xs font-bold text-[#C9962A] mb-2">💌 종합 분석</p>
+            <p className="text-xs font-bold text-[#C9962A] mb-2 flex items-center gap-1.5"><IcLoveLuck size={13} /> 종합 분석</p>
             <p className="text-sm text-[#C4B8D8] leading-relaxed relative z-10">{result.summary}</p>
           </div>
 

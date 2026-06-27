@@ -4,7 +4,7 @@ import { calcGunghab, type GunghabResult } from '../utils/gunghab'
 import { isOptedIn, joinMatchPool, leaveMatchPool, drawMatch, loadMatchHistory, addMatchHistory, type MatchOpponent, type MatchHistoryEntry } from '../utils/match'
 import { loadProfilePhoto } from '../utils/profilePhoto'
 import PointsClaimButton from './PointsClaimButton'
-import { IcMatch } from './icons/SajuIcons'
+import { IcMatch, IcDraw } from './icons/SajuIcons'
 
 interface Props {
   nickname: string
@@ -151,9 +151,9 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
             <button
               onClick={handleDraw}
               disabled={busy}
-              className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] transition-all text-sm active:scale-[0.98] disabled:opacity-50"
+              className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] transition-all text-sm active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
             >
-              {busy ? '매칭 상대를 찾는 중...' : '랜덤 매칭 뽑기 🎲'}
+              {busy ? '매칭 상대를 찾는 중...' : <><IcDraw size={17} /> 랜덤 매칭 뽑기</>}
             </button>
           </>
         )}

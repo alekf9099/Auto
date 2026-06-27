@@ -14,6 +14,7 @@ import SyncErrorBanner  from './components/SyncErrorBanner'
 import NoticeBanner     from './components/NoticeBanner'
 import BottomNav from './components/BottomNav'
 import type { NavTab } from './components/BottomNav'
+import { IcLock } from './components/icons/SajuIcons'
 
 const ProfileSetupPage = lazy(() => import('./components/ProfileSetupPage'))
 const HomePage         = lazy(() => import('./components/HomePage'))
@@ -426,7 +427,7 @@ export default function App() {
       {loginPrompt && (
         <div className="fixed inset-0 z-[80] flex items-center justify-center p-6 bg-black/70 backdrop-blur-sm" onClick={() => setLoginPrompt(null)}>
           <div className="w-full max-w-sm rounded-3xl bg-[#130E24] border border-[#2A1F4A] p-6 shadow-2xl text-center" onClick={e => e.stopPropagation()}>
-            <p className="text-2xl mb-2">🔒</p>
+            <p className="flex justify-center mb-2 text-[#C9962A]"><IcLock size={32} /></p>
             <h2 className="text-lg font-bold text-[#F5EDD4] mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>로그인이 필요해요</h2>
             <p className="text-sm text-[#BCB1D4] leading-relaxed mb-5">{loginPrompt}<br/>로그인하면 데이터도 안전하게 저장돼요.</p>
             <div className="flex gap-2">

@@ -489,7 +489,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
                       ))}
 
                       <div className="rounded-2xl bg-red-900/20 border border-red-900/40 p-4">
-                        <p className="text-xs font-bold text-red-400 mb-1.5">⚠ 주의사항</p>
+                        <p className="text-xs font-bold text-red-400 mb-1.5 flex items-center gap-1.5"><span className="w-4 h-4 rounded-full bg-red-500/20 text-red-400 text-[10px] font-bold flex items-center justify-center">!</span>주의사항</p>
                         <p className="text-sm text-[#C4B8D8] leading-relaxed">{reading.caution}</p>
                       </div>
                     </div>

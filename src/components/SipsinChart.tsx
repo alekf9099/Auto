@@ -1,6 +1,7 @@
 import type { SajuResult } from '../types'
 import { STEMS, BRANCHES, ELEMENT_COLORS, SIPSIN_DESC } from '../utils/constants'
 import { getSipsin } from '../utils/saju'
+import { IcSparkleKeyword } from './icons/SajuIcons'
 
 interface Props { result: SajuResult }
 
@@ -40,8 +41,8 @@ function SipsinBadge({ name }: { name: string }) {
         {desc && <span className="text-[10px] text-[#A79CC2]">{desc.meaning}</span>}
       </div>
       {plain && (
-        <p className="text-[10px] text-[#C9962A]/80 leading-snug">
-          💬 {plain}
+        <p className="text-[10px] text-[#C9962A]/80 leading-snug flex items-start gap-1">
+          <span className="shrink-0 mt-px"><IcSparkleKeyword size={11} /></span>{plain}
         </p>
       )}
     </div>
