@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { IcSaju } from './icons/SajuIcons'
 
 const MESSAGES = [
   '천간(天干)과 지지(地支)를 분석하는 중...',
@@ -80,10 +81,10 @@ export default function LoadingScreen({ onComplete }: Props) {
         {/* 아이콘 원 */}
         <div className="relative w-24 h-24 rounded-full bg-[#130E24] border border-[#2A1F4A] shadow-[0_4px_24px_rgba(201,150,42,0.18)] flex items-center justify-center">
           <span
-            className="text-5xl select-none animate-spin transition-colors duration-700"
-            style={{ color: OHAENG_COLORS[msgIdx], animationDuration: '6s', fontFamily: 'serif' }}
+            className="select-none animate-spin transition-colors duration-700 flex items-center justify-center"
+            style={{ color: OHAENG_COLORS[msgIdx], animationDuration: '6s' }}
           >
-            ☯
+            <IcSaju size={48} />
           </span>
         </div>
       </div>

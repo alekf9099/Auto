@@ -5,7 +5,7 @@ import { calculateSaju, getSipsin } from '../utils/saju'
 import { STEMS, BRANCHES, ELEMENT_COLORS } from '../utils/constants'
 import { YEARLY_FORTUNE, MONTHLY_FORTUNE } from '../utils/fortuneData'
 import PointsClaimButton from './PointsClaimButton'
-import { IcSinnyeon } from './icons/SajuIcons'
+import { IcSinnyeon, IcWealthLuck, IcLoveLuck, IcHealthLuck, IcCareerLuck, IcSparkleKeyword } from './icons/SajuIcons'
 
 interface Props {
   savedBirth?: BirthInput | null
@@ -65,7 +65,7 @@ function MonthlySection({ dayStemIdx }: { dayStemIdx: number }) {
               {isOpen && (
                 <div className="px-4 pb-4">
                   <div className="h-px bg-[#2A1F4A] mb-3" />
-                  <p className="text-xs font-semibold text-[#C9962A] mb-1.5">✨ {i + 1}월 조언</p>
+                  <p className="text-xs font-semibold text-[#C9962A] mb-1.5 flex items-center gap-1.5"><IcSparkleKeyword size={13} /> {i + 1}월 조언</p>
                   <p className="text-sm text-[#BCB1D4] leading-relaxed mb-3">{data.조언}</p>
                   <p className="text-sm text-[#BCB1D4] leading-relaxed">{data.총평}</p>
                 </div>
@@ -270,13 +270,13 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
               </div>
               <div className="space-y-4">
                 {[
-                  { icon: '💰', label: '재물운', text: fortune.재물 },
-                  { icon: '💕', label: '애정운', text: fortune.애정 },
-                  { icon: '💪', label: '건강운', text: fortune.건강 },
-                  { icon: '💼', label: '직업운', text: fortune.직업 },
+                  { Icon: IcWealthLuck, accent: '#E8B84B', label: '재물운', text: fortune.재물 },
+                  { Icon: IcLoveLuck,   accent: '#E86A8B', label: '애정운', text: fortune.애정 },
+                  { Icon: IcHealthLuck, accent: '#5CC98F', label: '건강운', text: fortune.건강 },
+                  { Icon: IcCareerLuck, accent: '#6AA8E8', label: '직업운', text: fortune.직업 },
                 ].map(item => (
                   <div key={item.label} className="flex gap-3 bg-[#1C1438] border border-[#2A1F4A] rounded-2xl p-4">
-                    <span className="text-xl shrink-0">{item.icon}</span>
+                    <span className="shrink-0 mt-0.5" style={{ color: item.accent }}><item.Icon size={20} /></span>
                     <div>
                       <p className="text-xs font-bold text-[#BCB1D4] mb-1">{item.label}</p>
                       <p className="text-sm text-[#C4B8D8] leading-relaxed">{item.text}</p>
@@ -288,7 +288,7 @@ export default function SinnyeonPage({ savedBirth, onSave, onBack }: Props) {
 
             {/* 올해의 조언 */}
             <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-3xl p-5">
-              <p className="text-xs font-semibold text-[#C9962A] mb-2">✨ {CURR_YEAR}년 핵심 조언</p>
+              <p className="text-xs font-semibold text-[#C9962A] mb-2 flex items-center gap-1.5"><IcSparkleKeyword size={13} /> {CURR_YEAR}년 핵심 조언</p>
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{fortune.조언}</p>
             </div>
 

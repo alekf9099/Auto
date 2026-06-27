@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { UserInfo } from '../types'
 import { decodeIdToken } from '../utils/cloudSync'
+import { IcSaju } from './icons/SajuIcons'
 
 interface Props {
   onLogin: (user: UserInfo) => void
@@ -136,7 +137,7 @@ export default function LoginPage({ onLogin, onGuest, onShowPrivacy, onShowTerms
           {/* 로고 — 스플래시처럼 회전 + 오행 색이 서서히 변함 */}
           <div className="relative w-[100px] h-[100px] rounded-full p-[3px] animate-spin-glow">
             <div className="w-full h-full rounded-full bg-[#0D0A1A] flex items-center justify-center">
-              <span className="text-5xl" style={{ color: '#C9962A', fontFamily: 'serif' }}>☯</span>
+              <IcSaju size={48} className="text-[#C9962A]" />
             </div>
           </div>
         </div>

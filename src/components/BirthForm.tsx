@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { BirthInput, Gender } from '../types'
+import { IcSaju } from './icons/SajuIcons'
 
 interface Props {
   savedBirth?: BirthInput | null
@@ -55,7 +56,7 @@ export default function BirthForm({ savedBirth, onSubmit }: Props) {
           <div className="relative w-[80px] h-[80px] rounded-full p-[3px]"
             style={{ background: 'linear-gradient(135deg, #C9962A, #E8B84B)' }}>
             <div className="w-full h-full rounded-full bg-[#0D0A1A] flex items-center justify-center">
-              <span className="text-4xl" style={{ color: '#C9962A', fontFamily: 'serif' }}>☯</span>
+              <IcSaju size={40} className="text-[#C9962A]" />
             </div>
           </div>
         </div>

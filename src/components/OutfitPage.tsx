@@ -5,7 +5,7 @@ import { calculateSaju } from '../utils/saju'
 import { getElement, OUTFIT_DATA } from '../utils/outfitData'
 import type { ColorSwatch, OutfitRecommendation } from '../utils/outfitData'
 import PointsClaimButton from './PointsClaimButton'
-import { IcOutfit } from './icons/SajuIcons'
+import { IcOutfit, IcSparkleKeyword } from './icons/SajuIcons'
 
 interface Props {
   savedBirth: BirthInput | null
@@ -13,12 +13,12 @@ interface Props {
   onBack: () => void
 }
 
-const ITEM_LABELS: { key: keyof OutfitRecommendation['items']; label: string; emoji: string }[] = [
-  { key: 'top',         label: '상의',   emoji: '👕' },
-  { key: 'bottom',      label: '하의',   emoji: '👖' },
-  { key: 'outer',       label: '아우터', emoji: '🧥' },
-  { key: 'shoes',       label: '신발',   emoji: '👟' },
-  { key: 'accessories', label: '악세서리', emoji: '💍' },
+const ITEM_LABELS: { key: keyof OutfitRecommendation['items']; label: string }[] = [
+  { key: 'top',         label: '상의' },
+  { key: 'bottom',      label: '하의' },
+  { key: 'outer',       label: '아우터' },
+  { key: 'shoes',       label: '신발' },
+  { key: 'accessories', label: '악세서리' },
 ]
 
 function computeResult(b: BirthInput) {
@@ -133,7 +133,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                           : 'bg-[#1C1438] border-[#2A1F4A] text-[#A79CC2] hover:border-[#E0528250]'
                       }`}
                     >
-                      {g === 'male' ? '남성 🧑' : '여성 👩'}
+                      {g === 'male' ? '남성 ♂' : '여성 ♀'}
                     </button>
                   ))}
                 </div>
@@ -187,9 +187,9 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
             <button
               type="submit"
               disabled={!canSubmit}
-              className="w-full py-3.5 bg-gradient-to-r from-[#C9507A] to-[#E05282] text-white font-bold rounded-2xl shadow-lg hover:from-[#B8406A] hover:to-[#CE4272] transition-all active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full py-3.5 bg-gradient-to-r from-[#C9507A] to-[#E05282] text-white font-bold rounded-2xl shadow-lg hover:from-[#B8406A] hover:to-[#CE4272] transition-all active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              👗 오늘의 코디 보기
+              <IcOutfit size={18} /> 오늘의 코디 보기
             </button>
 
             <div className="flex items-center gap-2 justify-center">
@@ -256,7 +256,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                             style={{ backgroundColor: c.hex }}
                           />
                           {c.main && (
-                            <span className="absolute -top-1.5 -right-1.5 text-[10px] bg-[#E05282] text-white rounded-full w-4 h-4 flex items-center justify-center shadow">⭐</span>
+                            <span className="absolute -top-1.5 -right-1.5 text-[9px] bg-[#E05282] text-white rounded-full w-4 h-4 flex items-center justify-center shadow">★</span>
                           )}
                         </div>
                         <p className={`text-[9px] text-center max-w-[48px] leading-tight ${active ? 'text-[#F5EDD4] font-semibold' : 'text-[#A79CC2]'}`}>{c.name}</p>
@@ -282,7 +282,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
 
               {/* My element */}
               <div className="flex gap-2 items-start bg-[#E052820D] border border-[#E0528230] rounded-2xl px-4 py-3">
-                <span className="text-sm flex-shrink-0">💡</span>
+                <span className="shrink-0 text-[#E05282] mt-0.5"><IcSparkleKeyword size={14} /></span>
                 <div>
                   <p className="text-[10px] text-[#E05282] font-bold mb-0.5">나의 사주 오행</p>
                   <p className="text-sm text-[#C4B8D8] leading-relaxed">
@@ -302,9 +302,9 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                 </h3>
               </div>
               <div className="space-y-3">
-                {ITEM_LABELS.map(({ key, label, emoji }) => (
+                {ITEM_LABELS.map(({ key, label }) => (
                   <div key={key}>
-                    <p className="text-[10px] text-[#A79CC2] font-semibold mb-1.5">{emoji} {label}</p>
+                    <p className="text-[10px] text-[#A79CC2] font-semibold mb-1.5">{label}</p>
                     <div className="flex flex-wrap gap-1.5">
                       {result.todayData.items[key].map((item, i) => (
                         <span
@@ -313,7 +313,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
                             ? "text-xs font-bold bg-[#E0528220] border border-[#E05282] text-[#F5EDD4] pl-2.5 pr-3 py-1 rounded-full inline-flex items-center gap-1"
                             : "text-xs bg-[#1C1438] border border-[#2A1F4A] text-[#C4B8D8] px-3 py-1 rounded-full"}
                         >
-                          {i === 0 && <span className="text-[10px]">⭐</span>}
+                          {i === 0 && <span className="text-[10px] text-[#E05282]">★</span>}
                           {item}
                         </span>
                       ))}
@@ -366,7 +366,7 @@ export default function OutfitPage({ savedBirth, onSave, onBack }: Props) {
             {/* Styling tip */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
               <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3">
-                <span className="text-sm flex-shrink-0">💬</span>
+                <span className="shrink-0 text-[#C9962A] mt-0.5"><IcSparkleKeyword size={14} /></span>
                 <div>
                   <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">스타일링 팁</p>
                   <p className="text-sm text-[#C4B8D8] leading-relaxed">{result.todayData.tip}</p>

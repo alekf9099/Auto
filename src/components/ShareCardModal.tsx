@@ -1,9 +1,12 @@
 import { useRef, useState } from 'react'
-import { IcGem, IcSinnyeon } from './icons/SajuIcons'
+import { IcGem, IcSinnyeon, IcShare } from './icons/SajuIcons'
+
+type IconCmp = React.ComponentType<{ size?: number; className?: string }>
 
 export interface ShareCardData {
   badge: string
-  emoji: string
+  Icon: IconCmp
+  iconColor?: string
   title: string
   date: string
   highlight: string
@@ -120,7 +123,7 @@ export default function ShareCardModal({ data, onClose }: Props) {
                 className="w-20 h-20 rounded-full flex items-center justify-center mb-4"
                 style={{ backgroundColor: data.accent + '18', border: `1.5px solid ${data.accent}45` }}
               >
-                <span className="text-5xl leading-none">{data.emoji}</span>
+                <span className="leading-none" style={{ color: data.iconColor ?? data.accent }}><data.Icon size={40} /></span>
               </div>
               <h2 className="text-xl font-bold text-[#F5EDD4] mb-2 leading-snug" style={{ fontFamily: "'Gowun Batang', serif" }}>
                 {data.title}
@@ -160,15 +163,15 @@ export default function ShareCardModal({ data, onClose }: Props) {
             disabled={busy}
             className="flex-1 py-3 rounded-2xl text-sm font-bold bg-[#231844] text-[#C4B8D8] hover:bg-[#2A1F4A] transition active:scale-[0.98] disabled:opacity-50"
           >
-            {done ? '✓ 저장됨' : '📥 이미지 저장'}
+            {done ? '✓ 저장됨' : '이미지 저장'}
           </button>
           <button
             onClick={handleShare}
             disabled={busy}
-            className="flex-1 py-3 rounded-2xl text-sm font-bold text-[#0D0A1A] active:scale-[0.98] disabled:opacity-50"
+            className="flex-1 py-3 rounded-2xl text-sm font-bold text-[#0D0A1A] active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-1.5"
             style={{ background: `linear-gradient(to right, ${data.accent}, ${data.accent}CC)` }}
           >
-            {busy ? '처리 중...' : '📤 공유하기'}
+            {busy ? '처리 중...' : <><IcShare size={15} /> 공유하기</>}
           </button>
         </div>
         <button

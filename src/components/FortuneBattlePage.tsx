@@ -339,7 +339,7 @@ export default function FortuneBattlePage({ savedBirth, onSave, onBack }: Props)
           onClose={() => setShowShare(false)}
           data={{
             badge: '운세대결',
-            emoji: winner === 'tie' ? '🤝' : '🏆',
+            Icon: winner === 'tie' ? IcDraw : IcCrown,
             title: winner === 'tie' ? '오늘은 무승부!' : winner === 'me' ? '내가 이겼다!' : `${nameLabel}이 이겼다!`,
             date: new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }),
             highlight: `나 ${result.me.fortune.star * 20}점 vs ${nameLabel} ${result.them.fortune.star * 20}점`,

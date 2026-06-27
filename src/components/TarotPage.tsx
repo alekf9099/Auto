@@ -3,7 +3,7 @@ import { blockGuestRetry } from '../utils/guestGate'
 import { shuffleDeck, cardImageSrc } from '../utils/tarotDeck'
 import type { DrawnCard } from '../utils/tarotDeck'
 import PointsClaimButton from './PointsClaimButton'
-import { IcTarot } from './icons/SajuIcons'
+import { IcTarot, IcGem, IcCloverLucky, IcBalance, IcTalisman, IcSparkleKeyword } from './icons/SajuIcons'
 
 // 카드 뒷면 — 모든 카드에 공통으로 쓰는 금빛 패턴 디자인
 function TarotCardBack() {
@@ -63,10 +63,10 @@ interface TarotResult {
 }
 
 const LUCK_CFG = {
-  great:   { label: '대길',   color: '#C9962A', bg: '#C9962A18', border: '#C9962A45', emoji: '✨' },
-  good:    { label: '길',     color: '#4BBF7E', bg: '#4BBF7E18', border: '#4BBF7E45', emoji: '🌟' },
-  neutral: { label: '평',     color: '#A3A6BC', bg: '#A3A6BC18', border: '#A3A6BC45', emoji: '🌙' },
-  caution: { label: '주의',   color: '#E05252', bg: '#E0525218', border: '#E0525245', emoji: '⚡' },
+  great:   { label: '대길',   color: '#C9962A', bg: '#C9962A18', border: '#C9962A45', Icon: IcGem },
+  good:    { label: '길',     color: '#4BBF7E', bg: '#4BBF7E18', border: '#4BBF7E45', Icon: IcCloverLucky },
+  neutral: { label: '평',     color: '#A3A6BC', bg: '#A3A6BC18', border: '#A3A6BC45', Icon: IcBalance },
+  caution: { label: '주의',   color: '#E05252', bg: '#E0525218', border: '#E0525245', Icon: IcTalisman },
 }
 
 const POSITIONS = [
@@ -306,9 +306,9 @@ export default function TarotPage({ onBack }: Props) {
             <button
               onClick={handleInterpret}
               disabled={!allPicked}
-              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              {allPicked ? '✨ 해석 보기' : `${picked.length}/3장 뽑는 중...`}
+              {allPicked ? <><IcSparkleKeyword size={16} /> 해석 보기</> : `${picked.length}/3장 뽑는 중...`}
             </button>
           </div>
         )}
@@ -339,7 +339,7 @@ export default function TarotPage({ onBack }: Props) {
               style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)', borderColor: luck.border }}
             >
               <div className="flex items-start justify-between mb-4">
-                <span className="text-6xl leading-none">{luck.emoji}</span>
+                <span className="leading-none" style={{ color: luck.color }}><luck.Icon size={52} /></span>
                 <span
                   className="text-sm font-bold px-3 py-1.5 rounded-full"
                   style={{ color: luck.color, backgroundColor: luck.bg, border: `1px solid ${luck.border}` }}

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { blockGuestRetry } from '../utils/guestGate'
 import PointsClaimButton from './PointsClaimButton'
-import { IcDream } from './icons/SajuIcons'
+import { IcDream, IcGem, IcCloverLucky, IcBalance, IcTalisman, IcSparkleKeyword } from './icons/SajuIcons'
 
 interface Props {
   onBack: () => void
@@ -19,10 +19,10 @@ interface DreamResult {
 }
 
 const LUCK_CFG = {
-  great:   { label: '대길몽', color: '#C9962A', bg: '#C9962A18', border: '#C9962A45', emoji: '✨' },
-  good:    { label: '길몽',   color: '#4BBF7E', bg: '#4BBF7E18', border: '#4BBF7E45', emoji: '🌟' },
-  neutral: { label: '평몽',   color: '#A3A6BC', bg: '#A3A6BC18', border: '#A3A6BC45', emoji: '🌙' },
-  caution: { label: '주의몽', color: '#E05252', bg: '#E0525218', border: '#E0525245', emoji: '⚡' },
+  great:   { label: '대길몽', color: '#C9962A', bg: '#C9962A18', border: '#C9962A45', Icon: IcGem },
+  good:    { label: '길몽',   color: '#4BBF7E', bg: '#4BBF7E18', border: '#4BBF7E45', Icon: IcCloverLucky },
+  neutral: { label: '평몽',   color: '#A3A6BC', bg: '#A3A6BC18', border: '#A3A6BC45', Icon: IcBalance },
+  caution: { label: '주의몽', color: '#E05252', bg: '#E0525218', border: '#E0525245', Icon: IcTalisman },
 }
 
 const DETAIL_SECTIONS = [
@@ -140,9 +140,9 @@ export default function DreamPage({ onBack }: Props) {
             <button
               onClick={handleSubmit}
               disabled={!dreamText.trim()}
-              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full py-3.5 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#B8871F] hover:to-[#D4A030] transition-all active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              💭 해몽하기
+              <IcDream size={18} /> 해몽하기
             </button>
 
             <div className="flex items-center gap-2 justify-center">
@@ -181,7 +181,7 @@ export default function DreamPage({ onBack }: Props) {
               style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)', borderColor: luck.border }}
             >
               <div className="flex items-start justify-between mb-4">
-                <span className="text-6xl leading-none">{luck.emoji}</span>
+                <span className="leading-none" style={{ color: luck.color }}><luck.Icon size={52} /></span>
                 <span
                   className="text-sm font-bold px-3 py-1.5 rounded-full"
                   style={{ color: luck.color, backgroundColor: luck.bg, border: `1px solid ${luck.border}` }}
@@ -196,7 +196,7 @@ export default function DreamPage({ onBack }: Props) {
 
               {/* 핵심 해몽 callout */}
               <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3 mb-3">
-                <span className="text-sm flex-shrink-0">💬</span>
+                <span className="shrink-0 text-[#C9962A] mt-0.5"><IcSparkleKeyword size={14} /></span>
                 <div>
                   <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">전통 해몽 핵심</p>
                   <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">

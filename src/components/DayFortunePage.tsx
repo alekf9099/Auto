@@ -17,6 +17,11 @@ import {
   IcAfternoon,
   IcEvening,
   IcCloverLucky,
+  IcTomorrowFortune,
+  IcGem,
+  IcBalance,
+  IcShare,
+  IcSparkleKeyword,
 } from './icons/SajuIcons'
 
 interface Props {
@@ -284,7 +289,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
           <>
             {/* 배너 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 shadow-xl shadow-[#000]/40 border border-[#C9962A25]">
-              <p className="text-violet-300/85 text-xs mb-2">{isToday ? '🔮 오늘' : '⏰ 내일'} · {new Date(Date.now() + activeOffset * 86400000).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })}</p>
+              <p className="text-violet-300/85 text-xs mb-2 flex items-center gap-1.5">{isToday ? <IcTodayFortune size={13} /> : <IcTomorrowFortune size={13} />}{isToday ? '오늘' : '내일'} · {new Date(Date.now() + activeOffset * 86400000).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })}</p>
               <p className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Gowun Batang', serif" }}>{title}</p>
               <p className="text-violet-300/80 text-sm">생년월일로 나만의 {isToday ? '오늘' : '내일'} 운세를 확인하세요</p>
             </div>
@@ -375,10 +380,10 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
                 className="border border-[#C9962A20] rounded-2xl p-4 flex items-center gap-3"
                 style={{ background: 'linear-gradient(135deg, #201A3A 0%, #160F2C 100%)' }}
               >
-                <GoldBadge size="w-9 h-9 text-lg">✨</GoldBadge>
+                <GoldBadge size="w-9 h-9"><IcGeneralLuck size={18} /></GoldBadge>
                 <div>
                   <p className="text-sm font-semibold text-[#F5EDD4]">{isToday ? '오늘' : '내일'}의 전체 운세</p>
-                  <p className="text-xs text-[#BCB1D4] mt-0.5">⭐ 종합 행운 지수: {luckPercent}%</p>
+                  <p className="text-xs text-[#BCB1D4] mt-0.5">종합 행운 지수: {luckPercent}%</p>
                 </div>
               </div>
             </div>
@@ -412,11 +417,11 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
 
             {/* 조언 + 주의 */}
             <div className="border border-[#C9962A30] rounded-3xl p-4" style={{ background: 'linear-gradient(135deg, #C9962A22 0%, #C9962A0A 100%)' }}>
-              <p className="text-xs font-semibold text-[#C9962A] mb-1.5">✨ {isToday ? '오늘의' : '내일의'} 조언</p>
+              <p className="text-xs font-semibold text-[#C9962A] mb-1.5 flex items-center gap-1.5"><IcSparkleKeyword size={13} /> {isToday ? '오늘의' : '내일의'} 조언</p>
               <p className="text-sm text-[#C4B8D8] leading-relaxed">{fortune.조언}</p>
             </div>
             <div className="border border-red-900/40 rounded-2xl px-4 py-3 flex items-start gap-2" style={{ background: 'linear-gradient(135deg, rgba(127,29,29,0.28) 0%, rgba(127,29,29,0.10) 100%)' }}>
-              <span className="shrink-0 mt-0.5">⚠️</span>
+              <span className="shrink-0 mt-0.5 w-4 h-4 rounded-full bg-red-500/20 text-red-400 text-[10px] font-bold flex items-center justify-center">!</span>
               <p className="text-xs text-[#BCB1D4] leading-relaxed">
                 <span className="font-semibold text-red-400">주의 </span>{fortune.주의}
               </p>
@@ -441,7 +446,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
             <div className="rounded-3xl border border-[#C9962A20] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5" style={{ background: 'linear-gradient(160deg, #1C1438 0%, #130E24 100%)' }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
-                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>🕐 시간대별</h2>
+                <h2 className="text-base font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>시간대별</h2>
               </div>
               <div className="space-y-2">
                 {[
@@ -489,7 +494,7 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
               className="w-full py-3.5 text-[#F5EDD4] font-semibold rounded-2xl text-sm border border-[#C9962A40] shadow-[0_2px_20px_rgba(201,150,42,0.10)] transition active:scale-[0.98] flex items-center justify-center gap-1.5"
               style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #1C1438 100%)' }}
             >
-              📤 운세 카드 공유하기
+              <IcShare size={16} /> 운세 카드 공유하기
             </button>
             <PointsClaimButton key={featKey} featureKey={featKey} label={`${title} 확인 🔮`} />
             <button
@@ -508,7 +513,8 @@ export default function DayFortunePage({ dayOffset, savedBirth, onSave, onBack }
           onClose={() => setShowShare(false)}
           data={{
             badge: title,
-            emoji: fortune.star >= 4 ? '✨' : fortune.star === 3 ? '🌟' : fortune.star === 2 ? '🍀' : '⚡',
+            Icon: fortune.star >= 4 ? IcGem : fortune.star === 3 ? IcCloverLucky : fortune.star === 2 ? IcGeneralLuck : IcBalance,
+            iconColor: fortune.color,
             title: `${tStem.ko}${tBranch.ko}일 · ${sipsin}`,
             date: targetDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }),
             highlight: fortune.총평.split('.')[0] + '.',

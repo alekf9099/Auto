@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import type { BirthInput, Gender, UserInfo } from '../types'
 import { lunarToSolar } from '../utils/lunar'
 import { loadProfilePhoto, saveProfilePhoto, clearProfilePhoto, resizeImageFile } from '../utils/profilePhoto'
+import { IcSaju, IcProfile } from './icons/SajuIcons'
 
 interface Props {
   user: UserInfo
@@ -94,7 +95,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
             <div className="relative w-[64px] h-[64px] rounded-full p-[2.5px]"
               style={{ background: 'linear-gradient(135deg, #C9962A, #E8B84B)' }}>
               <div className="w-full h-full rounded-full bg-[#0D0A1A] flex items-center justify-center">
-                <span className="text-3xl" style={{ color: '#C9962A', fontFamily: 'serif' }}>☯</span>
+                <IcSaju size={32} className="text-[#C9962A]" />
               </div>
             </div>
           </div>
@@ -136,7 +137,7 @@ export default function ProfileSetupPage({ user, savedNickname, savedBirth, onSa
                 {photo ? (
                   <img src={photo} alt="프로필 사진" className="w-16 h-16 rounded-full object-cover border border-[#C9962A40]" />
                 ) : (
-                  <div className="w-16 h-16 rounded-full bg-[#1C1438] border border-[#2A1F4A] flex items-center justify-center text-2xl">🙂</div>
+                  <div className="w-16 h-16 rounded-full bg-[#1C1438] border border-[#2A1F4A] flex items-center justify-center text-[#857AA0]"><IcProfile size={28} /></div>
                 )}
               </div>
               <div className="flex-1 space-y-1.5">

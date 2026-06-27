@@ -5,7 +5,7 @@ import { calculateSaju, getSipsin, pillarName } from '../utils/saju'
 import { STEMS, BRANCHES, ELEMENT_COLORS, SIPSIN_DESC } from '../utils/constants'
 import PointsClaimButton from './PointsClaimButton'
 import DaunChart from './DaunChart'
-import { IcDaun } from './icons/SajuIcons'
+import { IcDaun, IcWealthLuck, IcCareerLuck, IcLoveLuck, IcSparkleKeyword } from './icons/SajuIcons'
 
 interface Props {
   savedBirth: BirthInput | null
@@ -470,7 +470,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
                   {reading && (
                     <div className="space-y-3">
                       <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3">
-                        <span className="text-sm flex-shrink-0">💬</span>
+                        <span className="shrink-0 text-[#E8B84B] mt-0.5"><IcSparkleKeyword size={14} /></span>
                         <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">{reading.plain}</p>
                       </div>
                       <p className="text-sm text-[#C4B8D8] leading-relaxed bg-[#1C1438] rounded-2xl p-4">
@@ -478,12 +478,12 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
                       </p>
 
                       {[
-                        { label: '💰 재물운', text: reading.wealth },
-                        { label: '💼 직업운', text: reading.career },
-                        { label: '💕 애정운', text: reading.love },
-                      ].map(({ label, text }) => (
+                        { Icon: IcWealthLuck, accent: '#E8B84B', label: '재물운', text: reading.wealth },
+                        { Icon: IcCareerLuck, accent: '#6AA8E8', label: '직업운', text: reading.career },
+                        { Icon: IcLoveLuck,   accent: '#E86A8B', label: '애정운', text: reading.love },
+                      ].map(({ Icon, accent, label, text }) => (
                         <div key={label} className="rounded-2xl border border-[#2A1F4A] p-4">
-                          <p className="text-xs font-bold text-[#BCB1D4] mb-1.5">{label}</p>
+                          <p className="text-xs font-bold text-[#BCB1D4] mb-1.5 flex items-center gap-1.5"><span style={{ color: accent }}><Icon size={15} /></span>{label}</p>
                           <p className="text-sm text-[#C4B8D8] leading-relaxed">{text}</p>
                         </div>
                       ))}
@@ -554,7 +554,7 @@ export default function DaunPage({ savedBirth, onBack, onSave }: Props) {
               {seunReading && (
                 <div className="space-y-3">
                   <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3">
-                    <span className="text-sm flex-shrink-0">💬</span>
+                    <span className="shrink-0 text-[#C9962A] mt-0.5"><IcSparkleKeyword size={14} /></span>
                     <div>
                       <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">올해를 한 줄로 요약하면</p>
                       <p className="text-sm text-[#E8B84B] font-medium leading-relaxed">{seunReading.summary.split('.')[0]}.</p>

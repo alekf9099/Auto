@@ -2,8 +2,18 @@ import { useState } from 'react'
 import type { BirthInput, SajuResult, OhaengCount } from '../types'
 import { STEMS, BRANCHES, ELEMENT_COLORS, ELEMENT_LABELS, ILJU_MEANING } from '../utils/constants'
 import { pillarName, pillarNameKo, calculateSaju, getSipsin } from '../utils/saju'
+import { IcElementWood, IcElementFire, IcElementEarth, IcElementMetal, IcElementWater } from './icons/SajuIcons'
 
 const SHARE_URL = 'https://alekf9099.github.io/Auto/'
+
+type IconCmp = React.ComponentType<{ size?: number; className?: string }>
+const ELEMENT_ICON: Record<string, IconCmp> = {
+  wood: IcElementWood, fire: IcElementFire, earth: IcElementEarth, metal: IcElementMetal, water: IcElementWater,
+}
+function ElementIcon({ el, size }: { el: string; size: number }) {
+  const I = ELEMENT_ICON[el] ?? IcElementEarth
+  return <span className="inline-flex align-middle" style={{ color: ELEMENT_COLORS[el] }}><I size={size} /></span>
+}
 
 interface Props {
   input:   BirthInput
@@ -13,9 +23,6 @@ interface Props {
   onReset: () => void
 }
 
-const ELEMENT_EMOJI: Record<string, string> = {
-  wood: '🌳', fire: '🔥', earth: '🪨', metal: '⚔️', water: '💧',
-}
 const LUCKY_COLOR: Record<string, { name: string; hex: string }> = {
   wood:  { name: '청색·녹색', hex: '#4CAF50' },
   fire:  { name: '적색·주황', hex: '#F44336' },
@@ -162,7 +169,7 @@ export default function SummaryPage({ input, result, ohaeng, onBack, onReset }: 
               const pct = (n / total) * 100
               return (
                 <div key={el} className="flex items-center gap-2">
-                  <span className="w-5 text-sm">{ELEMENT_EMOJI[el]}</span>
+                  <span className="w-5 flex justify-center"><ElementIcon el={el} size={16} /></span>
                   <span className="w-12 text-xs text-stone-400">{ELEMENT_LABELS[el]}</span>
                   <div className="flex-1 bg-stone-700 rounded-full h-3">
                     <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: ELEMENT_COLORS[el] }} />
@@ -176,13 +183,13 @@ export default function SummaryPage({ input, result, ohaeng, onBack, onReset }: 
             <div className="flex-1 bg-stone-700/60 rounded-2xl p-3">
               <p className="text-xs text-stone-500 mb-1">강한 기운</p>
               <p className="text-sm font-bold" style={{ color: ELEMENT_COLORS[strongest] }}>
-                {ELEMENT_EMOJI[strongest]} {ELEMENT_LABELS[strongest]}
+                <ElementIcon el={strongest} size={15} /> {ELEMENT_LABELS[strongest]}
               </p>
             </div>
             <div className="flex-1 bg-stone-700/60 rounded-2xl p-3">
               <p className="text-xs text-stone-500 mb-1">보완 필요</p>
               <p className="text-sm font-bold" style={{ color: ELEMENT_COLORS[weakest] }}>
-                {ELEMENT_EMOJI[weakest]} {ELEMENT_LABELS[weakest]}
+                <ElementIcon el={weakest} size={15} /> {ELEMENT_LABELS[weakest]}
               </p>
             </div>
           </div>
@@ -222,13 +229,13 @@ export default function SummaryPage({ input, result, ohaeng, onBack, onReset }: 
           <p className="text-stone-400 text-xs mb-3">나에게 필요한 에너지 ({ELEMENT_LABELS[weakest]} 보완)</p>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { label: '행운 색상', value: LUCKY_COLOR[weakest].name, icon: '🎨' },
-              { label: '행운 숫자', value: LUCKY_NUM[weakest], icon: '🔢' },
-              { label: '행운 방향', value: LUCKY_DIR[weakest], icon: '🧭' },
-              { label: '오늘 총운', value: `${sipsin} (${todayStar[sipsin] ?? 3}점/5점)`, icon: '🔮' },
+              { label: '행운 색상', value: LUCKY_COLOR[weakest].name },
+              { label: '행운 숫자', value: LUCKY_NUM[weakest] },
+              { label: '행운 방향', value: LUCKY_DIR[weakest] },
+              { label: '오늘 총운', value: `${sipsin} (${todayStar[sipsin] ?? 3}점/5점)` },
             ].map(item => (
               <div key={item.label} className="bg-stone-700/50 rounded-2xl p-3">
-                <p className="text-stone-500 text-xs mb-1">{item.icon} {item.label}</p>
+                <p className="text-stone-500 text-xs mb-1">{item.label}</p>
                 <p className="text-white text-sm font-semibold">{item.value}</p>
               </div>
             ))}

@@ -5,12 +5,17 @@ import { calculateSaju, getSipsin } from '../utils/saju'
 import { getElement, JOB_DATA, JOB_LUCK_BY_SIPSIN, LUCK_GRADE_CFG } from '../utils/jobData'
 import PointsClaimButton from './PointsClaimButton'
 import ShareCardModal from './ShareCardModal'
-import { IcJob } from './icons/SajuIcons'
+import { IcJob, IcSparkleKeyword, IcShare, IcGem, IcCloverLucky, IcBalance, IcTalisman } from './icons/SajuIcons'
 
 interface Props {
   savedBirth: BirthInput | null
   onSave?: (b: BirthInput) => void
   onBack: () => void
+}
+
+type IconCmp = React.ComponentType<{ size?: number; className?: string }>
+const GRADE_ICON: Record<string, IconCmp> = {
+  great: IcGem, good: IcCloverLucky, neutral: IcBalance, caution: IcTalisman,
 }
 
 function computeResult(b: BirthInput) {
@@ -134,7 +139,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
                           : 'bg-[#1C1438] border-[#2A1F4A] text-[#A79CC2] hover:border-[#4BBF7E50]'
                       }`}
                     >
-                      {g === 'male' ? '남성 🧑' : '여성 👩'}
+                      {g === 'male' ? '남성 ♂' : '여성 ♀'}
                     </button>
                   ))}
                 </div>
@@ -188,9 +193,9 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
             <button
               type="submit"
               disabled={!canSubmit}
-              className="w-full py-3.5 bg-gradient-to-r from-[#3FA86A] to-[#4BBF7E] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#359A5E] hover:to-[#3FAE6E] transition-all active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full py-3.5 bg-gradient-to-r from-[#3FA86A] to-[#4BBF7E] text-[#0D0A1A] font-bold rounded-2xl shadow-lg hover:from-[#359A5E] hover:to-[#3FAE6E] transition-all active:scale-[0.99] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              💼 취업운 확인하기
+              <IcJob size={18} /> 취업운 확인하기
             </button>
 
             <div className="flex items-center gap-2 justify-center">
@@ -229,7 +234,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
               style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)', borderColor: LUCK_GRADE_CFG[result.overallLuck.grade].border }}
             >
               <div className="flex items-start justify-between mb-4">
-                <span className="text-5xl leading-none">{LUCK_GRADE_CFG[result.overallLuck.grade].emoji}</span>
+                <span className="leading-none" style={{ color: LUCK_GRADE_CFG[result.overallLuck.grade].color }}>{(() => { const I = GRADE_ICON[result.overallLuck.grade]; return <I size={44} /> })()}</span>
                 <span
                   className="text-sm font-bold px-3 py-1.5 rounded-full"
                   style={{ color: LUCK_GRADE_CFG[result.overallLuck.grade].color, backgroundColor: LUCK_GRADE_CFG[result.overallLuck.grade].bg, border: `1px solid ${LUCK_GRADE_CFG[result.overallLuck.grade].border}` }}
@@ -248,7 +253,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
               >
                 <p className="text-sm text-[#C4B8D8] leading-relaxed mb-2">{result.overallLuck.desc}</p>
                 <div className="flex gap-2 items-start">
-                  <span className="text-sm flex-shrink-0">💬</span>
+                  <span className="shrink-0 mt-0.5" style={{ color: LUCK_GRADE_CFG[result.overallLuck.grade].color }}><IcSparkleKeyword size={14} /></span>
                   <p className="text-sm font-medium" style={{ color: LUCK_GRADE_CFG[result.overallLuck.grade].color }}>{result.overallLuck.tip}</p>
                 </div>
               </div>
@@ -289,7 +294,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
                       ? "text-xs font-bold bg-[#4BBF7E20] border border-[#4BBF7E] text-[#F5EDD4] pl-2.5 pr-3 py-1 rounded-full inline-flex items-center gap-1"
                       : "text-xs bg-[#1C1438] border border-[#2A1F4A] text-[#C4B8D8] px-3 py-1 rounded-full"}
                   >
-                    {i === 0 && <span className="text-[10px]">⭐</span>}
+                    {i === 0 && <span className="text-[10px] text-[#4BBF7E]">★</span>}
                     {item}
                   </span>
                 ))}
@@ -328,7 +333,7 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
             {/* 면접 팁 */}
             <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-5 border border-[#C9962A25] shadow-xl shadow-[#000]/40">
               <div className="flex gap-2 items-start bg-[#C9962A0D] border border-[#C9962A30] rounded-2xl px-4 py-3">
-                <span className="text-sm flex-shrink-0">💡</span>
+                <span className="shrink-0 text-[#C9962A] mt-0.5"><IcSparkleKeyword size={14} /></span>
                 <div>
                   <p className="text-[10px] text-[#C9962A] font-bold mb-0.5">면접 팁</p>
                   <p className="text-sm text-[#C4B8D8] leading-relaxed">{result.myData.interviewTip}</p>
@@ -351,9 +356,9 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
             <PointsClaimButton featureKey="job" label="취업운 확인 💼" />
             <button
               onClick={() => setShowShare(true)}
-              className="w-full py-3.5 bg-[#231844] text-[#E8DFC8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98]"
+              className="w-full py-3.5 bg-[#231844] text-[#E8DFC8] font-semibold rounded-2xl text-sm hover:bg-[#2A1F4A] transition active:scale-[0.98] flex items-center justify-center gap-2"
             >
-              📤 취업운 카드 공유하기
+              <IcShare size={16} /> 취업운 카드 공유하기
             </button>
             <button
               onClick={() => { if (blockGuestRetry()) return; setStep('form'); setSubmitted(null); window.scrollTo(0, 0) }}
@@ -374,7 +379,8 @@ export default function JobPage({ savedBirth, onSave, onBack }: Props) {
           onClose={() => setShowShare(false)}
           data={{
             badge: '취업운',
-            emoji: LUCK_GRADE_CFG[result.overallLuck.grade].emoji,
+            Icon: GRADE_ICON[result.overallLuck.grade],
+            iconColor: LUCK_GRADE_CFG[result.overallLuck.grade].color,
             title: result.overallLuck.title,
             date: `${result.myData.elementChi}(${result.myData.element}) 일간 · ${result.daunSipsin} 대운 (${result.daunRange})`,
             highlight: result.overallLuck.desc.split('.')[0] + '.',

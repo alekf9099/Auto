@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { IcSaju } from './icons/SajuIcons'
 
 interface Props {
   onDone: () => void
@@ -67,7 +68,7 @@ export default function SplashScreen({ onDone }: Props) {
         <div className="relative w-[110px] h-[110px] rounded-full p-[3px] animate-spin"
           style={{ background: 'linear-gradient(135deg, #C9962A, #E8B84B)', animationDuration: '8s' }}>
           <div className="w-full h-full rounded-full bg-[#0D0A1A] flex items-center justify-center">
-            <span className="text-[52px]" style={{ color: '#C9962A', fontFamily: 'serif' }}>☯</span>
+            <IcSaju size={52} className="text-[#C9962A]" />
           </div>
         </div>
       </div>
