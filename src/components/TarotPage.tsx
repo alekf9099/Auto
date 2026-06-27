@@ -334,11 +334,11 @@ export default function TarotPage({ onBack }: Props) {
     const midIndex = (totalCards - 1) / 2
     const distanceFromCenter = i - midIndex
 
-    // 아래쪽이 잘리거나 문구와 겹치지 않도록 회전 각도와 반경을 콤팩트하게 압축
-    const rotateZ = distanceFromCenter * 2.0      // 카드당 회전 각도 (더 촘촘하게)
-    const translateX = distanceFromCenter * 7.5    // 카드 간 좌우 간격 (px)
-    // 둥글게 휘어지는 축의 Y 위치를 위로 올려서 카드 밑바닥이 화면 밖으로 나가는 것을 방지
-    const translateY = Math.abs(distanceFromCenter) * 0.8 - 40 
+    // 부채꼴 계산 및 모바일 조작성 최적화
+    const rotateZ = distanceFromCenter * 2.2      // 자연스러운 부채꼴 각도
+    const translateX = distanceFromCenter * 6.5    // 카드 간 좌우 간격 촘촘하게
+    // 가운데 카드가 화면 안쪽으로 쏙 들어오도록 자연스러운 무지개 아치형 구현
+    const translateY = -45 + (Math.abs(distanceFromCenter) * 1.5)
 
     return (
       <button
@@ -347,15 +347,14 @@ export default function TarotPage({ onBack }: Props) {
         disabled={isPicked || allPicked}
         style={{
           transform: `translateX(${translateX}px) translateY(${translateY}px) rotateZ(${rotateZ}deg)`,
-          transformOrigin: 'center 120%', // 회전 중심
-          축을 카드 아래 바깥쪽으로 설정해 완만한 아치 구현
-          zIndex: i,
+          transformOrigin: 'center center', // 중심축을 중앙으로 잡아 하단 탈출 차단
+          zIndex: isPicked ? i : 10 + i,
         }}
         className={`
-          absolute w-[60px] aspect-[2/3] transition-all duration-300 ease-out select-none
+          absolute w-[58px] aspect-[2/3] transition-all duration-300 ease-out select-none
           
-          /* 일반 상태 호버: 위로 번쩍 솟아오르며 안내 문구를 가리지 않도록 조절 */
-          ${!isPicked && !disabled ? 'hover:-translate-y-20 hover:scale-115 hover:z-[99] hover:shadow-[0_0_20px_rgba(201,150,42,0.7)]' : ''}
+          /* 모바일 터치 및 PC 호버 대응: 누르려고 할 때 위로 확 솟구치며 커져서 터치 미스 방지 */
+          ${!isPicked && !disabled ? 'active:-translate-y-24 active:scale-130 hover:-translate-y-24 hover:scale-130 hover:z-[999] hover:shadow-[0_0_25px_rgba(201,150,42,0.8)]' : ''}
           
           /* 이미 뽑힌 카드 처리 */
           ${isPicked ? 'opacity-10 scale-75 pointer-events-none' : ''}
