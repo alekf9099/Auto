@@ -227,6 +227,17 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
   const [showPoints, setShowPoints] = useState(false)
   const [dailyToast, setDailyToast] = useState<{ milestone: number; bonus: number } | true | false>(false)
   const [mounted, setMounted] = useState(false)
+
+  // 오늘의 운세 — 하루 1번 카드 뒤집어 펼치기 (펼친 상태는 그날 동안 유지)
+  const todayKey = `${todayDate.getFullYear()}-${month}-${day}`
+  const [fortuneRevealed, setFortuneRevealed] = useState(false)
+  useEffect(() => {
+    try { setFortuneRevealed(localStorage.getItem('todayFortuneRevealed') === todayKey) } catch { /* noop */ }
+  }, [todayKey])
+  function revealTodayFortune() {
+    setFortuneRevealed(true)
+    try { localStorage.setItem('todayFortuneRevealed', todayKey) } catch { /* noop */ }
+  }
   const streakMounted = mounted
   const animatedBalance = useCountUp(points.balance)
 
@@ -420,17 +431,48 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
           <p className="relative text-base font-bold text-[#F5EDD4] mb-3" style={{ fontFamily: "'Gowun Batang', serif" }}>
             오늘의 한 줄 운세
           </p>
-          <div
-            className="relative flex gap-3 items-start rounded-2xl px-4 py-3.5 border transition-colors duration-500"
-            style={{ backgroundColor: todayAccent + '12', borderColor: todayAccent + '35' }}
-          >
-            <span
-              className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: todayAccent + '20', color: todayAccent }}
+          {/* 오늘의 운세 카드 — 탭하면 3D로 뒤집혀 펼쳐짐 (하루 1번) */}
+          <div className="relative" style={{ perspective: '1000px' }}>
+            <div
+              className="grid transition-transform duration-700 ease-out"
+              style={{
+                transformStyle: 'preserve-3d',
+                transform: fortuneRevealed ? 'rotateY(180deg)' : 'rotateY(0deg)',
+              }}
             >
-              <IcSparkleKeyword size={16} />
-            </span>
-            <p className="text-sm leading-relaxed font-semibold" style={{ color: '#F5EDD4' }}>{todayFortune.text}</p>
+              {/* 뒷면 — 엎어둔 운세 카드 */}
+              <button
+                onClick={revealTodayFortune}
+                aria-label="오늘의 운세 펼치기"
+                className="[grid-area:1/1] w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 border text-left active:scale-[0.99] transition-transform"
+                style={{ backgroundColor: todayAccent + '12', borderColor: todayAccent + '35', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+              >
+                <span
+                  className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center animate-pulse"
+                  style={{ backgroundColor: todayAccent + '20', color: todayAccent }}
+                >
+                  <IcSaju size={20} />
+                </span>
+                <span className="flex-1">
+                  <p className="text-sm font-bold" style={{ color: '#F5EDD4' }}>오늘의 운세 카드</p>
+                  <p className="text-[11px] font-semibold" style={{ color: todayAccent }}>탭하여 펼쳐보기 →</p>
+                </span>
+              </button>
+
+              {/* 앞면 — 펼쳐진 운세 */}
+              <div
+                className="[grid-area:1/1] flex gap-3 items-start rounded-2xl px-4 py-3.5 border"
+                style={{ backgroundColor: todayAccent + '12', borderColor: todayAccent + '35', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}
+              >
+                <span
+                  className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
+                  style={{ backgroundColor: todayAccent + '20', color: todayAccent }}
+                >
+                  <IcSparkleKeyword size={16} />
+                </span>
+                <p className="text-sm leading-relaxed font-semibold" style={{ color: '#F5EDD4' }}>{todayFortune.text}</p>
+              </div>
+            </div>
           </div>
           <button
             onClick={() => onNavigate('today')}
