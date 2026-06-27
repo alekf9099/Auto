@@ -7,20 +7,35 @@ import { FlipCard } from './Anim3D'
 import { IcTarot, IcGem, IcCloverLucky, IcBalance, IcTalisman, IcSparkleKeyword } from './icons/SajuIcons'
 
 // 카드 뒷면 — 모든 카드에 공통으로 쓰는 금빛 패턴 디자인
+// 카드 뒷면 — 앱의 신비로운 밤하늘 분위기와 어우러지는 고급 골드 & 미드나잇 테마
 function TarotCardBack() {
   return (
-    <div
-      className="w-full h-full rounded-xl border border-[#C9962A50] flex items-center justify-center relative overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #1C1438 100%)' }}
+    <div 
+      className="w-full h-full rounded-xl border border-[#C9962A60] flex items-center justify-center relative overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.5)] bg-slate-950"
+      style={{
+        background: 'radial-gradient(circle at center, #1E1233 0%, #0A0514 100%)'
+      }}
     >
-      <div
-        className="absolute inset-1.5 rounded-lg border border-[#C9962A30]"
+      {/* 신비감을 극대화하는 배경 오버레이 및 미세 격자 실선 */}
+      <div 
+        className="absolute inset-1.5 rounded-lg border border-[#C9962A25]" 
         style={{
-          backgroundImage:
-            'repeating-linear-gradient(45deg, rgba(201,150,42,0.10) 0px, rgba(201,150,42,0.10) 1px, transparent 1px, transparent 7px), repeating-linear-gradient(-45deg, rgba(201,150,42,0.10) 0px, rgba(201,150,42,0.10) 1px, transparent 1px, transparent 7px)',
-        }}
+          backgroundImage: 'radial-gradient(rgba(201,150,42,0.15) 1px, transparent 1px)',
+          backgroundSize: '6px 6px'
+        }} 
       />
-      <IcTarot size={18} className="text-[#C9962A80] relative z-10" />
+      
+      {/* 중앙에서 빛나는 사주/타로 크로스 디자인 스파클 아이콘 */}
+      <div className="relative z-10 flex flex-col items-center gap-1 opacity-90 scale-105">
+        <IcSparkleKeyword size={20} className="text-[#C9962A]" />
+        <div className="w-1.5 h-1.5 rounded-full bg-[#C9962A] animate-pulse" />
+      </div>
+      
+      {/* 카드 네 모서리의 미세한 골드 안착 포인트 */}
+      <div className="absolute top-1 left-1 w-1 h-1 rounded-full bg-[#C9962A30]" />
+      <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-[#C9962A30]" />
+      <div className="absolute bottom-1 left-1 w-1 h-1 rounded-full bg-[#C9962A30]" />
+      <div className="absolute bottom-1 right-1 w-1 h-1 rounded-full bg-[#C9962A30]" />
     </div>
   )
 }
