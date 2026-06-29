@@ -7,20 +7,35 @@ import { FlipCard } from './Anim3D'
 import { IcTarot, IcGem, IcCloverLucky, IcBalance, IcTalisman, IcSparkleKeyword } from './icons/SajuIcons'
 
 // 카드 뒷면 — 모든 카드에 공통으로 쓰는 금빛 패턴 디자인
+// 카드 뒷면 — 앱의 신비로운 밤하늘 분위기와 어우러지는 고급 골드 & 미드나잇 테마
 function TarotCardBack() {
   return (
-    <div
-      className="w-full h-full rounded-xl border border-[#C9962A50] flex items-center justify-center relative overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #2A1F4A 0%, #1C1438 100%)' }}
+    <div 
+      className="w-full h-full rounded-xl border border-[#C9962A60] flex items-center justify-center relative overflow-hidden shadow-[0_4px_12px_rgba(0,0,0,0.5)] bg-slate-950"
+      style={{
+        background: 'radial-gradient(circle at center, #1E1233 0%, #0A0514 100%)'
+      }}
     >
-      <div
-        className="absolute inset-1.5 rounded-lg border border-[#C9962A30]"
+      {/* 신비감을 극대화하는 배경 오버레이 및 미세 격자 실선 */}
+      <div 
+        className="absolute inset-1.5 rounded-lg border border-[#C9962A25]" 
         style={{
-          backgroundImage:
-            'repeating-linear-gradient(45deg, rgba(201,150,42,0.10) 0px, rgba(201,150,42,0.10) 1px, transparent 1px, transparent 7px), repeating-linear-gradient(-45deg, rgba(201,150,42,0.10) 0px, rgba(201,150,42,0.10) 1px, transparent 1px, transparent 7px)',
-        }}
+          backgroundImage: 'radial-gradient(rgba(201,150,42,0.15) 1px, transparent 1px)',
+          backgroundSize: '6px 6px'
+        }} 
       />
-      <IcTarot size={18} className="text-[#C9962A80] relative z-10" />
+      
+      {/* 중앙에서 빛나는 사주/타로 크로스 디자인 스파클 아이콘 */}
+      <div className="relative z-10 flex flex-col items-center gap-1 opacity-90 scale-105">
+        <IcSparkleKeyword size={20} className="text-[#C9962A]" />
+        <div className="w-1.5 h-1.5 rounded-full bg-[#C9962A] animate-pulse" />
+      </div>
+      
+      {/* 카드 네 모서리의 미세한 골드 안착 포인트 */}
+      <div className="absolute top-1 left-1 w-1 h-1 rounded-full bg-[#C9962A30]" />
+      <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-[#C9962A30]" />
+      <div className="absolute bottom-1 left-1 w-1 h-1 rounded-full bg-[#C9962A30]" />
+      <div className="absolute bottom-1 right-1 w-1 h-1 rounded-full bg-[#C9962A30]" />
     </div>
   )
 }
@@ -307,23 +322,52 @@ export default function TarotPage({ onBack }: Props) {
 
             <p className="text-center text-sm text-[#BCB1D4]">22장 중 3장을 골라주세요 ({picked.length}/3)</p>
 
-            <div className="flex flex-wrap gap-2 justify-center">
-              {spread.map((card, i) => {
-                const pickIndex = picked.indexOf(i)
-                const isPicked = pickIndex !== -1
-                const disabled = allPicked && !isPicked
-                return (
-                  <button
-                    key={card.id}
-                    onClick={() => handlePick(i)}
-                    disabled={isPicked || allPicked}
-                    className={`w-[17.5%] aspect-[2/3] transition-all duration-300 ${isPicked ? 'opacity-20 scale-90' : disabled ? 'opacity-30' : 'active:scale-95 hover:-translate-y-1'}`}
-                  >
-                    <TarotCardBack/>
-                  </button>
-                )
-              })}
-            </div>
+            {/* 부채꼴 레이아웃 컨테이너 (높이를 축소하고 모바일 화면 중앙 정렬 최적화) */}
+<div className="relative w-full max-w-sm mx-auto h-[200px] flex items-center justify-center overflow-visible my-4" style={{ perspective: '1000px' }}>
+  {spread.map((card, i) => {
+    const pickIndex = picked.indexOf(i)
+    const isPicked = pickIndex !== -1
+    const disabled = allPicked && !isPicked
+
+    // 부채꼴 계산 로직
+    const totalCards = spread.length
+    const midIndex = (totalCards - 1) / 2
+    const distanceFromCenter = i - midIndex
+
+    // 부채꼴 계산 및 모바일 조작성 최적화
+    const rotateZ = distanceFromCenter * 2.2      // 자연스러운 부채꼴 각도
+    const translateX = distanceFromCenter * 6.5    // 카드 간 좌우 간격 촘촘하게
+    // 가운데 카드가 화면 안쪽으로 쏙 들어오도록 자연스러운 무지개 아치형 구현
+    const translateY = -45 + (Math.abs(distanceFromCenter) * 1.5)
+
+    return (
+      <button
+        key={card.id}
+        onClick={() => handlePick(i)}
+        disabled={isPicked || allPicked}
+        style={{
+          transform: `translateX(${translateX}px) translateY(${translateY}px) rotateZ(${rotateZ}deg)`,
+          transformOrigin: 'center center', // 중심축을 중앙으로 잡아 하단 탈출 차단
+          zIndex: isPicked ? i : 10 + i,
+        }}
+        className={`
+          absolute w-[58px] aspect-[2/3] transition-all duration-300 ease-out select-none
+          
+          /* 모바일 터치 및 PC 호버 대응: 누르려고 할 때 위로 확 솟구치며 커져서 터치 미스 방지 */
+          ${!isPicked && !disabled ? 'active:-translate-y-24 active:scale-130 hover:-translate-y-24 hover:scale-130 hover:z-[999] hover:shadow-[0_0_25px_rgba(201,150,42,0.8)]' : ''}
+          
+          /* 이미 뽑힌 카드 처리 */
+          ${isPicked ? 'opacity-10 scale-75 pointer-events-none' : ''}
+          
+          /* 3장 다 뽑아서 잠긴 카드 처리 */
+          ${disabled ? 'opacity-20 pointer-events-none' : ''}
+        `}
+      >
+        <TarotCardBack/>
+      </button>
+    )
+  })}
+</div>
 
             {error && <p className="text-xs text-red-400 text-center">{error}</p>}
 

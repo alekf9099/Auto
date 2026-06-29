@@ -97,7 +97,7 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
               오행 룰렛을 돌려보세요!
             </p>
             <p className="text-sm text-[#BCB1D4] leading-relaxed">
-              칸마다 포인트가 달라요. 운이 좋으면 <span className="text-[#C9962A] font-semibold">잭폿 +100P</span>까지!
+              칸마다 포인트가 달라요. 운이 좋으면 <span className="text-[#C9962A] font-semibold">잭팟 +100P</span>까지!
             </p>
           </div>
         </div>
@@ -125,54 +125,66 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
             >
               <svg viewBox="0 0 200 200" className="w-full h-full">
                 <defs>
-                  {ROULETTE_SEGMENTS.map(seg => (
-                    <linearGradient key={seg.key} id={`grad-${seg.key}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor={shade(seg.color, 0.35)} />
-                      <stop offset="55%" stopColor={seg.color} />
-                      <stop offset="100%" stopColor={shade(seg.color, -0.3)} />
-                    </linearGradient>
-                  ))}
-                  <linearGradient id="rim-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#F5D78E" />
-                    <stop offset="50%" stopColor="#C9962A" />
-                    <stop offset="100%" stopColor="#8A6C1F" />
-                  </linearGradient>
-                </defs>
+            {/* 별자리 우주 컨셉의 은은하고 깊은 미드나잇 퍼플/네이비 그라데이션 */}
+            {ROULETTE_SEGMENTS.map((seg, i) => {
+              // 칸마다 미세하게 톤을 다르게 주어 입체적인 밤하늘을 표현합니다.
+              const isEven = i % 2 === 0;
+              const startColor = isEven ? '#120A2A' : '#0A0618';
+              const endColor = isEven ? '#1C103F' : '#110926';
+              
+              // 잭폿(gold 계열 테마색일 경우) 칸만 특별히 조금 더 깊은 차원의 포인트를 줍니다.
+              const finalStart = seg.key === 'jackpot' ? '#1B0E3A' : startColor;
+              const finalEnd = seg.key === 'jackpot' ? '#29145C' : endColor;
 
-                {ROULETTE_SEGMENTS.map((seg, i) => {
-                  const start = i * SLICE_DEG
-                  const end = (i + 1) * SLICE_DEG
-                  const mid = start + SLICE_DEG / 2
-                  const labelPos = polar(mid, LABEL_R)
-                  return (
-                    <g key={seg.key}>
-                      <path
-                        d={slicePath(start, end, OUTER_R)}
-                        fill={`url(#grad-${seg.key})`}
-                        stroke="#0D0A1A"
-                        strokeWidth={1.5}
-                        strokeOpacity={0.5}
-                      />
-                      <text
-                        x={labelPos.x}
-                        y={labelPos.y}
-                        transform={`rotate(${mid}, ${labelPos.x}, ${labelPos.y})`}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fontSize="11"
-                        fontWeight="bold"
-                        fill="#fff"
-                        stroke="#0D0A1A"
-                        strokeWidth={3}
-                        paintOrder="stroke"
-                      >
-                        {seg.label}
-                      </text>
-                    </g>
-                  )
-                })}
+              return (
+                <linearGradient key={seg.key} id={`grad-${seg.key}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor={finalStart} />
+                  <stop offset="100%" stopColor={finalEnd} />
+                </linearGradient>
+              );
+            })}
+            {/* 밤하늘을 가로지르는 섬세한 은하수/골드 링 그라데이션 */}
+            <linearGradient id="rim-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#FFEAA7" />
+              <stop offset="50%" stopColor="#C9962A" />
+              <stop offset="100%" stopColor="#8A6C1F" />
+            </linearGradient>
+          </defs>
 
-                <circle cx={CENTER} cy={CENTER} r={OUTER_R} fill="none" stroke="url(#rim-gradient)" strokeWidth="4" />
+          {ROULETTE_SEGMENTS.map((seg, i) => {
+            const start = i * SLICE_DEG
+            const end = (i + 1) * SLICE_DEG
+            const mid = start + SLICE_DEG / 2
+            const labelPos = polar(mid, LABEL_R)
+            return (
+              <g key={seg.key}>
+                {/* 각 오행 조각의 배경을 우주 톤으로 변경 */}
+                <path d={slicePath(start, end, OUTER_R)} fill={`url(#grad-${seg.key})`} />
+                {/* 조각 사이의 경계선을 은은한 밤하늘의 '별자리 연결선(#C9962A35)' 느낌으로 가늘게 처리 */}
+                <path d={slicePath(start, end, OUTER_R)} fill="none" stroke="#C9962A" strokeWidth="0.5" strokeOpacity="0.25" />
+                
+                <text 
+                  x={labelPos.x} 
+                  y={labelPos.y} 
+                  transform={`rotate(${mid}, ${labelPos.x}, ${labelPos.y})`} 
+                  textAnchor="middle" 
+                  dominantBaseline="middle" 
+                  fontSize="11" 
+                  fontWeight="bold" 
+                  fill="#F5EDD4" /* 우아한 크림골드빛 글자색 */
+                  stroke="#0A0518" 
+                  strokeWidth={2.5} 
+                  paintOrder="stroke"
+                >
+                  {seg.label}
+                </text>
+              </g>
+            )
+          })}
+          {/* 외곽선 골드 프레임 테두리 */}
+          <circle cx={CENTER} cy={CENTER} r={OUTER_R} fill="none" stroke="url(#rim-gradient)" strokeWidth="2.5" />
+          {/* 내부 디자인 레이어 선 추가 (별자리 나침반 느낌 연출) */}
+          <circle cx={CENTER} cy={CENTER} r={OUTER_R - 12} fill="none" stroke="#C9962A" strokeWidth="0.5" strokeOpacity="0.15" strokeDasharray="3 3" />
               </svg>
             </div>
 
@@ -204,7 +216,7 @@ export default function RoulettePage({ onBack, onPointsUpdate }: Props) {
               >
                 <p className="text-base font-bold flex items-center justify-center gap-1.5" style={{ color: result.color }}>
                   {result.key === 'jackpot' && <IcSparkleKeyword size={16} />}
-                  {result.key === 'jackpot' ? '잭폿 당첨!' : result.key === 'blank' ? '꽝! 참가 보상 지급' : `${result.label} 적중!`}
+                  {result.key === 'jackpot' ? '잭팟 당첨!' : result.key === 'blank' ? '꽝! 참가 보상 지급' : `${result.label} 적중!`}
                 </p>
                 <p className="text-2xl font-bold mt-1" style={{ color: result.color }}>+{result.amount}P</p>
               </div>
