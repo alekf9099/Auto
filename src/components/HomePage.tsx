@@ -649,7 +649,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
               className={`w-full overflow-hidden rounded-3xl active:scale-[0.99] transition-all ${completed ? 'shadow-[0_2px_20px_rgba(201,150,42,0.25)]' : 'shadow-[0_2px_16px_rgba(180,30,30,0.10)]'}`}
             >
               <div
-                className={`relative overflow-hidden border rounded-3xl px-5 pt-4 pb-3 ${completed ? 'border-amber-500/50' : 'border-red-900/40'}`}
+                className={`relative overflow-hidden border rounded-3xl px-4 py-3 ${completed ? 'border-amber-500/50' : 'border-red-900/40'}`}
                 style={{ background: 'linear-gradient(135deg, #1A0E30 0%, #100820 60%, #060410 100%)' }}
               >
                 {/* 도장 뒤 은은한 빛 번짐 */}
@@ -665,19 +665,18 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                 </div>
                 <CornerOrnament size={20} className="absolute top-1.5 left-1.5 pointer-events-none opacity-70"/>
                 <CornerOrnament size={20} className="absolute top-1.5 right-1.5 -scale-x-100 pointer-events-none opacity-70"/>
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="relative shrink-0 w-[56px] h-[56px] flex items-center justify-center">
+                <div className="flex items-center gap-3 mb-2.5">
+                  <div className="relative shrink-0 w-12 h-12 flex items-center justify-center">
                     <div className={`absolute inset-0 rounded-full border-[3px] transition-all ${checked ? 'border-red-300' : 'border-red-500'}`}/>
-                    <div className="absolute inset-[5px] rounded-full border border-red-300 opacity-40"/>
+                    <div className="absolute inset-[4px] rounded-full border border-red-300 opacity-40"/>
                     {checked
-                      ? <div className="flex flex-col items-center"><span className="text-red-500 text-xl font-bold leading-none">✓</span><span className="text-[9px] text-red-400 font-bold mt-0.5">완료</span></div>
-                      : <div className="flex flex-col items-center"><span className="text-[11px] font-bold text-red-600 leading-tight text-center" style={{ fontFamily: "'Gowun Batang', serif" }}>출석<br/>도장</span></div>
+                      ? <div className="flex flex-col items-center"><span className="text-red-500 text-lg font-bold leading-none">✓</span><span className="text-[8px] text-red-400 font-bold mt-0.5">완료</span></div>
+                      : <div className="flex flex-col items-center"><span className="text-[10px] font-bold text-red-600 leading-tight text-center" style={{ fontFamily: "'Gowun Batang', serif" }}>출석<br/>도장</span></div>
                     }
                   </div>
                   <div className="flex-1 text-left">
-                    <p className="text-[10px] text-[#A79CC2] mb-0.5 font-medium">출석체크하고</p>
-                    <p className="text-base font-bold leading-tight" style={{ fontFamily: "'Gowun Batang', serif", color: checked ? '#BCB1D4' : '#F5EDD4' }}>
-                      {checked ? '오늘 도장 찍었어요!' : '포인트 받아가세요!'}
+                    <p className="text-[15px] font-bold leading-tight" style={{ fontFamily: "'Gowun Batang', serif", color: checked ? '#BCB1D4' : '#F5EDD4' }}>
+                      {checked ? '오늘 도장 찍었어요!' : '출석체크하고 포인트 받기'}
                     </p>
                     <p className="text-[11px] text-[#A79CC2] mt-0.5">
                       {checked
@@ -697,7 +696,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                     return (
                       <div
                         key={i}
-                        className={`flex-1 aspect-square rounded-full border-2 flex items-center justify-center transition-all duration-300 ${filled ? (isToday ? 'border-red-500 bg-red-500 shadow-sm shadow-red-900/30' : 'border-red-900/50 bg-red-900/30') : 'border-[#2A1F4A] bg-[#1C1438]'}`}
+                        className={`flex-1 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-300 ${filled ? (isToday ? 'border-red-500 bg-red-500 shadow-sm shadow-red-900/30' : 'border-red-900/50 bg-red-900/30') : 'border-[#2A1F4A] bg-[#1C1438]'}`}
                         style={{
                           transform: streakMounted ? 'scale(1)' : 'scale(0)',
                           transitionDelay: streakMounted ? `${i * 60}ms` : '0ms',
@@ -709,7 +708,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
                     )
                   })}
                 </div>
-                <div className={`mt-2.5 pt-2 border-t flex items-center justify-between ${completed ? 'border-amber-500/30' : 'border-red-900/30'}`}>
+                <div className={`mt-2 pt-1.5 border-t flex items-center justify-between ${completed ? 'border-amber-500/30' : 'border-red-900/30'}`}>
                   {completed
                     ? <span className="text-[10px] font-bold text-amber-400">7일 연속 보너스 +50P 받았어요!</span>
                     : <span className="text-[10px] text-[#857AA0]">{TOTAL_DAYS - streak}일 더 출석하면 보너스 +50P</span>
