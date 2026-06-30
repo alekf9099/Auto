@@ -39,10 +39,30 @@ const POINT_RULES: Record<string, { amount: number; dailyCap?: number; totalCap?
   // 다음 동기화 때 위조로 간주돼 history에서 사라진다.
   '친구 초대 보너스 🎁':       { amount: 50,  totalCap: 10 },
   '추천 코드 사용 보너스 🎁':   { amount: 30,  totalCap: 1 },
+  // 사주매칭 / 운세대결 적립 (src/components/MatchPage.tsx, FortuneBattlePage.tsx 의 라벨과 일치해야 한다)
+  '사주매칭 🎲':               { amount: 5,   dailyCap: 1 },
+  '운세대결 확인':             { amount: 5,   dailyCap: 1 },
+  // 오행 룰렛 — 하루 1회. 칸마다 금액이 다르므로 라벨별로 등록하되,
+  // ROULETTE_LABELS 묶음으로 하루 총 1회만 허용한다 (src/utils/points.ts ROULETTE_SEGMENTS 와 일치).
+  '오행 룰렛 — 목(木) 적중! 🎡': { amount: 10,  dailyCap: 1 },
+  '오행 룰렛 — 화(火) 적중! 🎡': { amount: 10,  dailyCap: 1 },
+  '오행 룰렛 — 토(土) 적중! 🎡': { amount: 10,  dailyCap: 1 },
+  '오행 룰렛 — 금(金) 적중! 🎡': { amount: 15,  dailyCap: 1 },
+  '오행 룰렛 — 수(水) 적중! 🎡': { amount: 15,  dailyCap: 1 },
+  '오행 룰렛 — 꽝 적중! 🎡':     { amount: 5,   dailyCap: 1 },
+  '오행 룰렛 — 대길 적중! 🎡':   { amount: 30,  dailyCap: 1 },
+  '오행 룰렛 — 잭폿 적중! 🎡':   { amount: 100, dailyCap: 1 },
 }
 
 // 행운의 숫자 잡기는 적중/실패 라벨을 합쳐 하루 3회(LUCKY_TIMER_MAX_ATTEMPTS)까지만 허용된다.
 const LUCKY_TIMER_LABELS = new Set(['행운의 숫자 적중! 🎯', '행운의 숫자 도전 ⏱️'])
+
+// 오행 룰렛은 칸별 라벨이 다르지만 하루 1회만 돌릴 수 있으므로, 라벨을 묶어 하루 총 1회로 제한한다.
+const ROULETTE_LABELS = new Set([
+  '오행 룰렛 — 목(木) 적중! 🎡', '오행 룰렛 — 화(火) 적중! 🎡', '오행 룰렛 — 토(土) 적중! 🎡',
+  '오행 룰렛 — 금(金) 적중! 🎡', '오행 룰렛 — 수(水) 적중! 🎡', '오행 룰렛 — 꽝 적중! 🎡',
+  '오행 룰렛 — 대길 적중! 🎡', '오행 룰렛 — 잭폿 적중! 🎡',
+])
 
 function sanitizePointsHistory(rawHistory: unknown): PointsHistoryEntry[] {
   if (!Array.isArray(rawHistory)) return []
@@ -50,6 +70,7 @@ function sanitizePointsHistory(rawHistory: unknown): PointsHistoryEntry[] {
   const perDayLabelCount = new Map<string, number>()
   const totalLabelCount  = new Map<string, number>()
   const luckyTimerCount  = new Map<string, number>() // date -> count
+  const rouletteCount    = new Map<string, number>() // date -> count
   const clean: PointsHistoryEntry[] = []
 
   for (const raw of rawHistory) {
@@ -72,6 +93,12 @@ function sanitizePointsHistory(rawHistory: unknown): PointsHistoryEntry[] {
       const lc = (luckyTimerCount.get(date) ?? 0) + 1
       if (lc > 3) continue
       luckyTimerCount.set(date, lc)
+    }
+
+    if (ROULETTE_LABELS.has(label)) {
+      const rc = (rouletteCount.get(date) ?? 0) + 1
+      if (rc > 1) continue // 룰렛은 하루 1회만 허용
+      rouletteCount.set(date, rc)
     }
 
     perDayLabelCount.set(dayKey, dayCount)
