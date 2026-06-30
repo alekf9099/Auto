@@ -18,6 +18,9 @@ const MAX_HISTORY = 60
 const POINT_RULES: Record<string, { amount: number; dailyCap?: number; totalCap?: number }> = {
   '가입 보너스 🎉':           { amount: 100, totalCap: 1 },
   '매일 출석 보너스':         { amount: 10,  dailyCap: 1 },
+  // 연속 출석 마일스톤 (src/utils/points.ts STREAK_MILESTONES 와 일치해야 한다)
+  '7일 연속 출석 보너스 🎉':   { amount: 50,  dailyCap: 1 },
+  '30일 연속 출석 보너스 🎉':  { amount: 200, dailyCap: 1 },
   '행운의 숫자 적중! 🎯':     { amount: 20,  dailyCap: 3 },
   '행운의 숫자 도전 ⏱️':      { amount: 5,   dailyCap: 3 },
   '정통사주 확인 ☯':         { amount: 5,   dailyCap: 1 },
