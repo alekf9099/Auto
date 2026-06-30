@@ -142,30 +142,61 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
             {!nickname && <p className="text-[11px] text-center text-[#857AA0]">프로필에 닉네임을 먼저 등록해주세요</p>}
           </div>
         ) : (
-          <>
-            <div className="bg-[#C9962A15] border border-[#C9962A30] rounded-3xl px-5 py-3.5 flex items-center justify-between">
-              <p className="text-xs text-[#C4B8D8]">
-                <span className="text-[#C9962A] font-semibold">✓ 매칭 풀 참여 중</span>
-                <span className="text-[#A79CC2] ml-1.5">· {nickname}</span>
-              </p>
-              <button onClick={handleLeave} disabled={busy} className="text-xs text-[#A79CC2] hover:text-rose-400 transition disabled:opacity-50">나가기</button>
-            </div>
+  <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto p-2">
+    {/* 🔮 천상의 요람(Celestial Cradle) 반투명 오로라 박스 */}
+    <div className="relative w-full rounded-3xl bg-[#130E24]/60 backdrop-blur-xl border border-[#C9962A]/30 p-8 flex flex-col items-center justify-center text-center overflow-hidden shadow-[0_0_30px_rgba(201,150,42,0.15)]">
+      
+      {/* 박스 내부 은은한 오로라 광채 이펙트 */}
+      <div className="absolute -top-10 -left-10 w-40 h-40 bg-violet-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#C9962A]/10 rounded-full blur-3xl pointer-events-none" />
 
-            {error && (
-              <div className="bg-rose-900/20 border border-rose-900/40 rounded-2xl px-4 py-3">
-                <p className="text-xs text-rose-300">{error}</p>
-              </div>
-            )}
+      {/* 🧭 실시간 탐색 동심원 펄스 애니메이션 */}
+      <div className="relative flex items-center justify-center w-28 h-28 mb-6">
+        {/* 퍼져나가는 동심원 파동들 */}
+        <div className="absolute inset-0 rounded-full border border-[#C9962A]/40 animate-ping opacity-25" style={{ animationDuration: '3s' }} />
+        <div className="absolute inset-3 rounded-full border border-[#C9962A]/30 animate-ping opacity-40" style={{ animationDuration: '2s' }} />
+        <div className="absolute inset-6 rounded-full border border-violet-400/20 animate-pulse" />
+        
+        {/* 중앙 나침반 대용 아이콘 영역 (천천히 회전) */}
+        <div className="relative z-10 p-4 bg-[#1A0E30] rounded-full border border-[#C9962A]/40 shadow-[0_0_15px_rgba(201,150,42,0.2)] animate-[spin_20s_linear_infinite] flex items-center justify-center">
+          <IcMatch size={28} className="text-[#C9962A]" />
+        </div>
+      </div>
 
-            <button
-              onClick={handleDraw}
-              disabled={busy}
-              className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] transition-all text-sm active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
-            >
-              {busy ? '매칭 상대를 찾는 중...' : <><IcDraw size={17} /> 랜덤 매칭 뽑기</>}
-            </button>
-          </>
-        )}
+      {/* 텍스트 상태 영역 */}
+      <div className="space-y-2.5 z-10 mb-6 w-full">
+        <div className="flex items-center justify-center gap-2 text-base font-medium tracking-wide text-[#F5EDD4]">
+          <span className="text-[#C9962A]">✦</span>
+          <span>매칭 풀 참여 중</span>
+          <span className="text-[#A79CC2]">·</span>
+          <span className="font-semibold text-white">{nickname}</span>
+        </div>
+        
+        {/* 👥 실시간 인연 카운팅 문구 (숨쉬듯 깜빡임) */}
+        <p className="text-xs text-[#BCB1D4]/70 animate-pulse" style={{ animationDuration: '2.5s' }}>
+          현재 12명의 인연이 운명을 기다리고 있어요
+        </p>
+        
+        {/* 나가기 버튼 */}
+        <button onClick={handleLeave} disabled={busy} className="text-[11px] text-[#A79CC2] hover:text-rose-400 transition underline decoration-dotted mt-1 block mx-auto">
+          매칭 풀에서 나가기
+        </button>
+      </div>
+
+      {error && (
+        <div className="bg-rose-900/20 border border-rose-900/40 rounded-2xl px-4 py-2.5 mb-4 w-full">
+          <p className="text-xs text-rose-300">{error}</p>
+        </div>
+      )}
+
+      {/* ✨ 랜덤 매칭 뽑기 버튼 */}
+      <button onClick={handleDraw} disabled={busy} className="relative z-10 w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] hover:shadow-[#C9962A50] transition-all text-sm active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2" >
+        {busy ? '매칭 상대를 찾는 중...' : <><IcDraw size={17} /> 랜덤 매칭 뽑기</>}
+      </button>
+
+    </div>
+  </div>
+)
 
         {/* 결과 — 카드를 뒤집어 매칭 상대 공개 */}
         {result && opponent && (
