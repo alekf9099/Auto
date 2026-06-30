@@ -116,7 +116,7 @@ export default async function handler(req: any, res: any) {
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).end()
 
-  const { idToken, provider, action, nickname, birth, photo, targetUserId, matchId, body, reason } = (req.body ?? {}) as {
+  const { idToken, provider, action, nickname, birth, photo, targetUserId, matchId, body, reason, score, grade } = (req.body ?? {}) as {
     idToken?: string
     provider?: string
     action?: 'join' | 'leave' | 'draw' | 'like' | 'matches' | 'messages' | 'send' | 'block' | 'report'
@@ -127,6 +127,8 @@ export default async function handler(req: any, res: any) {
     matchId?: string
     body?: string
     reason?: string
+    score?: number
+    grade?: string
   }
 
   const VALID_ACTIONS = ['join', 'leave', 'draw', 'like', 'matches', 'messages', 'send', 'block', 'report']
@@ -253,8 +255,10 @@ export default async function handler(req: any, res: any) {
       .from('matches').select('id').eq('user_a', ua).eq('user_b', ub).maybeSingle()
     if (existing) return res.status(200).json({ ok: true, matched: true, matchId: existing.id })
 
+    const safeScore = typeof score === 'number' && score >= 0 && score <= 100 ? Math.round(score) : null
+    const safeGrade = typeof grade === 'string' && grade.length <= 20 ? grade : null
     const { data: created, error: matchErr } = await supabase
-      .from('matches').insert({ user_a: ua, user_b: ub }).select('id').single()
+      .from('matches').insert({ user_a: ua, user_b: ub, score: safeScore, grade: safeGrade }).select('id').single()
     if (matchErr) return res.status(500).json({ error: matchErr.message })
 
     // 양쪽에 매칭 푸시 (실패해도 매칭 자체엔 영향 없음)
@@ -268,7 +272,7 @@ export default async function handler(req: any, res: any) {
   if (action === 'matches') {
     // 내 활성 매칭 목록 (상대 닉네임/사진 + 안 읽은 메시지 수 포함)
     const { data: myMatches } = await supabase
-      .from('matches').select('id, user_a, user_b, created_at, last_read_a, last_read_b')
+      .from('matches').select('id, user_a, user_b, created_at, last_read_a, last_read_b, score, grade')
       .or(`user_a.eq.${me.user_id},user_b.eq.${me.user_id}`)
       .eq('status', 'active')
       .order('created_at', { ascending: false })
@@ -295,6 +299,8 @@ export default async function handler(req: any, res: any) {
         matchId: m.id,
         createdAt: m.created_at,
         unread: count ?? 0,
+        score: m.score ?? null,
+        grade: m.grade ?? null,
         opponent: { userId: pid, nickname: p?.nickname ?? '알 수 없음', photo: p?.photo ?? null },
       }
     }))

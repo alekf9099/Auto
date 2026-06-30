@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import type { BirthInput } from '../types'
 import { calcGunghab, type GunghabResult } from '../utils/gunghab'
+import { ELEMENT_LABELS, ELEMENT_COLORS } from '../utils/constants'
 import { isOptedIn, joinMatchPool, leaveMatchPool, drawMatch, sendLike, loadMatches, loadMatchHistory, addMatchHistory, type MatchOpponent, type MatchHistoryEntry, type MatchEntry } from '../utils/match'
 import { loadProfilePhoto } from '../utils/profilePhoto'
 import PointsClaimButton from './PointsClaimButton'
@@ -14,6 +15,37 @@ interface Props {
 }
 
 const RANK_BADGE = ['#C9962A', '#BCB1D4', '#A79CC2']
+
+// 두 일간 오행의 관계 — 사주매칭다움을 살리는 근거 배지
+const OHAENG_REL = {
+  '생': { label: '상생', sub: '서로를 살려주는 기운', color: '#4BBF7E' },
+  '극': { label: '상극', sub: '부딪히며 배우는 기운', color: '#E0738A' },
+  '동': { label: '비화', sub: '같은 기운, 닮은 결',   color: '#C9962A' },
+} as const
+
+function OhaengMatchBadge({ result }: { result: GunghabResult }) {
+  const rel = OHAENG_REL[result.elementRelation]
+  const ca = ELEMENT_COLORS[result.elementA]
+  const cb = ELEMENT_COLORS[result.elementB]
+  const pill = (color: string, label: string) => (
+    <span className="px-2.5 py-1 rounded-full text-[11px] font-bold whitespace-nowrap"
+      style={{ color, backgroundColor: color + '1F', border: `1px solid ${color}55` }}>
+      {label}
+    </span>
+  )
+  return (
+    <div className="mt-4 pt-4 border-t border-white/10">
+      <div className="flex items-center justify-center gap-2">
+        {pill(ca, ELEMENT_LABELS[result.elementA])}
+        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full" style={{ color: rel.color, backgroundColor: rel.color + '1A' }}>
+          {result.elementRelation === '동' ? '=' : '↔'} {rel.label}
+        </span>
+        {pill(cb, ELEMENT_LABELS[result.elementB])}
+      </div>
+      <p className="text-center text-[11px] text-violet-200/70 mt-2">일간 오행 {rel.label} · {rel.sub}</p>
+    </div>
+  )
+}
 
 function today(): string {
   return new Date().toISOString().slice(0, 10)
@@ -112,7 +144,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
     if (!opponent || likeBusy || liked) return
     setLikeBusy(true)
     setLikeMsg(null)
-    const res = await sendLike(opponent.userId)
+    const res = await sendLike(opponent.userId, result?.total, result?.grade)
     setLikeBusy(false)
     if (!res.ok) {
       if (res.reason === 'limit') setLikeMsg(`오늘 좋아요를 모두 사용했어요. 내일 다시 보낼 수 있어요`)
@@ -281,6 +313,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
                     </div>
                   </div>
                   <p className="text-xs text-violet-200/85 leading-relaxed mt-4">{result.summary}</p>
+                  <OhaengMatchBadge result={result} />
                 </div>
               </div>
             </div>

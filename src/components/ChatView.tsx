@@ -202,6 +202,12 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
             <p className="text-sm font-bold text-[#F5EDD4] truncate">{match.opponent.nickname}</p>
             <p className="text-[10px] text-[#857AA0]">사주매칭으로 만난 익명의 인연</p>
           </div>
+          {match.score != null && (
+            <span className="shrink-0 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#C9962A14] border border-[#C9962A30]">
+              <span className="text-[11px] font-bold text-[#E8C75C]">궁합 {match.score}%</span>
+              {match.grade && <span className="text-[10px] text-[#C9962A]">· {match.grade}</span>}
+            </span>
+          )}
           <div className="relative">
             <button onClick={() => setMenuOpen(o => !o)} aria-label="더보기" className="text-[#A79CC2] hover:text-[#C4B8D8] transition px-2 text-lg">⋯</button>
             {menuOpen && (

@@ -29,6 +29,8 @@ export interface MatchEntry {
   matchId: string
   createdAt: string
   unread: number
+  score: number | null   // 매칭 당시 궁합 점수
+  grade: string | null   // 매칭 당시 궁합 등급
   opponent: { userId: string; nickname: string; photo: string | null }
 }
 
@@ -95,9 +97,10 @@ export async function drawMatch(): Promise<MatchOpponent | null> {
 }
 
 // 상대에게 좋아요 전송. 상호 좋아요면 matched=true 로 매칭 성사.
+// score/grade: 매칭 성사 시 저장할 궁합 점수/등급 (채팅 헤더 등에 표시)
 // reason: 'limit'(하루 한도 초과) | 'gone'(상대가 풀에서 나감)
-export async function sendLike(targetUserId: string): Promise<{ ok: boolean; matched: boolean; reason?: 'limit' | 'gone' }> {
-  const result = await callMatch('like', { targetUserId })
+export async function sendLike(targetUserId: string, score?: number, grade?: string): Promise<{ ok: boolean; matched: boolean; reason?: 'limit' | 'gone' }> {
+  const result = await callMatch('like', { targetUserId, score, grade })
   if (!result) return { ok: false, matched: false }
   return {
     ok: !!result.ok,

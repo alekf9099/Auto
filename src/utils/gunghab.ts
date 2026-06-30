@@ -15,6 +15,9 @@ export interface GunghabResult {
   headline: string
   summary: string
   tips: { text: string; good: boolean }[]
+  elementA: string          // 나의 일간 오행 (wood/fire/earth/metal/water)
+  elementB: string          // 상대의 일간 오행
+  elementRelation: '생' | '극' | '동'  // 두 일간 오행의 관계 (상생/상극/비화)
 }
 
 const STEM_HAP: [number, number][] = [[0,5],[1,6],[2,7],[3,8],[4,9]]
@@ -102,7 +105,9 @@ export function calcGunghab(a: BirthInput, b: BirthInput, rel: GunghabRelation):
   const meta = gradeInfo(total, rel, stemHap, samhap, chung, generates, controls)
   const tips = buildTips(stemHap, samhap, yukhap, chung, generates, controls, yyComp, rel)
 
-  return { total, emotion, personality, future, tips, ...meta }
+  const elementRelation: '생' | '극' | '동' = sameElem ? '동' : generates ? '생' : '극'
+
+  return { total, emotion, personality, future, tips, elementA: eA, elementB: eB, elementRelation, ...meta }
 }
 
 function gradeInfo(
