@@ -406,7 +406,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
           </div>
         )}
       </div>
-      <div className="text-center pb-8 text-xs text-[#857AA0]">사주매칭 — 참고용 · 닉네임 기반 익명 매칭</div>
+      <div className="text-center pb-28 text-xs text-[#857AA0]">사주매칭 — 참고용 · 닉네임 기반 익명 매칭</div>
     </div>
   )
 }

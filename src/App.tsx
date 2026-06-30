@@ -14,6 +14,7 @@ import SyncErrorBanner  from './components/SyncErrorBanner'
 import NoticeBanner     from './components/NoticeBanner'
 import BottomNav from './components/BottomNav'
 import type { NavTab } from './components/BottomNav'
+import { loadMatches } from './utils/match'
 import { IcLock } from './components/icons/SajuIcons'
 
 const ProfileSetupPage = lazy(() => import('./components/ProfileSetupPage'))
@@ -43,7 +44,7 @@ const STORAGE_KEY = 'unmyeongbom_birth'
 
 type Page = 'splash' | 'login' | 'profile' | 'analyzing' | 'home' | 'attendance' | 'sinnyeon' | 'tojeong' | 'today' | 'gunghab' | 'deepsaju' | 'saju' | 'daun' | 'dream' | 'tarot' | 'outfit' | 'job' | 'battle' | 'match' | 'lucky' | 'roulette' | 'invite' | 'event' | 'privacy' | 'terms'
 
-const TAB_PAGES: Page[] = ['home', 'saju', 'attendance', 'event']
+const TAB_PAGES: Page[] = ['home', 'saju', 'match', 'attendance', 'event']
 
 function loadBirthProfile(): BirthInput | null {
   try {
@@ -96,6 +97,7 @@ export default function App() {
   const [deleting,     setDeleting]     = useState(false)
   const [deleteError,  setDeleteError]  = useState(false)
   const [loginPrompt,  setLoginPrompt]  = useState<string | null>(null)
+  const [matchUnread,  setMatchUnread]  = useState(0)
 
   const isGuest = user?.provider === 'guest'
 
@@ -135,6 +137,18 @@ export default function App() {
       setPoints(loadPoints())
     })
   }, [])
+
+  // 사주매칭 안 읽은 메시지 수 — 하단 매칭 탭 뱃지용. 진입/주기적으로 갱신.
+  useEffect(() => {
+    if (!user || isGuest || !birthProfile) { setMatchUnread(0); return }
+    let alive = true
+    const refresh = () => loadMatches()
+      .then(ms => { if (alive) setMatchUnread(ms.reduce((s, m) => s + (m.unread || 0), 0)) })
+      .catch(() => {})
+    refresh()
+    const id = setInterval(refresh, 60000)
+    return () => { alive = false; clearInterval(id) }
+  }, [user, isGuest, birthProfile, page])
 
   useEffect(() => {
     const BACK_MAP: Partial<Record<Page, Page>> = {
@@ -275,6 +289,7 @@ export default function App() {
   function handleTabNavigate(tab: NavTab) {
     if (tab === 'home') { goHome(); return }
     if (tab === 'saju') { handleHomeNavigate('saju'); return }
+    if (tab === 'match') { handleHomeNavigate('match'); return }
     // 출석·이벤트는 포인트 기반이라 게스트는 로그인 후 이용한다.
     if (isGuest && (tab === 'attendance' || tab === 'event')) {
       setLoginPrompt('출석·이벤트는 로그인 후 이용할 수 있어요.')
@@ -421,7 +436,7 @@ export default function App() {
         <Suspense fallback={<PageFallback />}>
           <div className={showNav ? 'pb-16' : ''}>{content}</div>
         </Suspense>
-        {showNav && <BottomNav current={page as NavTab} onNavigate={handleTabNavigate} />}
+        {showNav && <BottomNav current={page as NavTab} onNavigate={handleTabNavigate} matchBadge={matchUnread} />}
       </div>
 
       {/* 게스트 — 로그인 필요 안내 모달 */}
