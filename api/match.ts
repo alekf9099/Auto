@@ -1,6 +1,30 @@
 /// <reference types="node" />
-import { createClient } from '@supabase/supabase-js'
+import { createClient, type SupabaseClient } from '@supabase/supabase-js'
+import webpush from 'web-push'
 import { verifyAuthToken, AuthProviderUnreachableError } from '../lib/auth.js'
+
+// 하루에 보낼 수 있는 좋아요 수 (스팸/어뷰징 방지)
+const DAILY_LIKE_LIMIT = 10
+
+// 매칭 성사 시 상대에게 보내는 푸시. VAPID/구독이 없으면 조용히 건너뛴다.
+async function notifyMatch(supabase: SupabaseClient, email: string, partnerNick: string): Promise<void> {
+  const vapidPublic = process.env.VITE_VAPID_PUBLIC_KEY
+  const vapidPrivate = process.env.VAPID_PRIVATE_KEY
+  const vapidSubject = process.env.VAPID_SUBJECT || 'mailto:admin@unmyeongbom.app'
+  if (!vapidPublic || !vapidPrivate) return
+  try {
+    webpush.setVapidDetails(vapidSubject, vapidPublic, vapidPrivate)
+    const { data: sub } = await supabase
+      .from('push_subscriptions').select('subscription').eq('email', email).eq('enabled', true).maybeSingle()
+    if (!sub?.subscription) return
+    const payload = JSON.stringify({
+      title: '💞 새로운 인연과 매칭됐어요!',
+      body: `${partnerNick}님과 서로 좋아요를 보냈어요. 지금 대화를 시작해보세요`,
+      url: '/?go=match',
+    })
+    await webpush.sendNotification(sub.subscription as webpush.PushSubscription, payload)
+  } catch { /* 푸시는 부가 기능이라 실패해도 매칭 자체엔 영향 없음 */ }
+}
 
 // 사주매칭: 옵트인한 사용자 풀에서 무작위로 한 명을 뽑아 닉네임 + 생년월일시 + (선택)프로필 사진을 돌려준다.
 // 이메일/이름/계정 사진 등 실제 신원 정보는 절대 클라이언트에 노출하지 않는다.
@@ -46,16 +70,18 @@ export default async function handler(req: any, res: any) {
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).end()
 
-  const { idToken, provider, action, nickname, birth, photo } = (req.body ?? {}) as {
+  const { idToken, provider, action, nickname, birth, photo, targetUserId } = (req.body ?? {}) as {
     idToken?: string
     provider?: string
-    action?: 'join' | 'leave' | 'draw'
+    action?: 'join' | 'leave' | 'draw' | 'like' | 'matches'
     nickname?: string
     birth?: unknown
     photo?: string | null
+    targetUserId?: string
   }
 
-  if (!idToken || (action !== 'join' && action !== 'leave' && action !== 'draw')) {
+  const VALID_ACTIONS = ['join', 'leave', 'draw', 'like', 'matches']
+  if (!idToken || !action || !VALID_ACTIONS.includes(action)) {
     return res.status(400).json({ error: 'invalid request' })
   }
 
@@ -96,30 +122,108 @@ export default async function handler(req: any, res: any) {
       hour: birth.hour, minute: birth.minute, gender: birth.gender,
       photo: photo ?? null,
       updated_at: new Date().toISOString(),
-    })
+    }, { onConflict: 'email' })
     if (error) return res.status(500).json({ error: error.message })
     return res.status(200).json({ ok: true })
   }
 
-  // action === 'draw'
-  const { data: rows, error } = await supabase
-    .from('match_pool')
-    .select('nickname, year, month, day, hour, minute, gender, photo')
-    .neq('email', email)
-    .limit(50)
+  if (action === 'draw') {
+    const { data: rows, error } = await supabase
+      .from('match_pool')
+      .select('user_id, nickname, year, month, day, hour, minute, gender, photo')
+      .neq('email', email)
+      .limit(50)
 
-  if (error) return res.status(500).json({ error: error.message })
-  if (!rows || rows.length === 0) return res.status(200).json({ opponent: null })
+    if (error) return res.status(500).json({ error: error.message })
+    if (!rows || rows.length === 0) return res.status(200).json({ opponent: null })
 
-  const pick = rows[Math.floor(Math.random() * rows.length)]
-  return res.status(200).json({
-    opponent: {
-      nickname: pick.nickname,
-      photo: pick.photo ?? null,
-      birth: {
-        year: pick.year, month: pick.month, day: pick.day,
-        hour: pick.hour, minute: pick.minute, gender: pick.gender,
+    const pick = rows[Math.floor(Math.random() * rows.length)]
+    return res.status(200).json({
+      opponent: {
+        userId: pick.user_id,
+        nickname: pick.nickname,
+        photo: pick.photo ?? null,
+        birth: {
+          year: pick.year, month: pick.month, day: pick.day,
+          hour: pick.hour, minute: pick.minute, gender: pick.gender,
+        },
       },
-    },
+    })
+  }
+
+  // 내 익명 핸들(user_id) 조회 — 매칭 풀에 참여(join)한 상태여야 한다.
+  const { data: me } = await supabase
+    .from('match_pool').select('user_id, nickname').eq('email', email).maybeSingle()
+  if (!me?.user_id) return res.status(400).json({ error: 'not in pool' })
+
+  if (action === 'like') {
+    if (typeof targetUserId !== 'string' || !/^[0-9a-f-]{36}$/i.test(targetUserId)) {
+      return res.status(400).json({ error: 'invalid target' })
+    }
+    if (targetUserId === me.user_id) return res.status(400).json({ error: 'self like' })
+
+    // 상대가 풀에 실재하는지 확인 + 이메일/닉네임 확보(푸시·정규화용)
+    const { data: target } = await supabase
+      .from('match_pool').select('email, nickname').eq('user_id', targetUserId).maybeSingle()
+    if (!target?.email) return res.status(200).json({ ok: false, reason: 'gone' })
+
+    // 하루 좋아요 한도 체크
+    const todayStart = new Date(); todayStart.setUTCHours(0, 0, 0, 0)
+    const { count } = await supabase
+      .from('likes').select('*', { count: 'exact', head: true })
+      .eq('from_user', me.user_id).gte('created_at', todayStart.toISOString())
+    if ((count ?? 0) >= DAILY_LIKE_LIMIT) return res.status(200).json({ ok: false, reason: 'limit' })
+
+    // 좋아요 기록 (중복이면 무시)
+    const { error: likeErr } = await supabase
+      .from('likes').upsert({ from_user: me.user_id, to_user: targetUserId }, { onConflict: 'from_user,to_user' })
+    if (likeErr) return res.status(500).json({ error: likeErr.message })
+
+    // 상대도 나를 좋아요 했는지 확인
+    const { data: reciprocal } = await supabase
+      .from('likes').select('from_user').eq('from_user', targetUserId).eq('to_user', me.user_id).maybeSingle()
+    if (!reciprocal) return res.status(200).json({ ok: true, matched: false })
+
+    // 상호 좋아요 → 매칭 성사 (user_a < user_b 정규화)
+    const [ua, ub] = me.user_id < targetUserId ? [me.user_id, targetUserId] : [targetUserId, me.user_id]
+    const { data: existing } = await supabase
+      .from('matches').select('id').eq('user_a', ua).eq('user_b', ub).maybeSingle()
+    if (existing) return res.status(200).json({ ok: true, matched: true, matchId: existing.id })
+
+    const { data: created, error: matchErr } = await supabase
+      .from('matches').insert({ user_a: ua, user_b: ub }).select('id').single()
+    if (matchErr) return res.status(500).json({ error: matchErr.message })
+
+    // 양쪽에 매칭 푸시 (실패해도 매칭 자체엔 영향 없음)
+    await Promise.allSettled([
+      notifyMatch(supabase, target.email, me.nickname ?? '상대'),
+      notifyMatch(supabase, email, target.nickname ?? '상대'),
+    ])
+    return res.status(200).json({ ok: true, matched: true, matchId: created.id })
+  }
+
+  // action === 'matches' — 내 활성 매칭 목록 (상대 닉네임/사진 포함)
+  const { data: myMatches } = await supabase
+    .from('matches').select('id, user_a, user_b, created_at')
+    .or(`user_a.eq.${me.user_id},user_b.eq.${me.user_id}`)
+    .eq('status', 'active')
+    .order('created_at', { ascending: false })
+
+  if (!myMatches || myMatches.length === 0) return res.status(200).json({ matches: [] })
+
+  const partnerIds = myMatches.map(m => (m.user_a === me.user_id ? m.user_b : m.user_a))
+  const { data: partners } = await supabase
+    .from('match_pool').select('user_id, nickname, photo').in('user_id', partnerIds)
+  const byId = new Map((partners ?? []).map(p => [p.user_id, p]))
+
+  const matches = myMatches.map(m => {
+    const pid = m.user_a === me.user_id ? m.user_b : m.user_a
+    const p = byId.get(pid)
+    return {
+      matchId: m.id,
+      createdAt: m.created_at,
+      opponent: { userId: pid, nickname: p?.nickname ?? '알 수 없음', photo: p?.photo ?? null },
+    }
   })
+  return res.status(200).json({ matches })
 }

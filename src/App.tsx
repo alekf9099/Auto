@@ -109,12 +109,13 @@ export default function App() {
   // 개별 분석 페이지의 "다시 하기"가 게스트일 때 로그인 모달을 띄울 수 있도록 핸들러를 등록한다.
   useEffect(() => registerGuestPrompt(msg => setLoginPrompt(msg)), [])
 
-  // 알림으로 진입(?go=today): 사용자/생년월일이 준비되면 오늘의 운세 화면으로 보낸다.
+  // 알림으로 진입(?go=today|match): 사용자/생년월일이 준비되면 해당 화면으로 보낸다.
   useEffect(() => {
-    if (pendingGo.current !== 'today' || !user || !birthProfile) return
+    const go = pendingGo.current
+    if ((go !== 'today' && go !== 'match') || !user || !birthProfile) return
     pendingGo.current = null
     try { window.history.replaceState({}, '', window.location.pathname) } catch { /* noop */ }
-    setPage('today')
+    setPage(go)
     window.scrollTo(0, 0)
   }, [user, birthProfile])
 

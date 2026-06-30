@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import type { BirthInput } from '../types'
 import { calcGunghab, type GunghabResult } from '../utils/gunghab'
-import { isOptedIn, joinMatchPool, leaveMatchPool, drawMatch, loadMatchHistory, addMatchHistory, type MatchOpponent, type MatchHistoryEntry } from '../utils/match'
+import { isOptedIn, joinMatchPool, leaveMatchPool, drawMatch, sendLike, loadMatches, loadMatchHistory, addMatchHistory, type MatchOpponent, type MatchHistoryEntry, type MatchEntry } from '../utils/match'
 import { loadProfilePhoto } from '../utils/profilePhoto'
 import PointsClaimButton from './PointsClaimButton'
-import { IcMatch, IcDraw } from './icons/SajuIcons'
+import { IcMatch, IcDraw, IcLoveLuck } from './icons/SajuIcons'
 
 interface Props {
   nickname: string
@@ -38,8 +38,20 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
   const [history, setHistory] = useState<MatchHistoryEntry[]>(loadMatchHistory)
   const [matchRevealed, setMatchRevealed] = useState(false)
 
+  // 좋아요 / 매칭 성사 상태 (현재 뽑은 상대 기준)
+  const [liked, setLiked] = useState(false)
+  const [likeBusy, setLikeBusy] = useState(false)
+  const [likeMsg, setLikeMsg] = useState<string | null>(null)
+  const [matchedNow, setMatchedNow] = useState(false)
+  const [matches, setMatches] = useState<MatchEntry[]>([])
+
   useEffect(() => {
     setError(null)
+  }, [optedIn])
+
+  // 참여 중이면 내 매칭 목록을 불러온다
+  useEffect(() => {
+    if (optedIn) loadMatches().then(setMatches)
   }, [optedIn])
 
   // 뽑을 때마다 카드를 엎었다가 3D로 뒤집어 매칭 상대를 공개
@@ -78,6 +90,9 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
     setError(null)
     setOpponent(null)
     setResult(null)
+    setLiked(false)
+    setLikeMsg(null)
+    setMatchedNow(false)
     const opp = await drawMatch()
     setBusy(false)
     if (!opp) {
@@ -89,6 +104,25 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
     setResult(r)
     setHistory(addMatchHistory({ nickname: opp.nickname, photo: opp.photo, score: r.total, grade: r.grade, date: today() }))
     window.scrollTo(0, 0)
+  }
+
+  async function handleLike() {
+    if (!opponent || likeBusy || liked) return
+    setLikeBusy(true)
+    setLikeMsg(null)
+    const res = await sendLike(opponent.userId)
+    setLikeBusy(false)
+    if (!res.ok) {
+      if (res.reason === 'limit') setLikeMsg(`오늘 좋아요를 모두 사용했어요. 내일 다시 보낼 수 있어요`)
+      else if (res.reason === 'gone') setLikeMsg('상대가 매칭 풀에서 나갔어요')
+      else setLikeMsg('좋아요 전송에 실패했어요. 잠시 후 다시 시도해주세요')
+      return
+    }
+    setLiked(true)
+    if (res.matched) {
+      setMatchedNow(true)
+      loadMatches().then(setMatches) // 매칭 목록 갱신
+    }
   }
 
   const ranking = [...history].sort((a, b) => b.score - a.score).slice(0, 10)
@@ -244,7 +278,58 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
           </div>
         )}
 
+        {/* 좋아요 / 매칭 성사 */}
+        {result && opponent && matchRevealed && (
+          matchedNow ? (
+            <div className="rounded-2xl border border-[#E0528255] bg-gradient-to-br from-[#2A1230] to-[#1A0E30] px-5 py-4 text-center animate-fade-in-up">
+              <p className="text-2xl mb-1">💞</p>
+              <p className="text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>
+                {opponent.nickname}님과 매칭됐어요!
+              </p>
+              <p className="text-[11px] text-[#BCB1D4] mt-1">서로 좋아요를 보냈어요 · 아래 ‘내 매칭’에서 확인할 수 있어요</p>
+            </div>
+          ) : liked ? (
+            <div className="rounded-2xl border border-[#2A1F4A] bg-[#130E24] px-5 py-3.5 text-center">
+              <p className="text-sm font-semibold text-[#E05282] flex items-center justify-center gap-1.5">
+                <IcLoveLuck size={16} /> 좋아요 보냄
+              </p>
+              <p className="text-[11px] text-[#A79CC2] mt-1">상대도 좋아요하면 매칭돼요</p>
+            </div>
+          ) : (
+            <div>
+              <button
+                onClick={handleLike}
+                disabled={likeBusy}
+                className="w-full py-4 rounded-2xl font-bold text-white text-sm bg-gradient-to-r from-[#E05282] to-[#C9962A] shadow-lg shadow-[#E0528230] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                <IcLoveLuck size={18} /> {likeBusy ? '보내는 중...' : '좋아요 보내기'}
+              </button>
+              {likeMsg && <p className="text-[11px] text-center text-[#A79CC2] mt-2">{likeMsg}</p>}
+            </div>
+          )
+        )}
+
         {result && <PointsClaimButton featureKey="match" label="사주매칭 🎲" />}
+
+        {/* 내 매칭 — 상호 좋아요로 성사된 인연 */}
+        {optedIn && matches.length > 0 && (
+          <div className="bg-[#130E24] rounded-3xl border border-[#E0528233] shadow-[0_2px_20px_rgba(224,82,130,0.08)] p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-1 h-5 bg-[#E05282] rounded-full" />
+              <h2 className="text-sm font-bold text-[#F5EDD4]">내 매칭</h2>
+              <span className="text-[10px] text-[#A79CC2]">서로 좋아요한 인연</span>
+            </div>
+            <div className="space-y-2">
+              {matches.map(m => (
+                <div key={m.matchId} className="flex items-center gap-3 px-3 py-2.5 rounded-2xl bg-[#1C1438]">
+                  <MiniAvatar photo={m.opponent.photo} label={m.opponent.nickname} bg="bg-rose-400" />
+                  <p className="text-sm font-semibold text-[#F5EDD4] flex-1 truncate">{m.opponent.nickname}</p>
+                  <span className="text-[10px] text-[#857AA0]">곧 채팅 열림</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 나의 매칭 랭킹 */}
         {optedIn && ranking.length > 0 && (

@@ -10,6 +10,7 @@ const HISTORY_KEY = 'unmyeongbom_match_history'
 const MAX_HISTORY = 30
 
 export interface MatchOpponent {
+  userId: string
   nickname: string
   photo: string | null
   birth: BirthInput
@@ -23,7 +24,14 @@ export interface MatchHistoryEntry {
   date: string
 }
 
-async function callMatch(action: 'join' | 'leave' | 'draw', extra?: Record<string, unknown>): Promise<Record<string, unknown> | null> {
+// 매칭 성사된 상대 (좋아요가 양쪽 다 모인 경우)
+export interface MatchEntry {
+  matchId: string
+  createdAt: string
+  opponent: { userId: string; nickname: string; photo: string | null }
+}
+
+async function callMatch(action: 'join' | 'leave' | 'draw' | 'like' | 'matches', extra?: Record<string, unknown>): Promise<Record<string, unknown> | null> {
   const idToken = getIdToken()
   if (!idToken) return null
   try {
@@ -75,6 +83,25 @@ export async function drawMatch(): Promise<MatchOpponent | null> {
   const result = await callMatch('draw')
   const opponent = result?.opponent as MatchOpponent | null | undefined
   return opponent ?? null
+}
+
+// 상대에게 좋아요 전송. 상호 좋아요면 matched=true 로 매칭 성사.
+// reason: 'limit'(하루 한도 초과) | 'gone'(상대가 풀에서 나감)
+export async function sendLike(targetUserId: string): Promise<{ ok: boolean; matched: boolean; reason?: 'limit' | 'gone' }> {
+  const result = await callMatch('like', { targetUserId })
+  if (!result) return { ok: false, matched: false }
+  return {
+    ok: !!result.ok,
+    matched: !!result.matched,
+    reason: typeof result.reason === 'string' ? (result.reason as 'limit' | 'gone') : undefined,
+  }
+}
+
+// 내 활성 매칭 목록
+export async function loadMatches(): Promise<MatchEntry[]> {
+  const result = await callMatch('matches')
+  const list = result?.matches as MatchEntry[] | undefined
+  return Array.isArray(list) ? list : []
 }
 
 export function loadMatchHistory(): MatchHistoryEntry[] {
