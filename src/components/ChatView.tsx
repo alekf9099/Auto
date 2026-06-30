@@ -7,7 +7,8 @@ interface Props {
   onEnded: () => void   // 차단/신고/종료로 매칭이 끝났을 때 (목록 갱신용)
 }
 
-const POLL_MS = 3000
+const POLL_ACTIVE_MS = 1500  // 대화 활성 중 (거의 즉답 느낌)
+const POLL_IDLE_MS = 4000    // 잠잠할 때 (부하 절감)
 
 function MiniAvatar({ photo, label }: { photo: string | null; label: string }) {
   return photo ? (
@@ -38,28 +39,50 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
   const [closed, setClosed] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
+  const [partnerLastRead, setPartnerLastRead] = useState<string | null>(null)
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const fetchingRef = useRef(false)
   const atBottomRef = useRef(true)
+  const lastActivityRef = useRef(Date.now()) // 최근 활동(전송/수신) 시각 — 폴링 주기 조절용
+  const lastMsgIdRef = useRef<string | null>(null)
 
-  // 메시지 폴링 (3초)
+  // 적응형 폴링: 최근 활동 후 잠시는 빠르게(1.5초), 잠잠하면 느리게(4초)
   useEffect(() => {
     let alive = true
+    let timer: ReturnType<typeof setTimeout>
     async function poll() {
-      if (fetchingRef.current) return
-      fetchingRef.current = true
-      const { messages: msgs, closed: isClosed } = await loadMessages(match.matchId)
-      fetchingRef.current = false
+      if (!fetchingRef.current) {
+        fetchingRef.current = true
+        const { messages: msgs, closed: isClosed, partnerLastRead: plr } = await loadMessages(match.matchId)
+        fetchingRef.current = false
+        if (!alive) return
+        const newest = msgs.length ? msgs[msgs.length - 1].id : null
+        if (newest && newest !== lastMsgIdRef.current) {
+          lastMsgIdRef.current = newest
+          lastActivityRef.current = Date.now()
+        }
+        setMessages(msgs)
+        setPartnerLastRead(plr)
+        setClosed(isClosed)
+        setLoading(false)
+      }
       if (!alive) return
-      setMessages(msgs)
-      setClosed(isClosed)
-      setLoading(false)
+      const idle = Date.now() - lastActivityRef.current > 15000
+      timer = setTimeout(poll, idle ? POLL_IDLE_MS : POLL_ACTIVE_MS)
     }
     poll()
-    const id = setInterval(poll, POLL_MS)
-    return () => { alive = false; clearInterval(id) }
+    return () => { alive = false; clearTimeout(timer) }
   }, [match.matchId])
+
+  // 내 메시지 중 상대가 읽은 가장 최근 것 (그 아래에 '읽음' 표시)
+  const lastReadMineId = (() => {
+    if (!partnerLastRead) return null
+    const t = new Date(partnerLastRead).getTime()
+    let id: string | null = null
+    for (const m of messages) if (m.mine && new Date(m.createdAt).getTime() <= t) id = m.id
+    return id
+  })()
 
   // 새 메시지 도착 시 하단에 있었으면 자동 스크롤
   useEffect(() => {
@@ -90,7 +113,11 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
     }
     setInput('')
     atBottomRef.current = true
-    if (res.message) setMessages(prev => [...prev.filter(m => m.id !== res.message!.id), res.message!])
+    lastActivityRef.current = Date.now() // 보낸 직후엔 빠른 폴링 유지
+    if (res.message) {
+      lastMsgIdRef.current = res.message.id
+      setMessages(prev => [...prev.filter(m => m.id !== res.message!.id), res.message!])
+    }
   }
 
   async function handleBlock() {
@@ -152,18 +179,23 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
           ) : (
             <div className="space-y-2.5">
               {messages.map(m => (
-                <div key={m.id} className={`flex items-end gap-1.5 ${m.mine ? 'justify-end' : 'justify-start'}`}>
-                  {!m.mine && <span className="text-[9px] text-[#6E6489] mb-0.5">{timeLabel(m.createdAt)}</span>}
-                  <div
-                    className={`max-w-[72%] px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap break-words ${
-                      m.mine
-                        ? 'bg-gradient-to-br from-[#C9962A] to-[#E8B84B] text-[#1A0E30] rounded-2xl rounded-br-md font-medium'
-                        : 'bg-[#1C1438] text-[#E8DFF5] rounded-2xl rounded-bl-md border border-[#2A1F4A]'
-                    }`}
-                  >
-                    {m.body}
+                <div key={m.id}>
+                  <div className={`flex items-end gap-1.5 ${m.mine ? 'justify-end' : 'justify-start'}`}>
+                    {!m.mine && <span className="text-[9px] text-[#6E6489] mb-0.5">{timeLabel(m.createdAt)}</span>}
+                    <div
+                      className={`max-w-[72%] px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap break-words ${
+                        m.mine
+                          ? 'bg-gradient-to-br from-[#C9962A] to-[#E8B84B] text-[#1A0E30] rounded-2xl rounded-br-md font-medium'
+                          : 'bg-[#1C1438] text-[#E8DFF5] rounded-2xl rounded-bl-md border border-[#2A1F4A]'
+                      }`}
+                    >
+                      {m.body}
+                    </div>
+                    {m.mine && <span className="text-[9px] text-[#6E6489] mb-0.5">{timeLabel(m.createdAt)}</span>}
                   </div>
-                  {m.mine && <span className="text-[9px] text-[#6E6489] mb-0.5">{timeLabel(m.createdAt)}</span>}
+                  {m.id === lastReadMineId && (
+                    <p className="text-[9px] text-[#C9962A] text-right mt-0.5 pr-1">읽음</p>
+                  )}
                 </div>
               ))}
             </div>

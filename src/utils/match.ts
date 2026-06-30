@@ -28,6 +28,7 @@ export interface MatchHistoryEntry {
 export interface MatchEntry {
   matchId: string
   createdAt: string
+  unread: number
   opponent: { userId: string; nickname: string; photo: string | null }
 }
 
@@ -113,11 +114,16 @@ export async function loadMatches(): Promise<MatchEntry[]> {
 }
 
 // 대화 메시지 불러오기. closed=true 면 상대가 나갔거나 차단/종료된 매칭.
-export async function loadMessages(matchId: string): Promise<{ messages: ChatMessage[]; closed: boolean }> {
+// partnerLastRead: 상대가 마지막으로 대화를 읽은 시각(ISO) — 내 메시지의 '읽음' 표시에 사용.
+export async function loadMessages(matchId: string): Promise<{ messages: ChatMessage[]; closed: boolean; partnerLastRead: string | null }> {
   const result = await callMatch('messages', { matchId })
-  if (!result) return { messages: [], closed: false }
+  if (!result) return { messages: [], closed: false, partnerLastRead: null }
   const list = result.messages as ChatMessage[] | undefined
-  return { messages: Array.isArray(list) ? list : [], closed: !!result.closed }
+  return {
+    messages: Array.isArray(list) ? list : [],
+    closed: !!result.closed,
+    partnerLastRead: typeof result.partnerLastRead === 'string' ? result.partnerLastRead : null,
+  }
 }
 
 // 메시지 전송. 성공 시 생성된 메시지를 반환. reason: 'closed' | 'blocked'

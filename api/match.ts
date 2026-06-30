@@ -251,9 +251,9 @@ export default async function handler(req: any, res: any) {
   }
 
   if (action === 'matches') {
-    // 내 활성 매칭 목록 (상대 닉네임/사진 포함)
+    // 내 활성 매칭 목록 (상대 닉네임/사진 + 안 읽은 메시지 수 포함)
     const { data: myMatches } = await supabase
-      .from('matches').select('id, user_a, user_b, created_at')
+      .from('matches').select('id, user_a, user_b, created_at, last_read_a, last_read_b')
       .or(`user_a.eq.${me.user_id},user_b.eq.${me.user_id}`)
       .eq('status', 'active')
       .order('created_at', { ascending: false })
@@ -265,15 +265,24 @@ export default async function handler(req: any, res: any) {
       .from('match_pool').select('user_id, nickname, photo').in('user_id', partnerIds)
     const byId = new Map((partners ?? []).map(p => [p.user_id, p]))
 
-    const matches = myMatches.map(m => {
-      const pid = m.user_a === me.user_id ? m.user_b : m.user_a
+    const matches = await Promise.all(myMatches.map(async m => {
+      const iAmA = m.user_a === me.user_id
+      const pid = iAmA ? m.user_b : m.user_a
       const p = byId.get(pid)
+      // 안 읽은 수 = 내 마지막 읽음 이후 상대가 보낸 메시지
+      const myLastRead = iAmA ? m.last_read_a : m.last_read_b
+      let q = supabase.from('messages')
+        .select('*', { count: 'exact', head: true })
+        .eq('match_id', m.id).neq('sender', me.user_id)
+      if (myLastRead) q = q.gt('created_at', myLastRead)
+      const { count } = await q
       return {
         matchId: m.id,
         createdAt: m.created_at,
+        unread: count ?? 0,
         opponent: { userId: pid, nickname: p?.nickname ?? '알 수 없음', photo: p?.photo ?? null },
       }
-    })
+    }))
     return res.status(200).json({ matches })
   }
 
@@ -289,8 +298,16 @@ export default async function handler(req: any, res: any) {
   }
 
   if (action === 'messages') {
-    const partnerId = await matchPartner(matchId, true)
-    if (!partnerId) return res.status(200).json({ messages: [], closed: true })
+    if (typeof matchId !== 'string' || !/^[0-9a-f-]{36}$/i.test(matchId)) {
+      return res.status(200).json({ messages: [], closed: true })
+    }
+    const { data: mrow } = await supabase
+      .from('matches').select('user_a, user_b, status, last_read_a, last_read_b').eq('id', matchId).maybeSingle()
+    if (!mrow || mrow.status !== 'active' || (mrow.user_a !== me.user_id && mrow.user_b !== me.user_id)) {
+      return res.status(200).json({ messages: [], closed: true })
+    }
+    const iAmA = mrow.user_a === me.user_id
+    const partnerLastRead = (iAmA ? mrow.last_read_b : mrow.last_read_a) ?? null
 
     const { data: rows, error } = await supabase
       .from('messages').select('id, sender, body, created_at')
@@ -299,10 +316,15 @@ export default async function handler(req: any, res: any) {
       .limit(300)
     if (error) return res.status(500).json({ error: error.message })
 
+    // 대화를 보는 중 = 읽음. 내 쪽 읽음 시각을 현재로 갱신한다.
+    const now = new Date().toISOString()
+    await supabase.from('matches')
+      .update(iAmA ? { last_read_a: now } : { last_read_b: now }).eq('id', matchId)
+
     const messages = (rows ?? []).map(r => ({
       id: r.id, body: r.body, mine: r.sender === me.user_id, createdAt: r.created_at,
     }))
-    return res.status(200).json({ messages, closed: false })
+    return res.status(200).json({ messages, closed: false, partnerLastRead })
   }
 
   if (action === 'send') {

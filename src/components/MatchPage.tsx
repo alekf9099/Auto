@@ -134,7 +134,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
       {chatMatch && (
         <ChatView
           match={chatMatch}
-          onBack={() => setChatMatch(null)}
+          onBack={() => { setChatMatch(null); loadMatches().then(setMatches) }}
           onEnded={() => loadMatches().then(setMatches)}
         />
       )}
@@ -337,7 +337,13 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
                 >
                   <MiniAvatar photo={m.opponent.photo} label={m.opponent.nickname} bg="bg-rose-400" />
                   <p className="text-sm font-semibold text-[#F5EDD4] flex-1 truncate">{m.opponent.nickname}</p>
-                  <span className="text-[11px] text-[#E05282] font-semibold">대화하기 →</span>
+                  {m.unread > 0 ? (
+                    <span className="min-w-[18px] h-[18px] px-1.5 rounded-full bg-[#E05282] text-white text-[10px] font-bold flex items-center justify-center">
+                      {m.unread > 99 ? '99+' : m.unread}
+                    </span>
+                  ) : (
+                    <span className="text-[11px] text-[#E05282] font-semibold">대화하기 →</span>
+                  )}
                 </button>
               ))}
             </div>
