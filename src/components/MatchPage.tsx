@@ -4,6 +4,7 @@ import { calcGunghab, type GunghabResult } from '../utils/gunghab'
 import { isOptedIn, joinMatchPool, leaveMatchPool, drawMatch, sendLike, loadMatches, loadMatchHistory, addMatchHistory, type MatchOpponent, type MatchHistoryEntry, type MatchEntry } from '../utils/match'
 import { loadProfilePhoto } from '../utils/profilePhoto'
 import PointsClaimButton from './PointsClaimButton'
+import ChatView from './ChatView'
 import { IcMatch, IcDraw, IcLoveLuck } from './icons/SajuIcons'
 
 interface Props {
@@ -44,6 +45,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
   const [likeMsg, setLikeMsg] = useState<string | null>(null)
   const [matchedNow, setMatchedNow] = useState(false)
   const [matches, setMatches] = useState<MatchEntry[]>([])
+  const [chatMatch, setChatMatch] = useState<MatchEntry | null>(null)
 
   useEffect(() => {
     setError(null)
@@ -129,6 +131,13 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
 
   return (
     <div className="min-h-screen">
+      {chatMatch && (
+        <ChatView
+          match={chatMatch}
+          onBack={() => setChatMatch(null)}
+          onEnded={() => loadMatches().then(setMatches)}
+        />
+      )}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} aria-label="뒤로 가기" className="text-[#A79CC2] hover:text-[#C4B8D8] transition text-lg">←</button>
@@ -321,11 +330,15 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
             </div>
             <div className="space-y-2">
               {matches.map(m => (
-                <div key={m.matchId} className="flex items-center gap-3 px-3 py-2.5 rounded-2xl bg-[#1C1438]">
+                <button
+                  key={m.matchId}
+                  onClick={() => setChatMatch(m)}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl bg-[#1C1438] hover:bg-[#241a44] active:scale-[0.99] transition text-left"
+                >
                   <MiniAvatar photo={m.opponent.photo} label={m.opponent.nickname} bg="bg-rose-400" />
                   <p className="text-sm font-semibold text-[#F5EDD4] flex-1 truncate">{m.opponent.nickname}</p>
-                  <span className="text-[10px] text-[#857AA0]">곧 채팅 열림</span>
-                </div>
+                  <span className="text-[11px] text-[#E05282] font-semibold">대화하기 →</span>
+                </button>
               ))}
             </div>
           </div>

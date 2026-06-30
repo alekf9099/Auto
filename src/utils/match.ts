@@ -31,7 +31,15 @@ export interface MatchEntry {
   opponent: { userId: string; nickname: string; photo: string | null }
 }
 
-async function callMatch(action: 'join' | 'leave' | 'draw' | 'like' | 'matches', extra?: Record<string, unknown>): Promise<Record<string, unknown> | null> {
+// 채팅 메시지 (mine: 내가 보낸 것인지 서버가 판정)
+export interface ChatMessage {
+  id: string
+  body: string
+  mine: boolean
+  createdAt: string
+}
+
+async function callMatch(action: 'join' | 'leave' | 'draw' | 'like' | 'matches' | 'messages' | 'send' | 'block' | 'report', extra?: Record<string, unknown>): Promise<Record<string, unknown> | null> {
   const idToken = getIdToken()
   if (!idToken) return null
   try {
@@ -102,6 +110,37 @@ export async function loadMatches(): Promise<MatchEntry[]> {
   const result = await callMatch('matches')
   const list = result?.matches as MatchEntry[] | undefined
   return Array.isArray(list) ? list : []
+}
+
+// 대화 메시지 불러오기. closed=true 면 상대가 나갔거나 차단/종료된 매칭.
+export async function loadMessages(matchId: string): Promise<{ messages: ChatMessage[]; closed: boolean }> {
+  const result = await callMatch('messages', { matchId })
+  if (!result) return { messages: [], closed: false }
+  const list = result.messages as ChatMessage[] | undefined
+  return { messages: Array.isArray(list) ? list : [], closed: !!result.closed }
+}
+
+// 메시지 전송. 성공 시 생성된 메시지를 반환. reason: 'closed' | 'blocked'
+export async function sendMessage(matchId: string, body: string): Promise<{ ok: boolean; message?: ChatMessage; reason?: 'closed' | 'blocked' }> {
+  const result = await callMatch('send', { matchId, body })
+  if (!result) return { ok: false }
+  return {
+    ok: !!result.ok,
+    message: result.message as ChatMessage | undefined,
+    reason: typeof result.reason === 'string' ? (result.reason as 'closed' | 'blocked') : undefined,
+  }
+}
+
+// 상대 차단 (해당 매칭 종료)
+export async function blockMatch(matchId: string): Promise<boolean> {
+  const result = await callMatch('block', { matchId })
+  return !!result?.ok
+}
+
+// 상대 신고 (신고 + 차단 + 매칭 종료)
+export async function reportMatch(matchId: string, reason: string): Promise<boolean> {
+  const result = await callMatch('report', { matchId, reason })
+  return !!result?.ok
 }
 
 export function loadMatchHistory(): MatchHistoryEntry[] {

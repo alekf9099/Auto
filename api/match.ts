@@ -5,6 +5,8 @@ import { verifyAuthToken, AuthProviderUnreachableError } from '../lib/auth.js'
 
 // 하루에 보낼 수 있는 좋아요 수 (스팸/어뷰징 방지)
 const DAILY_LIKE_LIMIT = 10
+// 메시지 1건 최대 길이
+const MESSAGE_MAX_LEN = 1000
 
 // 매칭 성사 시 상대에게 보내는 푸시. VAPID/구독이 없으면 조용히 건너뛴다.
 async function notifyMatch(supabase: SupabaseClient, email: string, partnerNick: string): Promise<void> {
@@ -24,6 +26,35 @@ async function notifyMatch(supabase: SupabaseClient, email: string, partnerNick:
     })
     await webpush.sendNotification(sub.subscription as webpush.PushSubscription, payload)
   } catch { /* 푸시는 부가 기능이라 실패해도 매칭 자체엔 영향 없음 */ }
+}
+
+// 새 메시지 도착 푸시
+async function notifyMessage(supabase: SupabaseClient, email: string, senderNick: string, preview: string): Promise<void> {
+  const vapidPublic = process.env.VITE_VAPID_PUBLIC_KEY
+  const vapidPrivate = process.env.VAPID_PRIVATE_KEY
+  const vapidSubject = process.env.VAPID_SUBJECT || 'mailto:admin@unmyeongbom.app'
+  if (!vapidPublic || !vapidPrivate) return
+  try {
+    webpush.setVapidDetails(vapidSubject, vapidPublic, vapidPrivate)
+    const { data: sub } = await supabase
+      .from('push_subscriptions').select('subscription').eq('email', email).eq('enabled', true).maybeSingle()
+    if (!sub?.subscription) return
+    const payload = JSON.stringify({
+      title: `💬 ${senderNick}님의 메시지`,
+      body: preview.length > 40 ? preview.slice(0, 40) + '…' : preview,
+      url: '/?go=match',
+    })
+    await webpush.sendNotification(sub.subscription as webpush.PushSubscription, payload)
+  } catch { /* 푸시 실패는 무시 */ }
+}
+
+// 두 사용자 사이에 차단이 존재하는지 (어느 방향이든)
+async function isBlockedBetween(supabase: SupabaseClient, a: string, b: string): Promise<boolean> {
+  const { data } = await supabase
+    .from('blocks').select('blocker')
+    .or(`and(blocker.eq.${a},blocked.eq.${b}),and(blocker.eq.${b},blocked.eq.${a})`)
+    .limit(1)
+  return !!(data && data.length > 0)
 }
 
 // 사주매칭: 옵트인한 사용자 풀에서 무작위로 한 명을 뽑아 닉네임 + 생년월일시 + (선택)프로필 사진을 돌려준다.
@@ -70,17 +101,20 @@ export default async function handler(req: any, res: any) {
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).end()
 
-  const { idToken, provider, action, nickname, birth, photo, targetUserId } = (req.body ?? {}) as {
+  const { idToken, provider, action, nickname, birth, photo, targetUserId, matchId, body, reason } = (req.body ?? {}) as {
     idToken?: string
     provider?: string
-    action?: 'join' | 'leave' | 'draw' | 'like' | 'matches'
+    action?: 'join' | 'leave' | 'draw' | 'like' | 'matches' | 'messages' | 'send' | 'block' | 'report'
     nickname?: string
     birth?: unknown
     photo?: string | null
     targetUserId?: string
+    matchId?: string
+    body?: string
+    reason?: string
   }
 
-  const VALID_ACTIONS = ['join', 'leave', 'draw', 'like', 'matches']
+  const VALID_ACTIONS = ['join', 'leave', 'draw', 'like', 'matches', 'messages', 'send', 'block', 'report']
   if (!idToken || !action || !VALID_ACTIONS.includes(action)) {
     return res.status(400).json({ error: 'invalid request' })
   }
@@ -137,7 +171,21 @@ export default async function handler(req: any, res: any) {
     if (error) return res.status(500).json({ error: error.message })
     if (!rows || rows.length === 0) return res.status(200).json({ opponent: null })
 
-    const pick = rows[Math.floor(Math.random() * rows.length)]
+    // 내가 차단했거나 나를 차단한 상대는 후보에서 제외한다
+    const { data: myRow } = await supabase
+      .from('match_pool').select('user_id').eq('email', email).maybeSingle()
+    let candidates = rows
+    if (myRow?.user_id) {
+      const { data: blockRows } = await supabase
+        .from('blocks').select('blocker, blocked')
+        .or(`blocker.eq.${myRow.user_id},blocked.eq.${myRow.user_id}`)
+      const blockedIds = new Set((blockRows ?? []).flatMap(b => [b.blocker, b.blocked]))
+      const filtered = rows.filter(r => !blockedIds.has(r.user_id))
+      if (filtered.length > 0) candidates = filtered
+      else return res.status(200).json({ opponent: null })
+    }
+
+    const pick = candidates[Math.floor(Math.random() * candidates.length)]
     return res.status(200).json({
       opponent: {
         userId: pick.user_id,
@@ -202,28 +250,105 @@ export default async function handler(req: any, res: any) {
     return res.status(200).json({ ok: true, matched: true, matchId: created.id })
   }
 
-  // action === 'matches' — 내 활성 매칭 목록 (상대 닉네임/사진 포함)
-  const { data: myMatches } = await supabase
-    .from('matches').select('id, user_a, user_b, created_at')
-    .or(`user_a.eq.${me.user_id},user_b.eq.${me.user_id}`)
-    .eq('status', 'active')
-    .order('created_at', { ascending: false })
+  if (action === 'matches') {
+    // 내 활성 매칭 목록 (상대 닉네임/사진 포함)
+    const { data: myMatches } = await supabase
+      .from('matches').select('id, user_a, user_b, created_at')
+      .or(`user_a.eq.${me.user_id},user_b.eq.${me.user_id}`)
+      .eq('status', 'active')
+      .order('created_at', { ascending: false })
 
-  if (!myMatches || myMatches.length === 0) return res.status(200).json({ matches: [] })
+    if (!myMatches || myMatches.length === 0) return res.status(200).json({ matches: [] })
 
-  const partnerIds = myMatches.map(m => (m.user_a === me.user_id ? m.user_b : m.user_a))
-  const { data: partners } = await supabase
-    .from('match_pool').select('user_id, nickname, photo').in('user_id', partnerIds)
-  const byId = new Map((partners ?? []).map(p => [p.user_id, p]))
+    const partnerIds = myMatches.map(m => (m.user_a === me.user_id ? m.user_b : m.user_a))
+    const { data: partners } = await supabase
+      .from('match_pool').select('user_id, nickname, photo').in('user_id', partnerIds)
+    const byId = new Map((partners ?? []).map(p => [p.user_id, p]))
 
-  const matches = myMatches.map(m => {
-    const pid = m.user_a === me.user_id ? m.user_b : m.user_a
-    const p = byId.get(pid)
-    return {
-      matchId: m.id,
-      createdAt: m.created_at,
-      opponent: { userId: pid, nickname: p?.nickname ?? '알 수 없음', photo: p?.photo ?? null },
+    const matches = myMatches.map(m => {
+      const pid = m.user_a === me.user_id ? m.user_b : m.user_a
+      const p = byId.get(pid)
+      return {
+        matchId: m.id,
+        createdAt: m.created_at,
+        opponent: { userId: pid, nickname: p?.nickname ?? '알 수 없음', photo: p?.photo ?? null },
+      }
+    })
+    return res.status(200).json({ matches })
+  }
+
+  // ── 채팅/안전 액션 공용: 매칭 멤버십 확인 → 상대 user_id 반환 ──
+  async function matchPartner(mid: unknown, requireActive: boolean): Promise<string | null> {
+    if (typeof mid !== 'string' || !/^[0-9a-f-]{36}$/i.test(mid)) return null
+    const { data: m } = await supabase
+      .from('matches').select('user_a, user_b, status').eq('id', mid).maybeSingle()
+    if (!m) return null
+    if (requireActive && m.status !== 'active') return null
+    if (m.user_a !== me.user_id && m.user_b !== me.user_id) return null
+    return m.user_a === me.user_id ? m.user_b : m.user_a
+  }
+
+  if (action === 'messages') {
+    const partnerId = await matchPartner(matchId, true)
+    if (!partnerId) return res.status(200).json({ messages: [], closed: true })
+
+    const { data: rows, error } = await supabase
+      .from('messages').select('id, sender, body, created_at')
+      .eq('match_id', matchId)
+      .order('created_at', { ascending: true })
+      .limit(300)
+    if (error) return res.status(500).json({ error: error.message })
+
+    const messages = (rows ?? []).map(r => ({
+      id: r.id, body: r.body, mine: r.sender === me.user_id, createdAt: r.created_at,
+    }))
+    return res.status(200).json({ messages, closed: false })
+  }
+
+  if (action === 'send') {
+    const text = typeof body === 'string' ? body.trim() : ''
+    if (!text) return res.status(400).json({ error: 'empty message' })
+    if (text.length > MESSAGE_MAX_LEN) return res.status(400).json({ error: 'message too long' })
+
+    const partnerId = await matchPartner(matchId, true)
+    if (!partnerId) return res.status(200).json({ ok: false, reason: 'closed' })
+    if (await isBlockedBetween(supabase, me.user_id, partnerId)) {
+      return res.status(200).json({ ok: false, reason: 'blocked' })
     }
-  })
-  return res.status(200).json({ matches })
+
+    const { data: created, error } = await supabase
+      .from('messages').insert({ match_id: matchId, sender: me.user_id, body: text })
+      .select('id, created_at').single()
+    if (error) return res.status(500).json({ error: error.message })
+
+    // 상대에게 새 메시지 푸시 (실패해도 전송 자체엔 영향 없음)
+    const { data: partner } = await supabase
+      .from('match_pool').select('email').eq('user_id', partnerId).maybeSingle()
+    if (partner?.email) await notifyMessage(supabase, partner.email, me.nickname ?? '상대', text)
+
+    return res.status(200).json({
+      ok: true,
+      message: { id: created.id, body: text, mine: true, createdAt: created.created_at },
+    })
+  }
+
+  if (action === 'block' || action === 'report') {
+    const partnerId = await matchPartner(matchId, false)
+    if (!partnerId) return res.status(400).json({ error: 'no match' })
+
+    if (action === 'report') {
+      await supabase.from('reports').insert({
+        reporter: me.user_id, target: partnerId, match_id: matchId,
+        reason: typeof reason === 'string' ? reason.slice(0, 500) : null,
+      })
+    }
+    // 신고/차단 모두: 차단 기록 + 해당 매칭 종료
+    await supabase.from('blocks').upsert(
+      { blocker: me.user_id, blocked: partnerId }, { onConflict: 'blocker,blocked' }
+    )
+    await supabase.from('matches').update({ status: 'closed' }).eq('id', matchId)
+    return res.status(200).json({ ok: true })
+  }
+
+  return res.status(400).json({ error: 'invalid request' })
 }
