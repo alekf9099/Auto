@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { loadMessages, sendMessage, blockMatch, reportMatch, type MatchEntry, type ChatMessage } from '../utils/match'
+import { subscribeToMatch, type MatchChannel } from '../utils/matchRealtime'
 
 interface Props {
   match: MatchEntry
@@ -7,8 +8,10 @@ interface Props {
   onEnded: () => void   // 차단/신고/종료로 매칭이 끝났을 때 (목록 갱신용)
 }
 
-const POLL_ACTIVE_MS = 1500  // 대화 활성 중 (거의 즉답 느낌)
-const POLL_IDLE_MS = 4000    // 잠잠할 때 (부하 절감)
+const POLL_ACTIVE_MS = 1500    // 실시간 미연결 시 — 대화 활성 중 (거의 즉답 느낌)
+const POLL_IDLE_MS = 4000      // 실시간 미연결 시 — 잠잠할 때 (부하 절감)
+const POLL_FALLBACK_MS = 10000 // 실시간 연결 시 — 놓친 이벤트 대비 안전망 폴링
+const TYPING_THROTTLE_MS = 1500
 
 function MiniAvatar({ photo, label }: { photo: string | null; label: string }) {
   return photo ? (
@@ -40,39 +43,80 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
   const [menuOpen, setMenuOpen] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
   const [partnerLastRead, setPartnerLastRead] = useState<string | null>(null)
+  const [partnerTyping, setPartnerTyping] = useState(false)
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const fetchingRef = useRef(false)
   const atBottomRef = useRef(true)
   const lastActivityRef = useRef(Date.now()) // 최근 활동(전송/수신) 시각 — 폴링 주기 조절용
   const lastMsgIdRef = useRef<string | null>(null)
+  const channelRef = useRef<MatchChannel | null>(null)
+  const realtimeReadyRef = useRef(false)
+  const typingSentRef = useRef(0)
+  const typingTimerRef = useRef<ReturnType<typeof setTimeout>>()
+  const refreshRef = useRef<() => void>(() => {})
 
-  // 적응형 폴링: 최근 활동 후 잠시는 빠르게(1.5초), 잠잠하면 느리게(4초)
+  // 메시지 동기화. 실시간 연결 시엔 안전망으로만 폴링하고, 미연결 시엔 적응형 폴링.
   useEffect(() => {
     let alive = true
     let timer: ReturnType<typeof setTimeout>
-    async function poll() {
-      if (!fetchingRef.current) {
-        fetchingRef.current = true
-        const { messages: msgs, closed: isClosed, partnerLastRead: plr } = await loadMessages(match.matchId)
-        fetchingRef.current = false
-        if (!alive) return
-        const newest = msgs.length ? msgs[msgs.length - 1].id : null
-        if (newest && newest !== lastMsgIdRef.current) {
-          lastMsgIdRef.current = newest
-          lastActivityRef.current = Date.now()
-        }
-        setMessages(msgs)
-        setPartnerLastRead(plr)
-        setClosed(isClosed)
-        setLoading(false)
-      }
+
+    async function doFetch() {
+      if (fetchingRef.current) return
+      fetchingRef.current = true
+      const { messages: msgs, closed: isClosed, partnerLastRead: plr } = await loadMessages(match.matchId)
+      fetchingRef.current = false
       if (!alive) return
-      const idle = Date.now() - lastActivityRef.current > 15000
-      timer = setTimeout(poll, idle ? POLL_IDLE_MS : POLL_ACTIVE_MS)
+      const newest = msgs.length ? msgs[msgs.length - 1] : null
+      if (newest && newest.id !== lastMsgIdRef.current) {
+        lastMsgIdRef.current = newest.id
+        lastActivityRef.current = Date.now()
+        // 상대가 보낸 새 메시지를 방금 읽었음을 알려 상대 화면의 '읽음'을 즉시 갱신
+        if (!newest.mine) channelRef.current?.sendRead()
+      }
+      setMessages(msgs)
+      setPartnerLastRead(plr)
+      setClosed(isClosed)
+      setLoading(false)
     }
-    poll()
+    refreshRef.current = () => { void doFetch() }
+
+    function schedule() {
+      const delay = realtimeReadyRef.current
+        ? POLL_FALLBACK_MS
+        : (Date.now() - lastActivityRef.current > 15000 ? POLL_IDLE_MS : POLL_ACTIVE_MS)
+      timer = setTimeout(async () => { await doFetch(); if (alive) schedule() }, delay)
+    }
+    void doFetch()
+    schedule()
     return () => { alive = false; clearTimeout(timer) }
+  }, [match.matchId])
+
+  // 실시간 채널 구독 (브로드캐스트). 키/네트워크 없으면 폴링으로 자동 폴백.
+  useEffect(() => {
+    let cancelled = false
+    let handle: MatchChannel | null = null
+    subscribeToMatch(match.matchId, {
+      onNewMessage: () => refreshRef.current(),
+      onRead: () => refreshRef.current(),
+      onTyping: () => {
+        setPartnerTyping(true)
+        clearTimeout(typingTimerRef.current)
+        typingTimerRef.current = setTimeout(() => setPartnerTyping(false), 3500)
+      },
+    }).then(h => {
+      if (cancelled) { h?.close(); return }
+      handle = h
+      channelRef.current = h
+      realtimeReadyRef.current = !!h
+    })
+    return () => {
+      cancelled = true
+      clearTimeout(typingTimerRef.current)
+      handle?.close()
+      channelRef.current = null
+      realtimeReadyRef.current = false
+    }
   }, [match.matchId])
 
   // 내 메시지 중 상대가 읽은 가장 최근 것 (그 아래에 '읽음' 표시)
@@ -95,6 +139,16 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
     const el = scrollRef.current
     if (!el) return
     atBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 60
+  }
+
+  function handleInputChange(v: string) {
+    setInput(v)
+    setNotice(null)
+    const now = Date.now()
+    if (channelRef.current && now - typingSentRef.current > TYPING_THROTTLE_MS) {
+      typingSentRef.current = now
+      channelRef.current.sendTyping()
+    }
   }
 
   async function handleSend() {
@@ -206,6 +260,20 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
         </div>
       </div>
 
+      {/* 타이핑 표시 */}
+      {partnerTyping && !closed && (
+        <div className="shrink-0 max-w-2xl w-full mx-auto px-4">
+          <div className="inline-flex items-center gap-1.5 bg-[#1C1438] border border-[#2A1F4A] rounded-full px-3 py-1.5 mb-1">
+            <span className="flex gap-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#A79CC2] animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#A79CC2] animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#A79CC2] animate-bounce" style={{ animationDelay: '300ms' }} />
+            </span>
+            <span className="text-[10px] text-[#A79CC2]">{match.opponent.nickname}님이 입력 중…</span>
+          </div>
+        </div>
+      )}
+
       {/* 입력창 */}
       <div className="shrink-0 bg-[#130E24] border-t border-[#2A1F4A] px-3 py-2.5">
         <div className="max-w-2xl mx-auto">
@@ -213,7 +281,7 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
           <div className="flex items-end gap-2">
             <textarea
               value={input}
-              onChange={e => { setInput(e.target.value); setNotice(null) }}
+              onChange={e => handleInputChange(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() } }}
               placeholder={closed ? '종료된 대화예요' : '메시지를 입력하세요'}
               disabled={closed}

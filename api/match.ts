@@ -48,6 +48,21 @@ async function notifyMessage(supabase: SupabaseClient, email: string, senderNick
   } catch { /* 푸시 실패는 무시 */ }
 }
 
+// 매칭 채널에 실시간 신호를 보낸다 (Realtime 브로드캐스트 REST API).
+// 본문은 싣지 않는다 — 클라이언트가 받으면 인증된 경로로 재조회한다. 실패해도 폴링이 대체.
+async function broadcastMatchEvent(matchId: string, event: string): Promise<void> {
+  const url = process.env.VITE_SUPABASE_URL
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!url || !serviceKey) return
+  try {
+    await fetch(`${url}/realtime/v1/api/broadcast`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: serviceKey, Authorization: `Bearer ${serviceKey}` },
+      body: JSON.stringify({ messages: [{ topic: `match:${matchId}`, event, payload: {}, private: false }] }),
+    })
+  } catch { /* 실시간 실패는 무시 */ }
+}
+
 // 두 사용자 사이에 차단이 존재하는지 (어느 방향이든)
 async function isBlockedBetween(supabase: SupabaseClient, a: string, b: string): Promise<boolean> {
   const { data } = await supabase
@@ -343,7 +358,8 @@ export default async function handler(req: any, res: any) {
       .select('id, created_at').single()
     if (error) return res.status(500).json({ error: error.message })
 
-    // 상대에게 새 메시지 푸시 (실패해도 전송 자체엔 영향 없음)
+    // 실시간 신호(앱이 켜져 있으면 즉시 갱신) + 푸시(백그라운드). 둘 다 실패해도 전송엔 영향 없음.
+    await broadcastMatchEvent(matchId as string, 'new_message')
     const { data: partner } = await supabase
       .from('match_pool').select('email').eq('user_id', partnerId).maybeSingle()
     if (partner?.email) await notifyMessage(supabase, partner.email, me.nickname ?? '상대', text)
