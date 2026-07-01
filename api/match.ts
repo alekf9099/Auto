@@ -119,7 +119,7 @@ export default async function handler(req: any, res: any) {
   const { idToken, provider, action, nickname, birth, photo, targetUserId, matchId, body, reason, score, grade } = (req.body ?? {}) as {
     idToken?: string
     provider?: string
-    action?: 'join' | 'leave' | 'draw' | 'like' | 'matches' | 'messages' | 'send' | 'block' | 'report'
+    action?: 'join' | 'leave' | 'draw' | 'like' | 'matches' | 'messages' | 'send' | 'block' | 'report' | 'summary'
     nickname?: string
     birth?: unknown
     photo?: string | null
@@ -131,7 +131,7 @@ export default async function handler(req: any, res: any) {
     grade?: string
   }
 
-  const VALID_ACTIONS = ['join', 'leave', 'draw', 'like', 'matches', 'messages', 'send', 'block', 'report']
+  const VALID_ACTIONS = ['join', 'leave', 'draw', 'like', 'matches', 'messages', 'send', 'block', 'report', 'summary']
   if (!idToken || !action || !VALID_ACTIONS.includes(action)) {
     return res.status(400).json({ error: 'invalid request' })
   }
@@ -220,6 +220,34 @@ export default async function handler(req: any, res: any) {
   const { data: me } = await supabase
     .from('match_pool').select('user_id, nickname').eq('email', email).maybeSingle()
   if (!me?.user_id) return res.status(400).json({ error: 'not in pool' })
+
+  if (action === 'summary') {
+    // 홈 히어로/네비 뱃지용 요약: 매칭 수, 안읽음 합계, 받은(대기) 좋아요 수
+    const { data: ms } = await supabase
+      .from('matches').select('id, user_a, user_b, last_read_a, last_read_b')
+      .or(`user_a.eq.${me.user_id},user_b.eq.${me.user_id}`)
+      .eq('status', 'active')
+    const matchesCount = ms?.length ?? 0
+
+    let unread = 0
+    for (const m of ms ?? []) {
+      const iAmA = m.user_a === me.user_id
+      const myLastRead = iAmA ? m.last_read_a : m.last_read_b
+      let q = supabase.from('messages').select('*', { count: 'exact', head: true })
+        .eq('match_id', m.id).neq('sender', me.user_id)
+      if (myLastRead) q = q.gt('created_at', myLastRead)
+      const { count } = await q
+      unread += count ?? 0
+    }
+
+    // 받은 좋아요 중 아직 매칭 안 된 것 = (나를 좋아요한 수) - (매칭 수)
+    // 매칭은 상대도 나를 좋아요한 상태라 각 매칭이 '나를 좋아요' 1건에 대응한다.
+    const { count: likesToMe } = await supabase
+      .from('likes').select('*', { count: 'exact', head: true }).eq('to_user', me.user_id)
+    const pendingLikes = Math.max(0, (likesToMe ?? 0) - matchesCount)
+
+    return res.status(200).json({ matches: matchesCount, unread, likes: pendingLikes })
+  }
 
   if (action === 'like') {
     if (typeof targetUserId !== 'string' || !/^[0-9a-f-]{36}$/i.test(targetUserId)) {

@@ -20,6 +20,7 @@ interface Props {
   points: PointsState
   onPointsUpdate: (p: PointsState) => void
   onNavigate: (dest: 'saju' | 'sinnyeon' | 'tojeong' | 'today' | 'daun' | 'gunghab' | 'deepsaju' | 'dream' | 'tarot' | 'outfit' | 'job' | 'battle' | 'match') => void
+  matchSummary: { matches: number; unread: number; likes: number }
   onAttendance: () => void
   onLuckyTimer: () => void
   onEditProfile: () => void
@@ -81,6 +82,56 @@ function PromoCard({
       <p className="relative text-sm font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>{title}</p>
       <p className="relative text-[11px] text-[#BCB1D4] mt-0.5 leading-snug">{subtitle}</p>
     </button>
+  )
+}
+
+// 사주매칭 홈 히어로 — 메인 기능이라 홈 최상단에서 바로 유입시킨다.
+// 받은 좋아요 > 안읽음 > 매칭수 > 신규 순으로 가장 강한 후크를 보여준다.
+function MatchHeroCard({
+  summary, onOpen, delay,
+}: {
+  summary: { matches: number; unread: number; likes: number }
+  onOpen: () => void; delay: React.CSSProperties
+}) {
+  const { matches, unread, likes } = summary
+  const accent = '#E05282'
+  let title: string, sub: string, badge = 0
+  if (likes > 0)        { title = `${likes}명이 좋아요를 보냈어요`; sub = '누가 나를 마음에 들어했는지 확인해보세요'; badge = likes }
+  else if (unread > 0)  { title = `새 메시지 ${unread}개`;          sub = '매칭된 인연과의 대화가 기다리고 있어요'; badge = unread }
+  else if (matches > 0) { title = `내 매칭 ${matches}명`;           sub = '대화를 이어가 인연을 키워보세요' }
+  else                  { title = '운명의 인연, 사주로 찾기';       sub = '나와 잘 맞는 사주의 익명 인연을 만나보세요' }
+
+  return (
+    <div style={delay}>
+      <button
+        onClick={onOpen}
+        className="w-full relative overflow-hidden rounded-3xl border p-4 flex items-center gap-3.5 active:scale-[0.99] transition-all"
+        style={{ borderColor: accent + '55', background: 'linear-gradient(135deg, #2A1230 0%, #1A0E30 55%, #120A22 100%)', boxShadow: `0 2px 22px ${accent}22` }}
+      >
+        <div className="absolute -right-6 top-1/2 -translate-y-1/2 w-40 h-40 rounded-full blur-3xl pointer-events-none"
+          style={{ background: `radial-gradient(circle, ${accent}40, transparent 70%)` }} />
+        <span className="absolute pointer-events-none" style={{ right: '18%', top: '22%', color: accent, fontSize: 10, opacity: 0.7 }}>✦</span>
+
+        <span className="relative shrink-0 w-14 h-14 rounded-2xl flex items-center justify-center"
+          style={{ background: accent + '22', border: `1px solid ${accent}66`, color: accent }}>
+          <IcMatch size={30} />
+          {badge > 0 && (
+            <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1.5 rounded-full bg-[#E05282] text-white text-[11px] font-bold flex items-center justify-center border-2 border-[#1A0E30]">
+              {badge > 99 ? '99+' : badge}
+            </span>
+          )}
+        </span>
+
+        <div className="relative flex-1 text-left">
+          <p className="text-[15px] font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>{title}</p>
+          <p className="text-[11px] text-[#D3A9C0] mt-0.5 leading-snug">{sub}</p>
+        </div>
+
+        <span className="relative text-xs font-bold shrink-0" style={{ color: accent }}>
+          {matches > 0 || likes > 0 ? '확인 →' : '시작 →'}
+        </span>
+      </button>
+    </div>
   )
 }
 
@@ -208,7 +259,7 @@ const TAROT_CARD_IMAGES = [
   { src: '/images/tarot/hand.webp',       rotate: 'rotate-[14deg]' },
 ]
 
-export default function HomePage({ user, nickname, birthProfile, points, onPointsUpdate, onNavigate, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms, onDeleteAccount, isGuest, onRequestLogin }: Props) {
+export default function HomePage({ user, nickname, birthProfile, points, onPointsUpdate, onNavigate, matchSummary, onAttendance, onLuckyTimer, onEditProfile, onLogout, onShowPrivacy, onShowTerms, onDeleteAccount, isGuest, onRequestLogin }: Props) {
   const todayDate = new Date()
   const month = todayDate.getMonth() + 1
   const day   = todayDate.getDate()
@@ -474,8 +525,11 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         </div>
         </div>
 
+        {/* 사주매칭 히어로 — 메인 기능, 홈 최상단 유입 */}
+        <MatchHeroCard summary={matchSummary} onOpen={() => onNavigate('match')} delay={reveal(1)} />
+
         {/* 가로 스크롤 칩 메뉴 */}
-        <div style={reveal(1)} className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-4">
+        <div style={reveal(2)} className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-4">
           <p className="text-xs text-[#A79CC2] mb-3 px-1">기능 바로가기</p>
           <div className="grid grid-cols-4 gap-x-2 gap-y-4">
             {CHIPS.map(chip => {

@@ -42,7 +42,7 @@ export interface ChatMessage {
   createdAt: string
 }
 
-async function callMatch(action: 'join' | 'leave' | 'draw' | 'like' | 'matches' | 'messages' | 'send' | 'block' | 'report', extra?: Record<string, unknown>): Promise<Record<string, unknown> | null> {
+async function callMatch(action: 'join' | 'leave' | 'draw' | 'like' | 'matches' | 'messages' | 'send' | 'block' | 'report' | 'summary', extra?: Record<string, unknown>): Promise<Record<string, unknown> | null> {
   const idToken = getIdToken()
   if (!idToken) return null
   try {
@@ -106,6 +106,17 @@ export async function sendLike(targetUserId: string, score?: number, grade?: str
     ok: !!result.ok,
     matched: !!result.matched,
     reason: typeof result.reason === 'string' ? (result.reason as 'limit' | 'gone') : undefined,
+  }
+}
+
+// 홈 히어로 / 네비 뱃지용 요약 (매칭 수 · 안읽음 · 받은 좋아요)
+export interface MatchSummary { matches: number; unread: number; likes: number }
+export async function loadMatchSummary(): Promise<MatchSummary> {
+  const r = await callMatch('summary')
+  return {
+    matches: typeof r?.matches === 'number' ? r.matches : 0,
+    unread: typeof r?.unread === 'number' ? r.unread : 0,
+    likes: typeof r?.likes === 'number' ? r.likes : 0,
   }
 }
 

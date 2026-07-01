@@ -14,7 +14,7 @@ import SyncErrorBanner  from './components/SyncErrorBanner'
 import NoticeBanner     from './components/NoticeBanner'
 import BottomNav from './components/BottomNav'
 import type { NavTab } from './components/BottomNav'
-import { loadMatches } from './utils/match'
+import { loadMatchSummary, type MatchSummary } from './utils/match'
 import { IcLock } from './components/icons/SajuIcons'
 
 const ProfileSetupPage = lazy(() => import('./components/ProfileSetupPage'))
@@ -97,7 +97,7 @@ export default function App() {
   const [deleting,     setDeleting]     = useState(false)
   const [deleteError,  setDeleteError]  = useState(false)
   const [loginPrompt,  setLoginPrompt]  = useState<string | null>(null)
-  const [matchUnread,  setMatchUnread]  = useState(0)
+  const [matchSummary, setMatchSummary] = useState<MatchSummary>({ matches: 0, unread: 0, likes: 0 })
 
   const isGuest = user?.provider === 'guest'
 
@@ -138,12 +138,12 @@ export default function App() {
     })
   }, [])
 
-  // 사주매칭 안 읽은 메시지 수 — 하단 매칭 탭 뱃지용. 진입/주기적으로 갱신.
+  // 사주매칭 요약(매칭·안읽음·받은 좋아요) — 홈 히어로 + 하단 탭 뱃지용. 진입/주기적 갱신.
   useEffect(() => {
-    if (!user || isGuest || !birthProfile) { setMatchUnread(0); return }
+    if (!user || isGuest || !birthProfile) { setMatchSummary({ matches: 0, unread: 0, likes: 0 }); return }
     let alive = true
-    const refresh = () => loadMatches()
-      .then(ms => { if (alive) setMatchUnread(ms.reduce((s, m) => s + (m.unread || 0), 0)) })
+    const refresh = () => loadMatchSummary()
+      .then(s => { if (alive) setMatchSummary(s) })
       .catch(() => {})
     refresh()
     const id = setInterval(refresh, 60000)
@@ -335,6 +335,7 @@ export default function App() {
         points={points}
         onPointsUpdate={setPoints}
         onNavigate={handleHomeNavigate}
+        matchSummary={matchSummary}
         onAttendance={() => { setPage('attendance'); window.scrollTo(0, 0) }}
         onLuckyTimer={() => { setPage('lucky'); window.scrollTo(0, 0) }}
         onEditProfile={() => { setPage('profile'); window.scrollTo(0, 0) }}
@@ -436,7 +437,7 @@ export default function App() {
         <Suspense fallback={<PageFallback />}>
           <div className={showNav ? 'pb-16' : ''}>{content}</div>
         </Suspense>
-        {showNav && <BottomNav current={page as NavTab} onNavigate={handleTabNavigate} matchBadge={matchUnread} />}
+        {showNav && <BottomNav current={page as NavTab} onNavigate={handleTabNavigate} matchBadge={matchSummary.unread + matchSummary.likes} />}
       </div>
 
       {/* 게스트 — 로그인 필요 안내 모달 */}
