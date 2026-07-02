@@ -5,6 +5,7 @@
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ],
   "crons": [
-    { "path": "/api/cron-daily-fortune", "schedule": "0 23 * * *" }
+    { "path": "/api/cron-daily-fortune", "schedule": "0 23 * * *" },
+    { "path": "/api/cron-daily-match", "schedule": "0 9 * * *" }
   ]
 }
