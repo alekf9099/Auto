@@ -84,7 +84,6 @@ function MatchHeroCard({
   onOpen: () => void; delay: React.CSSProperties
 }) {
   const { matches, unread, likes } = summary
-  const accent = '#C9962A' // 전체 고급 테마 일관성을 위해 럭셔리 황금빛 톤으로 조율
   let title: string, sub: string, badge = 0
   
   if (likes > 0)        { title = `${likes}명의 인연이 시그널을 보냈어요`; sub = '나의 사주와 이어진 비밀 인연을 확인하세요'; badge = likes }
@@ -798,7 +797,7 @@ export default function HomePage({ user, nickname, birthProfile, points, onPoint
         <p style={reveal(5)} className="text-xs font-bold tracking-wider text-[#A79CC2] px-1 pt-2 uppercase">궁극의 비책 리포트</p>
 
         <div style={reveal(5)} className="grid grid-cols-2 gap-3">
-          <PromoCard Icon={IcOutfit}   title="의복 색채 매칭"   title="오행 기반 스타일 비책"    accent="#E05282" onClick={() => onNavigate('outfit')}   />
+          <PromoCard Icon={IcOutfit}   title="의복 색채 매칭"   subtitle="오행 기반 스타일 비책"    accent="#E05282" onClick={() => onNavigate('outfit')}   />
           <PromoCard Icon={IcJob}      title="공명 취업 청사진"  subtitle="합격 관운의 사주 전략"     accent="#4BBF7E" onClick={() => onNavigate('job')}      />
           <PromoCard Icon={IcSinnyeon} title="신년 대운 로드맵"  subtitle="새해 기회와 성취 요약"      accent="#C9962A" onClick={() => onNavigate('sinnyeon')} />
           <PromoCard Icon={IcTojeong}  title="평생 토정비결"    subtitle="삶의 화를 피하는 이정표"    accent="#A78BFA" onClick={() => onNavigate('tojeong')}  />
