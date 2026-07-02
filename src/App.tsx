@@ -398,7 +398,7 @@ export default function App() {
   } else if (page === 'battle') {
     content = <FortuneBattlePage savedBirth={birthProfile} onSave={saveBirthProfile} onBack={goHome} />
   } else if (page === 'match' && birthProfile) {
-    content = <MatchPage nickname={nickname} birthProfile={birthProfile} onBack={goHome} />
+    content = <MatchPage nickname={nickname} birthProfile={birthProfile} onBack={goHome} onInvite={() => { setPage('invite'); window.scrollTo(0, 0) }} />
   } else {
     content = <LoadingScreen onComplete={() => { setPage('home'); window.scrollTo(0, 0) }} />
   }

@@ -4,14 +4,16 @@ import { calcGunghab, type GunghabResult } from '../utils/gunghab'
 import { ELEMENT_LABELS, ELEMENT_COLORS } from '../utils/constants'
 import { isOptedIn, joinMatchPool, leaveMatchPool, drawMatch, sendLike, loadMatches, loadMatchHistory, addMatchHistory, type MatchOpponent, type MatchHistoryEntry, type MatchEntry } from '../utils/match'
 import { loadProfilePhoto } from '../utils/profilePhoto'
+import { isPushSupported, isPushEnabled, enablePush } from '../utils/pushNotify'
 import PointsClaimButton from './PointsClaimButton'
 import ChatView from './ChatView'
-import { IcMatch, IcDraw, IcLoveLuck } from './icons/SajuIcons'
+import { IcMatch, IcDraw, IcLoveLuck, IcLock } from './icons/SajuIcons'
 
 interface Props {
   nickname: string
   birthProfile: BirthInput
   onBack: () => void
+  onInvite: () => void
 }
 
 const RANK_BADGE = ['#C9962A', '#BCB1D4', '#A79CC2']
@@ -61,11 +63,13 @@ function MiniAvatar({ photo, label, bg }: { photo: string | null; label: string;
   )
 }
 
-export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
+export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: Props) {
   const [myPhoto] = useState<string | null>(loadProfilePhoto)
   const [optedIn, setOptedInState] = useState(isOptedIn)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [poolEmpty, setPoolEmpty] = useState(false)
+  const [notifyOn, setNotifyOn] = useState(() => (typeof window !== 'undefined' ? isPushEnabled() : false))
   const [opponent, setOpponent] = useState<MatchOpponent | null>(null)
   const [result, setResult] = useState<GunghabResult | null>(null)
   const [history, setHistory] = useState<MatchHistoryEntry[]>(loadMatchHistory)
@@ -122,6 +126,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
   async function handleDraw() {
     setBusy(true)
     setError(null)
+    setPoolEmpty(false)
     setOpponent(null)
     setResult(null)
     setLiked(false)
@@ -130,7 +135,7 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
     const opp = await drawMatch()
     setBusy(false)
     if (!opp) {
-      setError('아직 매칭 가능한 다른 사용자가 없어요. 잠시 후 다시 시도해주세요.')
+      setPoolEmpty(true)   // 에러가 아니라 "아직 인연을 기다리는 중" 상태로 안내
       return
     }
     const r = calcGunghab(birthProfile, opp.birth, 'friend')
@@ -159,6 +164,12 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
     }
   }
 
+  async function handleEnableNotify() {
+    if (notifyOn) return
+    const r = await enablePush()
+    if (r.ok) setNotifyOn(true)
+  }
+
   const ranking = [...history].sort((a, b) => b.score - a.score).slice(0, 10)
 
   return (
@@ -181,7 +192,8 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-4">
-        {/* 히어로 배너 */}
+        {/* 히어로 배너 — 참여 중일 때만 (미참여 시엔 아래 온보딩이 히어로 역할) */}
+        {optedIn && (
         <div className="bg-gradient-to-br from-[#1A0E30] via-[#100820] to-[#060410] rounded-3xl p-6 shadow-xl shadow-[#000]/40 border border-[#C9962A25] relative overflow-hidden">
           <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-violet-400/15 blur-2xl" />
           <div className="absolute -bottom-8 -left-8 w-36 h-36 rounded-full bg-rose-500/15 blur-2xl" />
@@ -196,24 +208,43 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
             </div>
           </div>
         </div>
+        )}
 
-        {/* 참여 안내 / 상태 */}
+        {/* 참여 전 — 컨셉 온보딩 */}
         {!optedIn ? (
-          <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(201,150,42,0.10)] p-5 space-y-4">
-            <div>
-              <p className="text-sm font-bold text-[#F5EDD4] mb-2">매칭에 참여하면</p>
-              <ul className="space-y-1.5 text-xs text-[#BCB1D4] leading-relaxed">
-                <li>· 닉네임 <span className="font-semibold text-[#C9962A]">{nickname || '미설정'}</span>과 생년월일시가 매칭 풀에 등록돼요</li>
-                {myPhoto && <li>· 설정해둔 프로필 사진도 매칭 상대에게 보여요</li>}
-                <li>· 이메일·실명·구글 계정 사진 등 실제 신원 정보는 절대 공개되지 않아요</li>
-                <li>· 언제든 매칭 풀에서 나갈 수 있어요</li>
-              </ul>
+          <div className="bg-[#130E24] rounded-3xl border border-[#2A1F4A] shadow-[0_2px_20px_rgba(224,82,130,0.10)] p-6">
+            <div className="text-center">
+              <span className="inline-flex w-14 h-14 rounded-2xl items-center justify-center bg-[#E0528218] border border-[#E0528240] text-[#E05282] mb-3">
+                <IcMatch size={30} />
+              </span>
+              <h2 className="text-lg font-bold text-[#F5EDD4]" style={{ fontFamily: "'Gowun Batang', serif" }}>사주로 만나는 익명의 인연</h2>
+              <p className="text-xs text-[#BCB1D4] mt-2 leading-relaxed">이름도 얼굴도 몰라도 괜찮아요.<br/>사주 궁합으로 먼저 통하는 사람을 만나보세요.</p>
             </div>
-            {error && <p className="text-xs text-rose-400">{error}</p>}
-            <button onClick={handleJoin} disabled={busy || !nickname} className="w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] transition-all text-sm active:scale-[0.98] disabled:opacity-50" >
-              {busy ? '참여하는 중...' : '매칭 풀에 참여하기'}
+
+            <div className="mt-5 space-y-2">
+              {[
+                { n: 1, t: '매칭 뽑기',          s: '익명의 인연을 뽑고 사주 궁합을 확인' },
+                { n: 2, t: '마음에 들면 좋아요',  s: '호감이 가면 좋아요를 보내요' },
+                { n: 3, t: '서로 좋아요면 채팅',  s: '양쪽 다 좋아요하면 대화가 열려요' },
+              ].map(step => (
+                <div key={step.n} className="flex items-center gap-3 px-3 py-2.5 rounded-2xl bg-[#1C1438]">
+                  <span className="w-7 h-7 rounded-full bg-[#E0528222] border border-[#E0528266] text-[#E05282] text-sm font-bold flex items-center justify-center shrink-0">{step.n}</span>
+                  <div>
+                    <p className="text-sm font-semibold text-[#F5EDD4]">{step.t}</p>
+                    <p className="text-[11px] text-[#A79CC2] mt-0.5">{step.s}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {error && <p className="text-xs text-rose-400 mt-3 text-center">{error}</p>}
+            <button onClick={handleJoin} disabled={busy || !nickname} className="w-full mt-5 py-4 rounded-2xl font-bold text-white text-sm bg-gradient-to-r from-[#E05282] to-[#C9962A] shadow-lg shadow-[#E0528230] active:scale-[0.98] transition-all disabled:opacity-50">
+              {busy ? '시작하는 중...' : '매칭 시작하기'}
             </button>
-            {!nickname && <p className="text-[11px] text-center text-[#857AA0]">프로필에 닉네임을 먼저 등록해주세요</p>}
+            {!nickname && <p className="text-[11px] text-center text-[#857AA0] mt-2">프로필에 닉네임을 먼저 등록해주세요</p>}
+            <p className="text-[11px] text-[#857AA0] text-center mt-3 leading-relaxed flex items-center justify-center gap-1.5">
+              <IcLock size={12} /> 이메일·실명·계정 사진은 공개되지 않아요 · 언제든 나갈 수 있어요
+            </p>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto p-2">
@@ -260,9 +291,35 @@ export default function MatchPage({ nickname, birthProfile, onBack }: Props) {
                 </div>
               )}
 
+              {/* 풀에 상대가 없을 때 — 에러가 아니라 설레는 대기 상태로 안내 */}
+              {poolEmpty && (
+                <div className="w-full bg-[#1A0E30]/70 border border-[#C9962A30] rounded-2xl px-4 py-5 mb-4 text-center">
+                  <p className="text-3xl mb-2">🌙</p>
+                  <p className="text-sm font-bold text-[#F5EDD4]">아직 인연을 기다리는 중이에요</p>
+                  <p className="text-[11px] text-[#A79CC2] mt-1.5 leading-relaxed">새 인연이 매칭 풀에 들어오면 바로 알려드릴게요</p>
+                  <div className="flex gap-2 mt-4">
+                    {isPushSupported() && (
+                      <button
+                        onClick={handleEnableNotify}
+                        disabled={notifyOn}
+                        className="flex-1 py-2.5 rounded-xl text-xs font-bold text-[#0D0A1A] bg-gradient-to-r from-[#C9962A] to-[#E8B84B] active:scale-[0.98] transition disabled:opacity-70"
+                      >
+                        {notifyOn ? '🔔 알림 켜짐 ✓' : '🔔 알림 켜기'}
+                      </button>
+                    )}
+                    <button
+                      onClick={onInvite}
+                      className="flex-1 py-2.5 rounded-xl text-xs font-bold text-[#E05282] border border-[#E0528266] active:scale-[0.98] transition"
+                    >
+                      친구 초대하기
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {/* ✨ 랜덤 매칭 뽑기 버튼 */}
               <button onClick={handleDraw} disabled={busy} className="relative z-10 w-full py-4 bg-gradient-to-r from-[#C9962A] to-[#E8B84B] text-[#0D0A1A] font-bold rounded-2xl shadow-lg shadow-[#C9962A30] hover:shadow-[#C9962A50] transition-all text-sm active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2" >
-                {busy ? '매칭 상대를 찾는 중...' : <><IcDraw size={17} /> 랜덤 매칭 뽑기</>}
+                {busy ? '매칭 상대를 찾는 중...' : <><IcDraw size={17} /> {poolEmpty ? '다시 찾아보기' : '랜덤 매칭 뽑기'}</>}
               </button>
 
             </div>
