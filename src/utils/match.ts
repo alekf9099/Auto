@@ -42,7 +42,7 @@ export interface ChatMessage {
   createdAt: string
 }
 
-async function callMatch(action: 'join' | 'leave' | 'draw' | 'like' | 'matches' | 'messages' | 'send' | 'block' | 'report' | 'summary', extra?: Record<string, unknown>): Promise<Record<string, unknown> | null> {
+async function callMatch(action: 'join' | 'leave' | 'draw' | 'like' | 'matches' | 'messages' | 'send' | 'block' | 'report' | 'summary' | 'daily', extra?: Record<string, unknown>): Promise<Record<string, unknown> | null> {
   const idToken = getIdToken()
   if (!idToken) return null
   try {
@@ -92,6 +92,13 @@ export async function leaveMatchPool(): Promise<{ ok: boolean; error?: string }>
 
 export async function drawMatch(): Promise<MatchOpponent | null> {
   const result = await callMatch('draw')
+  const opponent = result?.opponent as MatchOpponent | null | undefined
+  return opponent ?? null
+}
+
+// 오늘의 추천 인연 — 하루 1명 고정 큐레이션
+export async function loadDailyPick(): Promise<MatchOpponent | null> {
+  const result = await callMatch('daily')
   const opponent = result?.opponent as MatchOpponent | null | undefined
   return opponent ?? null
 }

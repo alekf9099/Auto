@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import type { BirthInput } from '../types'
 import { calcGunghab, type GunghabResult } from '../utils/gunghab'
 import { ELEMENT_LABELS, ELEMENT_COLORS } from '../utils/constants'
-import { isOptedIn, joinMatchPool, leaveMatchPool, drawMatch, sendLike, loadMatches, loadMatchHistory, addMatchHistory, type MatchOpponent, type MatchHistoryEntry, type MatchEntry } from '../utils/match'
+import { isOptedIn, joinMatchPool, leaveMatchPool, drawMatch, loadDailyPick, sendLike, loadMatches, loadMatchHistory, addMatchHistory, type MatchOpponent, type MatchHistoryEntry, type MatchEntry } from '../utils/match'
 import { loadProfilePhoto } from '../utils/profilePhoto'
 import { isPushSupported, isPushEnabled, enablePush } from '../utils/pushNotify'
 import PointsClaimButton from './PointsClaimButton'
@@ -77,6 +77,8 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
   const [matches, setMatches] = useState<MatchEntry[]>([])
   const [chatMatch, setChatMatch] = useState<MatchEntry | null>(null)
   const [showShare, setShowShare] = useState(false)
+  const [dailyPick, setDailyPick] = useState<MatchOpponent | null>(null)
+  const [dailyViewed, setDailyViewed] = useState(() => { try { return localStorage.getItem('unmyeongbom_daily_viewed') === today() } catch { return false } })
 
   // 궁합 결과 공유 카드 데이터 (상대 닉네임은 넣지 않아 익명 유지)
   const shareData: ShareCardData | null = result ? {
@@ -98,9 +100,12 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
     setError(null)
   }, [optedIn])
 
-  // 참여 중이면 내 매칭 목록을 불러온다
+  // 참여 중이면 내 매칭 목록 + 오늘의 추천 인연을 불러온다
   useEffect(() => {
-    if (optedIn) loadMatches().then(setMatches)
+    if (optedIn) {
+      loadMatches().then(setMatches)
+      loadDailyPick().then(setDailyPick)
+    }
   }, [optedIn])
 
   // 뽑을 때마다 카드를 엎었다가 3D로 뒤집어 매칭 상대를 공개
@@ -153,6 +158,22 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
     setOpponent(opp)
     setResult(r)
     setHistory(addMatchHistory({ nickname: opp.nickname, photo: opp.photo, score: r.total, grade: r.grade, date: today() }))
+    window.scrollTo(0, 0)
+  }
+
+  // 오늘의 추천 인연 궁합 열어보기
+  function openDaily() {
+    if (!dailyPick) return
+    const r = calcGunghab(birthProfile, dailyPick.birth, 'friend')
+    setOpponent(dailyPick)
+    setResult(r)
+    setPoolEmpty(false)
+    setLiked(false)
+    setLikeMsg(null)
+    setMatchedNow(false)
+    setHistory(addMatchHistory({ nickname: dailyPick.nickname, photo: dailyPick.photo, score: r.total, grade: r.grade, date: today() }))
+    try { localStorage.setItem('unmyeongbom_daily_viewed', today()) } catch { /* noop */ }
+    setDailyViewed(true)
     window.scrollTo(0, 0)
   }
 
@@ -220,6 +241,28 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
             </div>
           </div>
         </div>
+        )}
+
+        {/* 오늘의 추천 인연 — 하루 1명, 재방문 후크 */}
+        {optedIn && dailyPick && !result && (
+          <button
+            onClick={openDaily}
+            className="w-full relative overflow-hidden rounded-3xl border p-4 flex items-center gap-3.5 active:scale-[0.99] transition-all"
+            style={{ borderColor: '#C9962A55', background: 'linear-gradient(135deg, #2A1F10 0%, #1A0E30 55%, #120A22 100%)', boxShadow: '0 2px 22px rgba(201,150,42,0.18)' }}
+          >
+            <div className="absolute -right-6 top-1/2 -translate-y-1/2 w-40 h-40 rounded-full blur-3xl pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(201,150,42,0.4), transparent 70%)' }} />
+            <AnonAvatar seed={dailyPick.userId} photo={dailyPick.photo} size={48} />
+            <div className="relative flex-1 text-left min-w-0">
+              <div className="flex items-center gap-1.5">
+                <span className="text-[#E8C75C] text-[10px]">✦</span>
+                <p className="text-[10px] font-bold text-[#E8C75C] tracking-wide">오늘의 추천 인연</p>
+                {!dailyViewed && <span className="text-[8px] font-bold text-white bg-[#E05282] px-1.5 py-0.5 rounded-full">NEW</span>}
+              </div>
+              <p className="text-[15px] font-bold text-[#F5EDD4] mt-0.5 truncate" style={{ fontFamily: "'Gowun Batang', serif" }}>{dailyPick.nickname}</p>
+              <p className="text-[11px] text-[#BCB1D4] truncate">오늘 당신과 이어진 사주, 궁합을 확인해보세요</p>
+            </div>
+            <span className="relative text-xs font-bold text-[#E8C75C] shrink-0">{dailyViewed ? '다시 보기' : '확인 →'}</span>
+          </button>
         )}
 
         {/* 참여 전 — 컨셉 온보딩 */}

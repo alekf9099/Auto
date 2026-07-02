@@ -119,7 +119,7 @@ export default async function handler(req: any, res: any) {
   const { idToken, provider, action, nickname, birth, photo, targetUserId, matchId, body, reason, score, grade } = (req.body ?? {}) as {
     idToken?: string
     provider?: string
-    action?: 'join' | 'leave' | 'draw' | 'like' | 'matches' | 'messages' | 'send' | 'block' | 'report' | 'summary'
+    action?: 'join' | 'leave' | 'draw' | 'like' | 'matches' | 'messages' | 'send' | 'block' | 'report' | 'summary' | 'daily'
     nickname?: string
     birth?: unknown
     photo?: string | null
@@ -131,7 +131,7 @@ export default async function handler(req: any, res: any) {
     grade?: string
   }
 
-  const VALID_ACTIONS = ['join', 'leave', 'draw', 'like', 'matches', 'messages', 'send', 'block', 'report', 'summary']
+  const VALID_ACTIONS = ['join', 'leave', 'draw', 'like', 'matches', 'messages', 'send', 'block', 'report', 'summary', 'daily']
   if (!idToken || !action || !VALID_ACTIONS.includes(action)) {
     return res.status(400).json({ error: 'invalid request' })
   }
@@ -247,6 +247,43 @@ export default async function handler(req: any, res: any) {
     const pendingLikes = Math.max(0, (likesToMe ?? 0) - matchesCount)
 
     return res.status(200).json({ matches: matchesCount, unread, likes: pendingLikes })
+  }
+
+  if (action === 'daily') {
+    // 오늘의 추천 인연 — 하루 1명, 날짜+내 user_id로 결정적 선택(당일 고정, 매일 회전)
+    const { data: rows } = await supabase
+      .from('match_pool')
+      .select('user_id, nickname, year, month, day, hour, minute, gender, photo')
+      .neq('email', email)
+    if (!rows || rows.length === 0) return res.status(200).json({ opponent: null })
+
+    // 제외: 차단(양방향) / 이미 매칭된 상대 / 이미 좋아요한 상대
+    const [{ data: blocks }, { data: myMatches }, { data: myLikes }] = await Promise.all([
+      supabase.from('blocks').select('blocker, blocked').or(`blocker.eq.${me.user_id},blocked.eq.${me.user_id}`),
+      supabase.from('matches').select('user_a, user_b').or(`user_a.eq.${me.user_id},user_b.eq.${me.user_id}`),
+      supabase.from('likes').select('to_user').eq('from_user', me.user_id),
+    ])
+    const excl = new Set<string>()
+    for (const b of blocks ?? []) { excl.add(b.blocker); excl.add(b.blocked) }
+    for (const m of myMatches ?? []) { excl.add(m.user_a); excl.add(m.user_b) }
+    for (const l of myLikes ?? []) excl.add(l.to_user)
+
+    const eligible = (rows as { user_id: string }[]).filter(r => !excl.has(r.user_id))
+    if (eligible.length === 0) return res.status(200).json({ opponent: null })
+    eligible.sort((a, b) => (a.user_id < b.user_id ? -1 : 1))
+
+    const seed = new Date().toISOString().slice(0, 10) + me.user_id
+    let h = 0
+    for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0
+    const pick = eligible[h % eligible.length] as typeof rows[number]
+    return res.status(200).json({
+      opponent: {
+        userId: pick.user_id,
+        nickname: pick.nickname,
+        photo: pick.photo ?? null,
+        birth: { year: pick.year, month: pick.month, day: pick.day, hour: pick.hour, minute: pick.minute, gender: pick.gender },
+      },
+    })
   }
 
   if (action === 'like') {
