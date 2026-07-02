@@ -7,7 +7,10 @@ import { loadProfilePhoto } from '../utils/profilePhoto'
 import { isPushSupported, isPushEnabled, enablePush } from '../utils/pushNotify'
 import PointsClaimButton from './PointsClaimButton'
 import ChatView from './ChatView'
-import { IcMatch, IcDraw, IcLoveLuck, IcLock } from './icons/SajuIcons'
+import AnonAvatar from './AnonAvatar'
+import ShareCardModal from './ShareCardModal'
+import type { ShareCardData } from './ShareCardModal'
+import { IcMatch, IcDraw, IcLoveLuck, IcLock, IcShare } from './icons/SajuIcons'
 
 interface Props {
   nickname: string
@@ -53,15 +56,6 @@ function today(): string {
   return new Date().toISOString().slice(0, 10)
 }
 
-function MiniAvatar({ photo, label, bg }: { photo: string | null; label: string; bg: string }) {
-  return photo ? (
-    <img src={photo} alt={label} className="w-5 h-5 rounded-full object-cover shrink-0" />
-  ) : (
-    <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] text-white font-bold shrink-0 ${bg}`}>
-      {label[0] ?? '?'}
-    </div>
-  )
-}
 
 export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: Props) {
   const [myPhoto] = useState<string | null>(loadProfilePhoto)
@@ -82,6 +76,23 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
   const [matchedNow, setMatchedNow] = useState(false)
   const [matches, setMatches] = useState<MatchEntry[]>([])
   const [chatMatch, setChatMatch] = useState<MatchEntry | null>(null)
+  const [showShare, setShowShare] = useState(false)
+
+  // 궁합 결과 공유 카드 데이터 (상대 닉네임은 넣지 않아 익명 유지)
+  const shareData: ShareCardData | null = result ? {
+    badge: '사주궁합',
+    Icon: IcMatch,
+    iconColor: '#E05282',
+    title: result.grade,
+    date: (() => { const n = new Date(); return `${n.getFullYear()}.${String(n.getMonth() + 1).padStart(2, '0')}.${String(n.getDate()).padStart(2, '0')}` })(),
+    highlight: result.headline,
+    items: [
+      { label: '궁합 점수', value: `${result.total}%` },
+      { label: '오행 관계', value: `${ELEMENT_LABELS[result.elementA]} ${OHAENG_REL[result.elementRelation].label} ${ELEMENT_LABELS[result.elementB]}` },
+    ],
+    accent: '#E05282',
+    footer: '사주매칭 · 운명봄',
+  } : null
 
   useEffect(() => {
     setError(null)
@@ -181,6 +192,7 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
           onEnded={() => loadMatches().then(setMatches)}
         />
       )}
+      {showShare && shareData && <ShareCardModal data={shareData} onClose={() => setShowShare(false)} />}
       <div className="bg-[#130E24] border-b border-[#2A1F4A] sticky top-0 z-20">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={onBack} aria-label="뒤로 가기" className="text-[#A79CC2] hover:text-[#C4B8D8] transition text-lg">←</button>
@@ -345,12 +357,12 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
                 <div className="relative z-10 p-6">
                   <div className="flex items-center gap-3 mb-5">
                     <div className="flex items-center gap-1.5 bg-violet-400/20 border border-violet-400/30 rounded-full px-2.5 py-1.5">
-                      <MiniAvatar photo={myPhoto} label={nickname} bg="bg-violet-500" />
+                      <AnonAvatar seed={nickname} photo={myPhoto} element={result.elementA} size={20} />
                       <span className="text-xs text-violet-200 font-medium">{nickname}</span>
                     </div>
                     <span className="text-violet-400/80 text-sm">✕</span>
                     <div className="flex items-center gap-1.5 bg-rose-400/20 border border-rose-400/30 rounded-full px-2.5 py-1.5">
-                      <MiniAvatar photo={opponent.photo} label={opponent.nickname} bg="bg-rose-400" />
+                      <AnonAvatar seed={opponent.userId} photo={opponent.photo} element={result.elementB} size={20} />
                       <span className="text-xs text-rose-200 font-medium">{opponent.nickname}</span>
                     </div>
                   </div>
@@ -375,6 +387,16 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
               </div>
             </div>
           </div>
+        )}
+
+        {/* 궁합 결과 공유 (익명 — 상대 닉네임 없이 내 궁합만) */}
+        {result && matchRevealed && (
+          <button
+            onClick={() => setShowShare(true)}
+            className="w-full py-3 rounded-2xl text-sm font-bold text-[#E05282] border border-[#E0528240] bg-[#E0528210] active:scale-[0.98] transition flex items-center justify-center gap-2"
+          >
+            <IcShare size={15} /> 궁합 결과 공유하기
+          </button>
         )}
 
         {/* 좋아요 / 매칭 성사 */}
@@ -425,7 +447,7 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
                   onClick={() => setChatMatch(m)}
                   className="w-full flex items-center gap-3 px-3 py-2.5 rounded-2xl bg-[#1C1438] hover:bg-[#241a44] active:scale-[0.99] transition text-left"
                 >
-                  <MiniAvatar photo={m.opponent.photo} label={m.opponent.nickname} bg="bg-rose-400" />
+                  <AnonAvatar seed={m.opponent.userId} photo={m.opponent.photo} size={28} />
                   <p className="text-sm font-semibold text-[#F5EDD4] flex-1 truncate">{m.opponent.nickname}</p>
                   {m.unread > 0 ? (
                     <span className="min-w-[18px] h-[18px] px-1.5 rounded-full bg-[#E05282] text-white text-[10px] font-bold flex items-center justify-center">
@@ -453,7 +475,7 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
                   <span className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold text-[#0D0A1A] shrink-0" style={{ backgroundColor: RANK_BADGE[i] ?? '#3A2F55', color: i < 3 ? '#0D0A1A' : '#C4B8D8' }} >
                     {i + 1}
                   </span>
-                  <MiniAvatar photo={entry.photo} label={entry.nickname} bg="bg-violet-500" />
+                  <AnonAvatar seed={entry.nickname} photo={entry.photo} size={24} />
                   <p className="text-xs font-semibold text-[#C4B8D8] flex-1 truncate">{entry.nickname}</p>
                   <span className="text-[11px] text-[#A79CC2]">{entry.grade}</span>
                   <span className="text-xs font-bold text-[#C9962A] tabular-nums">{entry.score}%</span>

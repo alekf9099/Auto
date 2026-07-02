@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { loadMessages, sendMessage, blockMatch, reportMatch, type MatchEntry, type ChatMessage } from '../utils/match'
 import { subscribeToMatch, type MatchChannel } from '../utils/matchRealtime'
+import AnonAvatar from './AnonAvatar'
 
 interface Props {
   match: MatchEntry
@@ -13,15 +14,6 @@ const POLL_IDLE_MS = 4000      // 실시간 미연결 시 — 잠잠할 때 (부
 const POLL_FALLBACK_MS = 10000 // 실시간 연결 시 — 놓친 이벤트 대비 안전망 폴링
 const TYPING_THROTTLE_MS = 1500
 
-function MiniAvatar({ photo, label }: { photo: string | null; label: string }) {
-  return photo ? (
-    <img src={photo} alt={label} className="w-8 h-8 rounded-full object-cover shrink-0" />
-  ) : (
-    <div className="w-8 h-8 rounded-full bg-rose-400 flex items-center justify-center text-xs text-white font-bold shrink-0">
-      {label[0] ?? '?'}
-    </div>
-  )
-}
 
 function timeLabel(iso: string): string {
   try {
@@ -197,7 +189,7 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
       <div className="bg-[#130E24] border-b border-[#2A1F4A] shrink-0">
         <div className="max-w-2xl mx-auto px-3 py-2.5 flex items-center gap-2">
           <button onClick={onBack} aria-label="뒤로 가기" className="text-[#A79CC2] hover:text-[#C4B8D8] transition text-lg px-1">←</button>
-          <MiniAvatar photo={match.opponent.photo} label={match.opponent.nickname} />
+          <AnonAvatar seed={match.opponent.userId} photo={match.opponent.photo} size={32} />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-[#F5EDD4] truncate">{match.opponent.nickname}</p>
             <p className="text-[10px] text-[#857AA0]">사주매칭으로 만난 익명의 인연</p>
@@ -227,8 +219,12 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
       <div ref={scrollRef} onScroll={onScroll} className="flex-1 overflow-y-auto px-4 py-4">
         <div className="max-w-2xl mx-auto">
           {loading ? (
-            <div className="flex justify-center py-10">
-              <div className="w-5 h-5 rounded-full border-2 border-[#2A1F4A] border-t-[#C9962A] animate-spin" />
+            <div className="space-y-3 py-2">
+              {([['left', '58%'], ['right', '44%'], ['left', '70%'], ['right', '36%'], ['left', '50%']] as const).map(([side, w], i) => (
+                <div key={i} className={`flex ${side === 'right' ? 'justify-end' : 'justify-start'}`}>
+                  <div className="h-9 rounded-2xl bg-[#1C1438] animate-pulse" style={{ width: w, animationDelay: `${i * 100}ms` }} />
+                </div>
+              ))}
             </div>
           ) : messages.length === 0 ? (
             <div className="text-center py-12">
