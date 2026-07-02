@@ -120,6 +120,13 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
     return id
   })()
 
+  // 아이스브레이커 — 첫 대화를 쉽게 시작하도록 궁합 기반 추천 인사말
+  const openers = [
+    match.score != null ? `안녕하세요! 궁합 ${match.score}% 나왔네요 ㅎㅎ 반가워요 😊` : '안녕하세요! 반가워요 😊',
+    '사주로 만난 인연이라니 신기하네요 :)',
+    '오늘 하루 어떻게 보내고 계세요?',
+  ]
+
   // 새 메시지 도착 시 하단에 있었으면 자동 스크롤
   useEffect(() => {
     if (atBottomRef.current && scrollRef.current) {
@@ -143,8 +150,8 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
     }
   }
 
-  async function handleSend() {
-    const text = input.trim()
+  async function handleSend(textArg?: string) {
+    const text = (textArg ?? input).trim()
     if (!text || sending || closed) return
     setSending(true)
     const res = await sendMessage(match.matchId, text)
@@ -157,7 +164,7 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
       }
       return
     }
-    setInput('')
+    if (!textArg) setInput('')   // 입력창에서 보낸 경우에만 비운다 (추천 인사말은 입력창 유지 안 함)
     atBottomRef.current = true
     lastActivityRef.current = Date.now() // 보낸 직후엔 빠른 폴링 유지
     if (res.message) {
@@ -231,6 +238,21 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
               <p className="text-3xl mb-3">💞</p>
               <p className="text-sm font-semibold text-[#F5EDD4]">{match.opponent.nickname}님과 매칭됐어요</p>
               <p className="text-xs text-[#A79CC2] mt-1.5">먼저 인사를 건네 대화를 시작해보세요</p>
+              {!closed && (
+                <div className="mt-6 space-y-2 max-w-[290px] mx-auto">
+                  <p className="text-[10px] text-[#6E6489] mb-1">탭하면 바로 전송돼요 ↓</p>
+                  {openers.map((o, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleSend(o)}
+                      disabled={sending}
+                      className="w-full text-left px-3.5 py-2.5 rounded-2xl bg-[#1C1438] border border-[#2A1F4A] text-xs text-[#D3C9EA] hover:border-[#C9962A]/40 active:scale-[0.98] transition disabled:opacity-50"
+                    >
+                      {o}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           ) : (
             <div className="space-y-2.5">
@@ -292,7 +314,7 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
               className="flex-1 resize-none max-h-28 px-4 py-2.5 rounded-2xl bg-[#1C1438] border border-[#2A1F4A] text-sm text-[#F5EDD4] placeholder-[#857AA0] focus:outline-none focus:border-[#C9962A] transition disabled:opacity-50"
             />
             <button
-              onClick={handleSend}
+              onClick={() => handleSend()}
               disabled={!input.trim() || sending || closed}
               className="shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-[#C9962A] to-[#E8B84B] text-[#1A0E30] flex items-center justify-center disabled:opacity-40 active:scale-95 transition"
               aria-label="전송"
