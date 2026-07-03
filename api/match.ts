@@ -156,6 +156,15 @@ export default async function handler(req: any, res: any) {
   const supabase = createClient(supabaseUrl, serviceKey)
 
   if (action === 'leave') {
+    // 나가기 전에 내 활성 매칭을 모두 종료 처리한다. 그래야 상대방이 "대화 종료"로
+    // 인지하고(기존 closed 처리 재사용), 나간 사람에게 계속 메시지가 저장되는 걸 막는다.
+    const { data: myRow } = await supabase.from('match_pool').select('user_id').eq('email', email).maybeSingle()
+    if (myRow?.user_id) {
+      await supabase.from('matches')
+        .update({ status: 'closed' })
+        .or(`user_a.eq.${myRow.user_id},user_b.eq.${myRow.user_id}`)
+        .eq('status', 'active')
+    }
     const { error } = await supabase.from('match_pool').delete().eq('email', email)
     if (error) return res.status(500).json({ error: error.message })
     return res.status(200).json({ ok: true })
