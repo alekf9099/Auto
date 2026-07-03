@@ -5,12 +5,13 @@ import { ELEMENT_LABELS, ELEMENT_COLORS } from '../utils/constants'
 import { isOptedIn, joinMatchPool, leaveMatchPool, drawMatch, loadDailyPick, sendLike, loadMatches, loadMatchHistory, addMatchHistory, type MatchOpponent, type MatchHistoryEntry, type MatchEntry } from '../utils/match'
 import { loadProfilePhoto } from '../utils/profilePhoto'
 import { isPushSupported, isPushEnabled, enablePush } from '../utils/pushNotify'
+import { loadPoints, spendPoints } from '../utils/points'
 import PointsClaimButton from './PointsClaimButton'
 import ChatView from './ChatView'
 import AnonAvatar from './AnonAvatar'
 import ShareCardModal from './ShareCardModal'
 import type { ShareCardData } from './ShareCardModal'
-import { IcMatch, IcDraw, IcLoveLuck, IcLock, IcShare } from './icons/SajuIcons'
+import { IcMatch, IcDraw, IcLoveLuck, IcLock, IcShare, IcGem } from './icons/SajuIcons'
 
 interface Props {
   nickname: string
@@ -20,6 +21,7 @@ interface Props {
 }
 
 const RANK_BADGE = ['#C9962A', '#BCB1D4', '#A79CC2']
+const MATCH_REPORT_COST = 20
 
 // 두 일간 오행의 관계 — 사주매칭다움을 살리는 근거 배지
 const OHAENG_REL = {
@@ -77,6 +79,8 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
   const [matches, setMatches] = useState<MatchEntry[]>([])
   const [chatMatch, setChatMatch] = useState<MatchEntry | null>(null)
   const [showShare, setShowShare] = useState(false)
+  const [reportUnlocked, setReportUnlocked] = useState(false)
+  const [reportErr, setReportErr] = useState(false)
   const [dailyPick, setDailyPick] = useState<MatchOpponent | null>(null)
   const [dailyViewed, setDailyViewed] = useState(() => { try { return localStorage.getItem('unmyeongbom_daily_viewed') === today() } catch { return false } })
 
@@ -148,6 +152,8 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
     setLiked(false)
     setLikeMsg(null)
     setMatchedNow(false)
+    setReportUnlocked(false)
+    setReportErr(false)
     const opp = await drawMatch()
     setBusy(false)
     if (!opp) {
@@ -161,6 +167,14 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
     window.scrollTo(0, 0)
   }
 
+  function handleUnlockReport() {
+    if (reportUnlocked) return
+    setReportErr(false)
+    const { success } = spendPoints(loadPoints(), MATCH_REPORT_COST, '궁합 상세 리포트 🔍')
+    if (success) setReportUnlocked(true)
+    else setReportErr(true)
+  }
+
   // 오늘의 추천 인연 궁합 열어보기
   function openDaily() {
     if (!dailyPick) return
@@ -171,6 +185,8 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
     setLiked(false)
     setLikeMsg(null)
     setMatchedNow(false)
+    setReportUnlocked(false)
+    setReportErr(false)
     setHistory(addMatchHistory({ nickname: dailyPick.nickname, photo: dailyPick.photo, score: r.total, grade: r.grade, date: today() }))
     try { localStorage.setItem('unmyeongbom_daily_viewed', today()) } catch { /* noop */ }
     setDailyViewed(true)
@@ -429,6 +445,52 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* 궁합 상세 리포트 — 포인트로 언락 (마음·성향·미래 3축 + 팁) */}
+        {result && matchRevealed && (
+          <div className="rounded-2xl border border-[#2A1F4A] bg-[#130E24] p-5">
+            <div className="flex items-center gap-2">
+              <div className="w-1 h-5 bg-[#C9962A] rounded-full" />
+              <h3 className="text-sm font-bold text-[#F5EDD4]">궁합 상세 리포트</h3>
+              {reportUnlocked && <span className="text-[10px] text-[#4BBF7E]">· 열람 완료</span>}
+            </div>
+            {reportUnlocked ? (
+              <div className="mt-3.5 space-y-3">
+                {([['마음', result.emotion], ['성향', result.personality], ['미래', result.future]] as const).map(([label, val]) => (
+                  <div key={label}>
+                    <div className="flex justify-between text-[11px] mb-1">
+                      <span className="text-[#BCB1D4]">{label} 궁합</span>
+                      <span className="font-bold text-[#E8C75C]">{val}점</span>
+                    </div>
+                    <div className="h-2 rounded-full bg-[#1C1438] overflow-hidden">
+                      <div className="h-full rounded-full" style={{ width: `${val}%`, background: 'linear-gradient(90deg, #C9962A, #E8B84B)' }} />
+                    </div>
+                  </div>
+                ))}
+                <div className="pt-2 space-y-1.5 border-t border-white/5 mt-3">
+                  {result.tips.map((t, i) => (
+                    <p key={i} className="text-[11px] leading-relaxed flex gap-1.5">
+                      <span className={t.good ? 'text-[#4BBF7E]' : 'text-[#E0738A]'}>{t.good ? '✓' : '!'}</span>
+                      <span className="text-[#C4B8D8]">{t.text}</span>
+                    </p>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <>
+                <p className="text-[11px] text-[#A79CC2] mt-1.5 mb-3">마음·성향·미래 3축 궁합과 관계 팁을 자세히 확인해보세요</p>
+                <button onClick={handleUnlockReport} className="w-full py-3 rounded-2xl text-sm font-bold text-[#0D0A1A] bg-gradient-to-r from-[#C9962A] to-[#E8B84B] active:scale-[0.98] transition flex items-center justify-center gap-1.5">
+                  <IcLock size={14} /> 상세 리포트 열기 · {MATCH_REPORT_COST}P
+                </button>
+                {reportErr && (
+                  <p className="text-[11px] text-rose-400 text-center mt-2 flex items-center justify-center gap-1">
+                    <IcGem size={11} /> 포인트가 부족해요 (보유 {loadPoints().balance}P · 필요 {MATCH_REPORT_COST}P)
+                  </p>
+                )}
+              </>
+            )}
           </div>
         )}
 
