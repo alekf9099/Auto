@@ -32,6 +32,7 @@ export interface MatchChannelHandlers {
   onNewMessage: () => void
   onRead: () => void
   onTyping: () => void
+  onClosed?: () => void
 }
 
 // 매칭 채널 구독. 실패(키 없음/네트워크)하면 null 을 돌려준다.
@@ -45,6 +46,7 @@ export async function subscribeToMatch(matchId: string, handlers: MatchChannelHa
       .on('broadcast', { event: 'new_message' }, () => handlers.onNewMessage())
       .on('broadcast', { event: 'read' }, () => handlers.onRead())
       .on('broadcast', { event: 'typing' }, () => handlers.onTyping())
+      .on('broadcast', { event: 'closed' }, () => handlers.onClosed?.())
       .subscribe()
     const send = (event: string) => { try { channel.send({ type: 'broadcast', event, payload: {} }) } catch { /* noop */ } }
     return {

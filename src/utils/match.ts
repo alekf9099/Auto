@@ -116,14 +116,15 @@ export async function sendLike(targetUserId: string, score?: number, grade?: str
   }
 }
 
-// 홈 히어로 / 네비 뱃지용 요약 (매칭 수 · 안읽음 · 받은 좋아요)
-export interface MatchSummary { matches: number; unread: number; likes: number }
+// 홈 히어로 / 네비 뱃지용 요약 (매칭 수 · 안읽음 · 받은 좋아요 · 풀 인원 수)
+export interface MatchSummary { matches: number; unread: number; likes: number; poolCount: number }
 export async function loadMatchSummary(): Promise<MatchSummary> {
   const r = await callMatch('summary')
   return {
     matches: typeof r?.matches === 'number' ? r.matches : 0,
     unread: typeof r?.unread === 'number' ? r.unread : 0,
     likes: typeof r?.likes === 'number' ? r.likes : 0,
+    poolCount: typeof r?.poolCount === 'number' ? r.poolCount : 0,
   }
 }
 

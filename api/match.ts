@@ -103,9 +103,11 @@ function isValidNickname(n: unknown): n is string {
 }
 
 // 사용자가 직접 업로드한 작은 썸네일(data URL)만 허용한다. 용량 제한으로 남용을 방지한다.
+// SVG는 인라인 스크립트를 담을 수 있으므로 허용하지 않는다.
+const ALLOWED_IMAGE_PREFIXES = ['data:image/jpeg', 'data:image/png', 'data:image/webp', 'data:image/gif']
 function isValidPhoto(p: unknown): p is string | null {
   if (p === null || p === undefined) return true
-  return typeof p === 'string' && p.startsWith('data:image/') && p.length <= 300000
+  return typeof p === 'string' && ALLOWED_IMAGE_PREFIXES.some(prefix => p.startsWith(prefix)) && p.length <= 300_000
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -188,30 +190,29 @@ export default async function handler(req: any, res: any) {
   }
 
   if (action === 'draw') {
-    const { data: rows, error } = await supabase
-      .from('match_pool')
-      .select('user_id, nickname, year, month, day, hour, minute, gender, photo')
-      .neq('email', email)
-      .limit(50)
-
-    if (error) return res.status(500).json({ error: error.message })
-    if (!rows || rows.length === 0) return res.status(200).json({ opponent: null })
-
-    // 내가 차단했거나 나를 차단한 상대는 후보에서 제외한다
+    // 차단 목록을 DB 쿼리 단계에서 제외해야 limit(50) 이후 후보가 모두 차단된 상황을 방지한다
     const { data: myRow } = await supabase
       .from('match_pool').select('user_id').eq('email', email).maybeSingle()
-    let candidates = rows
+
+    let excludeIds: string[] = []
     if (myRow?.user_id) {
       const { data: blockRows } = await supabase
         .from('blocks').select('blocker, blocked')
         .or(`blocker.eq.${myRow.user_id},blocked.eq.${myRow.user_id}`)
-      const blockedIds = new Set((blockRows ?? []).flatMap(b => [b.blocker, b.blocked]))
-      const filtered = rows.filter(r => !blockedIds.has(r.user_id))
-      if (filtered.length > 0) candidates = filtered
-      else return res.status(200).json({ opponent: null })
+      excludeIds = [...new Set((blockRows ?? []).flatMap(b => [b.blocker, b.blocked]))]
     }
 
-    const pick = candidates[Math.floor(Math.random() * candidates.length)]
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let q: any = supabase.from('match_pool')
+      .select('user_id, nickname, year, month, day, hour, minute, gender, photo')
+      .neq('email', email)
+    if (excludeIds.length > 0) q = q.not('user_id', 'in', `(${excludeIds.join(',')})`)
+    const { data: rows, error } = await q.limit(50)
+
+    if (error) return res.status(500).json({ error: error.message })
+    if (!rows || rows.length === 0) return res.status(200).json({ opponent: null })
+
+    const pick = rows[Math.floor(Math.random() * rows.length)]
     return res.status(200).json({
       opponent: {
         userId: pick.user_id,
@@ -231,11 +232,13 @@ export default async function handler(req: any, res: any) {
   if (!me?.user_id) return res.status(400).json({ error: 'not in pool' })
 
   if (action === 'summary') {
-    // 홈 히어로/네비 뱃지용 요약: 매칭 수, 안읽음 합계, 받은(대기) 좋아요 수
-    const { data: ms } = await supabase
-      .from('matches').select('id, user_a, user_b, last_read_a, last_read_b')
-      .or(`user_a.eq.${me.user_id},user_b.eq.${me.user_id}`)
-      .eq('status', 'active')
+    // 홈 히어로/네비 뱃지용 요약: 매칭 수, 안읽음 합계, 받은(대기) 좋아요 수, 풀 인원 수
+    const [{ data: ms }, { count: poolCount }] = await Promise.all([
+      supabase.from('matches').select('id, user_a, user_b, last_read_a, last_read_b')
+        .or(`user_a.eq.${me.user_id},user_b.eq.${me.user_id}`)
+        .eq('status', 'active'),
+      supabase.from('match_pool').select('*', { count: 'exact', head: true }),
+    ])
     const matchesCount = ms?.length ?? 0
 
     let unread = 0
@@ -249,13 +252,13 @@ export default async function handler(req: any, res: any) {
       unread += count ?? 0
     }
 
-    // 받은 좋아요 중 아직 매칭 안 된 것 = (나를 좋아요한 수) - (매칭 수)
-    // 매칭은 상대도 나를 좋아요한 상태라 각 매칭이 '나를 좋아요' 1건에 대응한다.
-    const { count: likesToMe } = await supabase
-      .from('likes').select('*', { count: 'exact', head: true }).eq('to_user', me.user_id)
-    const pendingLikes = Math.max(0, (likesToMe ?? 0) - matchesCount)
+    // 받은 좋아요 중 아직 활성 매칭이 없는 것만 집계한다.
+    // 이전 방식(총 좋아요 수 - 매칭 수)은 종료된 매칭이 있으면 오차가 생긴다.
+    const matchedPartnerIds = new Set((ms ?? []).map(m => m.user_a === me.user_id ? m.user_b : m.user_a))
+    const { data: likers } = await supabase.from('likes').select('from_user').eq('to_user', me.user_id)
+    const pendingLikes = (likers ?? []).filter(l => !matchedPartnerIds.has(l.from_user)).length
 
-    return res.status(200).json({ matches: matchesCount, unread, likes: pendingLikes })
+    return res.status(200).json({ matches: matchesCount, unread, likes: pendingLikes, poolCount: poolCount ?? 0 })
   }
 
   if (action === 'daily') {
@@ -264,6 +267,7 @@ export default async function handler(req: any, res: any) {
       .from('match_pool')
       .select('user_id, nickname, year, month, day, hour, minute, gender, photo')
       .neq('email', email)
+      .limit(500)
     if (!rows || rows.length === 0) return res.status(200).json({ opponent: null })
 
     // 제외: 차단(양방향) / 이미 매칭된 상대 / 이미 좋아요한 상대
@@ -324,15 +328,14 @@ export default async function handler(req: any, res: any) {
     if (!reciprocal) return res.status(200).json({ ok: true, matched: false })
 
     // 상호 좋아요 → 매칭 성사 (user_a < user_b 정규화)
+    // matches(user_a,user_b) 에 UNIQUE 제약이 있으므로 upsert 로 동시 요청 중복을 방지한다.
     const [ua, ub] = me.user_id < targetUserId ? [me.user_id, targetUserId] : [targetUserId, me.user_id]
-    const { data: existing } = await supabase
-      .from('matches').select('id').eq('user_a', ua).eq('user_b', ub).maybeSingle()
-    if (existing) return res.status(200).json({ ok: true, matched: true, matchId: existing.id })
-
     const safeScore = typeof score === 'number' && score >= 0 && score <= 100 ? Math.round(score) : null
     const safeGrade = typeof grade === 'string' && grade.length <= 20 ? grade : null
     const { data: created, error: matchErr } = await supabase
-      .from('matches').insert({ user_a: ua, user_b: ub, score: safeScore, grade: safeGrade }).select('id').single()
+      .from('matches')
+      .upsert({ user_a: ua, user_b: ub, score: safeScore, grade: safeGrade }, { onConflict: 'user_a,user_b' })
+      .select('id').single()
     if (matchErr) return res.status(500).json({ error: matchErr.message })
 
     // 양쪽에 매칭 푸시 (실패해도 매칭 자체엔 영향 없음)
@@ -411,10 +414,15 @@ export default async function handler(req: any, res: any) {
       .limit(300)
     if (error) return res.status(500).json({ error: error.message })
 
-    // 대화를 보는 중 = 읽음. 내 쪽 읽음 시각을 현재로 갱신한다.
-    const now = new Date().toISOString()
-    await supabase.from('matches')
-      .update(iAmA ? { last_read_a: now } : { last_read_b: now }).eq('id', matchId)
+    // 상대가 보낸 읽지 않은 메시지가 있을 때만 last_read 를 갱신한다.
+    // 매 폴링마다 무조건 쓰면 1.5초 간격으로 불필요한 DB 쓰기가 발생한다.
+    const myCurrentLastRead = iAmA ? mrow.last_read_a : mrow.last_read_b
+    const latestPartnerMsg = (rows ?? []).filter(r => r.sender !== me.user_id).pop()
+    if (latestPartnerMsg && (!myCurrentLastRead || latestPartnerMsg.created_at > myCurrentLastRead)) {
+      const now = new Date().toISOString()
+      await supabase.from('matches')
+        .update(iAmA ? { last_read_a: now } : { last_read_b: now }).eq('id', matchId)
+    }
 
     const messages = (rows ?? []).map(r => ({
       id: r.id, body: r.body, mine: r.sender === me.user_id, createdAt: r.created_at,
@@ -460,11 +468,12 @@ export default async function handler(req: any, res: any) {
         reason: typeof reason === 'string' ? reason.slice(0, 500) : null,
       })
     }
-    // 신고/차단 모두: 차단 기록 + 해당 매칭 종료
+    // 신고/차단 모두: 차단 기록 + 해당 매칭 종료 + 상대 화면에 즉시 종료 신호
     await supabase.from('blocks').upsert(
       { blocker: me.user_id, blocked: partnerId }, { onConflict: 'blocker,blocked' }
     )
     await supabase.from('matches').update({ status: 'closed' }).eq('id', matchId)
+    await broadcastMatchEvent(matchId as string, 'closed')
     return res.status(200).json({ ok: true })
   }
 

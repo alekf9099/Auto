@@ -97,7 +97,7 @@ export default function App() {
   const [deleting,     setDeleting]     = useState(false)
   const [deleteError,  setDeleteError]  = useState(false)
   const [loginPrompt,  setLoginPrompt]  = useState<string | null>(null)
-  const [matchSummary, setMatchSummary] = useState<MatchSummary>({ matches: 0, unread: 0, likes: 0 })
+  const [matchSummary, setMatchSummary] = useState<MatchSummary>({ matches: 0, unread: 0, likes: 0, poolCount: 0 })
 
   const isGuest = user?.provider === 'guest'
 
@@ -140,7 +140,7 @@ export default function App() {
 
   // 사주매칭 요약(매칭·안읽음·받은 좋아요) — 홈 히어로 + 하단 탭 뱃지용. 진입/주기적 갱신.
   useEffect(() => {
-    if (!user || isGuest || !birthProfile) { setMatchSummary({ matches: 0, unread: 0, likes: 0 }); return }
+    if (!user || isGuest || !birthProfile) { setMatchSummary({ matches: 0, unread: 0, likes: 0, poolCount: 0 }); return }
     let alive = true
     const refresh = () => loadMatchSummary()
       .then(s => { if (alive) setMatchSummary(s) })

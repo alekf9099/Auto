@@ -36,10 +36,12 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
   const [notice, setNotice] = useState<string | null>(null)
   const [partnerLastRead, setPartnerLastRead] = useState<string | null>(null)
   const [partnerTyping, setPartnerTyping] = useState(false)
+  const [showNewMsgBanner, setShowNewMsgBanner] = useState(false)
 
   const scrollRef = useRef<HTMLDivElement>(null)
   const fetchingRef = useRef(false)
   const atBottomRef = useRef(true)
+  const prevMsgCountRef = useRef(0)
   const lastActivityRef = useRef(Date.now()) // 최근 활동(전송/수신) 시각 — 폴링 주기 조절용
   const lastMsgIdRef = useRef<string | null>(null)
   const channelRef = useRef<MatchChannel | null>(null)
@@ -96,6 +98,11 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
         clearTimeout(typingTimerRef.current)
         typingTimerRef.current = setTimeout(() => setPartnerTyping(false), 3500)
       },
+      onClosed: () => {
+        setClosed(true)
+        setNotice('상대방이 대화를 종료했어요')
+        onEnded()
+      },
     }).then(h => {
       if (cancelled) { h?.close(); return }
       handle = h
@@ -127,17 +134,32 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
     '오늘 하루 어떻게 보내고 계세요?',
   ]
 
-  // 새 메시지 도착 시 하단에 있었으면 자동 스크롤
+  // 새 메시지 도착 시 하단에 있었으면 자동 스크롤, 아니면 배너 표시
   useEffect(() => {
-    if (atBottomRef.current && scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    const count = messages.length
+    if (count > prevMsgCountRef.current) {
+      if (atBottomRef.current) {
+        scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight })
+        setShowNewMsgBanner(false)
+      } else {
+        const lastMsg = messages[messages.length - 1]
+        if (lastMsg && !lastMsg.mine) setShowNewMsgBanner(true)
+      }
     }
+    prevMsgCountRef.current = count
   }, [messages])
+
+  function scrollToBottom() {
+    atBottomRef.current = true
+    setShowNewMsgBanner(false)
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
+  }
 
   function onScroll() {
     const el = scrollRef.current
     if (!el) return
     atBottomRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 60
+    if (atBottomRef.current) setShowNewMsgBanner(false)
   }
 
   function handleInputChange(v: string) {
@@ -283,6 +305,17 @@ export default function ChatView({ match, onBack, onEnded }: Props) {
           )}
         </div>
       </div>
+
+      {/* 스크롤 올린 상태에서 새 메시지 도착 시 배너 */}
+      {showNewMsgBanner && !closed && (
+        <button
+          onClick={scrollToBottom}
+          className="fixed bottom-24 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#E05282] text-white text-xs font-bold shadow-lg shadow-[#E05282]/40 animate-bounce"
+          style={{ animationDuration: '1.2s' }}
+        >
+          ↓ 새 메시지
+        </button>
+      )}
 
       {/* 타이핑 표시 */}
       {partnerTyping && !closed && (

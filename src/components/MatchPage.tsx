@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { BirthInput } from '../types'
 import { calcGunghab, type GunghabResult } from '../utils/gunghab'
 import { ELEMENT_LABELS, ELEMENT_COLORS } from '../utils/constants'
-import { isOptedIn, joinMatchPool, leaveMatchPool, drawMatch, loadDailyPick, sendLike, loadMatches, loadMatchHistory, addMatchHistory, type MatchOpponent, type MatchHistoryEntry, type MatchEntry } from '../utils/match'
+import { isOptedIn, joinMatchPool, leaveMatchPool, drawMatch, loadDailyPick, sendLike, loadMatches, loadMatchSummary, loadMatchHistory, addMatchHistory, type MatchOpponent, type MatchHistoryEntry, type MatchEntry } from '../utils/match'
 import { loadProfilePhoto } from '../utils/profilePhoto'
 import { isPushSupported, isPushEnabled, enablePush } from '../utils/pushNotify'
 import { loadPoints, spendPoints } from '../utils/points'
@@ -83,6 +83,9 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
   const [reportErr, setReportErr] = useState(false)
   const [dailyPick, setDailyPick] = useState<MatchOpponent | null>(null)
   const [dailyViewed, setDailyViewed] = useState(() => { try { return localStorage.getItem('unmyeongbom_daily_viewed') === today() } catch { return false } })
+  const [poolCount, setPoolCount] = useState<number | null>(null)
+
+  const unlockingRef = useRef(false)
 
   // 궁합 결과 공유 카드 데이터 (상대 닉네임은 넣지 않아 익명 유지)
   const shareData: ShareCardData | null = result ? {
@@ -104,11 +107,12 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
     setError(null)
   }, [optedIn])
 
-  // 참여 중이면 내 매칭 목록 + 오늘의 추천 인연을 불러온다
+  // 참여 중이면 내 매칭 목록 + 오늘의 추천 인연 + 풀 인원 수를 불러온다
   useEffect(() => {
     if (optedIn) {
       loadMatches().then(setMatches)
       loadDailyPick().then(setDailyPick)
+      loadMatchSummary().then(s => setPoolCount(s.poolCount))
     }
   }, [optedIn])
 
@@ -130,6 +134,7 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
   }
 
   async function handleLeave() {
+    if (!window.confirm('매칭 풀을 나가면 진행 중인 모든 대화가 종료돼요.\n계속할까요?')) return
     setBusy(true)
     setError(null)
     const { ok, error: serverError } = await leaveMatchPool()
@@ -168,11 +173,12 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
   }
 
   function handleUnlockReport() {
-    if (reportUnlocked) return
+    if (reportUnlocked || unlockingRef.current) return
+    unlockingRef.current = true
     setReportErr(false)
     const { success } = spendPoints(loadPoints(), MATCH_REPORT_COST, '궁합 상세 리포트 🔍')
     if (success) setReportUnlocked(true)
-    else setReportErr(true)
+    else { setReportErr(true); unlockingRef.current = false }
   }
 
   // 오늘의 추천 인연 궁합 열어보기
@@ -348,7 +354,7 @@ export default function MatchPage({ nickname, birthProfile, onBack, onInvite }: 
                 </div>
                 
                 <p className="text-xs text-[#BCB1D4]/70 animate-pulse" style={{ animationDuration: '2.5s' }}>
-                  현재 12명의 인연이 운명을 기다리고 있어요
+                  {poolCount !== null ? `현재 ${poolCount}명의 인연이 운명을 기다리고 있어요` : '인연을 찾는 중...'}
                 </p>
                 
                 <button onClick={handleLeave} disabled={busy} className="text-[11px] text-[#A79CC2] hover:text-rose-400 transition underline decoration-dotted mt-1 block mx-auto">
